@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/widgetRoot"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:padding="14dp"
+  android:background="@drawable/root_widget_bg">
+
+  <!-- 상단: 날짜 + 수면 -->
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <TextView
+      android:id="@+id/widgetDate"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="7월 4일 토요일"
+      android:textSize="15sp"
+      android:textStyle="bold"
+      android:textColor="#4A2A14" />
+
+    <TextView
+      android:id="@+id/widgetSleepLabel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="수면 🌙"
+      android:textSize="13sp"
+      android:textStyle="bold"
+      android:textColor="#4A2A14" />
+
+    <TextView
+      android:id="@+id/widgetSleepButton"
+      android:layout_width="54dp"
+      android:layout_height="32dp"
+      android:layout_marginLeft="8dp"
+      android:gravity="center"
+      android:background="@drawable/root_widget_start_button"
+      android:text="시작"
+      android:textSize="12sp"
+      android:textStyle="bold"
+      android:textColor="#A65322" />
+  </LinearLayout>
+
+<!-- 공부 / 운동 -->
+  <LinearLayout
+    android:layout_width="match_parent"
+  android:layout_height="154dp"
+  android:layout_marginTop="8dp"
+  android:orientation="horizontal">
+
+    <!-- 공부 -->
+    <LinearLayout
+  android:id="@+id/widgetStudyBox"
+  android:layout_width="0dp"
+  android:layout_height="match_parent"
+  android:layout_weight="1"
+  android:layout_marginRight="5dp"
+  android:orientation="vertical"
+  android:padding="8dp"
+  android:background="@drawable/root_widget_section_bg">
+
+      <TextView
+        android:id="@+id/widgetStudyTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📚 공부"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textColor="#4A2A14" />
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/widgetStudyGoal1"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="아직없음"
+          android:textSize="11sp"
+          android:textColor="#4A2A14" />
+
+        <TextView
+          android:id="@+id/widgetStudyButton1"
+          android:layout_width="42dp"
+          android:layout_height="24dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="확인"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/widgetStudyGoal2"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text=""
+          android:textSize="11sp"
+          android:textColor="#4A2A14" />
+
+        <TextView
+          android:id="@+id/widgetStudyButton2"
+          android:layout_width="42dp"
+          android:layout_height="24dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="확인"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/widgetStudyGoal3"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text=""
+          android:textSize="11sp"
+          android:textColor="#4A2A14" />
+
+        <TextView
+          android:id="@+id/widgetStudyButton3"
+          android:layout_width="42dp"
+          android:layout_height="24dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="확인"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/widgetStudyGoal4"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text=""
+          android:textSize="11sp"
+          android:textColor="#4A2A14" />
+
+        <TextView
+          android:id="@+id/widgetStudyButton4"
+          android:layout_width="42dp"
+          android:layout_height="24dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="확인"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+    </LinearLayout>
+
+    <!-- 운동 -->
+    <LinearLayout
+    android:id="@+id/widgetExerciseBox"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:layout_marginLeft="5dp"
+      android:orientation="vertical"
+      android:padding="8dp"
+      android:background="@drawable/root_widget_section_bg">
+
+      <TextView
+        android:id="@+id/widgetExerciseTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="👟 운동"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textColor="#4A2A14" />
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/widgetExerciseGoal1"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="아직없음"
+          android:textSize="11sp"
+          android:textColor="#4A2A14" />
+
+        <TextView
+          android:id="@+id/widgetExerciseButton1"
+          android:layout_width="42dp"
+          android:layout_height="24dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="확인"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/widgetExerciseGoal2"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text=""
+          android:textSize="11sp"
+          android:textColor="#4A2A14" />
+
+        <TextView
+          android:id="@+id/widgetExerciseButton2"
+          android:layout_width="42dp"
+          android:layout_height="24dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="확인"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/widgetExerciseGoal3"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text=""
+          android:textSize="11sp"
+          android:textColor="#4A2A14" />
+
+        <TextView
+          android:id="@+id/widgetExerciseButton3"
+          android:layout_width="42dp"
+          android:layout_height="24dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="확인"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/widgetExerciseGoal4"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text=""
+          android:textSize="11sp"
+          android:textColor="#4A2A14" />
+
+        <TextView
+          android:id="@+id/widgetExerciseButton4"
+          android:layout_width="42dp"
+          android:layout_height="24dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="확인"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+    </LinearLayout>
+  </LinearLayout>
+
+  <!-- 정신 / 일상 -->
+  <LinearLayout
+    android:layout_width="match_parent"
+  android:layout_height="154dp"
+  android:layout_marginTop="8dp"
+  android:orientation="horizontal">
+
+    <!-- 정신 -->
+    <LinearLayout
+    android:id="@+id/widgetMentalBox"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:layout_marginRight="5dp"
+      android:orientation="vertical"
+      android:padding="8dp"
+      android:background="@drawable/root_widget_section_bg">
+
+      <TextView
+        android:id="@+id/widgetMentalTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🧘 정신"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textColor="#4A2A14" />
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/widgetMentalGoal1"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="아직없음"
+          android:textSize="11sp"
+          android:textColor="#4A2A14" />
+
+        <TextView
+          android:id="@+id/widgetMentalButton1"
+          android:layout_width="42dp"
+          android:layout_height="24dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="확인"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/widgetMentalGoal2"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text=""
+          android:textSize="11sp"
+          android:textColor="#4A2A14" />
+
+        <TextView
+          android:id="@+id/widgetMentalButton2"
+          android:layout_width="42dp"
+          android:layout_height="24dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="확인"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/widgetMentalGoal3"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text=""
+          android:textSize="11sp"
+          android:textColor="#4A2A14" />
+
+        <TextView
+          android:id="@+id/widgetMentalButton3"
+          android:layout_width="42dp"
+          android:layout_height="24dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="확인"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/widgetMentalGoal4"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text=""
+          android:textSize="11sp"
+          android:textColor="#4A2A14" />
+
+        <TextView
+          android:id="@+id/widgetMentalButton4"
+          android:layout_width="42dp"
+          android:layout_height="24dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="확인"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+    </LinearLayout>
+
+    <!-- 일상 -->
+    <LinearLayout
+    android:id="@+id/widgetDailyBox"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      android:layout_marginLeft="5dp"
+      android:orientation="vertical"
+      android:padding="8dp"
+      android:background="@drawable/root_widget_section_bg">
+
+      <TextView
+        android:id="@+id/widgetDailyTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🏠 일상"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textColor="#4A2A14" />
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/widgetDailyGoal1"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text="아직없음"
+          android:textSize="11sp"
+          android:textColor="#4A2A14" />
+
+        <TextView
+          android:id="@+id/widgetDailyButton1"
+          android:layout_width="42dp"
+          android:layout_height="24dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="확인"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/widgetDailyGoal2"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text=""
+          android:textSize="11sp"
+          android:textColor="#4A2A14" />
+
+        <TextView
+          android:id="@+id/widgetDailyButton2"
+          android:layout_width="42dp"
+          android:layout_height="24dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="확인"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/widgetDailyGoal3"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text=""
+          android:textSize="11sp"
+          android:textColor="#4A2A14" />
+
+        <TextView
+          android:id="@+id/widgetDailyButton3"
+          android:layout_width="42dp"
+          android:layout_height="24dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="확인"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+          android:id="@+id/widgetDailyGoal4"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:text=""
+          android:textSize="11sp"
+          android:textColor="#4A2A14" />
+
+        <TextView
+          android:id="@+id/widgetDailyButton4"
+          android:layout_width="42dp"
+          android:layout_height="24dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="확인"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+    </LinearLayout>
+  </LinearLayout>
+  
+ <!-- 오늘의 할일 -->
+<LinearLayout
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginTop="8dp"
+  android:orientation="vertical"
+  android:padding="5dp"
+  android:background="@drawable/root_widget_section_bg">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <TextView
+      android:id="@+id/widgetTodoTitle"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="📋 오늘의 할일"
+      android:textSize="14sp"
+      android:textStyle="bold"
+      android:textColor="#4A2A14" />
+
+    <TextView
+      android:id="@+id/widgetTodoAdd"
+      android:layout_width="66dp"
+      android:layout_height="24dp"
+      android:gravity="center"
+      android:background="@drawable/root_widget_start_button"
+      android:text="+ 추가"
+      android:textSize="11sp"
+      android:textStyle="bold"
+      android:textColor="#A65322" />
+  </LinearLayout>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:orientation="vertical">
+
+      <TextView
+        android:id="@+id/widgetTodo1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="□ -------------------"
+        android:textSize="12sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="#6B4A2B" />
+
+      <TextView
+        android:id="@+id/widgetTodo2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="□ -------------------"
+        android:textSize="12sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="#6B4A2B" />
+    </LinearLayout>
+
+    <TextView
+      android:layout_width="1dp"
+      android:layout_height="42dp"
+      android:layout_marginLeft="8dp"
+      android:layout_marginRight="8dp"
+      android:background="#D8C3A5"
+      android:text="" />
+
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:orientation="vertical">
+
+      <TextView
+        android:id="@+id/widgetTodo3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="□ -------------------"
+        android:textSize="12sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="#6B4A2B" />
+
+      <TextView
+        android:id="@+id/widgetTodo4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="□ -------------------"
+        android:textSize="12sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="#6B4A2B" />
+    </LinearLayout>
+  </LinearLayout>
+</LinearLayout>
+
+<!-- 칼로리 요약 -->
+<LinearLayout
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginTop="8dp"
+  android:orientation="vertical"
+  android:padding="10dp"
+  android:background="@drawable/root_widget_section_bg">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:orientation="vertical">
+
+      <TextView
+        android:id="@+id/widgetCalorieTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🔥 오늘 칼로리"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="#4A2A14" />
+
+      <TextView
+        android:id="@+id/widgetCalorieText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="섭취 - / 권장 - kcal\n소모 - · 남음 - kcal"
+        android:textSize="11sp"
+        android:textColor="#6B4A2B" />
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="168dp"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="8dp"
+      android:orientation="vertical">
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+          android:id="@+id/widgetMealBreakfast"
+          android:layout_width="0dp"
+          android:layout_height="26dp"
+          android:layout_weight="1"
+          android:layout_marginRight="4dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="+아침"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+
+        <TextView
+          android:id="@+id/widgetMealLunch"
+          android:layout_width="0dp"
+          android:layout_height="26dp"
+          android:layout_weight="1"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="+점심"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+          android:id="@+id/widgetMealDinner"
+          android:layout_width="0dp"
+          android:layout_height="26dp"
+          android:layout_weight="1"
+          android:layout_marginRight="4dp"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="+저녁"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+
+        <TextView
+          android:id="@+id/widgetMealSnack"
+          android:layout_width="0dp"
+          android:layout_height="26dp"
+          android:layout_weight="1"
+          android:gravity="center"
+          android:background="@drawable/root_widget_check_button"
+          android:text="+간식"
+          android:textSize="10sp"
+          android:textStyle="bold"
+          android:textColor="#4D7A35" />
+      </LinearLayout>
+    </LinearLayout>
+  </LinearLayout>
+</LinearLayout>
+
+<LinearLayout
+    android:id="@+id/widget_ledger_box"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:background="@drawable/root_widget_section_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/widget_ledger_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="💰 오늘의 가계부"
+            android:textColor="#3D2515"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/widget_ledger_add"
+            android:layout_width="96dp"
+            android:layout_height="26dp"
+            android:gravity="center"
+            android:text="＋ 가계부"
+            android:textColor="#A65322"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:background="@drawable/root_widget_start_button" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/widget_ledger_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="지출 0원 · 수입 0원"
+        android:textColor="#5A3A24"
+        android:textSize="12sp"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:id="@+id/widget_ledger_recent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="오늘 가계부 내역 없음"
+        android:textColor="#8A6A4A"
+        android:textSize="11sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_marginTop="3dp" />
+</LinearLayout>
+
+</LinearLayout>

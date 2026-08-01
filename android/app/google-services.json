@@ -1,0 +1,100 @@
+{
+  "project_info": {
+    "project_number": "914235938891",
+    "project_id": "root-c7949",
+    "storage_bucket": "root-c7949.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914235938891:android:0f1ffe659dbe2bfed095ce",
+        "android_client_info": {
+          "package_name": "com.cwoos311.root"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "914235938891-9js4dmo88t3didep5f9o3fq7acj7i5ni.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cwoos311.root",
+            "certificate_hash": "2f68cb2fbff92012e416a5c8891a1970de6fda39"
+          }
+        },
+        {
+          "client_id": "914235938891-8f8h890fnb4phoijtcilvui995quuud3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6mo94DuhD_cbjWM5o5JFMvbAiA9oyoA0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "914235938891-8f8h890fnb4phoijtcilvui995quuud3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914235938891:android:1b1bba93d847233bd095ce",
+        "android_client_info": {
+          "package_name": "com.cwoos311.rootappnew"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "914235938891-3gcs7jn5d221m9d1ojqu0nojl4q3p5q2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cwoos311.rootappnew",
+            "certificate_hash": "db597418665b005296dd38690cb3090f02585f67"
+          }
+        },
+        {
+          "client_id": "914235938891-hoo9a9gs6umvc2i1a0qo4kcg71mcfgki.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cwoos311.rootappnew",
+            "certificate_hash": "98c2c95df16b26d67f36b6659e80748116f8d450"
+          }
+        },
+        {
+          "client_id": "914235938891-nfbjtbbde6m11jm6r2h470skhfv2j981.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cwoos311.rootappnew",
+            "certificate_hash": "2a1b5831763b47740281388a20f1f6a2a17594cb"
+          }
+        },
+        {
+          "client_id": "914235938891-8f8h890fnb4phoijtcilvui995quuud3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6mo94DuhD_cbjWM5o5JFMvbAiA9oyoA0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "914235938891-8f8h890fnb4phoijtcilvui995quuud3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

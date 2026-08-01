@@ -1,0 +1,72 @@
+{
+  "expo": {
+    "name": "root-app-new",
+    "slug": "root-app-new",
+    "version": "1.0.0",
+    "orientation": "default",
+    "icon": "./assets/images/icon.png",
+    "scheme": "rootappnew",
+    "userInterfaceStyle": "automatic",
+        "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+  "package": "com.cwoos311.rootappnew",
+  "googleServicesFile": "./google-services.json",
+  "config": {
+    "googleMaps": {
+      "apiKey": "AIzaSyDnm4yAPm3Zm3mVzK4ogGr9nZEZGBlNgQE"
+    }
+  },
+  "permissions": [
+    "ACTIVITY_RECOGNITION",
+    "ACCESS_COARSE_LOCATION",
+    "ACCESS_FINE_LOCATION",
+    "POST_NOTIFICATIONS"
+  ],
+  "adaptiveIcon": {
+    "foregroundImage": "./assets/images/icon.png",
+    "backgroundColor": "#F28C28"
+  },
+  "predictiveBackGestureEnabled": false
+},
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+   "plugins": [
+  "expo-router",
+  [
+    "expo-notifications",
+    {
+      "icon": "./assets/images/icon.png",
+      "color": "#F28C28"
+    }
+  ],
+  [
+    "expo-splash-screen",
+    {
+      "image": "./assets/images/splash-icon.png",
+      "imageWidth": 200,
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff",
+      "dark": {
+        "backgroundColor": "#000000"
+      }
+    }
+  ],
+  "@react-native-google-signin/google-signin/app.plugin.js",
+  "./plugins/withSeoulOpenApiNetwork"
+   ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "904e5799-91f3-486c-9238-3ab297777715"
+      }
+    }
+  }
+}

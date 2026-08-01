@@ -1,50 +1,50 @@
-# Welcome to your Expo app 👋
+# ROOT
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+현실을 RPG처럼 살아가는 성장·탐험 플랫폼입니다.
 
-## Get started
+## 서비스 소개
 
-1. Install dependencies
+ROOT는 사용자가 일상 속 목표를 달성하고 새로운 지역과 문화를 탐험하도록 돕는 모바일 애플리케이션입니다.
 
-   ```bash
-   npm install
-   ```
+사용자는 운동, 공부, 생활 습관 등의 행동 목표를 기록하고 경험치와 포인트를 얻을 수 있습니다. 또한 대한민국 지역별 명소, 축제, 문화행사, 전시와 체험 프로그램을 확인하고 방문 기록을 남길 수 있습니다.
 
-2. Start the app
+## 주요 기능
 
-   ```bash
-   npx expo start
-   ```
+- 결과 목표 및 행동 목표 관리
+- 운동·공부·일상 기록
+- 경험치, 포인트, 뱃지 보상
+- 대한민국 지역별 명소 탐험
+- 축제·행사·전시 일정 확인
+- GPS 기반 방문 인증
+- 탐험 기록과 여행기 작성
+- 크루 활동 및 기록 공유
 
-In the output, you'll find options to open the app in a
+## 서울 문화행사 Open API 활용 목적
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+서울 열린데이터광장의 문화행사 Open API를 이용하여 다음 정보를 제공합니다.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- 서울 문화행사명
+- 행사 기간 및 운영시간
+- 자치구와 행사 장소
+- 공연·전시·축제·체험 분류
+- 이용 대상 및 이용 요금
+- 예약 및 신청 정보
+- 행사 프로그램과 문의처
+- 행사장 위치 정보
 
-## Get a fresh project
+조회한 정보는 ROOT 앱에서 기간, 자치구, 행사 유형, 관람 조건 및 추천 대상별로 문화행사를 검색하고 상세 정보를 제공하는 데 사용합니다.
 
-When you're ready, run:
+## 개발 환경
 
-```bash
-npm run reset-project
-```
+- React Native
+- Expo
+- TypeScript
+- Firebase
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 운영 상태
 
-## Learn more
+현재 Android 모바일 애플리케이션을 개발하고 있습니다.
 
-To learn more about developing your project with Expo, look at the following resources:
+## 문의
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+관리자 이메일: 본인의 이메일 주소

@@ -540,6 +540,167 @@ async function fetchService(
     );
   }
 
+  if (service.id === 'institution') {
+    const seoulDistricts =
+      new Set([
+        '강남구',
+        '강동구',
+        '강북구',
+        '강서구',
+        '관악구',
+        '광진구',
+        '구로구',
+        '금천구',
+        '노원구',
+        '도봉구',
+        '동대문구',
+        '동작구',
+        '마포구',
+        '서대문구',
+        '서초구',
+        '성동구',
+        '성북구',
+        '송파구',
+        '양천구',
+        '영등포구',
+        '용산구',
+        '은평구',
+        '종로구',
+        '중구',
+        '중랑구',
+      ]);
+
+    const seoulRows =
+      rows.filter(
+        (row) =>
+          seoulDistricts.has(
+            cleanText(row?.AREANM)
+          )
+      );
+
+    const reviewRows =
+      rows.filter(
+        (row) =>
+          !seoulDistricts.has(
+            cleanText(row?.AREANM)
+          )
+      );
+
+    if (
+      seoulRows.length +
+        reviewRows.length !==
+      rows.length
+    ) {
+      throw new Error(
+        '공간대관 서울 내부·외부 분리 개수가 일치하지 않습니다.'
+      );
+    }
+
+    writeJson(
+      path.join(
+        tmpDirectory,
+        'seoul-space-seoul-raw.json'
+      ),
+      seoulRows
+    );
+
+    writeJson(
+      path.join(
+        tmpDirectory,
+        'seoul-space-review.json'
+      ),
+      reviewRows
+    );
+
+    console.log(
+      `공간대관 서울 자치구 예약상품: ${seoulRows.length}개`
+    );
+
+    console.log(
+      `공간대관 외부 검토 예약상품: ${reviewRows.length}개`
+    );
+  }
+
+  if (service.id === 'education') {
+    const seoulDistricts =
+      new Set([
+        '강남구',
+        '강동구',
+        '강북구',
+        '강서구',
+        '관악구',
+        '광진구',
+        '구로구',
+        '금천구',
+        '노원구',
+        '도봉구',
+        '동대문구',
+        '동작구',
+        '마포구',
+        '서대문구',
+        '서초구',
+        '성동구',
+        '성북구',
+        '송파구',
+        '양천구',
+        '영등포구',
+        '용산구',
+        '은평구',
+        '종로구',
+        '중구',
+        '중랑구',
+      ]);
+
+    const seoulRows =
+      rows.filter(
+        (row) =>
+          seoulDistricts.has(
+            cleanText(row?.AREANM)
+          )
+      );
+
+    const reviewRows =
+      rows.filter(
+        (row) =>
+          !seoulDistricts.has(
+            cleanText(row?.AREANM)
+          )
+      );
+
+    if (
+      seoulRows.length +
+        reviewRows.length !==
+      rows.length
+    ) {
+      throw new Error(
+        '교육·체험 서울 내부·외부 분리 개수가 일치하지 않습니다.'
+      );
+    }
+
+    writeJson(
+      path.join(
+        tmpDirectory,
+        'seoul-education-seoul-raw.json'
+      ),
+      seoulRows
+    );
+
+    writeJson(
+      path.join(
+        tmpDirectory,
+        'seoul-education-review.json'
+      ),
+      reviewRows
+    );
+
+    console.log(
+      `교육·체험 서울 자치구 프로그램: ${seoulRows.length}개`
+    );
+
+    console.log(
+      `교육·체험 외부 검토 프로그램: ${reviewRows.length}개`
+    );
+  }
   const duplicateServiceIdCount =
     countDuplicateServiceIds(
       rows

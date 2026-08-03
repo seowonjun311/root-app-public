@@ -31,6 +31,7 @@ const services = [
       'ListPublicReservationSport',
     outputFiles: [
       'seoul-sports-all-raw.json',
+      'seoul-sports-raw.json',
       'seoul-sport-all-raw.json',
     ],
   },

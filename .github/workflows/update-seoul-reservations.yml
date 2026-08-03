@@ -57,8 +57,22 @@ jobs:
           test -s store/seoulSpaceSelectors.ts
           test -s store/seoulEducationPrograms.ts
           test -s store/seoulEducationSelectors.ts
+          test -s scripts/upload-seoul-reservations-to-firestore.mjs
 
+          npm list firebase-admin --depth=0
           git diff --check
+
+      - name: Verify Firestore secret
+        shell: bash
+        env:
+          FIREBASE_SERVICE_ACCOUNT_BASE64: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_BASE64 }}
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT_BASE64" ]; then
+            echo "FIREBASE_SERVICE_ACCOUNT_BASE64 is not configured."
+            exit 1
+          fi
+
+          echo "Firestore service account secret is configured."
 
       - name: Commit updated data
         shell: bash
@@ -74,7 +88,7 @@ jobs:
             store/seoulEducationSelectors.ts
 
           if git diff --cached --quiet; then
-            echo "서울 예약정보 변경사항이 없습니다."
+            echo "No Seoul reservation data changes."
             exit 0
           fi
 
@@ -83,3 +97,11 @@ jobs:
 
           git commit -m "chore: update Seoul reservation data"
           git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Upload reservation data to Firestore
+        shell: bash
+        timeout-minutes: 10
+        env:
+          FIREBASE_PROJECT_ID: root-c7949
+          FIREBASE_SERVICE_ACCOUNT_BASE64: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_BASE64 }}
+        run: node ./scripts/upload-seoul-reservations-to-firestore.mjs

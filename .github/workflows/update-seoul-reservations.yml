@@ -1,0 +1,85 @@
+name: Update Seoul reservation data
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: '10 19 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-seoul-reservations
+  cancel-in-progress: false
+
+jobs:
+  update:
+    name: Update reservation data
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      TZ: Asia/Seoul
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Update Seoul reservation data
+        env:
+          SEOUL_OPEN_DATA_API_KEY: ${{ secrets.SEOUL_OPEN_DATA_API_KEY }}
+        run: node ./scripts/update-seoul-reservations.mjs --strict
+
+      - name: Verify generated files
+        shell: bash
+        run: |
+          test -s store/seoulCampingFacilities.ts
+          test -s store/seoulCampingSelectors.ts
+          test -s store/seoulSportsFacilities.ts
+          test -s store/seoulSportsSelectors.ts
+          test -s store/seoulSpaceFacilities.ts
+          test -s store/seoulSpaceSelectors.ts
+          test -s store/seoulEducationPrograms.ts
+          test -s store/seoulEducationSelectors.ts
+
+          git diff --check
+
+      - name: Commit updated data
+        shell: bash
+        run: |
+          git add \
+            store/seoulCampingFacilities.ts \
+            store/seoulCampingSelectors.ts \
+            store/seoulSportsFacilities.ts \
+            store/seoulSportsSelectors.ts \
+            store/seoulSpaceFacilities.ts \
+            store/seoulSpaceSelectors.ts \
+            store/seoulEducationPrograms.ts \
+            store/seoulEducationSelectors.ts
+
+          if git diff --cached --quiet; then
+            echo "서울 예약정보 변경사항이 없습니다."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git commit -m "chore: update Seoul reservation data"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

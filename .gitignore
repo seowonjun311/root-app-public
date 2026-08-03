@@ -56,3 +56,7 @@ backup-*/
 # editor and AI local settings
 .vscode/
 .claude/
+
+# Local generated data and backup files
+/tmp/
+*.backup-before-*

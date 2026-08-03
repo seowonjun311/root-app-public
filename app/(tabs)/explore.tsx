@@ -4,6 +4,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  Linking,
   Modal,
   Pressable,
   ScrollView,
@@ -16,7 +17,6 @@ import Svg, {
   Circle,
   G,
   Polygon,
-  Path as SvgPath,
   Text as SvgText,
 } from 'react-native-svg';
 
@@ -53,6 +53,12 @@ import {
 } from '../../store/festivalCatalog';
 import { useRootTheme } from '../../store/rootTheme';
 import {
+  getCampingStatusLabel,
+  getInsideSeoulCampingSummaries,
+  getSeoulOperatedOutsideCampingSummaries,
+  type SeoulCampingFacilitySummary,
+} from '../../store/seoulCampingSelectors';
+import {
   fetchSeoulCultureEvents,
   formatSeoulCultureDateLabel,
   getSeoulCultureReservationLabel,
@@ -62,10 +68,111 @@ import {
   type SeoulCultureContentType,
   type SeoulCultureEvent,
 } from '../../store/seoulCultureEvents';
+import {
+  getInsideSeoulSportsSummaries,
+  getSeoulOperatedOutsideSportsSummaries,
+  type SeoulSportsFacilitySummary,
+} from '../../store/seoulSportsSelectors';
+import {
+  getSpaceFacilitySummaries,
+  getSpaceKindLabel,
+  type SeoulSpaceFacilitySummary,
+} from '../../store/seoulSpaceSelectors';
+import type {
+  SeoulEducationAudience,
+  SeoulEducationCategory,
+} from '../../store/seoulEducationPrograms';
+import {
+  getEducationAudienceLabel,
+  getEducationCategoryLabel,
+  getInsideSeoulEducationSummaries,
+  getSeoulOperatedOutsideEducationSummaries,
+  type RootEducationStatus,
+  type SeoulEducationPlaceSummary,
+} from '../../store/seoulEducationSelectors';
 
 
 const EXPLORATION_BADGE_NOTICE_KEY =
   'root_exploration_badge_notice_v1';
+
+type SeoulFacilityCategoryFilter =
+  | 'all'
+  | 'camping'
+  | 'picnic'
+  | 'sports'
+  | 'space'
+  | 'education';
+
+const SEOUL_FACILITY_CATEGORY_OPTIONS: readonly {
+  id: SeoulFacilityCategoryFilter;
+  label: string;
+}[] = [
+  { id: 'all', label: '전체' },
+  { id: 'camping', label: '캠핑' },
+  { id: 'picnic', label: '피크닉' },
+  { id: 'sports', label: '체육시설' },
+  { id: 'space', label: '공간대관' },
+  { id: 'education', label: '교육·체험' },
+];
+
+const SEOUL_SPORTS_PAGE_SIZE = 30;
+const SEOUL_SPACE_PAGE_SIZE = 30;
+const SEOUL_EDUCATION_PAGE_SIZE = 30;
+
+type SeoulEducationCategoryFilter =
+  | 'all'
+  | SeoulEducationCategory;
+
+type SeoulEducationAudienceFilter =
+  | 'any'
+  | SeoulEducationAudience;
+
+type SeoulEducationStatusFilter =
+  | 'all'
+  | Extract<
+      RootEducationStatus,
+      'open' | 'scheduled'
+    >;
+
+const SEOUL_EDUCATION_CATEGORY_OPTIONS: readonly {
+  id: SeoulEducationCategoryFilter;
+  label: string;
+}[] = [
+  { id: 'all', label: '전체' },
+  { id: 'craftMaking', label: '공예' },
+  { id: 'natureEnvironment', label: '환경' },
+  { id: 'historyCulture', label: '역사' },
+  { id: 'urbanAgriculture', label: '도시농업' },
+  { id: 'scienceDigital', label: '과학' },
+  { id: 'cookingFood', label: '요리' },
+  { id: 'careerYouth', label: '진로' },
+  { id: 'healthSportsSafety', label: '건강' },
+  { id: 'liberalArtsLanguage', label: '교양' },
+  { id: 'other', label: '기타' },
+];
+
+const SEOUL_EDUCATION_AUDIENCE_OPTIONS: readonly {
+  id: SeoulEducationAudienceFilter;
+  label: string;
+}[] = [
+  { id: 'any', label: '전체' },
+  { id: 'children', label: '어린이' },
+  { id: 'teen', label: '청소년' },
+  { id: 'youth', label: '청년' },
+  { id: 'adult', label: '성인' },
+  { id: 'family', label: '가족' },
+  { id: 'senior', label: '어르신' },
+  { id: 'all', label: '누구나' },
+];
+
+const SEOUL_EDUCATION_STATUS_OPTIONS: readonly {
+  id: SeoulEducationStatusFilter;
+  label: string;
+}[] = [
+  { id: 'all', label: '전체 상태' },
+  { id: 'open', label: '접수 중' },
+  { id: 'scheduled', label: '접수 예정' },
+];
 
 type NationalFestivalRegionFilter =
   | 'all'
@@ -123,7 +230,6 @@ const SEOUL_CULTURE_PERIOD_FILTERS: readonly {
   { id: 'today', label: '오늘' },
   { id: 'thisWeek', label: '이번 주' },
   { id: 'thisMonth', label: '이번 달' },
-  { id: 'nextMonth', label: '다음 달' },
 ];
 
 const SEOUL_CULTURE_TYPE_FILTERS: readonly {
@@ -132,7 +238,7 @@ const SEOUL_CULTURE_TYPE_FILTERS: readonly {
 }[] = [
   { id: 'all', label: '전체' },
   { id: 'performance', label: '공연' },
-  { id: 'exhibition', label: '규모 전시' },
+  { id: 'exhibition', label: '전시' },
   { id: 'festival', label: '축제' },
   { id: 'experience', label: '교육·체험' },
   { id: 'other', label: '기타' },
@@ -697,6 +803,429 @@ function formatSeoulCultureFetchedAt(
   ).padStart(2, '0')} 갱신`;
 }
 
+function formatCampingShortDate(
+  value: string | null | undefined
+) {
+  const match = String(value ?? '').match(
+    /^(\d{4})-(\d{2})-(\d{2})/
+  );
+
+  if (!match) {
+    return null;
+  }
+
+  return `${Number(match[2])}.${Number(
+    match[3]
+  )}`;
+}
+
+function getCampingReceptionLabel(
+  summary: SeoulCampingFacilitySummary
+) {
+  const reservation =
+    summary.primaryReservation;
+
+  if (!reservation) {
+    return '예약 일정 확인';
+  }
+
+  const start =
+    formatCampingShortDate(
+      reservation.receptionStartAt
+    );
+
+  const end =
+    formatCampingShortDate(
+      reservation.receptionEndAt
+    );
+
+  if (start && end) {
+    return `접수 ${start}~${end}`;
+  }
+
+  if (end) {
+    return `접수 마감 ${end}`;
+  }
+
+  return '예약 일정 확인';
+}
+
+function openCampingReservation(
+  url: string | null | undefined
+) {
+  const normalizedUrl =
+    String(url ?? '').trim();
+
+  if (!normalizedUrl) {
+    return;
+  }
+
+  void Linking.openURL(
+    normalizedUrl
+  ).catch((error) => {
+    console.log(
+      'SEOUL CAMPING URL OPEN ERROR',
+      error
+    );
+  });
+}
+
+function getSportsFacilityIcon(
+  category: string
+) {
+  const normalized =
+    String(category ?? '').trim();
+
+  if (normalized.includes('테니스')) {
+    return '🎾';
+  }
+
+  if (
+    normalized.includes('축구') ||
+    normalized.includes('풋살')
+  ) {
+    return '⚽';
+  }
+
+  if (normalized.includes('야구')) {
+    return '⚾';
+  }
+
+  if (normalized.includes('농구')) {
+    return '🏀';
+  }
+
+  if (normalized.includes('배구')) {
+    return '🏐';
+  }
+
+  if (
+    normalized.includes('배드민턴') ||
+    normalized.includes('피클볼')
+  ) {
+    return '🏸';
+  }
+
+  if (normalized.includes('탁구')) {
+    return '🏓';
+  }
+
+  if (normalized.includes('수영')) {
+    return '🏊';
+  }
+
+  if (normalized.includes('골프')) {
+    return '⛳';
+  }
+
+  return '🏟️';
+}
+
+function getSportsReceptionLabel(
+  summary: SeoulSportsFacilitySummary
+) {
+  const reservation =
+    summary.primaryReservation;
+
+  if (!reservation) {
+    return '예약 일정 확인';
+  }
+
+  const start =
+    formatCampingShortDate(
+      reservation.receptionStartAt
+    );
+
+  const end =
+    formatCampingShortDate(
+      reservation.receptionEndAt
+    );
+
+  if (start && end) {
+    return `접수 ${start}~${end}`;
+  }
+
+  if (start) {
+    return `접수 ${start}부터`;
+  }
+
+  if (end) {
+    return `접수 ${end}까지`;
+  }
+
+  return '예약 일정 확인';
+}
+
+function getSportsReservationUrl(
+  summary: SeoulSportsFacilitySummary
+) {
+  return (
+    summary.primaryReservation
+      ?.serviceUrl ??
+    summary.facility.officialUrl ??
+    ''
+  );
+}
+
+
+type SeoulFacilityDetailKind =
+  | 'camping'
+  | 'sports'
+  | 'space'
+  | 'education';
+
+function openSeoulFacilityDetail(
+  kind: SeoulFacilityDetailKind,
+  facilityId: string
+) {
+  const normalizedFacilityId =
+    String(facilityId ?? '').trim();
+
+  if (!normalizedFacilityId) {
+    return;
+  }
+
+  router.push({
+    pathname:
+      '/explore/facility/[facilityId]',
+    params: {
+      facilityId:
+        normalizedFacilityId,
+      kind,
+    },
+  } as any);
+}
+
+function getSpaceFacilityIcon(
+  kind: string
+) {
+  if (kind === 'meetingRoom') {
+    return '🗣️';
+  }
+
+  if (kind === 'lectureRoom') {
+    return '🧑‍🏫';
+  }
+
+  if (kind === 'hall') {
+    return '🏛️';
+  }
+
+  if (kind === 'multipurpose') {
+    return '🧩';
+  }
+
+  if (kind === 'performance') {
+    return '🎭';
+  }
+
+  if (kind === 'exhibition') {
+    return '🖼️';
+  }
+
+  if (kind === 'studio') {
+    return '🎙️';
+  }
+
+  if (kind === 'plaza') {
+    return '🏙️';
+  }
+
+  if (kind === 'community') {
+    return '🤝';
+  }
+
+  return '🏢';
+}
+
+function getSpaceReceptionLabel(
+  summary: SeoulSpaceFacilitySummary
+) {
+  const reservation =
+    summary.primaryReservation;
+
+  if (!reservation) {
+    return '예약 일정 확인';
+  }
+
+  const start =
+    formatCampingShortDate(
+      reservation.receptionStartAt
+    );
+
+  const end =
+    formatCampingShortDate(
+      reservation.receptionEndAt
+    );
+
+  if (start && end) {
+    return `접수 ${start}~${end}`;
+  }
+
+  if (start) {
+    return `접수 ${start}부터`;
+  }
+
+  if (end) {
+    return `접수 ${end}까지`;
+  }
+
+  return '예약 일정 확인';
+}
+
+function getSpaceReservationUrl(
+  summary: SeoulSpaceFacilitySummary
+) {
+  return (
+    summary.primaryReservation
+      ?.serviceUrl ??
+    summary.facility.officialUrl ??
+    ''
+  );
+}
+
+
+function getEducationFacilityIcon(
+  category: SeoulEducationCategory
+) {
+  if (category === 'craftMaking') {
+    return '🎨';
+  }
+
+  if (category === 'cookingFood') {
+    return '🍳';
+  }
+
+  if (
+    category === 'natureEnvironment' ||
+    category === 'urbanAgriculture'
+  ) {
+    return '🌿';
+  }
+
+  if (category === 'historyCulture') {
+    return '🏛️';
+  }
+
+  if (category === 'scienceDigital') {
+    return '🔬';
+  }
+
+  if (category === 'healthSportsSafety') {
+    return '🧘';
+  }
+
+  if (category === 'careerYouth') {
+    return '💼';
+  }
+
+  if (category === 'liberalArtsLanguage') {
+    return '📚';
+  }
+
+  return '🧑‍🏫';
+}
+
+function getEducationReceptionLabel(
+  summary: SeoulEducationPlaceSummary
+) {
+  const program = summary.primaryProgram;
+
+  if (!program) {
+    return '접수 일정 확인';
+  }
+
+  const start = formatCampingShortDate(
+    program.receptionStartAt
+  );
+  const end = formatCampingShortDate(
+    program.receptionEndAt
+  );
+
+  if (start && end) {
+    return `접수 ${start}~${end}`;
+  }
+
+  if (start) {
+    return `접수 ${start}부터`;
+  }
+
+  if (end) {
+    return `접수 ${end}까지`;
+  }
+
+  return '접수 일정 확인';
+}
+
+function getEducationReservationUrl(
+  summary: SeoulEducationPlaceSummary
+) {
+  return (
+    summary.primaryProgram?.serviceUrl ??
+    summary.place.officialUrl ??
+    ''
+  );
+}
+
+function getEducationAudienceSummary(
+  summary: SeoulEducationPlaceSummary
+) {
+  const audiences = [
+    ...new Set(
+      summary.place.programs.flatMap(
+        (program) => program.audienceTags
+      )
+    ),
+  ].filter(
+    (audience) => audience !== 'unspecified'
+  );
+
+  if (audiences.length === 0) {
+    return '대상 확인';
+  }
+
+  return audiences
+    .slice(0, 3)
+    .map(getEducationAudienceLabel)
+    .join(' · ');
+}
+
+function doesEducationSummaryMatchFilters(
+  summary: SeoulEducationPlaceSummary,
+  categoryFilter: SeoulEducationCategoryFilter,
+  audienceFilter: SeoulEducationAudienceFilter,
+  statusFilter: SeoulEducationStatusFilter
+) {
+  if (
+    categoryFilter !== 'all' &&
+    !summary.place.categoryNames.includes(
+      categoryFilter
+    )
+  ) {
+    return false;
+  }
+
+  if (
+    audienceFilter !== 'any' &&
+    !summary.place.programs.some((program) =>
+      program.audienceTags.includes(
+        audienceFilter
+      )
+    )
+  ) {
+    return false;
+  }
+
+  if (
+    statusFilter !== 'all' &&
+    summary.status !== statusFilter
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
 type ExplorationMapLevel =
   | 'korea'
   | 'seoul'
@@ -716,6 +1245,29 @@ type ExplorationMapLevel =
   | 'daegu'
   | 'sejong'
   | 'ulsan';
+
+  type RegionSection =
+  | 'places'
+  | 'events'
+  | 'facilities';
+
+const REGION_SECTION_OPTIONS: readonly {
+  id: RegionSection;
+  label: string;
+}[] = [
+  {
+    id: 'places',
+    label: '탐험장소',
+  },
+  {
+    id: 'events',
+    label: '축제·행사',
+  },
+  {
+    id: 'facilities',
+    label: '예약·시설',
+  },
+];
 
 type KoreaRegionMarker = {
   id: string;
@@ -753,10 +1305,216 @@ const KOREA_REGION_MARKERS: KoreaRegionMarker[] = [
   { id: 'jeju', name: '제주특별자치도', shortLabel: '제주', icon: '🍊', x: 126, y: 407, available: true },
 ];
 
-const KOREA_OPEN_REGION_COUNT =
-  KOREA_REGION_MARKERS.filter(
-    (region) => region.available
-  ).length;
+type KoreaRegionShape = {
+  id: Exclude<
+    ExplorationMapLevel,
+    'korea'
+  >;
+  shortLabel: string;
+  points: string;
+  labelX: number;
+  labelY: number;
+  fill: string;
+  labelSize?: number;
+  touchRadius?: number;
+};
+
+/*
+ * 대한민국 17개 광역지역의 단순화 SVG 지도입니다.
+ *
+ * 큰 도·특별자치도는 Polygon 전체를 누르고,
+ * 서울·세종·대전·광주·대구·울산·부산처럼 작은 지역은
+ * 별도의 투명 터치 영역을 함께 사용합니다.
+ *
+ * 배열 뒤쪽에 있는 광역시가 앞쪽의 도 위에 표시되도록
+ * 도 → 광역시 순서로 배치했습니다.
+ */
+const KOREA_REGION_SHAPES: KoreaRegionShape[] = [
+  {
+    id: 'gyeonggi',
+    shortLabel: '경기',
+    points:
+      '95,45 145,28 185,45 202,78 193,115 175,145 140,150 112,128 90,95',
+    labelX: 154,
+    labelY: 68,
+    fill: '#F6D463',
+    labelSize: 12,
+  },
+  {
+    id: 'gangwon',
+    shortLabel: '강원',
+    points:
+      '175,35 230,20 286,42 310,83 302,128 270,158 225,150 193,115 202,78',
+    labelX: 250,
+    labelY: 82,
+    fill: '#A9D489',
+    labelSize: 12,
+  },
+  {
+    id: 'chungnam',
+    shortLabel: '충남',
+    points:
+      '67,125 112,128 140,150 158,188 142,224 97,232 58,205 48,165',
+    labelX: 95,
+    labelY: 181,
+    fill: '#F2A9B5',
+    labelSize: 11,
+  },
+  {
+    id: 'chungbuk',
+    shortLabel: '충북',
+    points:
+      '140,150 175,145 225,150 235,188 213,225 175,235 142,224 158,188',
+    labelX: 190,
+    labelY: 184,
+    fill: '#74C7CC',
+    labelSize: 11,
+  },
+  {
+    id: 'gyeongbuk',
+    shortLabel: '경북',
+    points:
+      '225,150 270,158 302,128 315,175 305,225 280,270 238,268 213,225 235,188',
+    labelX: 270,
+    labelY: 196,
+    fill: '#F4B16A',
+    labelSize: 11,
+  },
+  {
+    id: 'jeonbuk',
+    shortLabel: '전북',
+    points:
+      '97,232 142,224 175,235 188,274 168,305 118,307 82,282 70,250',
+    labelX: 130,
+    labelY: 267,
+    fill: '#B5D47A',
+    labelSize: 11,
+  },
+  {
+    id: 'jeonnam',
+    shortLabel: '전남',
+    points:
+      '58,275 82,282 118,307 168,305 182,348 158,385 110,400 65,372 40,330',
+    labelX: 108,
+    labelY: 350,
+    fill: '#F3CF4A',
+    labelSize: 11,
+  },
+  {
+    id: 'gyeongnam',
+    shortLabel: '경남',
+    points:
+      '168,305 188,274 238,268 280,270 292,315 270,355 230,375 182,348',
+    labelX: 228,
+    labelY: 319,
+    fill: '#B9A0D0',
+    labelSize: 11,
+  },
+  {
+    id: 'jeju',
+    shortLabel: '제주',
+    points:
+      '110,445 145,435 190,442 205,455 178,470 130,468 105,458',
+    labelX: 155,
+    labelY: 457,
+    fill: '#89C878',
+    labelSize: 10,
+  },
+
+  /*
+   * 아래부터는 도 내부 또는 가장자리에 표시되는 광역시입니다.
+   * 뒤에 그려져서 도 위에 나타납니다.
+   */
+  {
+    id: 'incheon',
+    shortLabel: '인천',
+    points:
+      '88,89 104,80 116,91 111,111 94,116 83,103',
+    labelX: 99,
+    labelY: 101,
+    fill: '#78B7E3',
+    labelSize: 8,
+    touchRadius: 12,
+  },
+  {
+    id: 'seoul',
+    shortLabel: '서울',
+    points:
+      '116,91 131,83 143,95 137,110 120,111',
+    labelX: 129,
+    labelY: 100,
+    fill: '#B56CC7',
+    labelSize: 8,
+    touchRadius: 11,
+  },
+  {
+    id: 'sejong',
+    shortLabel: '세종',
+    points:
+      '132,165 145,159 154,171 149,184 135,181',
+    labelX: 143,
+    labelY: 174,
+    fill: '#F28A1B',
+    labelSize: 8,
+    touchRadius: 11,
+  },
+  {
+    id: 'daejeon',
+    shortLabel: '대전',
+    points:
+      '139,194 153,186 164,199 159,214 144,214',
+    labelX: 152,
+    labelY: 203,
+    fill: '#4C85D9',
+    labelSize: 8,
+    touchRadius: 11,
+  },
+  {
+    id: 'gwangju',
+    shortLabel: '광주',
+    points:
+      '105,313 119,307 130,319 125,334 109,334 100,322',
+    labelX: 115,
+    labelY: 323,
+    fill: '#5DAA34',
+    labelSize: 8,
+    touchRadius: 11,
+  },
+  {
+    id: 'daegu',
+    shortLabel: '대구',
+    points:
+      '242,230 259,222 272,236 266,251 248,252 238,242',
+    labelX: 255,
+    labelY: 240,
+    fill: '#EF6458',
+    labelSize: 8,
+    touchRadius: 12,
+  },
+  {
+    id: 'ulsan',
+    shortLabel: '울산',
+    points:
+      '278,278 292,271 304,285 299,302 285,303 276,291',
+    labelX: 290,
+    labelY: 290,
+    fill: '#43B7BD',
+    labelSize: 8,
+    touchRadius: 11,
+  },
+  {
+    id: 'busan',
+    shortLabel: '부산',
+    points:
+      '250,338 268,333 280,346 270,361 252,360 243,349',
+    labelX: 261,
+    labelY: 349,
+    fill: '#2F64B3',
+    labelSize: 8,
+    touchRadius: 11,
+  },
+];
+
 
 type SeoulDistrictShape = {
   id: string;
@@ -794,6 +1552,25 @@ const SEOUL_DISTRICT_SHAPES: SeoulDistrictShape[] = [
   { id: 'gangseo', name: '강서구', points: '12,150 52,125 70,166 60,181 37,213 13,229 2,191', labelX: 31, labelY: 181 },
 
 ];
+
+
+function getSeoulDistrictIdByName(
+  districtName: string | null
+) {
+  const normalizedName =
+    String(districtName ?? '').trim();
+
+  if (!normalizedName) {
+    return null;
+  }
+
+  return (
+    SEOUL_DISTRICT_SHAPES.find(
+      (district) =>
+        district.name === normalizedName
+    )?.id ?? null
+  );
+}
 
 
 type BusanDistrictShape = {
@@ -2481,17 +3258,1449 @@ const EMPTY_REWARDS: ExplorationRewardData = {
   unlockedThemeBadgeIds: [],
 };
 
+
+type SeoulCultureListPanelProps = {
+  events: SeoulCultureEvent[];
+  loading: boolean;
+  error: string | null;
+  periodFilter: SeoulCulturePeriodFilter;
+  setPeriodFilter: (
+    value: SeoulCulturePeriodFilter
+  ) => void;
+  typeFilter: SeoulCultureTypeFilter;
+  setTypeFilter: (
+    value: SeoulCultureTypeFilter
+  ) => void;
+  conditionFilter: SeoulCultureConditionFilter;
+  setConditionFilter: (
+    value: SeoulCultureConditionFilter
+  ) => void;
+  audienceFilter: NationalFestivalAudienceFilter;
+  setAudienceFilter: (
+    value: NationalFestivalAudienceFilter
+  ) => void;
+};
+
+const SEOUL_CULTURE_LIST_PAGE_SIZE = 40;
+
+function getSeoulCultureListStatusLabel(
+  event: SeoulCultureEvent
+) {
+  const now = new Date();
+  const start = getLocalDateFromIso(
+    event.startDate
+  );
+  const end =
+    getLocalDateFromIso(event.endDate) ??
+    start;
+
+  if (!start || !end) {
+    return '일정 확인';
+  }
+
+  if (
+    now.getTime() <
+    getStartOfDay(start).getTime()
+  ) {
+    return '예정';
+  }
+
+  if (
+    now.getTime() <=
+    getEndOfDay(end).getTime()
+  ) {
+    return '진행 중';
+  }
+
+  return '종료';
+}
+
+type CompactFilterOption<T extends string> = {
+  id: T;
+  label: string;
+};
+
+type SeoulCompactFilterLineProps<T extends string> = {
+  label: string;
+  options: readonly CompactFilterOption<T>[];
+  selectedId: T;
+  onSelect: (value: T) => void;
+};
+
+function SeoulCompactFilterLine<T extends string>({
+  label,
+  options,
+  selectedId,
+  onSelect,
+}: SeoulCompactFilterLineProps<T>) {
+  const {
+    theme,
+    isCityBlack,
+  } = useRootTheme();
+
+  return (
+    <View
+      style={
+        seoulCultureListStyles.filterLine
+      }
+    >
+      <Text
+        style={[
+          seoulCultureListStyles.filterLineLabel,
+          {
+            color: theme.text,
+          },
+        ]}
+      >
+        {label}
+      </Text>
+
+      <ScrollView
+        horizontal
+        style={
+          seoulCultureListStyles.filterScroll
+        }
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={
+          seoulCultureListStyles.filterButtonRow
+        }
+      >
+        {options.map((option) => {
+          const selected =
+            selectedId === option.id;
+
+          return (
+            <Pressable
+              key={option.id}
+              onPress={() =>
+                onSelect(option.id)
+              }
+              style={({ pressed }) => [
+                seoulCultureListStyles.compactFilterButton,
+                {
+                  backgroundColor: selected
+                    ? theme.card
+                    : theme.background,
+                  borderColor: selected
+                    ? theme.strongLine ??
+                      theme.line
+                    : theme.line,
+                  borderRadius: isCityBlack
+                    ? 2
+                    : 7,
+                  opacity: pressed
+                    ? 0.58
+                    : 1,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  seoulCultureListStyles.compactFilterText,
+                  {
+                    color: selected
+                      ? theme.text
+                      : theme.subText,
+                  },
+                ]}
+              >
+                {option.label}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+    </View>
+  );
+}
+
+function SeoulCultureListPanel({
+  events,
+  loading,
+  error,
+  periodFilter,
+  setPeriodFilter,
+  typeFilter,
+  setTypeFilter,
+  conditionFilter,
+  setConditionFilter,
+  audienceFilter,
+  setAudienceFilter,
+}: SeoulCultureListPanelProps) {
+  const {
+    theme,
+    isCityBlack,
+  } = useRootTheme();
+
+  const [displayLimit, setDisplayLimit] =
+    useState(
+      SEOUL_CULTURE_LIST_PAGE_SIZE
+    );
+
+  useEffect(() => {
+    setDisplayLimit(
+      SEOUL_CULTURE_LIST_PAGE_SIZE
+    );
+  }, [
+    audienceFilter,
+    conditionFilter,
+    events.length,
+    periodFilter,
+    typeFilter,
+  ]);
+
+  const visibleEvents = useMemo(
+    () =>
+      events.slice(0, displayLimit),
+    [displayLimit, events]
+  );
+
+  const openEvent = useCallback(
+    (eventId: string) => {
+      router.push({
+        pathname:
+          '/explore/culture/[eventId]',
+        params: {
+          eventId,
+        },
+      } as any);
+    },
+    []
+  );
+
+  return (
+    <View
+      style={
+        seoulCultureListStyles.container
+      }
+    >
+      <View
+        style={[
+          seoulCultureListStyles.compactFilterCard,
+          {
+            backgroundColor: theme.card,
+            borderColor: theme.line,
+            borderRadius: isCityBlack
+              ? 3
+              : 12,
+          },
+        ]}
+      >
+        <SeoulCompactFilterLine
+          label="기간"
+          options={
+            SEOUL_CULTURE_PERIOD_FILTERS
+          }
+          selectedId={periodFilter}
+          onSelect={setPeriodFilter}
+        />
+
+        <SeoulCompactFilterLine
+          label="종류"
+          options={
+            SEOUL_CULTURE_TYPE_FILTERS
+          }
+          selectedId={typeFilter}
+          onSelect={setTypeFilter}
+        />
+
+        <SeoulCompactFilterLine
+          label="조건"
+          options={
+            SEOUL_CULTURE_CONDITION_FILTERS
+          }
+          selectedId={conditionFilter}
+          onSelect={setConditionFilter}
+        />
+
+        <SeoulCompactFilterLine
+          label="대상"
+          options={
+            NATIONAL_FESTIVAL_AUDIENCE_FILTERS
+          }
+          selectedId={audienceFilter}
+          onSelect={setAudienceFilter}
+        />
+      </View>
+
+      <View
+        style={
+          seoulCultureListStyles.listHeader
+        }
+      >
+        <View
+          style={{
+            flex: 1,
+            minWidth: 0,
+          }}
+        >
+          <Text
+            style={[
+              seoulCultureListStyles.listTitle,
+              {
+                color: theme.text,
+              },
+            ]}
+          >
+            서울 축제·행사 목록
+          </Text>
+
+          <Text
+            style={[
+              seoulCultureListStyles.listSubtitle,
+              {
+                color: theme.subText,
+              },
+            ]}
+          >
+            상세보기를 누르면 위치와 예약
+            정보를 확인할 수 있어요.
+          </Text>
+        </View>
+
+        <Text
+          style={[
+            seoulCultureListStyles.listCount,
+            {
+              color: theme.text,
+            },
+          ]}
+        >
+          {events.length}개
+        </Text>
+      </View>
+
+      {loading && events.length === 0 ? (
+        <View
+          style={
+            seoulCultureListStyles.loadingBox
+          }
+        >
+          <ActivityIndicator
+            color={theme.text}
+          />
+
+          <Text
+            style={[
+              seoulCultureListStyles.loadingText,
+              {
+                color: theme.subText,
+              },
+            ]}
+          >
+            서울 행사를 불러오는 중이에요.
+          </Text>
+        </View>
+      ) : error && events.length === 0 ? (
+        <View
+          style={[
+            seoulCultureListStyles.emptyCard,
+            {
+              backgroundColor: theme.card,
+              borderColor: theme.line,
+              borderRadius: isCityBlack
+                ? 3
+                : 14,
+            },
+          ]}
+        >
+          <Text
+            style={[
+              seoulCultureListStyles.emptyTitle,
+              {
+                color: theme.text,
+              },
+            ]}
+          >
+            문화행사를 불러오지 못했어요.
+          </Text>
+
+          <Text
+            style={[
+              seoulCultureListStyles.emptyText,
+              {
+                color: theme.subText,
+              },
+            ]}
+          >
+            {error}
+          </Text>
+        </View>
+      ) : events.length === 0 ? (
+        <View
+          style={[
+            seoulCultureListStyles.emptyCard,
+            {
+              backgroundColor: theme.card,
+              borderColor: theme.line,
+              borderRadius: isCityBlack
+                ? 3
+                : 14,
+            },
+          ]}
+        >
+          <Text
+            style={[
+              seoulCultureListStyles.emptyTitle,
+              {
+                color: theme.text,
+              },
+            ]}
+          >
+            조건에 맞는 행사가 없어요.
+          </Text>
+
+          <Text
+            style={[
+              seoulCultureListStyles.emptyText,
+              {
+                color: theme.subText,
+              },
+            ]}
+          >
+            기간·종류·조건·대상을 바꿔
+            보세요.
+          </Text>
+        </View>
+      ) : (
+        <View
+          style={
+            seoulCultureListStyles.eventList
+          }
+        >
+          {visibleEvents.map((event) => (
+            <Pressable
+              key={event.id}
+              onPress={() =>
+                openEvent(event.id)
+              }
+              style={({ pressed }) => [
+                seoulCultureListStyles.eventCard,
+                {
+                  backgroundColor: theme.card,
+                  borderColor: theme.line,
+                  borderRadius: isCityBlack
+                    ? 3
+                    : 14,
+                  opacity: pressed
+                    ? 0.65
+                    : 1,
+                },
+              ]}
+            >
+              <View
+                style={[
+                  seoulCultureListStyles.eventIconBox,
+                  {
+                    backgroundColor:
+                      theme.background,
+                    borderRadius: isCityBlack
+                      ? 2
+                      : 10,
+                  },
+                ]}
+              >
+                <Text
+                  style={
+                    seoulCultureListStyles.eventIcon
+                  }
+                >
+                  {getSeoulCultureTypeIcon(
+                    event.contentType
+                  )}
+                </Text>
+              </View>
+
+              <View
+                style={
+                  seoulCultureListStyles.eventContent
+                }
+              >
+                <View
+                  style={
+                    seoulCultureListStyles.eventTitleRow
+                  }
+                >
+                  <Text
+                    numberOfLines={2}
+                    style={[
+                      seoulCultureListStyles.eventName,
+                      {
+                        color: theme.text,
+                      },
+                    ]}
+                  >
+                    {event.title}
+                  </Text>
+
+                  <Text
+                    style={[
+                      seoulCultureListStyles.eventStatus,
+                      {
+                        color: theme.subText,
+                      },
+                    ]}
+                  >
+                    {getSeoulCultureListStatusLabel(
+                      event
+                    )}
+                  </Text>
+                </View>
+
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    seoulCultureListStyles.eventMeta,
+                    {
+                      color: theme.subText,
+                    },
+                  ]}
+                >
+                  {getSeoulCultureTypeLabel(
+                    event.contentType
+                  )}
+                  {' · '}
+                  {event.districtName}
+                  {' · '}
+                  {event.rawCategory}
+                </Text>
+
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    seoulCultureListStyles.eventMeta,
+                    {
+                      color: theme.subText,
+                    },
+                  ]}
+                >
+                  {formatSeoulCultureDateLabel(
+                    event
+                  )}
+                  {event.eventTime
+                    ? ` · ${event.eventTime}`
+                    : ''}
+                </Text>
+
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    seoulCultureListStyles.eventMeta,
+                    {
+                      color: theme.subText,
+                    },
+                  ]}
+                >
+                  {event.isFree === true
+                    ? '무료'
+                    : event.isFree === false
+                      ? '유료'
+                      : '요금 확인'}
+                  {' · '}
+                  {getSeoulCultureReservationLabel(
+                    event.reservationStatus
+                  )}
+                  {' · '}
+                  {getSeoulCultureVenueTypeLabel(
+                    event.venueType
+                  )}
+                </Text>
+
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    seoulCultureListStyles.eventPlace,
+                    {
+                      color: theme.text,
+                    },
+                  ]}
+                >
+                  {event.place}
+                </Text>
+              </View>
+
+              <Ionicons
+                name="chevron-forward"
+                size={17}
+                color={theme.subText}
+              />
+            </Pressable>
+          ))}
+        </View>
+      )}
+
+      {displayLimit < events.length ? (
+        <Pressable
+          onPress={() =>
+            setDisplayLimit(
+              (current) =>
+                current +
+                SEOUL_CULTURE_LIST_PAGE_SIZE
+            )
+          }
+          style={({ pressed }) => [
+            seoulCultureListStyles.moreButton,
+            {
+              borderColor: theme.line,
+              borderRadius: isCityBlack
+                ? 2
+                : 10,
+              opacity: pressed
+                ? 0.6
+                : 1,
+            },
+          ]}
+        >
+          <Text
+            style={[
+              seoulCultureListStyles.moreText,
+              {
+                color: theme.text,
+              },
+            ]}
+          >
+            행사 더 보기
+          </Text>
+        </Pressable>
+      ) : null}
+    </View>
+  );
+}
+
+const SEOUL_TOP_PLACE_RANKING = [
+  ['경복궁'],
+  ['N서울타워', '남산서울타워', '서울N타워'],
+  ['롯데월드타워', '서울스카이'],
+  ['창덕궁'],
+  ['북촌한옥마을'],
+  ['광화문광장'],
+  ['청와대'],
+  ['남산공원'],
+  ['명동거리', '명동'],
+  ['동대문디자인플라자', 'DDP'],
+  ['여의도한강공원'],
+  ['서울숲'],
+  ['석촌호수'],
+  ['롯데월드 어드벤처'],
+  ['코엑스'],
+  ['봉은사'],
+  ['홍대거리', '홍대'],
+  ['광장시장'],
+  ['인사동'],
+  ['국립중앙박물관'],
+] as const;
+
+function normalizeSeoulPlaceName(
+  value: unknown
+) {
+  return String(value ?? '')
+    .replace(/\s+/g, '')
+    .replace(/[·ㆍ・]/g, '')
+    .toLowerCase();
+}
+
+function buildSeoulTopPlaces(
+  places: readonly any[]
+) {
+  const selectedIds = new Set<string>();
+  const result: any[] = [];
+
+  SEOUL_TOP_PLACE_RANKING.forEach(
+    (aliases) => {
+      const place = places.find(
+        (candidate) => {
+          const candidateId = String(
+            candidate?.id ?? ''
+          );
+
+          if (
+            !candidateId ||
+            selectedIds.has(candidateId)
+          ) {
+            return false;
+          }
+
+          const candidateName =
+            normalizeSeoulPlaceName(
+              candidate?.name
+            );
+
+          return aliases.some(
+            (alias) =>
+              candidateName.includes(
+                normalizeSeoulPlaceName(
+                  alias
+                )
+              )
+          );
+        }
+      );
+
+      if (place) {
+        selectedIds.add(
+          String(place.id)
+        );
+        result.push(place);
+      }
+    }
+  );
+
+  const fallbackPlaces = [...places]
+    .filter(
+      (place) =>
+        !selectedIds.has(
+          String(place?.id ?? '')
+        )
+    )
+    .sort((first, second) => {
+      const pointDifference =
+        Number(
+          second?.rewardPoints ?? 0
+        ) -
+        Number(
+          first?.rewardPoints ?? 0
+        );
+
+      if (pointDifference !== 0) {
+        return pointDifference;
+      }
+
+      return String(
+        first?.name ?? ''
+      ).localeCompare(
+        String(second?.name ?? ''),
+        'ko'
+      );
+    });
+
+  return [
+    ...result,
+    ...fallbackPlaces,
+  ].slice(0, 20);
+}
+
+type SeoulTopPlacesPanelProps = {
+  places: readonly any[];
+  completedPlaceIds: readonly string[];
+};
+
+function SeoulTopPlacesPanel({
+  places,
+  completedPlaceIds,
+}: SeoulTopPlacesPanelProps) {
+  const {
+    theme,
+    isCityBlack,
+  } = useRootTheme();
+
+  const completedCount =
+    places.filter((place) =>
+      completedPlaceIds.includes(
+        String(place?.id ?? '')
+      )
+    ).length;
+
+  return (
+    <View
+      style={
+        seoulTopPlaceStyles.container
+      }
+    >
+      <View
+        style={
+          seoulTopPlaceStyles.header
+        }
+      >
+        <View
+          style={{
+            flex: 1,
+            minWidth: 0,
+          }}
+        >
+          <Text
+            style={[
+              seoulTopPlaceStyles.title,
+              {
+                color: theme.text,
+              },
+            ]}
+          >
+            ROOT 서울 명소 TOP 20
+          </Text>
+
+          <Text
+            style={[
+              seoulTopPlaceStyles.subtitle,
+              {
+                color: theme.subText,
+              },
+            ]}
+          >
+            서울 전체에서 먼저 가볼 만한
+            대표 명소를 순위대로 모았어요.
+          </Text>
+        </View>
+
+        <Text
+          style={[
+            seoulTopPlaceStyles.count,
+            {
+              color: theme.text,
+            },
+          ]}
+        >
+          방문 {completedCount}/20
+        </Text>
+      </View>
+
+      <View
+        style={
+          seoulTopPlaceStyles.list
+        }
+      >
+        {places.map((place, index) => {
+          const placeId = String(
+            place?.id ?? ''
+          );
+
+          const completed =
+            completedPlaceIds.includes(
+              placeId
+            );
+
+          const districtName =
+            String(
+              place?.district ??
+                getExplorationDistrict(
+                  String(
+                    place?.districtId ?? ''
+                  )
+                )?.name ??
+                '서울'
+            );
+
+          return (
+            <Pressable
+              key={placeId}
+              onPress={() =>
+                router.push(
+                  `/explore/place/${placeId}`
+                )
+              }
+              style={({ pressed }) => [
+                seoulTopPlaceStyles.card,
+                {
+                  backgroundColor: theme.card,
+                  borderColor: completed
+                    ? theme.strongLine ??
+                      theme.line
+                    : theme.line,
+                  borderRadius: isCityBlack
+                    ? 3
+                    : 13,
+                  opacity: pressed
+                    ? 0.65
+                    : 1,
+                },
+              ]}
+            >
+              <View
+                style={[
+                  seoulTopPlaceStyles.rankBox,
+                  {
+                    backgroundColor:
+                      index < 3
+                        ? theme.background
+                        : theme.card,
+                    borderColor:
+                      index < 3
+                        ? theme.strongLine ??
+                          theme.line
+                        : theme.line,
+                    borderRadius: isCityBlack
+                      ? 2
+                      : 9,
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    seoulTopPlaceStyles.rankText,
+                    {
+                      color: theme.text,
+                    },
+                  ]}
+                >
+                  {index + 1}
+                </Text>
+              </View>
+
+              <View
+                style={[
+                  seoulTopPlaceStyles.iconBox,
+                  {
+                    backgroundColor:
+                      theme.background,
+                    borderRadius: isCityBlack
+                      ? 2
+                      : 10,
+                  },
+                ]}
+              >
+                <Text
+                  style={
+                    seoulTopPlaceStyles.icon
+                  }
+                >
+                  {String(
+                    place?.icon ?? '📍'
+                  )}
+                </Text>
+              </View>
+
+              <View
+                style={
+                  seoulTopPlaceStyles.content
+                }
+              >
+                <View
+                  style={
+                    seoulTopPlaceStyles.nameRow
+                  }
+                >
+                  <Text
+                    numberOfLines={1}
+                    style={[
+                      seoulTopPlaceStyles.name,
+                      {
+                        color: theme.text,
+                      },
+                    ]}
+                  >
+                    {String(
+                      place?.name ??
+                        '서울 명소'
+                    )}
+                  </Text>
+
+                  <Text
+                    style={[
+                      seoulTopPlaceStyles.status,
+                      {
+                        color: completed
+                          ? theme.text
+                          : theme.subText,
+                      },
+                    ]}
+                  >
+                    {completed
+                      ? '방문 완료'
+                      : `+${Number(
+                          place?.rewardPoints ??
+                            0
+                        )}P`}
+                  </Text>
+                </View>
+
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    seoulTopPlaceStyles.meta,
+                    {
+                      color: theme.subText,
+                    },
+                  ]}
+                >
+                  {districtName}
+                  {' · '}
+                  {String(
+                    place?.category ??
+                      '대표 명소'
+                  )}
+                  {' · '}
+                  {String(
+                    place?.areaType ??
+                      '탐험 장소'
+                  )}
+                </Text>
+              </View>
+
+              <Ionicons
+                name="chevron-forward"
+                size={17}
+                color={theme.subText}
+              />
+            </Pressable>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+const seoulCultureListStyles =
+  StyleSheet.create({
+    container: {
+      gap: 10,
+    },
+    compactFilterCard: {
+      paddingVertical: 8,
+      paddingHorizontal: 9,
+      borderWidth: 0.8,
+      gap: 6,
+    },
+    filterLine: {
+      minHeight: 30,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 7,
+    },
+    filterLineLabel: {
+      width: 31,
+      fontSize: 10,
+      fontWeight: '900',
+    },
+    filterScroll: {
+      flex: 1,
+      minWidth: 0,
+    },
+    filterButtonRow: {
+      paddingRight: 10,
+      gap: 5,
+    },
+    compactFilterButton: {
+      minWidth: 50,
+      height: 28,
+      paddingHorizontal: 9,
+      borderWidth: 0.8,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    compactFilterText: {
+      fontSize: 9.5,
+      fontWeight: '800',
+    },
+    listHeader: {
+      marginTop: 5,
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      justifyContent: 'space-between',
+      gap: 10,
+    },
+    listTitle: {
+      fontSize: 15,
+      fontWeight: '900',
+    },
+    listSubtitle: {
+      marginTop: 3,
+      fontSize: 9.5,
+      lineHeight: 14,
+    },
+    listCount: {
+      fontSize: 10.5,
+      fontWeight: '800',
+    },
+    loadingBox: {
+      minHeight: 150,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 9,
+    },
+    loadingText: {
+      fontSize: 10.5,
+      textAlign: 'center',
+    },
+    emptyCard: {
+      padding: 20,
+      borderWidth: 0.8,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    emptyTitle: {
+      fontSize: 13,
+      fontWeight: '900',
+      textAlign: 'center',
+    },
+    emptyText: {
+      marginTop: 5,
+      fontSize: 10.5,
+      lineHeight: 16,
+      textAlign: 'center',
+    },
+    eventList: {
+      gap: 8,
+    },
+    eventCard: {
+      padding: 11,
+      borderWidth: 0.8,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+    },
+    eventIconBox: {
+      width: 46,
+      height: 46,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    eventIcon: {
+      fontSize: 23,
+    },
+    eventContent: {
+      flex: 1,
+      minWidth: 0,
+    },
+    eventTitleRow: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      justifyContent: 'space-between',
+      gap: 8,
+    },
+    eventName: {
+      flex: 1,
+      minWidth: 0,
+      fontSize: 12.5,
+      lineHeight: 17,
+      fontWeight: '900',
+    },
+    eventStatus: {
+      fontSize: 10,
+      fontWeight: '800',
+    },
+    eventMeta: {
+      marginTop: 4,
+      fontSize: 9.5,
+      lineHeight: 14,
+    },
+    eventPlace: {
+      marginTop: 5,
+      fontSize: 9.5,
+      lineHeight: 14,
+      fontWeight: '700',
+    },
+    moreButton: {
+      minHeight: 38,
+      borderWidth: 0.8,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    moreText: {
+      fontSize: 10.5,
+      fontWeight: '900',
+    },
+  });
+
+const seoulTopPlaceStyles =
+  StyleSheet.create({
+    container: {
+      gap: 10,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      justifyContent: 'space-between',
+      gap: 10,
+    },
+    title: {
+      fontSize: 16,
+      fontWeight: '900',
+    },
+    subtitle: {
+      marginTop: 4,
+      fontSize: 10,
+      lineHeight: 15,
+    },
+    count: {
+      fontSize: 10.5,
+      lineHeight: 15,
+      fontWeight: '800',
+    },
+    list: {
+      gap: 8,
+    },
+    card: {
+      minHeight: 72,
+      padding: 10,
+      borderWidth: 0.8,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 9,
+    },
+    rankBox: {
+      width: 30,
+      height: 30,
+      borderWidth: 0.8,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    rankText: {
+      fontSize: 12,
+      fontWeight: '900',
+    },
+    iconBox: {
+      width: 43,
+      height: 43,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    icon: {
+      fontSize: 22,
+    },
+    content: {
+      flex: 1,
+      minWidth: 0,
+    },
+    nameRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 8,
+    },
+    name: {
+      flex: 1,
+      minWidth: 0,
+      fontSize: 12.5,
+      fontWeight: '900',
+    },
+    status: {
+      fontSize: 9.5,
+      fontWeight: '800',
+    },
+    meta: {
+      marginTop: 5,
+      fontSize: 9.5,
+      lineHeight: 14,
+    },
+  });
+
 export default function ExploreScreen() {
   const { theme, isCityBlack } = useRootTheme();
   const insets = useSafeAreaInsets();
 
+  const insideSeoulCampingSummaries =
+    useMemo(
+      () =>
+        getInsideSeoulCampingSummaries(),
+      []
+    );
+
+  const outsideSeoulCampingSummaries =
+    useMemo(
+      () =>
+        getSeoulOperatedOutsideCampingSummaries(),
+      []
+    );
+
+  const insideSeoulSportsSummaries =
+    useMemo(
+      () =>
+        getInsideSeoulSportsSummaries(),
+      []
+    );
+
+  const outsideSeoulSportsSummaries =
+    useMemo(
+      () =>
+        getSeoulOperatedOutsideSportsSummaries(),
+      []
+    );
+
+  const seoulSpaceSummaries =
+    useMemo(
+      () =>
+        getSpaceFacilitySummaries(),
+      []
+    );
+
+  const insideSeoulEducationSummaries =
+    useMemo(
+      () =>
+        getInsideSeoulEducationSummaries(),
+      []
+    );
+
+  const outsideSeoulEducationSummaries =
+    useMemo(
+      () =>
+        getSeoulOperatedOutsideEducationSummaries(),
+      []
+    );
+
+
   const [mapLevel, setMapLevel] =
     useState<ExplorationMapLevel>('korea');
-  const [explorationContentMode, setExplorationContentMode] =
-    useState<'places' | 'festivals'>('places');
+  const [
+  explorationContentMode,
+  setExplorationContentMode,
+] = useState<RegionSection>(
+  'places'
+);
+  const [
+    seoulFacilityCategoryFilter,
+    setSeoulFacilityCategoryFilter,
+  ] = useState<SeoulFacilityCategoryFilter>(
+    'all'
+  );
+  const [
+    seoulSportsDisplayLimit,
+    setSeoulSportsDisplayLimit,
+  ] = useState(SEOUL_SPORTS_PAGE_SIZE);
+  const [
+    seoulSpaceDisplayLimit,
+    setSeoulSpaceDisplayLimit,
+  ] = useState(SEOUL_SPACE_PAGE_SIZE);
+  const [
+    seoulEducationDisplayLimit,
+    setSeoulEducationDisplayLimit,
+  ] = useState(SEOUL_EDUCATION_PAGE_SIZE);
+  const [
+    seoulEducationCategoryFilter,
+    setSeoulEducationCategoryFilter,
+  ] = useState<SeoulEducationCategoryFilter>(
+    'all'
+  );
+  const [
+    seoulEducationAudienceFilter,
+    setSeoulEducationAudienceFilter,
+  ] = useState<SeoulEducationAudienceFilter>(
+    'any'
+  );
+  const [
+    seoulEducationStatusFilter,
+    setSeoulEducationStatusFilter,
+  ] = useState<SeoulEducationStatusFilter>(
+    'all'
+  );
+
+
+  const insideSeoulCampingOnlySummaries =
+    useMemo(
+      () =>
+        insideSeoulCampingSummaries.filter(
+          (summary) =>
+            summary.facility.facilityKind !==
+            'picnic'
+        ),
+      [insideSeoulCampingSummaries]
+    );
+
+  const insideSeoulPicnicSummaries =
+    useMemo(
+      () =>
+        insideSeoulCampingSummaries.filter(
+          (summary) =>
+            summary.facility.facilityKind ===
+            'picnic'
+        ),
+      [insideSeoulCampingSummaries]
+    );
+
+  const visibleInsideSeoulCampingSummaries =
+    useMemo(() => {
+      if (
+        seoulFacilityCategoryFilter ===
+        'camping'
+      ) {
+        return insideSeoulCampingOnlySummaries;
+      }
+
+      if (
+        seoulFacilityCategoryFilter ===
+        'picnic'
+      ) {
+        return insideSeoulPicnicSummaries;
+      }
+
+      return insideSeoulCampingSummaries;
+    }, [
+      insideSeoulCampingOnlySummaries,
+      insideSeoulCampingSummaries,
+      insideSeoulPicnicSummaries,
+      seoulFacilityCategoryFilter,
+    ]);
+
+  const visibleInsideSeoulSportsSummaries =
+    useMemo(
+      () =>
+        insideSeoulSportsSummaries.slice(
+          0,
+          seoulSportsDisplayLimit
+        ),
+      [
+        insideSeoulSportsSummaries,
+        seoulSportsDisplayLimit,
+      ]
+    );
+
+  const visibleSeoulSpaceSummaries =
+    useMemo(
+      () =>
+        seoulSpaceSummaries.slice(
+          0,
+          seoulSpaceDisplayLimit
+        ),
+      [
+        seoulSpaceDisplayLimit,
+        seoulSpaceSummaries,
+      ]
+    );
+
+  const filteredInsideSeoulEducationSummaries =
+    useMemo(
+      () =>
+        insideSeoulEducationSummaries.filter(
+          (summary) =>
+            doesEducationSummaryMatchFilters(
+              summary,
+              seoulEducationCategoryFilter,
+              seoulEducationAudienceFilter,
+              seoulEducationStatusFilter
+            )
+        ),
+      [
+        insideSeoulEducationSummaries,
+        seoulEducationAudienceFilter,
+        seoulEducationCategoryFilter,
+        seoulEducationStatusFilter,
+      ]
+    );
+
+  const visibleInsideSeoulEducationSummaries =
+    useMemo(
+      () =>
+        filteredInsideSeoulEducationSummaries.slice(
+          0,
+          seoulEducationDisplayLimit
+        ),
+      [
+        filteredInsideSeoulEducationSummaries,
+        seoulEducationDisplayLimit,
+      ]
+    );
+
+  const filteredOutsideSeoulEducationSummaries =
+    useMemo(
+      () =>
+        outsideSeoulEducationSummaries.filter(
+          (summary) =>
+            doesEducationSummaryMatchFilters(
+              summary,
+              seoulEducationCategoryFilter,
+              seoulEducationAudienceFilter,
+              seoulEducationStatusFilter
+            )
+        ),
+      [
+        outsideSeoulEducationSummaries,
+        seoulEducationAudienceFilter,
+        seoulEducationCategoryFilter,
+        seoulEducationStatusFilter,
+      ]
+    );
+
   const [festivalScope, setFestivalScope] =
     useState<'district' | 'region'>('region');
-  const [selectedDistrictId, setSelectedDistrictId] = useState('jongno');
+  const [selectedDistrictId, setSelectedDistrictId] = useState('');
   const [completedPlaceIds, setCompletedPlaceIds] = useState<string[]>([]);
   const [rewards, setRewards] = useState<ExplorationRewardData>(EMPTY_REWARDS);
   const [mainBadgeId, setMainBadgeId] = useState<string | null>(null);
@@ -2645,6 +4854,16 @@ export default function ExploreScreen() {
     ]
   );
 
+  const monthlyRecommendedFestivals =
+  useMemo(
+    () =>
+      filterFestivalsByPeriod(
+        FESTIVAL_CATALOG,
+        'thisMonth'
+      ).slice(0, 6),
+    []
+  );
+
   const nationalFestivalRegionLabel =
     NATIONAL_FESTIVAL_REGION_FILTERS.find(
       (option) =>
@@ -2706,7 +4925,13 @@ export default function ExploreScreen() {
 
   useEffect(() => {
     if (
-      seoulCultureModalVisible &&
+      (
+        seoulCultureModalVisible ||
+        (
+          mapLevel === 'seoul' &&
+          explorationContentMode === 'events'
+        )
+      ) &&
       !seoulCultureFetchedAt &&
       !seoulCultureLoading
     ) {
@@ -2717,6 +4942,8 @@ export default function ExploreScreen() {
     seoulCultureFetchedAt,
     seoulCultureLoading,
     seoulCultureModalVisible,
+    mapLevel,
+    explorationContentMode,
   ]);
 
   const seoulCulturePeriodRange =
@@ -2736,9 +4963,7 @@ export default function ExploreScreen() {
             event,
             seoulCulturePeriodRange.start,
             seoulCulturePeriodRange.end
-          ) &&
-          (event.contentType !== 'exhibition' ||
-            event.isLargeExhibition)
+          )
       ),
     [
       seoulCultureEvents,
@@ -2833,6 +5058,65 @@ export default function ExploreScreen() {
       ]
     );
 
+  const seoulCitywideCultureEvents =
+    useMemo(
+      () =>
+        seoulCulturePeriodList.filter(
+          (event) => {
+            if (
+              seoulCultureTypeFilter !== 'all' &&
+              event.contentType !==
+                seoulCultureTypeFilter
+            ) {
+              return false;
+            }
+
+            if (
+              seoulCultureConditionFilter ===
+                'free' &&
+              event.isFree !== true
+            ) {
+              return false;
+            }
+
+            if (
+              seoulCultureConditionFilter ===
+                'paid' &&
+              event.isFree !== false
+            ) {
+              return false;
+            }
+
+            if (
+              seoulCultureConditionFilter ===
+                'reservation' &&
+              event.reservationStatus ===
+                'unknown'
+            ) {
+              return false;
+            }
+
+            if (
+              seoulCultureAudienceFilter !==
+                'all' &&
+              !event.audiences.includes(
+                seoulCultureAudienceFilter
+              )
+            ) {
+              return false;
+            }
+
+            return true;
+          }
+        ),
+      [
+        seoulCultureAudienceFilter,
+        seoulCultureConditionFilter,
+        seoulCulturePeriodList,
+        seoulCultureTypeFilter,
+      ]
+    );
+
   const seoulCulturePeriodLabel =
     getSeoulCulturePeriodLabel(
       seoulCulturePeriodFilter
@@ -2844,7 +5128,7 @@ export default function ExploreScreen() {
   } | null>(null);
   const [newThemeBadgeId, setNewThemeBadgeId] = useState<string | null>(null);
   const [mapLayout, setMapLayout] = useState({ width: 0, height: 0 });
-  const [koreaMapLayout, setKoreaMapLayout] = useState({ width: 0, height: 0 });
+  const [  koreaMapLayout,  setKoreaMapLayout,] = useState({  width: 0,  height: 0,});
   const [busanMapLayout, setBusanMapLayout] = useState({ width: 0, height: 0 });
   const [jejuMapLayout, setJejuMapLayout] = useState({ width: 0, height: 0 });
   const [incheonMapLayout, setIncheonMapLayout] = useState({ width: 0, height: 0 });
@@ -3130,6 +5414,15 @@ export default function ExploreScreen() {
           !String(place.districtId).startsWith('ulsan-')
       ),
     []
+  );
+
+
+  const seoulTopPlaces = useMemo(
+    () =>
+      buildSeoulTopPlaces(
+        seoulPlaces
+      ),
+    [seoulPlaces]
   );
 
   const busanPlaces = useMemo(
@@ -3775,20 +6068,46 @@ export default function ExploreScreen() {
       }
 
       setNoticeModal(null);
-      setSelectedDistrictId(normalizedDistrictId);
 
-      /*
-       * 지도나 지역 버튼을 누른 직후 선택한 지역의 장소 목록이
-       * 화면 아래에 숨어 보이지 않는 문제를 막습니다.
-       */
-      setTimeout(() => {
-        mainScrollRef.current?.scrollTo({
-          y: Math.max(0, placeSectionY - 16),
-          animated: true,
-        });
-      }, 120);
+/*
+ * 서울 자치구는 선택 상태를 남기지 않고
+ * 곧바로 실제 통합 지도 화면으로 이동합니다.
+ */
+if (mapLevel === 'seoul') {
+  router.push({
+    pathname:
+      '/explore/district/[districtId]',
+    params: {
+      districtId:
+        normalizedDistrictId,
     },
-    [placeSectionY]
+  } as any);
+
+  return;
+}
+
+setSelectedDistrictId(
+  normalizedDistrictId
+);
+
+/*
+ * 서울 이외 지역은 기존처럼
+ * 현재 화면 아래의 장소 목록으로 이동합니다.
+ */
+setTimeout(() => {
+  mainScrollRef.current?.scrollTo({
+    y: Math.max(
+      0,
+      placeSectionY - 16
+    ),
+    animated: true,
+  });
+}, 120);
+    },
+    [
+  mapLevel,
+  placeSectionY,
+]
   );
 
 
@@ -3823,9 +6142,20 @@ export default function ExploreScreen() {
           region.id === 'jeju'
         )
       ) {
-        setNoticeModal(null);
-        setMapLevel(region.id as ExplorationMapLevel);
+  setNoticeModal(null);
+setExplorationContentMode(
+  'places'
+);
+setFestivalScope('region');
 
+setMapLevel(
+  region.id as ExplorationMapLevel
+);
+
+
+if (region.id === 'seoul') {
+  setSelectedDistrictId('');
+}
         if (
           region.id === 'jeonnam' ||
           region.id === 'gyeongbuk' ||
@@ -3857,6 +6187,251 @@ export default function ExploreScreen() {
     []
   );
 
+const handleKoreaRegionMapPress =
+  useCallback(
+    (event: any) => {
+      if (
+        koreaMapLayout.width <= 0 ||
+        koreaMapLayout.height <= 0
+      ) {
+        return;
+      }
+
+      const locationX = Number(
+        event?.nativeEvent
+          ?.locationX ?? NaN
+      );
+
+      const locationY = Number(
+        event?.nativeEvent
+          ?.locationY ?? NaN
+      );
+
+      if (
+        !Number.isFinite(
+          locationX
+        ) ||
+        !Number.isFinite(
+          locationY
+        )
+      ) {
+        return;
+      }
+
+      /*
+       * 전국 지도 SVG:
+       * viewBox="0 0 360 500"
+       *
+       * preserveAspectRatio의
+       * xMidYMid meet 여백까지
+       * 고려하여 실제 SVG 좌표로
+       * 변환합니다.
+       */
+      const viewBoxWidth = 360;
+      const viewBoxHeight = 500;
+
+      const scale = Math.min(
+        koreaMapLayout.width /
+          viewBoxWidth,
+        koreaMapLayout.height /
+          viewBoxHeight
+      );
+
+      if (
+        !Number.isFinite(scale) ||
+        scale <= 0
+      ) {
+        return;
+      }
+
+      const renderedWidth =
+        viewBoxWidth * scale;
+
+      const renderedHeight =
+        viewBoxHeight * scale;
+
+      const offsetX =
+        (koreaMapLayout.width -
+          renderedWidth) /
+        2;
+
+      const offsetY =
+        (koreaMapLayout.height -
+          renderedHeight) /
+        2;
+
+      const svgX =
+        (locationX - offsetX) /
+        scale;
+
+      const svgY =
+        (locationY - offsetY) /
+        scale;
+
+      if (
+        svgX < 0 ||
+        svgX > viewBoxWidth ||
+        svgY < 0 ||
+        svgY > viewBoxHeight
+      ) {
+        return;
+      }
+
+      /*
+       * 작은 광역시는 배열 뒤에
+       * 그려지므로 역순으로 검사합니다.
+       *
+       * 그렇지 않으면 서울을 눌렀을 때
+       * 아래에 깔린 경기도가 먼저
+       * 선택될 수 있습니다.
+       */
+      const shapesByPriority = [
+        ...KOREA_REGION_SHAPES,
+      ].reverse();
+
+      /*
+       * 서울·인천·세종·대전·광주·
+       * 대구·울산·부산은 실제 도형보다
+       * 터치 범위를 조금 넓게 판정합니다.
+       */
+      const expandedTouchShape =
+        shapesByPriority.find(
+          (shape) => {
+            if (
+              !shape.touchRadius
+            ) {
+              return false;
+            }
+
+            const centerX =
+              shape.labelX;
+
+            const centerY =
+              shape.labelY - 3;
+
+            const radius =
+              shape.touchRadius +
+              4;
+
+            const distanceX =
+              svgX - centerX;
+
+            const distanceY =
+              svgY - centerY;
+
+            return (
+              distanceX *
+                distanceX +
+                distanceY *
+                  distanceY <=
+              radius * radius
+            );
+          }
+        );
+
+      /*
+       * 큰 지역은 색칠된 Polygon
+       * 내부인지 검사합니다.
+       */
+      const polygonShape =
+        shapesByPriority.find(
+          (shape) =>
+            isPointInsidePolygon(
+              svgX,
+              svgY,
+              parsePolygonPoints(
+                shape.points
+              )
+            )
+        );
+
+      /*
+       * 본토와 떨어져 표시된 섬을
+       * 별도로 판정합니다.
+       */
+      const islandTargets = [
+        {
+          id: 'incheon' as const,
+          x: 31,
+          y: 135,
+          radius: 10,
+        },
+        {
+          id: 'chungnam' as const,
+          x: 38,
+          y: 185,
+          radius: 9,
+        },
+        {
+          id: 'jeonnam' as const,
+          x: 28,
+          y: 340,
+          radius: 10,
+        },
+        {
+          id: 'gyeongbuk' as const,
+          x: 331,
+          y: 170,
+          radius: 12,
+        },
+        {
+          id: 'gyeongbuk' as const,
+          x: 346,
+          y: 182,
+          radius: 9,
+        },
+      ];
+
+      const islandTarget =
+        islandTargets.find(
+          (target) => {
+            const distanceX =
+              svgX - target.x;
+
+            const distanceY =
+              svgY - target.y;
+
+            return (
+              distanceX *
+                distanceX +
+                distanceY *
+                  distanceY <=
+              target.radius *
+                target.radius
+            );
+          }
+        );
+
+      const pressedRegionId =
+        expandedTouchShape?.id ??
+        polygonShape?.id ??
+        islandTarget?.id;
+
+      if (!pressedRegionId) {
+        return;
+      }
+
+      console.log(
+        'EXPLORATION KOREA REGION MAP PRESSED',
+        {
+          regionId:
+            pressedRegionId,
+          svgX,
+          svgY,
+        }
+      );
+
+      openKoreaRegion(
+        pressedRegionId
+      );
+    },
+    [
+      koreaMapLayout.height,
+      koreaMapLayout.width,
+      openKoreaRegion,
+    ]
+  );
+
   const returnToKoreaMap = useCallback(() => {
     setMapLevel('korea');
     setNoticeModal(null);
@@ -3869,79 +6444,7 @@ export default function ExploreScreen() {
     }, 80);
   }, []);
 
-  const handleKoreaMapPress = useCallback(
-    (event: any) => {
-      if (
-        koreaMapLayout.width <= 0 ||
-        koreaMapLayout.height <= 0
-      ) {
-        return;
-      }
 
-      const locationX = Number(
-        event?.nativeEvent?.locationX ?? NaN
-      );
-      const locationY = Number(
-        event?.nativeEvent?.locationY ?? NaN
-      );
-
-      if (
-        !Number.isFinite(locationX) ||
-        !Number.isFinite(locationY)
-      ) {
-        return;
-      }
-
-      const viewBoxWidth = 300;
-      const viewBoxHeight = 430;
-      const scale = Math.min(
-        koreaMapLayout.width / viewBoxWidth,
-        koreaMapLayout.height / viewBoxHeight
-      );
-
-      if (!Number.isFinite(scale) || scale <= 0) {
-        return;
-      }
-
-      const renderedWidth = viewBoxWidth * scale;
-      const renderedHeight = viewBoxHeight * scale;
-      const offsetX =
-        (koreaMapLayout.width - renderedWidth) / 2;
-      const offsetY =
-        (koreaMapLayout.height - renderedHeight) / 2;
-      const svgX = (locationX - offsetX) / scale;
-      const svgY = (locationY - offsetY) / scale;
-
-      const nearestRegion =
-        KOREA_REGION_MARKERS
-          .map((region) => ({
-            region,
-            distance:
-              Math.hypot(
-                svgX - region.x,
-                svgY - region.y
-              ),
-          }))
-          .sort(
-            (first, second) =>
-              first.distance - second.distance
-          )[0];
-
-      if (
-        !nearestRegion ||
-        nearestRegion.distance > 24
-      ) {
-        return;
-      }
-
-      openKoreaRegion(nearestRegion.region.id);
-    },
-    [
-      koreaMapLayout.height,
-      koreaMapLayout.width,
-      openKoreaRegion,
-    ]
-  );
 
   const handleMapPress = useCallback(
     (event: any) => {
@@ -4409,7 +6912,7 @@ export default function ExploreScreen() {
   );
 
 
-  
+
   const openGwangjuDistrict = useCallback(
     (districtId: string) => {
       const catalogDistrict = getExplorationDistrict(districtId);
@@ -4501,7 +7004,7 @@ export default function ExploreScreen() {
     ]
   );
 
-  
+
   const openChungbukDistrict = useCallback(
     (districtId: string) => {
       const catalogDistrict = getExplorationDistrict(districtId);
@@ -4536,7 +7039,7 @@ export default function ExploreScreen() {
     [chungbukMapLayout.height, chungbukMapLayout.width, openChungbukDistrict]
   );
 
-  
+
   const openChungnamDistrict = useCallback(
     (districtId: string) => {
       const catalogDistrict =
@@ -4636,7 +7139,7 @@ export default function ExploreScreen() {
     ]
   );
 
-  
+
   const openJeonbukDistrict = useCallback(
     (districtId: string) => {
       const catalogDistrict =
@@ -5107,26 +7610,22 @@ export default function ExploreScreen() {
       : mapLevelPlaceCollections[mapLevel] ?? [];
 
   const mapLevelTitle =
-    mapLevel === 'korea'
-      ? '대한민국 탐험'
-      : currentMapMeta?.title ?? '지역 탐험';
+  mapLevel === 'korea'
+    ? '대한민국 탐험'
+    : (
+        currentMapMeta?.title ??
+        '지역 탐험'
+      ).replace(
+        /\s*탐험$/,
+        ''
+      );
 
   const mapLevelSubtitle =
     mapLevel === 'korea'
       ? '대한민국 지도에서 탐험할 지역을 선택하세요.'
       : `${currentMapMeta?.regionCountText ?? '지역'}와 ${currentMapPlaces.length}개의 장소를 탐험해요.`;
 
-  const summaryLabel =
-    mapLevel === 'korea'
-      ? '대한민국 탐험 포인트'
-      : `${currentMapMeta?.shortTitle ?? '지역'} 탐험 포인트`;
-
-  const summaryEarnedPoints =
-    mapLevel === 'korea'
-      ? rewards.points
-      : mapLevelEarnedPoints[mapLevel] ?? 0;
-
-  const allRegionLevels = Object.keys(
+    const allRegionLevels = Object.keys(
     mapLevelPlaceCollections
   ) as ExplorationMapLevel[];
 
@@ -5220,686 +7719,853 @@ export default function ExploreScreen() {
     rewards.unlockedThemeBadgeIds.includes(item.id)
   ).length;
 
-  const summaryProgressPercent = Math.min(
-    100,
-    (summaryVisitedCount /
-      Math.max(1, summaryPlaceCount)) *
-      100
-  );
-
-  return (
-    <View style={[styles.screen, { backgroundColor: theme.background }]}> 
+   return (
+    <View style={[styles.screen, { backgroundColor: theme.background }]}>
       <ScrollView
         ref={mainScrollRef}
         contentContainerStyle={[
           styles.content,
-          { paddingTop: insets.top + 10, paddingBottom: insets.bottom + 110 },
+        {
+  paddingTop:
+    insets.top +
+    (mapLevel === 'korea'
+      ? 4
+      : 10),
+  paddingBottom:
+    insets.bottom + 110,
+},
         ]}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.headerRow}>
-          <View style={styles.headerTitleArea}>
-            <View style={styles.headerTextBlock}>
-              <Text style={[styles.title, { color: theme.text }]}>
-                {mapLevel === 'korea'
-                  ? '대한민국 지도'
-                  : mapLevelTitle}
-              </Text>
 
-              {mapLevel !== 'korea' && (
-                <Text
-                  style={[
-                    styles.subtitle,
-                    { color: theme.subText },
-                  ]}
-                >
-                  {mapLevelSubtitle}
-                </Text>
+        {mapLevel !== 'korea' ? (
+  <>
+    {/* 지역 상단 정보 */}
+    <View
+      style={[
+        styles.regionCompactHeader,
+        {
+          borderColor: theme.line,
+        },
+      ]}
+    >
+      <View
+  style={
+    styles.regionCompactTitleRow
+  }
+>
+  <View
+    style={
+      styles.regionCompactTitleLeft
+    }
+  >
+    <Pressable
+      onPress={returnToKoreaMap}
+      style={({ pressed }) => [
+        styles.headerBackButton,
+        {
+          borderColor:
+            theme.line,
+          borderRadius:
+            isCityBlack
+              ? 2
+              : 9,
+          opacity: pressed
+            ? 0.6
+            : 1,
+        },
+      ]}
+    >
+      <Ionicons
+        name="arrow-back"
+        size={17}
+        color={theme.text}
+      />
+    </Pressable>
+
+    <Text
+      numberOfLines={1}
+      style={[
+        styles.regionCompactTitle,
+        {
+          color: theme.text,
+        },
+      ]}
+    >
+      {mapLevelTitle}
+    </Text>
+  </View>
+
+  <View
+    style={
+      styles.regionCompactStatsInline
+    }
+  >
+    <Text
+      style={[
+        styles.regionCompactStatText,
+        {
+          color:
+            theme.subText,
+        },
+      ]}
+    >
+      방문{' '}
+      {summaryVisitedCount}/
+      {summaryPlaceCount}
+    </Text>
+
+    <Text
+      style={[
+        styles.regionCompactStatText,
+        {
+          color:
+            theme.subText,
+        },
+      ]}
+    >
+      뱃지{' '}
+      {summaryUnlockedThemeCount >
+      0
+        ? summaryUnlockedThemeCount
+        : '-'}
+      /{summaryThemes.length}
+    </Text>
+  </View>
+</View>
+
+
+
+
+    </View>
+
+    {/* 서울에서는 지도를 탭보다 위에 항상 표시 */}
+    {mapLevel === 'seoul' ? (
+      <View
+        style={[
+          styles.regionMapSection,
+          {
+            borderColor:
+              theme.line,
+          },
+        ]}
+      >
+        <Pressable
+          onLayout={(event) => {
+            const {
+              width,
+              height,
+            } =
+              event.nativeEvent.layout;
+
+            setMapLayout({
+              width,
+              height,
+            });
+          }}
+          onPress={handleMapPress}
+          style={({ pressed }) => [
+            styles.regionSeoulSvgBox,
+            {
+              backgroundColor:
+                theme.background,
+              opacity: pressed
+                ? 0.97
+                : 1,
+            },
+          ]}
+        >
+          <Svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 360 330"
+            pointerEvents="none"
+          >
+            <G>
+              {SEOUL_DISTRICT_SHAPES.map(
+                (shape) => {
+                  const district =
+                    getExplorationDistrict(
+                      shape.id
+                    );
+
+                  const available =
+                    isExplorationDistrictOpen(
+                      shape.id,
+                      district?.available ??
+                        null
+                    );
+
+                  const selected =
+                    selectedDistrictId ===
+                    shape.id;
+
+                  return (
+                    <G
+                      key={
+                        shape.id
+                      }
+                    >
+                      <Polygon
+                        points={
+                          shape.points
+                        }
+                        fill={
+                          selected
+                            ? isCityBlack
+                              ? '#EFEFEF'
+                              : '#E7DDCF'
+                            : available
+                              ? isCityBlack
+                                ? '#666666'
+                                : '#F5EFE7'
+                              : isCityBlack
+                                ? '#272727'
+                                : '#F2F2F2'
+                        }
+                        stroke={
+                          selected
+                            ? theme.strongLine ??
+                              theme.line
+                            : theme.line
+                        }
+                        strokeWidth={
+                          selected
+                            ? 2.5
+                            : 1
+                        }
+                      />
+
+                      <SvgText
+                        x={
+                          shape.labelX
+                        }
+                        y={
+                          shape.labelY
+                        }
+                        fontSize={
+                          available
+                            ? 8.5
+                            : 7.2
+                        }
+                        fontWeight={
+                          selected
+                            ? '700'
+                            : '500'
+                        }
+                        fill={
+                          selected
+                            ? isCityBlack
+                              ? '#111111'
+                              : '#4D4035'
+                            : available
+                              ? theme.text
+                              : theme.subText
+                        }
+                        textAnchor="middle"
+                      >
+                        {shape.name}
+                      </SvgText>
+                    </G>
+                  );
+                }
               )}
-            </View>
-          </View>
+            </G>
+          </Svg>
+        </Pressable>
 
-          <View style={styles.headerActionRow}>
-            {mapLevel !== 'korea' && (
-              <Pressable
-                onPress={returnToKoreaMap}
-                style={({ pressed }) => [
-                  styles.headerBackButton,
-                  {
-                    borderColor: theme.line,
-                    borderRadius: isCityBlack ? 2 : 10,
-                    opacity: pressed ? 0.6 : 1,
-                  },
-                ]}
-              >
-                <Ionicons
-                  name="arrow-back"
-                  size={17}
-                  color={theme.text}
-                />
-              </Pressable>
-            )}
+        <View
+          style={{
+            marginTop: 7,
+            paddingHorizontal: 4,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 10,
+          }}
+        >
+          <Text
+            style={{
+              flex: 1,
+              minWidth: 0,
+              color: theme.subText,
+              fontSize: 9.5,
+              lineHeight: 14,
+            }}
+          >
+            자치구를 누르면 해당 구의 탐험·축제·예약시설 통합 지도로 이동해요.
+          </Text>
 
-            <Pressable
-              onPress={() => setRewardModalVisible(true)}
-              style={({ pressed }) => [
-                styles.rewardButton,
-                {
-                  borderColor: theme.line,
-                  borderRadius: isCityBlack ? 2 : 10,
-                  opacity: pressed ? 0.65 : 1,
-                },
-              ]}
-            >
-              <Text
-                style={[
-                  styles.rewardButtonText,
-                  { color: theme.text },
-                ]}
-              >
-                보상
-              </Text>
-            </Pressable>
-
-            <Pressable
-              onPress={() => {
-                if (mapLevel === 'korea') {
-                  setNationalFestivalModalVisible(true);
-                  return;
-                }
-
-                setFestivalScope('region');
-                setExplorationContentMode('festivals');
-              }}
-              style={({ pressed }) => [
-                styles.rewardButton,
-                {
-                  borderColor:
-                    mapLevel !== 'korea' &&
-                    explorationContentMode === 'festivals'
-                      ? theme.strongLine ?? theme.line
-                      : theme.line,
-                  backgroundColor:
-                    mapLevel !== 'korea' &&
-                    explorationContentMode === 'festivals'
-                      ? theme.background
-                      : 'transparent',
-                  borderRadius: isCityBlack ? 2 : 10,
-                  opacity: pressed ? 0.65 : 1,
-                },
-              ]}
-            >
-              <Text
-                style={[
-                  styles.rewardButtonText,
-                  { color: theme.text },
-                ]}
-              >
-                축제
-              </Text>
-            </Pressable>
-
-            <Pressable
-              onPress={() =>
-                setSeoulCultureModalVisible(true)
-              }
-              style={({ pressed }) => [
-                styles.rewardButton,
-                {
-                  borderColor: theme.line,
-                  borderRadius: isCityBlack ? 2 : 10,
-                  opacity: pressed ? 0.65 : 1,
-                },
-              ]}
-            >
-              <Text
-                style={[
-                  styles.rewardButtonText,
-                  { color: theme.text },
-                ]}
-              >
-                문화
-              </Text>
-            </Pressable>
-          </View>
+          <Text
+            style={{
+              color: theme.text,
+              fontSize: 9.5,
+              fontWeight: '800',
+            }}
+          >
+            서울 전체
+          </Text>
         </View>
+      </View>
+    ) : null}
 
-        {mapLevel !== 'korea' && (
-          <>
-            <View
-              style={[
-                styles.summaryCard,
-                {
-                  backgroundColor: theme.card,
-                  borderColor: theme.line,
-                  borderRadius: isCityBlack ? 4 : 16,
-                },
-              ]}
-            >
-              <View style={styles.summaryTop}>
-                <View>
-                  <Text
-                    style={[
-                      styles.summaryLabel,
-                      { color: theme.subText },
-                    ]}
-                  >
-                    {summaryLabel}
-                  </Text>
+    {/* 지역 메뉴 */}
+    <View
+      style={[
+        styles.explorationModeCard,
+        {
+          backgroundColor:
+            theme.card,
+          borderColor:
+            theme.line,
+          borderRadius:
+            isCityBlack ? 3 : 12,
+        },
+      ]}
+    >
+      {REGION_SECTION_OPTIONS.map(
+        (option) => {
+          const selected =
+            explorationContentMode ===
+            option.id;
 
-                  <Text
-                    style={[
-                      styles.summaryPoints,
-                      { color: theme.text },
-                    ]}
-                  >
-                    {summaryEarnedPoints}P
-                  </Text>
-                </View>
+          return (
+            <Pressable
+              key={option.id}
+              onPress={() => {
+                setExplorationContentMode(
+                  option.id
+                );
 
-                <View style={styles.summaryCounts}>
-                  <Text
-                    style={[
-                      styles.summaryCountText,
-                      { color: theme.text },
-                    ]}
-                  >
-                    방문 {summaryVisitedCount}/{summaryPlaceCount}
-                  </Text>
-
-                  <Text
-                    style={[
-                      styles.summaryCountText,
-                      { color: theme.text },
-                    ]}
-                  >
-                    뱃지 {summaryUnlockedThemeCount}/{summaryThemes.length}
-                  </Text>
-                </View>
-              </View>
-
-              <View
-                style={[
-                  styles.progressTrack,
-                  { backgroundColor: theme.background },
-                ]}
-              >
-                <View
-                  style={[
-                    styles.progressFill,
-                    {
-                      width: `${summaryProgressPercent}%`,
-                      backgroundColor:
-                        theme.strongLine ?? theme.line,
-                    },
-                  ]}
-                />
-              </View>
-            </View>
-
-            <View
-              style={[
-                styles.explorationModeCard,
-                {
-                  backgroundColor: theme.card,
-                  borderColor: theme.line,
-                  borderRadius: isCityBlack ? 3 : 14,
-                },
-              ]}
-            >
-              <Pressable
-                onPress={() =>
-                  setExplorationContentMode('places')
+                if (
+                  option.id ===
+                  'events'
+                ) {
+                  setFestivalScope(
+                    'region'
+                  );
                 }
+              }}
+              style={[
+                styles.explorationModeButton,
+                {
+                  backgroundColor:
+                    selected
+                      ? theme.background
+                      : theme.card,
+                  borderColor:
+                    selected
+                      ? theme.strongLine ??
+                        theme.line
+                      : theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 8,
+                },
+              ]}
+            >
+              <Text
                 style={[
-                  styles.explorationModeButton,
+                  styles.explorationModeTitle,
                   {
-                    backgroundColor:
-                      explorationContentMode === 'places'
-                        ? theme.background
-                        : theme.card,
-                    borderColor:
-                      explorationContentMode === 'places'
-                        ? theme.strongLine ?? theme.line
-                        : theme.line,
-                    borderRadius: isCityBlack ? 2 : 9,
+                    color: selected
+                      ? theme.text
+                      : theme.subText,
                   },
                 ]}
               >
-                <Text
-                  style={[
-                    styles.explorationModeTitle,
-                    { color: theme.text },
-                  ]}
-                >
-                  상시 탐험
-                </Text>
-
-                <Text
-                  style={[
-                    styles.explorationModeCount,
-                    { color: theme.subText },
-                  ]}
-                >
-                  장소 {summaryPlaceCount}곳
-                </Text>
-              </Pressable>
-
-              <Pressable
-                onPress={() => {
-                  setFestivalScope('region');
-                  setExplorationContentMode('festivals');
-                }}
-                style={[
-                  styles.explorationModeButton,
-                  {
-                    backgroundColor:
-                      explorationContentMode === 'festivals'
-                        ? theme.background
-                        : theme.card,
-                    borderColor:
-                      explorationContentMode === 'festivals'
-                        ? theme.strongLine ?? theme.line
-                        : theme.line,
-                    borderRadius: isCityBlack ? 2 : 9,
-                  },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.explorationModeTitle,
-                    { color: theme.text },
-                  ]}
-                >
-                  축제·행사·전시
-                </Text>
-
-                <Text
-                  style={[
-                    styles.explorationModeCount,
-                    { color: theme.subText },
-                  ]}
-                >
-                  등록 콘텐츠 {selectedRegionFestivals.length}개
-                </Text>
-              </Pressable>
-            </View>
-          </>
-        )}
+                {option.label}
+              </Text>
+            </Pressable>
+          );
+        }
+      )}
+    </View>
+  </>
+) : null}
 
         {mapLevel === 'korea' ? (
-          <>
-            <View
-              style={[
-                styles.mapCard,
-                {
-                  backgroundColor: theme.card,
-                  borderColor: theme.line,
-                  borderRadius: isCityBlack ? 4 : 16,
-                },
-              ]}
+  <>
+    <View
+      style={[
+        styles.mapCard,
+        styles.koreaMapCard,
+        {
+          backgroundColor:
+            theme.card,
+          borderColor:
+            theme.line,
+          borderRadius:
+            isCityBlack ? 4 : 16,
+        },
+      ]}
+    >
+      <Pressable
+        onPress={() =>
+          setRewardModalVisible(true)
+        }
+        style={({ pressed }) => [
+          styles.rewardButton,
+          styles.koreaMapRewardButton,
+          {
+            backgroundColor:
+              theme.card,
+            borderColor:
+              theme.strongLine ??
+              theme.line,
+            borderRadius:
+              isCityBlack ? 2 : 10,
+            opacity: pressed
+              ? 0.65
+              : 1,
+          },
+        ]}
+      >
+        <Text
+          style={[
+            styles.rewardButtonText,
+            {
+              color: theme.text,
+            },
+          ]}
+        >
+          보상
+        </Text>
+      </Pressable>
+<Pressable
+  onLayout={(event) => {
+    const {
+      width,
+      height,
+    } = event.nativeEvent.layout;
+
+    setKoreaMapLayout({
+      width,
+      height,
+    });
+  }}
+  onPress={
+    handleKoreaRegionMapPress
+  }
+  style={({ pressed }) => [
+    styles.koreaSvgBox,
+    {
+      backgroundColor:
+        theme.background,
+      opacity: pressed
+        ? 0.97
+        : 1,
+    },
+  ]}
+>
+  <Svg
+    width="100%"
+    height="100%"
+    viewBox="0 0 360 500"
+    preserveAspectRatio="xMidYMid meet"
+    pointerEvents="none"
+  >
+    {KOREA_REGION_SHAPES.map(
+      (shape) => {
+        const visitedCount =
+          mapLevelVisitedCounts[
+            shape.id
+          ] ?? 0;
+
+        const placeCount =
+          mapLevelPlaceCollections[
+            shape.id
+          ]?.length ?? 0;
+
+        const hasVisited =
+          visitedCount > 0;
+
+        const completed =
+          placeCount > 0 &&
+          visitedCount >= placeCount;
+
+        const regionFill =
+          isCityBlack
+            ? hasVisited
+              ? '#EFEFEF'
+              : '#666666'
+            : shape.fill;
+
+        const regionTextColor =
+          isCityBlack
+            ? hasVisited
+              ? '#111111'
+              : '#FFFFFF'
+            : shape.id === 'busan'
+              ? '#FFFFFF'
+              : '#3D2A1D';
+
+        return (
+          <G key={shape.id}>
+            <Polygon
+              points={shape.points}
+              fill={regionFill}
+              fillOpacity={
+                isCityBlack
+                  ? 1
+                  : hasVisited
+                    ? 1
+                    : 0.78
+              }
+              stroke={
+                completed
+                  ? '#C58A2A'
+                  : '#FFFFFF'
+              }
+              strokeWidth={
+                completed ? 3 : 2
+              }
+              strokeLinejoin="round"
+            />
+
+            {shape.touchRadius ? (
+              <Circle
+                cx={shape.labelX}
+                cy={shape.labelY - 3}
+                r={shape.touchRadius}
+                fill={shape.fill}
+                fillOpacity={0.001}
+              />
+            ) : null}
+
+            <SvgText
+              x={shape.labelX}
+              y={shape.labelY}
+              fontSize={
+                shape.labelSize ?? 10
+              }
+              fontWeight="800"
+              fill={regionTextColor}
+              textAnchor="middle"
+              pointerEvents="none"
             >
-              <Pressable
-                onLayout={(event) => {
-                  const { width, height } = event.nativeEvent.layout;
-                  setKoreaMapLayout({ width, height });
-                }}
-                onPress={handleKoreaMapPress}
-                style={({ pressed }) => [
-                  styles.koreaSvgBox,
-                  {
-                    backgroundColor: theme.background,
-                    opacity: pressed ? 0.97 : 1,
-                  },
-                ]}
-              >
-                <Svg
-                  width="100%"
-                  height="100%"
-                  viewBox="0 0 300 430"
-                  pointerEvents="none"
-                >
-                  {/* 대한민국 본토: 서해·남해의 굴곡과 동해안의 긴 곡선을 강조한 단순화 윤곽 */}
-                  <SvgPath
-                    d="M91 31
-                       C109 25 132 20 153 23
-                       C176 25 198 31 214 45
-                       C226 56 229 72 231 88
-                       C233 106 241 119 246 136
-                       C252 156 250 176 253 195
-                       C256 215 253 235 246 250
-                       C239 264 227 274 222 287
-                       C218 297 222 306 217 315
-                       C212 322 202 324 197 332
-                       C191 341 184 349 174 353
-                       C167 356 163 365 154 367
-                       C145 369 139 361 131 360
-                       C124 359 119 365 111 362
-                       C103 360 99 352 91 349
-                       C84 346 80 351 73 347
-                       C66 343 64 335 59 330
-                       C53 324 45 323 43 315
-                       C41 307 47 301 43 294
-                       C39 287 31 283 33 275
-                       C35 267 42 261 39 253
-                       C36 245 28 239 31 231
-                       C34 223 42 218 39 209
-                       C36 200 29 194 34 185
-                       C39 176 48 171 46 161
-                       C44 152 37 145 43 136
-                       C49 127 58 122 57 112
-                       C56 102 49 95 56 86
-                       C63 77 73 73 73 63
-                       C73 51 78 39 91 31 Z"
-                    fill={isCityBlack ? '#343434' : '#F2E9DE'}
-                    stroke={theme.strongLine ?? theme.line}
-                    strokeWidth={1.5}
-                    strokeLinejoin="round"
-                  />
+              {shape.shortLabel}
+            </SvgText>
+          </G>
+        );
+      }
+    )}
 
-                  {/* 서해안과 남해안의 대표 섬 표현 */}
-                  <Circle cx="24" cy="116" r="2.3" fill={isCityBlack ? '#343434' : '#F2E9DE'} stroke={theme.line} strokeWidth="0.8" />
-                  <Circle cx="28" cy="158" r="1.8" fill={isCityBlack ? '#343434' : '#F2E9DE'} stroke={theme.line} strokeWidth="0.7" />
-                  <Circle cx="24" cy="279" r="2.2" fill={isCityBlack ? '#343434' : '#F2E9DE'} stroke={theme.line} strokeWidth="0.8" />
-                  <Circle cx="52" cy="347" r="2.4" fill={isCityBlack ? '#343434' : '#F2E9DE'} stroke={theme.line} strokeWidth="0.8" />
-                  <Circle cx="84" cy="369" r="2" fill={isCityBlack ? '#343434' : '#F2E9DE'} stroke={theme.line} strokeWidth="0.8" />
-                  <Circle cx="188" cy="368" r="2.2" fill={isCityBlack ? '#343434' : '#F2E9DE'} stroke={theme.line} strokeWidth="0.8" />
+    {/* 서해안 섬 */}
+    <Circle
+      cx="31"
+      cy="135"
+      r="3"
+      fill={
+        isCityBlack
+          ? '#666666'
+          : '#78B7E3'
+      }
+      stroke="#FFFFFF"
+      strokeWidth="1"
+    />
 
-                  {/* 제주도 */}
-                  <SvgPath
-                    d="M83 400 C100 389 129 387 154 396 C147 408 132 414 108 414 C96 414 87 410 83 406 Z"
-                    fill={isCityBlack ? '#343434' : '#F2E9DE'}
-                    stroke={theme.strongLine ?? theme.line}
-                    strokeWidth={1.2}
-                  />
+    <Circle
+      cx="38"
+      cy="185"
+      r="2.5"
+      fill={
+        isCityBlack
+          ? '#666666'
+          : '#F2A9B5'
+      }
+      stroke="#FFFFFF"
+      strokeWidth="1"
+    />
 
-                  {/* 울릉도와 독도 */}
-                  <Circle cx="273" cy="133" r="3.1" fill={isCityBlack ? '#343434' : '#F2E9DE'} stroke={theme.strongLine ?? theme.line} strokeWidth="0.9" />
-                  <Circle cx="286" cy="146" r="1.7" fill={isCityBlack ? '#343434' : '#F2E9DE'} stroke={theme.strongLine ?? theme.line} strokeWidth="0.8" />
-                  <SvgText x="271" y="125" fontSize="5.4" fill={theme.subText} textAnchor="middle">울릉</SvgText>
-                  <SvgText x="286" y="140" fontSize="4.8" fill={theme.subText} textAnchor="middle">독도</SvgText>
+    <Circle
+      cx="28"
+      cy="340"
+      r="3"
+      fill={
+        isCityBlack
+          ? '#666666'
+          : '#F3CF4A'
+      }
+      stroke="#FFFFFF"
+      strokeWidth="1"
+    />
 
-                  {KOREA_REGION_MARKERS.map((region) => {
-                    const available = region.available;
-                    const highlighted = region.available;
-                    const nextRegion = region.nextRegion === true;
+    {/* 울릉도와 독도 */}
+    <Circle
+      cx="331"
+      cy="170"
+      r="5"
+      fill={
+        isCityBlack
+          ? '#666666'
+          : '#F4B16A'
+      }
+      stroke="#FFFFFF"
+      strokeWidth="1.3"
+    />
 
-                    return (
-                      <G key={region.id}>
-                        <Circle
-                          cx={region.x}
-                          cy={region.y}
-                          r={highlighted ? 12 : nextRegion ? 9 : 5.5}
-                          fill={
-                            highlighted
-                              ? isCityBlack
-                                ? '#EFEFEF'
-                                : '#D8C7B3'
-                              : nextRegion
-                                ? isCityBlack
-                                  ? '#7A7A7A'
-                                  : '#DDD1C4'
-                                : isCityBlack
-                                  ? '#555555'
-                                  : '#D9D4CE'
-                          }
-                          stroke={
-                            available || nextRegion
-                              ? theme.strongLine ?? theme.line
-                              : theme.line
-                          }
-                          strokeWidth={highlighted ? 2 : 1}
-                          strokeDasharray={nextRegion ? '3 2' : undefined}
-                        />
-                        <SvgText
-                          x={region.x}
-                          y={region.y + (highlighted ? 3 : 2.5)}
-                          fontSize={highlighted ? 7.5 : 5.5}
-                          fontWeight={highlighted ? '800' : '600'}
-                          fill={
-                            highlighted
-                              ? isCityBlack
-                                ? '#111111'
-                                : '#4D4035'
-                              : theme.text
-                          }
-                          textAnchor="middle"
-                        >
-                          {region.shortLabel}
-                        </SvgText>
-                      </G>
-                    );
-                  })}
-                </Svg>
-              </Pressable>
+    <Circle
+      cx="346"
+      cy="182"
+      r="2.8"
+      fill={
+        isCityBlack
+          ? '#666666'
+          : '#F4B16A'
+      }
+      stroke="#FFFFFF"
+      strokeWidth="1"
+    />
 
-              <View style={styles.koreaMapLegendRow}>
-                <View style={styles.koreaMapLegendItem}>
-                  <View
-                    style={[
-                      styles.koreaMapLegendDot,
-                      {
-                        backgroundColor: isCityBlack
-                          ? '#EFEFEF'
-                          : '#D8C7B3',
-                      },
-                    ]}
-                  />
-                  <Text
-                    style={[
-                      styles.koreaMapLegendText,
-                      { color: theme.subText },
-                    ]}
-                  >
-                    17개 광역지역 모두 탐험 가능
-                  </Text>
-                </View>
-              </View>
+    <SvgText
+      x="331"
+      y="159"
+      fontSize="7"
+      fontWeight="700"
+      fill={theme.subText}
+      textAnchor="middle"
+      pointerEvents="none"
+    >
+      울릉
+    </SvgText>
 
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.countryRegionButtonRow}
-              >
-                {KOREA_REGION_MARKERS.map((region) => (
-                  <Pressable
-                    key={region.id}
-                    onPress={() => openKoreaRegion(region.id)}
-                    style={({ pressed }) => [
-                      styles.countryRegionButton,
-                      {
-                        backgroundColor: region.available
-                          ? theme.background
-                          : theme.card,
-                        borderColor:
-                          region.available || region.nextRegion
-                            ? theme.strongLine ?? theme.line
-                            : theme.line,
-                        borderRadius: isCityBlack ? 2 : 10,
-                        opacity: pressed ? 0.65 : region.available ? 1 : 0.68,
-                      },
-                    ]}
-                  >
-                    <Text style={styles.countryRegionIcon}>{region.icon}</Text>
-                    <Text style={[styles.countryRegionName, { color: theme.text }]}>{region.name}</Text>
-                    <Text style={[styles.countryRegionStatus, { color: theme.subText }]}>
-                      {region.id === 'seoul'
-                        ? `${seoulVisitedCount}/${seoulPlaces.length}곳`
-                        : region.id === 'busan'
-                          ? `${busanVisitedCount}/${busanPlaces.length}곳`
-                          : region.id === 'incheon'
-                            ? `${incheonVisitedCount}/${incheonPlaces.length}곳`
-                            : region.id === 'gyeonggi'
-                              ? `${gyeonggiVisitedCount}/${gyeonggiPlaces.length}곳`
-                              : region.id === 'gangwon'
-                                ? `${gangwonVisitedCount}/${gangwonPlaces.length}곳`
-                                : region.id === 'jeju'
-                                  ? '지도 열림'
-                                  : '준비 중'}
-                    </Text>
-                  </Pressable>
-                ))}
-              </ScrollView>
+    <SvgText
+      x="346"
+      y="174"
+      fontSize="6"
+      fontWeight="700"
+      fill={theme.subText}
+      textAnchor="middle"
+      pointerEvents="none"
+    >
+      독도
+    </SvgText>
+  </Svg>
+</Pressable>
+
             </View>
 
-            <Pressable
-              onPress={() => openKoreaRegion('seoul')}
-              style={({ pressed }) => [
-                styles.regionLaunchCard,
+<View
+  style={
+    styles.sectionBlock
+  }
+>
+  <View
+    style={
+      styles.monthlyEventHeader
+    }
+  >
+    <Text
+      style={[
+        styles.sectionTitle,
+        {
+          color: theme.text,
+        },
+      ]}
+    >
+      이번 달 추천 행사
+    </Text>
+
+    <Pressable
+      onPress={() => {
+        setNationalFestivalRegionFilter(
+          'all'
+        );
+
+        setNationalFestivalPeriodFilter(
+          'thisMonth'
+        );
+
+        setNationalFestivalAudienceFilter(
+          'all'
+        );
+
+        setNationalFestivalModalVisible(
+          true
+        );
+      }}
+      style={({ pressed }) => ({
+        opacity: pressed
+          ? 0.55
+          : 1,
+      })}
+    >
+      <Text
+        style={[
+          styles.monthlyEventAllText,
+          {
+            color: theme.text,
+          },
+        ]}
+      >
+        전체 보기 ›
+      </Text>
+    </Pressable>
+  </View>
+
+  {monthlyRecommendedFestivals.length >
+  0 ? (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={
+        false
+      }
+      contentContainerStyle={
+        styles.monthlyEventRow
+      }
+    >
+      {monthlyRecommendedFestivals.map(
+        (festival) => (
+          <Pressable
+            key={festival.id}
+            onPress={() =>
+              router.push({
+                pathname:
+                  '/explore/festival/[festivalId]',
+                params: {
+                  festivalId:
+                    festival.id,
+                },
+              } as any)
+            }
+            style={({ pressed }) => [
+              styles.monthlyEventCard,
+              {
+                backgroundColor:
+                  theme.card,
+                borderColor:
+                  theme.line,
+                borderRadius:
+                  isCityBlack
+                    ? 3
+                    : 14,
+                opacity: pressed
+                  ? 0.65
+                  : 1,
+              },
+            ]}
+          >
+            <Text
+              style={
+                styles.monthlyEventIcon
+              }
+            >
+              {festival.icon}
+            </Text>
+
+            <Text
+              style={[
+                styles.monthlyEventBadge,
                 {
-                  backgroundColor: theme.card,
-                  borderColor: theme.strongLine ?? theme.line,
-                  borderRadius: isCityBlack ? 4 : 16,
-                  opacity: pressed ? 0.65 : 1,
+                  color:
+                    theme.subText,
                 },
               ]}
             >
-              <View style={[styles.regionLaunchIconBox, { backgroundColor: theme.background, borderRadius: isCityBlack ? 2 : 12 }]}>
-                <Text style={styles.regionLaunchIcon}>🏙️</Text>
-              </View>
-              <View style={styles.regionLaunchContent}>
-                <View style={styles.regionLaunchTitleRow}>
-                  <Text style={[styles.regionLaunchTitle, { color: theme.text }]}>서울특별시</Text>
-                  <Text style={[styles.regionLaunchPercent, { color: theme.text }]}>{Math.round((seoulVisitedCount / Math.max(1, seoulPlaces.length)) * 100)}%</Text>
-                </View>
-                <Text style={[styles.regionLaunchSubtitle, { color: theme.subText }]}>25개 자치구 · 탐험 장소 {seoulPlaces.length}곳</Text>
-                <Text style={[styles.regionLaunchAction, { color: theme.text }]}>서울 지도 열기</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={19} color={theme.subText} />
-            </Pressable>
+              이번 달 추천
+            </Text>
 
-            <Pressable
-              onPress={() => openKoreaRegion('incheon')}
-              style={({ pressed }) => [
-                styles.regionLaunchCard,
+            <Text
+              numberOfLines={2}
+              style={[
+                styles.monthlyEventName,
                 {
-                  backgroundColor: theme.card,
-                  borderColor: theme.strongLine ?? theme.line,
-                  borderRadius: isCityBlack ? 4 : 16,
-                  opacity: pressed ? 0.65 : 1,
+                  color:
+                    theme.text,
                 },
               ]}
             >
-              <View style={[styles.regionLaunchIconBox, { backgroundColor: theme.background, borderRadius: isCityBlack ? 2 : 12 }]}>
-                <Text style={styles.regionLaunchIcon}>🌊</Text>
-              </View>
-              <View style={styles.regionLaunchContent}>
-                <View style={styles.regionLaunchTitleRow}>
-                  <Text style={[styles.regionLaunchTitle, { color: theme.text }]}>인천광역시</Text>
-                  <Text style={[styles.regionLaunchPercent, { color: theme.text }]}>{Math.round((incheonVisitedCount / Math.max(1, incheonPlaces.length)) * 100)}%</Text>
-                </View>
-                <Text style={[styles.regionLaunchSubtitle, { color: theme.subText }]}>9개 구·2개 군 · 제물포구·영종구·미추홀구·연수구·남동구·부평구·계양구 70곳 탐험 가능</Text>
-                <Text style={[styles.regionLaunchAction, { color: theme.text }]}>인천 지도 열기</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={19} color={theme.subText} />
-            </Pressable>
+              {festival.name}
+            </Text>
 
-            <Pressable
-              onPress={() => openKoreaRegion('gyeonggi')}
-              style={({ pressed }) => [
-                styles.regionLaunchCard,
+            <Text
+              numberOfLines={2}
+              style={[
+                styles.monthlyEventMeta,
                 {
-                  backgroundColor: theme.card,
-                  borderColor: theme.strongLine ?? theme.line,
-                  borderRadius: isCityBlack ? 4 : 16,
-                  opacity: pressed ? 0.65 : 1,
+                  color:
+                    theme.subText,
                 },
               ]}
             >
-              <View style={[styles.regionLaunchIconBox, { backgroundColor: theme.background, borderRadius: isCityBlack ? 2 : 12 }]}>
-                <Text style={styles.regionLaunchIcon}>🏰</Text>
-              </View>
-              <View style={styles.regionLaunchContent}>
-                <View style={styles.regionLaunchTitleRow}>
-                  <Text style={[styles.regionLaunchTitle, { color: theme.text }]}>경기도</Text>
-                  <Text style={[styles.regionLaunchPercent, { color: theme.text }]}>{Math.round((gyeonggiVisitedCount / Math.max(1, gyeonggiPlaces.length)) * 100)}%</Text>
-                </View>
-                <Text style={[styles.regionLaunchSubtitle, { color: theme.subText }]}>31개 시·군 전체 · 대표 장소 310곳 탐험 가능</Text>
-                <Text style={[styles.regionLaunchAction, { color: theme.text }]}>경기도 지도 열기</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={19} color={theme.subText} />
-            </Pressable>
+              {festival.regionName}
+              {' · '}
+              {getFestivalScheduleLabel(
+                festival
+              )}
+            </Text>
 
-            <Pressable
-              onPress={() => openKoreaRegion('busan')}
-              style={({ pressed }) => [
-                styles.regionLaunchCard,
+            <Text
+              numberOfLines={1}
+              style={[
+                styles.monthlyEventCategory,
                 {
-                  backgroundColor: theme.card,
-                  borderColor: theme.strongLine ?? theme.line,
-                  borderRadius: isCityBlack ? 4 : 16,
-                  opacity: pressed ? 0.65 : 1,
+                  color:
+                    theme.text,
                 },
               ]}
             >
-              <View style={[styles.regionLaunchIconBox, { backgroundColor: theme.background, borderRadius: isCityBlack ? 2 : 12 }]}>
-                <Text style={styles.regionLaunchIcon}>🌉</Text>
-              </View>
-              <View style={styles.regionLaunchContent}>
-                <View style={styles.regionLaunchTitleRow}>
-                  <Text style={[styles.regionLaunchTitle, { color: theme.text }]}>부산광역시</Text>
-                  <Text style={[styles.regionLaunchPercent, { color: theme.text }]}>{Math.round((busanVisitedCount / Math.max(1, busanPlaces.length)) * 100)}%</Text>
-                </View>
-                <Text style={[styles.regionLaunchSubtitle, { color: theme.subText }]}>16개 구·군 전체 탐험 가능 · 탐험 장소 {busanPlaces.length}곳</Text>
-                <Text style={[styles.regionLaunchAction, { color: theme.text }]}>부산 지도 열기</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={19} color={theme.subText} />
-            </Pressable>
+              {getFestivalContentTypeLabel(
+                festival
+              )}
+              {' · '}
+              {festival.category}
+            </Text>
+          </Pressable>
+        )
+      )}
+    </ScrollView>
+  ) : (
+    <View
+      style={[
+        styles.monthlyEventEmptyCard,
+        {
+          backgroundColor:
+            theme.card,
+          borderColor:
+            theme.line,
+          borderRadius:
+            isCityBlack
+              ? 3
+              : 14,
+        },
+      ]}
+    >
+      <Text
+        style={[
+          styles.monthlyEventEmptyText,
+          {
+            color:
+              theme.subText,
+          },
+        ]}
+      >
+        이번 달 추천 행사를
+        준비하고 있어요.
+      </Text>
+    </View>
+  )}
+</View>
 
-
-            <Pressable
-              onPress={() => openKoreaRegion('gangwon')}
-              style={({ pressed }) => [
-                styles.regionLaunchCard,
-                {
-                  backgroundColor: theme.card,
-                  borderColor: theme.strongLine ?? theme.line,
-                  borderRadius: isCityBlack ? 4 : 16,
-                  opacity: pressed ? 0.65 : 1,
-                },
-              ]}
-            >
-              <View style={[styles.regionLaunchIconBox, { backgroundColor: theme.background, borderRadius: isCityBlack ? 2 : 12 }]}>
-                <Text style={styles.regionLaunchIcon}>🏔️</Text>
-              </View>
-              <View style={styles.regionLaunchContent}>
-                <View style={styles.regionLaunchTitleRow}>
-                  <Text style={[styles.regionLaunchTitle, { color: theme.text }]}>강원특별자치도</Text>
-                  <Text style={[styles.regionLaunchPercent, { color: theme.text }]}>{Math.round((gangwonVisitedCount / Math.max(1, gangwonPlaces.length)) * 100)}%</Text>
-                </View>
-                <Text style={[styles.regionLaunchSubtitle, { color: theme.subText }]}>18개 시·군 전체 탐험 가능 · 탐험 장소 {gangwonPlaces.length}곳</Text>
-                <Text style={[styles.regionLaunchAction, { color: theme.text }]}>강원 지도 열기</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={19} color={theme.subText} />
-            </Pressable>
-
-            <Pressable
-              onPress={() => openKoreaRegion('jeju')}
-              style={({ pressed }) => [
-                styles.regionLaunchCard,
-                {
-                  backgroundColor: theme.card,
-                  borderColor: theme.strongLine ?? theme.line,
-                  borderRadius: isCityBlack ? 4 : 16,
-                  opacity: pressed ? 0.65 : 1,
-                },
-              ]}
-            >
-              <View style={[styles.regionLaunchIconBox, { backgroundColor: theme.background, borderRadius: isCityBlack ? 2 : 12 }]}>
-                <Text style={styles.regionLaunchIcon}>🍊</Text>
-              </View>
-              <View style={styles.regionLaunchContent}>
-                <View style={styles.regionLaunchTitleRow}>
-                  <Text style={[styles.regionLaunchTitle, { color: theme.text }]}>제주특별자치도</Text>
-                  <Text style={[styles.regionLaunchPercent, { color: theme.text }]}>지도 열림</Text>
-                </View>
-                <Text style={[styles.regionLaunchSubtitle, { color: theme.subText }]}>제주시 30곳 · 서귀포시 30곳 탐험 가능</Text>
-                <Text style={[styles.regionLaunchAction, { color: theme.text }]}>제주 지도 열기</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={19} color={theme.subText} />
-            </Pressable>
           </>
-        ) : explorationContentMode === 'festivals' ? (
+        ) : explorationContentMode ==='events' ? (
+          mapLevel === 'seoul' ? (
+            <SeoulCultureListPanel
+              events={seoulCitywideCultureEvents}
+              loading={seoulCultureLoading}
+              error={seoulCultureError}
+              periodFilter={seoulCulturePeriodFilter}
+              setPeriodFilter={setSeoulCulturePeriodFilter}
+              typeFilter={seoulCultureTypeFilter}
+              setTypeFilter={setSeoulCultureTypeFilter}
+              conditionFilter={seoulCultureConditionFilter}
+              setConditionFilter={setSeoulCultureConditionFilter}
+              audienceFilter={seoulCultureAudienceFilter}
+              setAudienceFilter={setSeoulCultureAudienceFilter}
+            />
+          ) : (
           <>
             <View style={styles.festivalScopeRow}>
               <Pressable
@@ -5934,9 +8600,21 @@ export default function ExploreScreen() {
             <View style={styles.sectionBlock}>
               <View style={styles.sectionHeader}>
                 <View>
-                  <Text style={[styles.sectionTitle, { color: theme.text }]}>축제·행사·전시</Text>
+                  <Text
+  style={[
+    styles.sectionTitle,
+    {
+      color: theme.text,
+    },
+  ]}
+>
+  {currentMapMeta?.shortTitle ??
+    '지역'}{' '}
+  축제·행사
+</Text>
                   <Text style={[styles.sectionSubtitle, { color: theme.subText }]}>
-                    매년 일정이 바뀌므로 공식 일정이 확정된 축제만 GPS 인증이 열려요.
+                    현재 진행 중이거나 예정된
+지역 행사를 확인하세요.
                   </Text>
                 </View>
                 <Text style={[styles.openCount, { color: theme.text }]}>
@@ -6020,7 +8698,3068 @@ export default function ExploreScreen() {
               )}
             </View>
           </>
-        ) : mapLevel === 'gyeonggi' ? (
+          )
+          ) : explorationContentMode ===
+  'facilities' ? (
+  mapLevel === 'seoul' ? (
+    <>
+      <View
+        style={[
+          styles.seoulFacilityCategoryCard,
+          {
+            backgroundColor:
+              theme.card,
+            borderColor:
+              theme.line,
+            borderRadius:
+              isCityBlack
+                ? 3
+                : 12,
+          },
+        ]}
+      >
+        <View
+          style={
+            styles.seoulFacilityFilterRow
+          }
+        >
+          {SEOUL_FACILITY_CATEGORY_OPTIONS.map(
+            (option) => {
+              const selected =
+                seoulFacilityCategoryFilter ===
+                option.id;
+
+              return (
+                <Pressable
+                  key={option.id}
+                  onPress={() => {
+                    setSeoulFacilityCategoryFilter(
+                      option.id
+                    );
+                    setSeoulSportsDisplayLimit(
+                      SEOUL_SPORTS_PAGE_SIZE
+                    );
+                    setSeoulSpaceDisplayLimit(
+                      SEOUL_SPACE_PAGE_SIZE
+                    );
+                    setSeoulEducationDisplayLimit(
+                      SEOUL_EDUCATION_PAGE_SIZE
+                    );
+                  }}
+                  style={({ pressed }) => [
+                    styles.seoulFacilityFilterButton,
+                    {
+                      backgroundColor:
+                        selected
+                          ? theme.background
+                          : theme.card,
+                      borderColor:
+                        selected
+                          ? theme.strongLine ??
+                            theme.line
+                          : theme.line,
+                      borderRadius:
+                        isCityBlack
+                          ? 2
+                          : 7,
+                      opacity:
+                        pressed
+                          ? 0.58
+                          : 1,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.seoulFacilityFilterText,
+                      {
+                        color:
+                          selected
+                            ? theme.text
+                            : theme.subText,
+                      },
+                    ]}
+                  >
+                    {option.label}
+                  </Text>
+                </Pressable>
+              );
+            }
+          )}
+        </View>
+      </View>
+
+
+      {seoulFacilityCategoryFilter ===
+      'education' ? (
+        <View
+          style={[
+            styles.seoulFacilityCategoryCard,
+            {
+              backgroundColor: theme.card,
+              borderColor: theme.line,
+              borderRadius: isCityBlack
+                ? 3
+                : 12,
+            },
+          ]}
+        >
+          <Text
+            style={[
+              styles.sectionSubtitle,
+              { color: theme.subText },
+            ]}
+          >
+            교육 분야
+          </Text>
+
+          <View
+            style={
+              styles.seoulFacilityFilterRow
+            }
+          >
+            {SEOUL_EDUCATION_CATEGORY_OPTIONS.map(
+              (option) => {
+                const selected =
+                  seoulEducationCategoryFilter ===
+                  option.id;
+
+                return (
+                  <Pressable
+                    key={option.id}
+                    onPress={() => {
+                      setSeoulEducationCategoryFilter(
+                        option.id
+                      );
+                      setSeoulEducationDisplayLimit(
+                        SEOUL_EDUCATION_PAGE_SIZE
+                      );
+                    }}
+                    style={({ pressed }) => [
+                      styles.seoulFacilityFilterButton,
+                      {
+                        backgroundColor: selected
+                          ? theme.background
+                          : theme.card,
+                        borderColor: selected
+                          ? theme.strongLine ??
+                            theme.line
+                          : theme.line,
+                        borderRadius: isCityBlack
+                          ? 2
+                          : 7,
+                        opacity: pressed
+                          ? 0.58
+                          : 1,
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.seoulFacilityFilterText,
+                        {
+                          color: selected
+                            ? theme.text
+                            : theme.subText,
+                        },
+                      ]}
+                    >
+                      {option.label}
+                    </Text>
+                  </Pressable>
+                );
+              }
+            )}
+          </View>
+
+          <Text
+            style={[
+              styles.sectionSubtitle,
+              {
+                color: theme.subText,
+                marginTop: 8,
+              },
+            ]}
+          >
+            추천 대상
+          </Text>
+
+          <View
+            style={
+              styles.seoulFacilityFilterRow
+            }
+          >
+            {SEOUL_EDUCATION_AUDIENCE_OPTIONS.map(
+              (option) => {
+                const selected =
+                  seoulEducationAudienceFilter ===
+                  option.id;
+
+                return (
+                  <Pressable
+                    key={option.id}
+                    onPress={() => {
+                      setSeoulEducationAudienceFilter(
+                        option.id
+                      );
+                      setSeoulEducationDisplayLimit(
+                        SEOUL_EDUCATION_PAGE_SIZE
+                      );
+                    }}
+                    style={({ pressed }) => [
+                      styles.seoulFacilityFilterButton,
+                      {
+                        backgroundColor: selected
+                          ? theme.background
+                          : theme.card,
+                        borderColor: selected
+                          ? theme.strongLine ??
+                            theme.line
+                          : theme.line,
+                        borderRadius: isCityBlack
+                          ? 2
+                          : 7,
+                        opacity: pressed
+                          ? 0.58
+                          : 1,
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.seoulFacilityFilterText,
+                        {
+                          color: selected
+                            ? theme.text
+                            : theme.subText,
+                        },
+                      ]}
+                    >
+                      {option.label}
+                    </Text>
+                  </Pressable>
+                );
+              }
+            )}
+          </View>
+
+          <Text
+            style={[
+              styles.sectionSubtitle,
+              {
+                color: theme.subText,
+                marginTop: 8,
+              },
+            ]}
+          >
+            예약 상태
+          </Text>
+
+          <View
+            style={
+              styles.seoulFacilityFilterRow
+            }
+          >
+            {SEOUL_EDUCATION_STATUS_OPTIONS.map(
+              (option) => {
+                const selected =
+                  seoulEducationStatusFilter ===
+                  option.id;
+
+                return (
+                  <Pressable
+                    key={option.id}
+                    onPress={() => {
+                      setSeoulEducationStatusFilter(
+                        option.id
+                      );
+                      setSeoulEducationDisplayLimit(
+                        SEOUL_EDUCATION_PAGE_SIZE
+                      );
+                    }}
+                    style={({ pressed }) => [
+                      styles.seoulFacilityFilterButton,
+                      {
+                        backgroundColor: selected
+                          ? theme.background
+                          : theme.card,
+                        borderColor: selected
+                          ? theme.strongLine ??
+                            theme.line
+                          : theme.line,
+                        borderRadius: isCityBlack
+                          ? 2
+                          : 7,
+                        opacity: pressed
+                          ? 0.58
+                          : 1,
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.seoulFacilityFilterText,
+                        {
+                          color: selected
+                            ? theme.text
+                            : theme.subText,
+                        },
+                      ]}
+                    >
+                      {option.label}
+                    </Text>
+                  </Pressable>
+                );
+              }
+            )}
+          </View>
+        </View>
+      ) : null}
+
+      {(seoulFacilityCategoryFilter ===
+        'all' ||
+        seoulFacilityCategoryFilter ===
+          'camping' ||
+        seoulFacilityCategoryFilter ===
+          'picnic') ? (
+        <View
+          style={
+            styles.sectionBlock
+          }
+        >
+          <View
+            style={
+              styles.sectionHeader
+            }
+          >
+            <View
+              style={{
+                flex: 1,
+                minWidth: 0,
+              }}
+            >
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              >
+                {seoulFacilityCategoryFilter ===
+                'camping'
+                  ? '서울 안 캠핑장'
+                  : seoulFacilityCategoryFilter ===
+                      'picnic'
+                    ? '서울 안 피크닉'
+                    : '서울 안 캠핑·피크닉'}
+              </Text>
+
+              <Text
+                style={[
+                  styles.sectionSubtitle,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                자치구 안에서 이용할 수
+                있는 캠핑장과 피크닉 시설
+              </Text>
+            </View>
+
+            <Text
+              style={[
+                styles.openCount,
+                {
+                  color:
+                    theme.subText,
+                },
+              ]}
+            >
+              {
+                visibleInsideSeoulCampingSummaries.length
+              }
+              곳
+            </Text>
+          </View>
+
+          <View
+            style={
+              styles.placeList
+            }
+          >
+            {visibleInsideSeoulCampingSummaries.map(
+              (summary) => {
+                const facility =
+                  summary.facility;
+
+                const reservationUrl =
+                  summary
+                    .primaryReservation
+                    ?.reservationUrl ??
+                  facility.officialUrl;
+
+                const districtId =
+                  getSeoulDistrictIdByName(
+                    facility.district
+                  );
+
+                return (
+                  <View
+                    key={facility.id}
+                    style={[
+                      styles.placeCard,
+                      {
+                        backgroundColor:
+                          theme.card,
+                        borderColor:
+                          theme.line,
+                        borderRadius:
+                          isCityBlack
+                            ? 3
+                            : 12,
+                      },
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.placeIconBox,
+                        {
+                          backgroundColor:
+                            theme.background,
+                          borderRadius:
+                            isCityBlack
+                              ? 2
+                              : 10,
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={
+                          styles.placeIcon
+                        }
+                      >
+                        {facility.facilityKind ===
+                        'picnic'
+                          ? '🧺'
+                          : '🏕️'}
+                      </Text>
+                    </View>
+
+                    <View
+                      style={
+                        styles.placeContent
+                      }
+                    >
+                      <View
+                        style={
+                          styles.placeTitleRow
+                        }
+                      >
+                        <Text
+                          numberOfLines={2}
+                          style={[
+                            styles.placeName,
+                            {
+                              color:
+                                theme.text,
+                            },
+                          ]}
+                        >
+                          {facility.name}
+                        </Text>
+
+                        <Text
+                          style={[
+                            styles.placeStatus,
+                            {
+                              color:
+                                theme.text,
+                            },
+                          ]}
+                        >
+                          {getCampingStatusLabel(
+                            summary.primaryStatus
+                          )}
+                        </Text>
+                      </View>
+
+                      <Text
+                        numberOfLines={1}
+                        style={[
+                          styles.placeMeta,
+                          {
+                            color:
+                              theme.subText,
+                          },
+                        ]}
+                      >
+                        {facility.district ??
+                          '서울'}{' '}
+                        · 예약상품{' '}
+                        {
+                          facility.reservationCount
+                        }
+                        개
+                      </Text>
+
+                      <View
+                        style={
+                          styles.placeTagRow
+                        }
+                      >
+                        <View
+                          style={[
+                            styles.placeTag,
+                            {
+                              borderColor:
+                                theme.line,
+                              borderRadius:
+                                isCityBlack
+                                  ? 2
+                                  : 6,
+                            },
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.placeTagText,
+                              {
+                                color:
+                                  theme.subText,
+                              },
+                            ]}
+                          >
+                            {facility.facilityKind ===
+                            'picnic'
+                              ? '피크닉'
+                              : '캠핑장'}
+                          </Text>
+                        </View>
+
+                        {summary.openCount >
+                        0 ? (
+                          <View
+                            style={[
+                              styles.placeTag,
+                              {
+                                borderColor:
+                                  theme.strongLine ??
+                                  theme.line,
+                                borderRadius:
+                                  isCityBlack
+                                    ? 2
+                                    : 6,
+                              },
+                            ]}
+                          >
+                            <Text
+                              style={[
+                                styles.placeTagText,
+                                {
+                                  color:
+                                    theme.text,
+                                },
+                              ]}
+                            >
+                              접수 중{' '}
+                              {
+                                summary.openCount
+                              }
+                            </Text>
+                          </View>
+                        ) : null}
+
+                        {summary.upcomingCount >
+                        0 ? (
+                          <View
+                            style={[
+                              styles.placeTag,
+                              {
+                                borderColor:
+                                  theme.line,
+                                borderRadius:
+                                  isCityBlack
+                                    ? 2
+                                    : 6,
+                              },
+                            ]}
+                          >
+                            <Text
+                              style={[
+                                styles.placeTagText,
+                                {
+                                  color:
+                                    theme.subText,
+                                },
+                              ]}
+                            >
+                              접수 예정{' '}
+                              {
+                                summary.upcomingCount
+                              }
+                            </Text>
+                          </View>
+                        ) : null}
+                      </View>
+
+                      <Text
+                        numberOfLines={1}
+                        style={[
+                          styles.placeReward,
+                          {
+                            color:
+                              theme.subText,
+                          },
+                        ]}
+                      >
+                        {getCampingReceptionLabel(
+                          summary
+                        )}
+                      </Text>
+
+                      <View
+                        style={
+                          styles.campingActionRow
+                        }
+                      >
+                        {districtId ? (
+                          <Pressable
+                            onPress={() =>
+                              router.push({
+                                pathname:
+                                  '/explore/district/[districtId]',
+                                params: {
+                                  districtId,
+                                },
+                              } as any)
+                            }
+                            style={({
+                              pressed,
+                            }) => [
+                              styles.campingActionButton,
+                              {
+                                borderColor:
+                                  theme.line,
+                                borderRadius:
+                                  isCityBlack
+                                    ? 2
+                                    : 7,
+                                opacity:
+                                  pressed
+                                    ? 0.55
+                                    : 1,
+                              },
+                            ]}
+                          >
+                            <Text
+                              style={[
+                                styles.campingActionText,
+                                {
+                                  color:
+                                    theme.text,
+                                },
+                              ]}
+                            >
+                              자치구 보기
+                            </Text>
+                          </Pressable>
+                        ) : null}
+
+                        <Pressable
+                          onPress={() =>
+                            openSeoulFacilityDetail(
+                              'camping',
+                              facility.id
+                            )
+                          }
+                          style={({
+                            pressed,
+                          }) => [
+                            styles.campingActionButton,
+                            {
+                              borderColor:
+                                theme.strongLine ??
+                                theme.line,
+                              borderRadius:
+                                isCityBlack
+                                  ? 2
+                                  : 7,
+                              opacity:
+                                pressed
+                                  ? 0.55
+                                  : 1,
+                            },
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.campingActionText,
+                              {
+                                color:
+                                  theme.text,
+                              },
+                            ]}
+                          >
+                            상세보기
+                          </Text>
+                        </Pressable>
+
+                        <Pressable
+                          disabled={
+                            !reservationUrl
+                          }
+                          onPress={() =>
+                            openCampingReservation(
+                              reservationUrl
+                            )
+                          }
+                          style={({
+                            pressed,
+                          }) => [
+                            styles.campingActionButton,
+                            {
+                              borderColor:
+                                theme.strongLine ??
+                                theme.line,
+                              borderRadius:
+                                isCityBlack
+                                  ? 2
+                                  : 7,
+                              opacity:
+                                !reservationUrl
+                                  ? 0.4
+                                  : pressed
+                                    ? 0.55
+                                    : 1,
+                            },
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.campingActionText,
+                              {
+                                color:
+                                  theme.text,
+                              },
+                            ]}
+                          >
+                            예약 페이지
+                          </Text>
+                        </Pressable>
+                      </View>
+                    </View>
+                  </View>
+                );
+              }
+            )}
+          </View>
+        </View>
+      ) : null}
+
+      {(seoulFacilityCategoryFilter ===
+        'all' ||
+        seoulFacilityCategoryFilter ===
+          'sports') ? (
+        <View
+          style={
+            styles.sectionBlock
+          }
+        >
+          <View
+            style={
+              styles.sectionHeader
+            }
+          >
+            <View
+              style={{
+                flex: 1,
+                minWidth: 0,
+              }}
+            >
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              >
+                서울 안 체육시설
+              </Text>
+
+              <Text
+                style={[
+                  styles.sectionSubtitle,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                테니스장·풋살장·축구장 등
+                서울 공공체육시설 예약
+              </Text>
+            </View>
+
+            <Text
+              style={[
+                styles.openCount,
+                {
+                  color:
+                    theme.subText,
+                },
+              ]}
+            >
+              {
+                insideSeoulSportsSummaries.length
+              }
+              곳
+            </Text>
+          </View>
+
+          <Text
+            style={[
+              styles.sectionSubtitle,
+              {
+                color: theme.subText,
+                marginBottom: 8,
+              },
+            ]}
+          >
+            서울 전체 시설을 종목과 예약 상태 중심으로 확인하세요.
+          </Text>
+
+          {visibleInsideSeoulSportsSummaries.length ===
+          0 ? (
+            <View
+              style={[
+                styles.festivalEmptyCard,
+                {
+                  backgroundColor:
+                    theme.card,
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 3
+                      : 14,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.festivalEmptyTitle,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              >
+                현재 연결된 체육시설이
+                없어요.
+              </Text>
+
+              <Text
+                style={[
+                  styles.festivalEmptyText,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                체육시설 데이터가 갱신되면
+                이곳에 표시됩니다.
+              </Text>
+            </View>
+          ) : (
+            <View
+              style={
+                styles.placeList
+              }
+            >
+              {visibleInsideSeoulSportsSummaries.map(
+                (summary) => {
+                  const facility =
+                    summary.facility;
+
+                  const reservation =
+                    summary.primaryReservation;
+
+                  const reservationUrl =
+                    getSportsReservationUrl(
+                      summary
+                    );
+
+                  const districtId =
+                    getSeoulDistrictIdByName(
+                      facility.district
+                    );
+
+                  return (
+                    <View
+                      key={facility.id}
+                      style={[
+                        styles.placeCard,
+                        {
+                          backgroundColor:
+                            theme.card,
+                          borderColor:
+                            theme.line,
+                          borderRadius:
+                            isCityBlack
+                              ? 3
+                              : 12,
+                        },
+                      ]}
+                    >
+                      <View
+                        style={[
+                          styles.placeIconBox,
+                          {
+                            backgroundColor:
+                              theme.background,
+                            borderRadius:
+                              isCityBlack
+                                ? 2
+                                : 10,
+                          },
+                        ]}
+                      >
+                        <Text
+                          style={
+                            styles.placeIcon
+                          }
+                        >
+                          {getSportsFacilityIcon(
+                            facility.primaryCategory
+                          )}
+                        </Text>
+                      </View>
+
+                      <View
+                        style={
+                          styles.placeContent
+                        }
+                      >
+                        <View
+                          style={
+                            styles.placeTitleRow
+                          }
+                        >
+                          <Text
+                            numberOfLines={2}
+                            style={[
+                              styles.placeName,
+                              {
+                                color:
+                                  theme.text,
+                              },
+                            ]}
+                          >
+                            {facility.name}
+                          </Text>
+
+                          <Text
+                            style={[
+                              styles.placeStatus,
+                              {
+                                color:
+                                  theme.text,
+                              },
+                            ]}
+                          >
+                            {summary.statusLabel}
+                          </Text>
+                        </View>
+
+                        <Text
+                          numberOfLines={1}
+                          style={[
+                            styles.placeMeta,
+                            {
+                              color:
+                                theme.subText,
+                            },
+                          ]}
+                        >
+                          {facility.district ??
+                            '서울'}{' '}
+                          ·{' '}
+                          {facility.primaryCategory ||
+                            '체육시설'}{' '}
+                          · 예약상품{' '}
+                          {
+                            facility.reservationCount
+                          }
+                          개
+                        </Text>
+
+                        <View
+                          style={
+                            styles.placeTagRow
+                          }
+                        >
+                          {summary.openReservationCount >
+                          0 ? (
+                            <View
+                              style={[
+                                styles.placeTag,
+                                {
+                                  borderColor:
+                                    theme.strongLine ??
+                                    theme.line,
+                                  borderRadius:
+                                    isCityBlack
+                                      ? 2
+                                      : 6,
+                                },
+                              ]}
+                            >
+                              <Text
+                                style={[
+                                  styles.placeTagText,
+                                  {
+                                    color:
+                                      theme.text,
+                                  },
+                                ]}
+                              >
+                                접수 중{' '}
+                                {
+                                  summary.openReservationCount
+                                }
+                              </Text>
+                            </View>
+                          ) : null}
+
+                          {summary.scheduledReservationCount >
+                          0 ? (
+                            <View
+                              style={[
+                                styles.placeTag,
+                                {
+                                  borderColor:
+                                    theme.line,
+                                  borderRadius:
+                                    isCityBlack
+                                      ? 2
+                                      : 6,
+                                },
+                              ]}
+                            >
+                              <Text
+                                style={[
+                                  styles.placeTagText,
+                                  {
+                                    color:
+                                      theme.subText,
+                                  },
+                                ]}
+                              >
+                                접수 예정{' '}
+                                {
+                                  summary.scheduledReservationCount
+                                }
+                              </Text>
+                            </View>
+                          ) : null}
+
+                          {reservation?.paidType ? (
+                            <View
+                              style={[
+                                styles.placeTag,
+                                {
+                                  borderColor:
+                                    theme.line,
+                                  borderRadius:
+                                    isCityBlack
+                                      ? 2
+                                      : 6,
+                                },
+                              ]}
+                            >
+                              <Text
+                                style={[
+                                  styles.placeTagText,
+                                  {
+                                    color:
+                                      theme.subText,
+                                  },
+                                ]}
+                              >
+                                {reservation.paidType}
+                              </Text>
+                            </View>
+                          ) : null}
+                        </View>
+
+                        {reservation?.title ? (
+                          <Text
+                            numberOfLines={1}
+                            style={[
+                              styles.placeReward,
+                              {
+                                color:
+                                  theme.text,
+                              },
+                            ]}
+                          >
+                            {reservation.title}
+                          </Text>
+                        ) : null}
+
+                        <Text
+                          numberOfLines={1}
+                          style={[
+                            styles.placeReward,
+                            {
+                              color:
+                                theme.subText,
+                            },
+                          ]}
+                        >
+                          {getSportsReceptionLabel(
+                            summary
+                          )}
+                        </Text>
+
+                        <View
+                          style={
+                            styles.campingActionRow
+                          }
+                        >
+                          {districtId ? (
+                            <Pressable
+                              onPress={() =>
+                                router.push({
+                                  pathname:
+                                    '/explore/district/[districtId]',
+                                  params: {
+                                    districtId,
+                                  },
+                                } as any)
+                              }
+                              style={({
+                                pressed,
+                              }) => [
+                                styles.campingActionButton,
+                                {
+                                  borderColor:
+                                    theme.line,
+                                  borderRadius:
+                                    isCityBlack
+                                      ? 2
+                                      : 7,
+                                  opacity:
+                                    pressed
+                                      ? 0.55
+                                      : 1,
+                                },
+                              ]}
+                            >
+                              <Text
+                                style={[
+                                  styles.campingActionText,
+                                  {
+                                    color:
+                                      theme.text,
+                                  },
+                                ]}
+                              >
+                                자치구 보기
+                              </Text>
+                            </Pressable>
+                          ) : null}
+
+                          <Pressable
+                            onPress={() =>
+                              openSeoulFacilityDetail(
+                                'sports',
+                                facility.id
+                              )
+                            }
+                            style={({
+                              pressed,
+                            }) => [
+                              styles.campingActionButton,
+                              {
+                                borderColor:
+                                  theme.strongLine ??
+                                  theme.line,
+                                borderRadius:
+                                  isCityBlack
+                                    ? 2
+                                    : 7,
+                                opacity:
+                                  pressed
+                                    ? 0.55
+                                    : 1,
+                              },
+                            ]}
+                          >
+                            <Text
+                              style={[
+                                styles.campingActionText,
+                                {
+                                  color:
+                                    theme.text,
+                                },
+                              ]}
+                            >
+                              상세보기
+                            </Text>
+                          </Pressable>
+
+                          <Pressable
+                            disabled={
+                              !reservationUrl
+                            }
+                            onPress={() =>
+                              openCampingReservation(
+                                reservationUrl
+                              )
+                            }
+                            style={({
+                              pressed,
+                            }) => [
+                              styles.campingActionButton,
+                              {
+                                borderColor:
+                                  theme.strongLine ??
+                                  theme.line,
+                                borderRadius:
+                                  isCityBlack
+                                    ? 2
+                                    : 7,
+                                opacity:
+                                  !reservationUrl
+                                    ? 0.4
+                                    : pressed
+                                      ? 0.55
+                                      : 1,
+                              },
+                            ]}
+                          >
+                            <Text
+                              style={[
+                                styles.campingActionText,
+                                {
+                                  color:
+                                    theme.text,
+                                },
+                              ]}
+                            >
+                              예약 페이지
+                            </Text>
+                          </Pressable>
+                        </View>
+                      </View>
+                    </View>
+                  );
+                }
+              )}
+
+              {visibleInsideSeoulSportsSummaries.length <
+              insideSeoulSportsSummaries.length ? (
+                <Pressable
+                  onPress={() =>
+                    setSeoulSportsDisplayLimit(
+                      (current) =>
+                        current +
+                        SEOUL_SPORTS_PAGE_SIZE
+                    )
+                  }
+                  style={({ pressed }) => [
+                    styles.seoulFacilityLoadMoreButton,
+                    {
+                      backgroundColor:
+                        theme.card,
+                      borderColor:
+                        theme.strongLine ??
+                        theme.line,
+                      borderRadius:
+                        isCityBlack
+                          ? 2
+                          : 9,
+                      opacity:
+                        pressed
+                          ? 0.58
+                          : 1,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.seoulFacilityLoadMoreText,
+                      {
+                        color:
+                          theme.text,
+                      },
+                    ]}
+                  >
+                    체육시설 더 보기 ·{' '}
+                    {
+                      insideSeoulSportsSummaries.length -
+                      visibleInsideSeoulSportsSummaries.length
+                    }
+                    곳 남음
+                  </Text>
+                </Pressable>
+              ) : null}
+            </View>
+          )}
+        </View>
+      ) : null}
+
+      {(seoulFacilityCategoryFilter ===
+        'all' ||
+        seoulFacilityCategoryFilter ===
+          'space') ? (
+        <View
+          style={
+            styles.sectionBlock
+          }
+        >
+          <View
+            style={
+              styles.sectionHeader
+            }
+          >
+            <View
+              style={{
+                flex: 1,
+                minWidth: 0,
+              }}
+            >
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              >
+                서울 공간대관
+              </Text>
+
+              <Text
+                style={[
+                  styles.sectionSubtitle,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                회의실·강의실·강당·공연·전시공간 예약
+              </Text>
+            </View>
+
+            <Text
+              style={[
+                styles.openCount,
+                {
+                  color:
+                    theme.subText,
+                },
+              ]}
+            >
+              {
+                seoulSpaceSummaries.length
+              }
+              곳
+            </Text>
+          </View>
+
+          <Text
+            style={[
+              styles.sectionSubtitle,
+              {
+                color: theme.subText,
+                marginBottom: 8,
+              },
+            ]}
+          >
+            서울 25개 자치구의 공공 공간대관 시설을 예약 상태 중심으로 확인하세요.
+          </Text>
+
+          {visibleSeoulSpaceSummaries.length ===
+          0 ? (
+            <View
+              style={[
+                styles.festivalEmptyCard,
+                {
+                  backgroundColor:
+                    theme.card,
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 3
+                      : 14,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.festivalEmptyTitle,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              >
+                현재 연결된 공간대관 시설이 없어요.
+              </Text>
+
+              <Text
+                style={[
+                  styles.festivalEmptyText,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                공간대관 데이터가 갱신되면 이곳에 표시됩니다.
+              </Text>
+            </View>
+          ) : (
+            <View
+              style={
+                styles.placeList
+              }
+            >
+              {visibleSeoulSpaceSummaries.map(
+                (summary) => {
+                  const facility =
+                    summary.facility;
+
+                  const reservation =
+                    summary.primaryReservation;
+
+                  const reservationUrl =
+                    getSpaceReservationUrl(
+                      summary
+                    );
+
+                  const districtId =
+                    getSeoulDistrictIdByName(
+                      facility.district
+                    );
+
+                  return (
+                    <View
+                      key={facility.id}
+                      style={[
+                        styles.placeCard,
+                        {
+                          backgroundColor:
+                            theme.card,
+                          borderColor:
+                            theme.line,
+                          borderRadius:
+                            isCityBlack
+                              ? 3
+                              : 12,
+                        },
+                      ]}
+                    >
+                      <View
+                        style={[
+                          styles.placeIconBox,
+                          {
+                            backgroundColor:
+                              theme.background,
+                            borderRadius:
+                              isCityBlack
+                                ? 2
+                                : 10,
+                          },
+                        ]}
+                      >
+                        <Text
+                          style={
+                            styles.placeIcon
+                          }
+                        >
+                          {getSpaceFacilityIcon(
+                            facility.spaceKind
+                          )}
+                        </Text>
+                      </View>
+
+                      <View
+                        style={
+                          styles.placeContent
+                        }
+                      >
+                        <View
+                          style={
+                            styles.placeTitleRow
+                          }
+                        >
+                          <Text
+                            numberOfLines={2}
+                            style={[
+                              styles.placeName,
+                              {
+                                color:
+                                  theme.text,
+                              },
+                            ]}
+                          >
+                            {facility.name}
+                          </Text>
+
+                          <Text
+                            style={[
+                              styles.placeStatus,
+                              {
+                                color:
+                                  theme.text,
+                              },
+                            ]}
+                          >
+                            {summary.statusLabel}
+                          </Text>
+                        </View>
+
+                        <Text
+                          numberOfLines={1}
+                          style={[
+                            styles.placeMeta,
+                            {
+                              color:
+                                theme.subText,
+                            },
+                          ]}
+                        >
+                          {facility.district}{' '}
+                          ·{' '}
+                          {getSpaceKindLabel(
+                            facility.spaceKind
+                          )}{' '}
+                          · 예약상품{' '}
+                          {
+                            facility.reservationCount
+                          }
+                          개
+                        </Text>
+
+                        <View
+                          style={
+                            styles.placeTagRow
+                          }
+                        >
+                          {summary.openReservationCount >
+                          0 ? (
+                            <View
+                              style={[
+                                styles.placeTag,
+                                {
+                                  borderColor:
+                                    theme.strongLine ??
+                                    theme.line,
+                                  borderRadius:
+                                    isCityBlack
+                                      ? 2
+                                      : 6,
+                                },
+                              ]}
+                            >
+                              <Text
+                                style={[
+                                  styles.placeTagText,
+                                  {
+                                    color:
+                                      theme.text,
+                                  },
+                                ]}
+                              >
+                                접수 중{' '}
+                                {
+                                  summary.openReservationCount
+                                }
+                              </Text>
+                            </View>
+                          ) : null}
+
+                          {summary.scheduledReservationCount >
+                          0 ? (
+                            <View
+                              style={[
+                                styles.placeTag,
+                                {
+                                  borderColor:
+                                    theme.line,
+                                  borderRadius:
+                                    isCityBlack
+                                      ? 2
+                                      : 6,
+                                },
+                              ]}
+                            >
+                              <Text
+                                style={[
+                                  styles.placeTagText,
+                                  {
+                                    color:
+                                      theme.subText,
+                                  },
+                                ]}
+                              >
+                                접수 예정{' '}
+                                {
+                                  summary.scheduledReservationCount
+                                }
+                              </Text>
+                            </View>
+                          ) : null}
+
+                          {reservation?.paidType ? (
+                            <View
+                              style={[
+                                styles.placeTag,
+                                {
+                                  borderColor:
+                                    theme.line,
+                                  borderRadius:
+                                    isCityBlack
+                                      ? 2
+                                      : 6,
+                                },
+                              ]}
+                            >
+                              <Text
+                                style={[
+                                  styles.placeTagText,
+                                  {
+                                    color:
+                                      theme.subText,
+                                  },
+                                ]}
+                              >
+                                {reservation.paidType}
+                              </Text>
+                            </View>
+                          ) : null}
+                        </View>
+
+                        {reservation?.title ? (
+                          <Text
+                            numberOfLines={1}
+                            style={[
+                              styles.placeReward,
+                              {
+                                color:
+                                  theme.text,
+                              },
+                            ]}
+                          >
+                            {reservation.title}
+                          </Text>
+                        ) : null}
+
+                        <Text
+                          numberOfLines={1}
+                          style={[
+                            styles.placeReward,
+                            {
+                              color:
+                                theme.subText,
+                            },
+                          ]}
+                        >
+                          {getSpaceReceptionLabel(
+                            summary
+                          )}
+                        </Text>
+
+                        <View
+                          style={
+                            styles.campingActionRow
+                          }
+                        >
+                          {districtId ? (
+                            <Pressable
+                              onPress={() =>
+                                router.push({
+                                  pathname:
+                                    '/explore/district/[districtId]',
+                                  params: {
+                                    districtId,
+                                  },
+                                } as any)
+                              }
+                              style={({
+                                pressed,
+                              }) => [
+                                styles.campingActionButton,
+                                {
+                                  borderColor:
+                                    theme.line,
+                                  borderRadius:
+                                    isCityBlack
+                                      ? 2
+                                      : 7,
+                                  opacity:
+                                    pressed
+                                      ? 0.55
+                                      : 1,
+                                },
+                              ]}
+                            >
+                              <Text
+                                style={[
+                                  styles.campingActionText,
+                                  {
+                                    color:
+                                      theme.text,
+                                  },
+                                ]}
+                              >
+                                자치구 보기
+                              </Text>
+                            </Pressable>
+                          ) : null}
+
+                          <Pressable
+                            onPress={() =>
+                              openSeoulFacilityDetail(
+                                'space',
+                                facility.id
+                              )
+                            }
+                            style={({
+                              pressed,
+                            }) => [
+                              styles.campingActionButton,
+                              {
+                                borderColor:
+                                  theme.strongLine ??
+                                  theme.line,
+                                borderRadius:
+                                  isCityBlack
+                                    ? 2
+                                    : 7,
+                                opacity:
+                                  pressed
+                                    ? 0.55
+                                    : 1,
+                              },
+                            ]}
+                          >
+                            <Text
+                              style={[
+                                styles.campingActionText,
+                                {
+                                  color:
+                                    theme.text,
+                                },
+                              ]}
+                            >
+                              상세보기
+                            </Text>
+                          </Pressable>
+
+                          <Pressable
+                            disabled={
+                              !reservationUrl
+                            }
+                            onPress={() =>
+                              openCampingReservation(
+                                reservationUrl
+                              )
+                            }
+                            style={({
+                              pressed,
+                            }) => [
+                              styles.campingActionButton,
+                              {
+                                borderColor:
+                                  theme.strongLine ??
+                                  theme.line,
+                                borderRadius:
+                                  isCityBlack
+                                    ? 2
+                                    : 7,
+                                opacity:
+                                  !reservationUrl
+                                    ? 0.4
+                                    : pressed
+                                      ? 0.55
+                                      : 1,
+                              },
+                            ]}
+                          >
+                            <Text
+                              style={[
+                                styles.campingActionText,
+                                {
+                                  color:
+                                    theme.text,
+                                },
+                              ]}
+                            >
+                              예약 페이지
+                            </Text>
+                          </Pressable>
+                        </View>
+                      </View>
+                    </View>
+                  );
+                }
+              )}
+
+              {visibleSeoulSpaceSummaries.length <
+              seoulSpaceSummaries.length ? (
+                <Pressable
+                  onPress={() =>
+                    setSeoulSpaceDisplayLimit(
+                      (current) =>
+                        current +
+                        SEOUL_SPACE_PAGE_SIZE
+                    )
+                  }
+                  style={({ pressed }) => [
+                    styles.seoulFacilityLoadMoreButton,
+                    {
+                      backgroundColor:
+                        theme.card,
+                      borderColor:
+                        theme.strongLine ??
+                        theme.line,
+                      borderRadius:
+                        isCityBlack
+                          ? 2
+                          : 9,
+                      opacity:
+                        pressed
+                          ? 0.58
+                          : 1,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.seoulFacilityLoadMoreText,
+                      {
+                        color:
+                          theme.text,
+                      },
+                    ]}
+                  >
+                    공간대관 더 보기 ·{' '}
+                    {
+                      seoulSpaceSummaries.length -
+                      visibleSeoulSpaceSummaries.length
+                    }
+                    곳 남음
+                  </Text>
+                </Pressable>
+              ) : null}
+            </View>
+          )}
+        </View>
+      ) : null}
+
+
+
+      {(seoulFacilityCategoryFilter ===
+        'all' ||
+        seoulFacilityCategoryFilter ===
+          'education') ? (
+        <View style={styles.sectionBlock}>
+          <View style={styles.sectionHeader}>
+            <View
+              style={{
+                flex: 1,
+                minWidth: 0,
+              }}
+            >
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  { color: theme.text },
+                ]}
+              >
+                서울 교육·체험
+              </Text>
+
+              <Text
+                style={[
+                  styles.sectionSubtitle,
+                  { color: theme.subText },
+                ]}
+              >
+                공예·환경·역사·과학 등 공공 프로그램
+              </Text>
+            </View>
+
+            <Text
+              style={[
+                styles.openCount,
+                { color: theme.subText },
+              ]}
+            >
+              {
+                filteredInsideSeoulEducationSummaries.length
+              }
+              곳
+            </Text>
+          </View>
+
+          {filteredInsideSeoulEducationSummaries.length ===
+          0 ? (
+            <View
+              style={[
+                styles.festivalEmptyCard,
+                {
+                  backgroundColor: theme.card,
+                  borderColor: theme.line,
+                  borderRadius: isCityBlack
+                    ? 3
+                    : 14,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.festivalEmptyTitle,
+                  { color: theme.text },
+                ]}
+              >
+                현재 조건에 맞는 교육·체험이 없어요.
+              </Text>
+
+              <Text
+                style={[
+                  styles.festivalEmptyText,
+                  { color: theme.subText },
+                ]}
+              >
+                분야·대상·접수 상태 필터를 바꾸어 확인해 보세요.
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.placeList}>
+              {visibleInsideSeoulEducationSummaries.map(
+                (summary) => {
+                  const place = summary.place;
+                  const program =
+                    summary.primaryProgram;
+                  const reservationUrl =
+                    getEducationReservationUrl(
+                      summary
+                    );
+
+                  return (
+                    <View
+                      key={place.id}
+                      style={[
+                        styles.placeCard,
+                        {
+                          backgroundColor: theme.card,
+                          borderColor: theme.line,
+                          borderRadius: isCityBlack
+                            ? 3
+                            : 12,
+                        },
+                      ]}
+                    >
+                      <View
+                        style={[
+                          styles.placeIconBox,
+                          {
+                            backgroundColor:
+                              theme.background,
+                            borderRadius:
+                              isCityBlack
+                                ? 2
+                                : 10,
+                          },
+                        ]}
+                      >
+                        <Text
+                          style={styles.placeIcon}
+                        >
+                          {getEducationFacilityIcon(
+                            place.primaryCategory
+                          )}
+                        </Text>
+                      </View>
+
+                      <View
+                        style={styles.placeContent}
+                      >
+                        <View
+                          style={styles.placeTitleRow}
+                        >
+                          <Text
+                            numberOfLines={2}
+                            style={[
+                              styles.placeName,
+                              { color: theme.text },
+                            ]}
+                          >
+                            {place.name}
+                          </Text>
+
+                          <Text
+                            style={[
+                              styles.placeStatus,
+                              { color: theme.text },
+                            ]}
+                          >
+                            {summary.statusLabel}
+                          </Text>
+                        </View>
+
+                        <Text
+                          numberOfLines={1}
+                          style={[
+                            styles.placeMeta,
+                            { color: theme.subText },
+                          ]}
+                        >
+                          {place.locationLabel} ·{' '}
+                          {getEducationCategoryLabel(
+                            place.primaryCategory
+                          )}{' '}
+                          · 프로그램 {place.programCount}개
+                        </Text>
+
+                        {program?.title ? (
+                          <Text
+                            numberOfLines={2}
+                            style={[
+                              styles.placeReward,
+                              { color: theme.text },
+                            ]}
+                          >
+                            {program.title}
+                          </Text>
+                        ) : null}
+
+                        <Text
+                          numberOfLines={1}
+                          style={[
+                            styles.placeReward,
+                            { color: theme.subText },
+                          ]}
+                        >
+                          {getEducationAudienceSummary(
+                            summary
+                          )}{' '}
+                          ·{' '}
+                          {getEducationReceptionLabel(
+                            summary
+                          )}
+                        </Text>
+
+                        <View
+                          style={styles.campingActionRow}
+                        >
+                          <Pressable
+                            onPress={() =>
+                              openSeoulFacilityDetail(
+                                'education',
+                                place.id
+                              )
+                            }
+                            style={({ pressed }) => [
+                              styles.campingActionButton,
+                              {
+                                borderColor:
+                                  theme.strongLine ??
+                                  theme.line,
+                                borderRadius:
+                                  isCityBlack
+                                    ? 2
+                                    : 7,
+                                opacity: pressed
+                                  ? 0.55
+                                  : 1,
+                              },
+                            ]}
+                          >
+                            <Text
+                              style={[
+                                styles.campingActionText,
+                                { color: theme.text },
+                              ]}
+                            >
+                              상세보기
+                            </Text>
+                          </Pressable>
+
+                          <Pressable
+                            disabled={!reservationUrl}
+                            onPress={() =>
+                              openCampingReservation(
+                                reservationUrl
+                              )
+                            }
+                            style={({ pressed }) => [
+                              styles.campingActionButton,
+                              {
+                                borderColor:
+                                  theme.strongLine ??
+                                  theme.line,
+                                borderRadius:
+                                  isCityBlack
+                                    ? 2
+                                    : 7,
+                                opacity: !reservationUrl
+                                  ? 0.4
+                                  : pressed
+                                    ? 0.55
+                                    : 1,
+                              },
+                            ]}
+                          >
+                            <Text
+                              style={[
+                                styles.campingActionText,
+                                { color: theme.text },
+                              ]}
+                            >
+                              예약 페이지
+                            </Text>
+                          </Pressable>
+                        </View>
+                      </View>
+                    </View>
+                  );
+                }
+              )}
+
+              {visibleInsideSeoulEducationSummaries.length <
+              filteredInsideSeoulEducationSummaries.length ? (
+                <Pressable
+                  onPress={() =>
+                    setSeoulEducationDisplayLimit(
+                      (current) =>
+                        current +
+                        SEOUL_EDUCATION_PAGE_SIZE
+                    )
+                  }
+                  style={({ pressed }) => [
+                    styles.seoulFacilityLoadMoreButton,
+                    {
+                      borderColor: theme.line,
+                      borderRadius: isCityBlack
+                        ? 2
+                        : 9,
+                      opacity: pressed
+                        ? 0.55
+                        : 1,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.seoulFacilityLoadMoreText,
+                      { color: theme.text },
+                    ]}
+                  >
+                    교육·체험 더 보기 ·{' '}
+                    {
+                      filteredInsideSeoulEducationSummaries.length -
+                      visibleInsideSeoulEducationSummaries.length
+                    }
+                    곳 남음
+                  </Text>
+                </Pressable>
+              ) : null}
+            </View>
+          )}
+        </View>
+      ) : null}
+
+      {(seoulFacilityCategoryFilter ===
+        'all' ||
+        seoulFacilityCategoryFilter ===
+          'camping') ? (
+        <View
+          style={
+            styles.sectionBlock
+          }
+        >
+          <View
+            style={
+              styles.sectionHeader
+            }
+          >
+            <View
+              style={{
+                flex: 1,
+                minWidth: 0,
+              }}
+            >
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              >
+                서울시 운영 지역 캠핑장
+              </Text>
+
+              <Text
+                style={[
+                  styles.sectionSubtitle,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                서울 밖에 있지만 서울시가
+                운영하는 지역 캠핑장
+              </Text>
+            </View>
+
+            <Text
+              style={[
+                styles.openCount,
+                {
+                  color:
+                    theme.subText,
+                },
+              ]}
+            >
+              {
+                outsideSeoulCampingSummaries.length
+              }
+              곳
+            </Text>
+          </View>
+
+          <View
+            style={
+              styles.placeList
+            }
+          >
+            {outsideSeoulCampingSummaries.map(
+              (summary) => {
+                const facility =
+                  summary.facility;
+
+                const reservationUrl =
+                  summary
+                    .primaryReservation
+                    ?.reservationUrl ??
+                  facility.officialUrl;
+
+                return (
+                  <View
+                    key={facility.id}
+                    style={[
+                      styles.placeCard,
+                      {
+                        backgroundColor:
+                          theme.card,
+                        borderColor:
+                          theme.line,
+                        borderRadius:
+                          isCityBlack
+                            ? 3
+                            : 12,
+                      },
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.placeIconBox,
+                        {
+                          backgroundColor:
+                            theme.background,
+                          borderRadius:
+                            isCityBlack
+                              ? 2
+                              : 10,
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={
+                          styles.placeIcon
+                        }
+                      >
+                        🏕️
+                      </Text>
+                    </View>
+
+                    <View
+                      style={
+                        styles.placeContent
+                      }
+                    >
+                      <View
+                        style={
+                          styles.placeTitleRow
+                        }
+                      >
+                        <Text
+                          numberOfLines={2}
+                          style={[
+                            styles.placeName,
+                            {
+                              color:
+                                theme.text,
+                            },
+                          ]}
+                        >
+                          {facility.name}
+                        </Text>
+
+                        <Text
+                          style={[
+                            styles.placeStatus,
+                            {
+                              color:
+                                theme.text,
+                            },
+                          ]}
+                        >
+                          {getCampingStatusLabel(
+                            summary.primaryStatus
+                          )}
+                        </Text>
+                      </View>
+
+                      <Text
+                        numberOfLines={1}
+                        style={[
+                          styles.placeMeta,
+                          {
+                            color:
+                              theme.subText,
+                          },
+                        ]}
+                      >
+                        {facility.district ??
+                          '지역 확인'}{' '}
+                        · 예약상품{' '}
+                        {
+                          facility.reservationCount
+                        }
+                        개
+                      </Text>
+
+                      <Text
+                        numberOfLines={1}
+                        style={[
+                          styles.placeReward,
+                          {
+                            color:
+                              theme.subText,
+                          },
+                        ]}
+                      >
+                        {getCampingReceptionLabel(
+                          summary
+                        )}
+                      </Text>
+
+                      <View
+                        style={
+                          styles.campingActionRow
+                        }
+                      >
+                        <Pressable
+                          onPress={() =>
+                            openSeoulFacilityDetail(
+                              'camping',
+                              facility.id
+                            )
+                          }
+                          style={({
+                            pressed,
+                          }) => [
+                            styles.campingActionButton,
+                            {
+                              borderColor:
+                                theme.strongLine ??
+                                theme.line,
+                              borderRadius:
+                                isCityBlack
+                                  ? 2
+                                  : 7,
+                              opacity:
+                                pressed
+                                  ? 0.55
+                                  : 1,
+                            },
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.campingActionText,
+                              {
+                                color:
+                                  theme.text,
+                              },
+                            ]}
+                          >
+                            상세보기
+                          </Text>
+                        </Pressable>
+
+                        <Pressable
+                          disabled={
+                            !reservationUrl
+                          }
+                          onPress={() =>
+                            openCampingReservation(
+                              reservationUrl
+                            )
+                          }
+                          style={({
+                            pressed,
+                          }) => [
+                            styles.campingActionButton,
+                            {
+                              borderColor:
+                                theme.strongLine ??
+                                theme.line,
+                              borderRadius:
+                                isCityBlack
+                                  ? 2
+                                  : 7,
+                              opacity:
+                                !reservationUrl
+                                  ? 0.4
+                                  : pressed
+                                    ? 0.55
+                                    : 1,
+                            },
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.campingActionText,
+                              {
+                                color:
+                                  theme.text,
+                              },
+                            ]}
+                          >
+                            예약 페이지
+                          </Text>
+                        </Pressable>
+                      </View>
+                    </View>
+                  </View>
+                );
+              }
+            )}
+          </View>
+        </View>
+      ) : null}
+
+      {(seoulFacilityCategoryFilter ===
+        'all' ||
+        seoulFacilityCategoryFilter ===
+          'sports') ? (
+        <View
+          style={
+            styles.sectionBlock
+          }
+        >
+          <View
+            style={
+              styles.sectionHeader
+            }
+          >
+            <View
+              style={{
+                flex: 1,
+                minWidth: 0,
+              }}
+            >
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              >
+                서울시 운영 외부 체육시설
+              </Text>
+
+              <Text
+                style={[
+                  styles.sectionSubtitle,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                경기 고양·과천에 위치한
+                서울시 운영 체육시설
+              </Text>
+            </View>
+
+            <Text
+              style={[
+                styles.openCount,
+                {
+                  color:
+                    theme.subText,
+                },
+              ]}
+            >
+              {
+                outsideSeoulSportsSummaries.length
+              }
+              곳
+            </Text>
+          </View>
+
+          <View
+            style={
+              styles.placeList
+            }
+          >
+            {outsideSeoulSportsSummaries.map(
+              (summary) => {
+                const facility =
+                  summary.facility;
+
+                const reservation =
+                  summary.primaryReservation;
+
+                const reservationUrl =
+                  getSportsReservationUrl(
+                    summary
+                  );
+
+                return (
+                  <View
+                    key={facility.id}
+                    style={[
+                      styles.placeCard,
+                      {
+                        backgroundColor:
+                          theme.card,
+                        borderColor:
+                          theme.line,
+                        borderRadius:
+                          isCityBlack
+                            ? 3
+                            : 12,
+                      },
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.placeIconBox,
+                        {
+                          backgroundColor:
+                            theme.background,
+                          borderRadius:
+                            isCityBlack
+                              ? 2
+                              : 10,
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={
+                          styles.placeIcon
+                        }
+                      >
+                        {getSportsFacilityIcon(
+                          facility.primaryCategory
+                        )}
+                      </Text>
+                    </View>
+
+                    <View
+                      style={
+                        styles.placeContent
+                      }
+                    >
+                      <View
+                        style={
+                          styles.placeTitleRow
+                        }
+                      >
+                        <Text
+                          numberOfLines={2}
+                          style={[
+                            styles.placeName,
+                            {
+                              color:
+                                theme.text,
+                            },
+                          ]}
+                        >
+                          {facility.name}
+                        </Text>
+
+                        <Text
+                          style={[
+                            styles.placeStatus,
+                            {
+                              color:
+                                theme.text,
+                            },
+                          ]}
+                        >
+                          {summary.statusLabel}
+                        </Text>
+                      </View>
+
+                      <Text
+                        numberOfLines={1}
+                        style={[
+                          styles.placeMeta,
+                          {
+                            color:
+                              theme.subText,
+                          },
+                        ]}
+                      >
+                        {facility.locationLabel}{' '}
+                        ·{' '}
+                        {facility.primaryCategory ||
+                          '체육시설'}{' '}
+                        · 예약상품{' '}
+                        {
+                          facility.reservationCount
+                        }
+                        개
+                      </Text>
+
+                      {reservation?.title ? (
+                        <Text
+                          numberOfLines={1}
+                          style={[
+                            styles.placeReward,
+                            {
+                              color:
+                                theme.text,
+                            },
+                          ]}
+                        >
+                          {reservation.title}
+                        </Text>
+                      ) : null}
+
+                      <Text
+                        numberOfLines={1}
+                        style={[
+                          styles.placeReward,
+                          {
+                            color:
+                              theme.subText,
+                          },
+                        ]}
+                      >
+                        {getSportsReceptionLabel(
+                          summary
+                        )}
+                      </Text>
+
+                      <View
+                        style={
+                          styles.campingActionRow
+                        }
+                      >
+                        <Pressable
+                          onPress={() =>
+                            openSeoulFacilityDetail(
+                              'sports',
+                              facility.id
+                            )
+                          }
+                          style={({
+                            pressed,
+                          }) => [
+                            styles.campingActionButton,
+                            {
+                              borderColor:
+                                theme.strongLine ??
+                                theme.line,
+                              borderRadius:
+                                isCityBlack
+                                  ? 2
+                                  : 7,
+                              opacity:
+                                pressed
+                                  ? 0.55
+                                  : 1,
+                            },
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.campingActionText,
+                              {
+                                color:
+                                  theme.text,
+                              },
+                            ]}
+                          >
+                            상세보기
+                          </Text>
+                        </Pressable>
+
+                        <Pressable
+                          disabled={
+                            !reservationUrl
+                          }
+                          onPress={() =>
+                            openCampingReservation(
+                              reservationUrl
+                            )
+                          }
+                          style={({
+                            pressed,
+                          }) => [
+                            styles.campingActionButton,
+                            {
+                              borderColor:
+                                theme.strongLine ??
+                                theme.line,
+                              borderRadius:
+                                isCityBlack
+                                  ? 2
+                                  : 7,
+                              opacity:
+                                !reservationUrl
+                                  ? 0.4
+                                  : pressed
+                                    ? 0.55
+                                    : 1,
+                            },
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.campingActionText,
+                              {
+                                color:
+                                  theme.text,
+                              },
+                            ]}
+                          >
+                            예약 페이지
+                          </Text>
+                        </Pressable>
+                      </View>
+                    </View>
+                  </View>
+                );
+              }
+            )}
+          </View>
+        </View>
+      ) : null}
+
+
+      {(seoulFacilityCategoryFilter ===
+        'all' ||
+        seoulFacilityCategoryFilter ===
+          'education') &&
+      filteredOutsideSeoulEducationSummaries.length >
+        0 ? (
+        <View style={styles.sectionBlock}>
+          <View style={styles.sectionHeader}>
+            <View>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  { color: theme.text },
+                ]}
+              >
+                서울시 운영 외부 교육·체험
+              </Text>
+
+              <Text
+                style={[
+                  styles.sectionSubtitle,
+                  { color: theme.subText },
+                ]}
+              >
+                과천·고양 등 서울시 운영 프로그램
+              </Text>
+            </View>
+
+            <Text
+              style={[
+                styles.openCount,
+                { color: theme.subText },
+              ]}
+            >
+              {
+                filteredOutsideSeoulEducationSummaries.length
+              }
+              곳
+            </Text>
+          </View>
+
+          <View style={styles.placeList}>
+            {filteredOutsideSeoulEducationSummaries.map(
+              (summary) => {
+                const place = summary.place;
+                const program =
+                  summary.primaryProgram;
+                const reservationUrl =
+                  getEducationReservationUrl(
+                    summary
+                  );
+
+                return (
+                  <View
+                    key={place.id}
+                    style={[
+                      styles.placeCard,
+                      {
+                        backgroundColor: theme.card,
+                        borderColor: theme.line,
+                        borderRadius: isCityBlack
+                          ? 3
+                          : 12,
+                      },
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.placeIconBox,
+                        {
+                          backgroundColor:
+                            theme.background,
+                          borderRadius: isCityBlack
+                            ? 2
+                            : 10,
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={styles.placeIcon}
+                      >
+                        {getEducationFacilityIcon(
+                          place.primaryCategory
+                        )}
+                      </Text>
+                    </View>
+
+                    <View
+                      style={styles.placeContent}
+                    >
+                      <View
+                        style={styles.placeTitleRow}
+                      >
+                        <Text
+                          numberOfLines={2}
+                          style={[
+                            styles.placeName,
+                            { color: theme.text },
+                          ]}
+                        >
+                          {place.name}
+                        </Text>
+
+                        <Text
+                          style={[
+                            styles.placeStatus,
+                            { color: theme.text },
+                          ]}
+                        >
+                          {summary.statusLabel}
+                        </Text>
+                      </View>
+
+                      <Text
+                        numberOfLines={1}
+                        style={[
+                          styles.placeMeta,
+                          { color: theme.subText },
+                        ]}
+                      >
+                        {place.locationLabel} ·{' '}
+                        {getEducationCategoryLabel(
+                          place.primaryCategory
+                        )}{' '}
+                        · 프로그램 {place.programCount}개
+                      </Text>
+
+                      {program?.title ? (
+                        <Text
+                          numberOfLines={2}
+                          style={[
+                            styles.placeReward,
+                            { color: theme.text },
+                          ]}
+                        >
+                          {program.title}
+                        </Text>
+                      ) : null}
+
+                      <Text
+                        numberOfLines={1}
+                        style={[
+                          styles.placeReward,
+                          { color: theme.subText },
+                        ]}
+                      >
+                        {getEducationAudienceSummary(
+                          summary
+                        )}{' '}
+                        ·{' '}
+                        {getEducationReceptionLabel(
+                          summary
+                        )}
+                      </Text>
+
+                      <View
+                        style={styles.campingActionRow}
+                      >
+                        <Pressable
+                          onPress={() =>
+                            openSeoulFacilityDetail(
+                              'education',
+                              place.id
+                            )
+                          }
+                          style={({ pressed }) => [
+                            styles.campingActionButton,
+                            {
+                              borderColor:
+                                theme.strongLine ??
+                                theme.line,
+                              borderRadius:
+                                isCityBlack
+                                  ? 2
+                                  : 7,
+                              opacity: pressed
+                                ? 0.55
+                                : 1,
+                            },
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.campingActionText,
+                              { color: theme.text },
+                            ]}
+                          >
+                            상세보기
+                          </Text>
+                        </Pressable>
+
+                        <Pressable
+                          disabled={!reservationUrl}
+                          onPress={() =>
+                            openCampingReservation(
+                              reservationUrl
+                            )
+                          }
+                          style={({ pressed }) => [
+                            styles.campingActionButton,
+                            {
+                              borderColor:
+                                theme.strongLine ??
+                                theme.line,
+                              borderRadius:
+                                isCityBlack
+                                  ? 2
+                                  : 7,
+                              opacity: !reservationUrl
+                                ? 0.4
+                                : pressed
+                                  ? 0.55
+                                  : 1,
+                            },
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.campingActionText,
+                              { color: theme.text },
+                            ]}
+                          >
+                            예약 페이지
+                          </Text>
+                        </Pressable>
+                      </View>
+                    </View>
+                  </View>
+                );
+              }
+            )}
+          </View>
+        </View>
+      ) : null}
+
+    </>
+  ) : (
+    <View
+      style={[
+        styles.festivalEmptyCard,
+        {
+          backgroundColor:
+            theme.card,
+          borderColor:
+            theme.line,
+          borderRadius:
+            isCityBlack
+              ? 3
+              : 14,
+        },
+      ]}
+    >
+      <Text
+        style={[
+          styles.festivalEmptyTitle,
+          {
+            color:
+              theme.text,
+          },
+        ]}
+      >
+        {currentMapMeta?.shortTitle ??
+          '지역'}{' '}
+        예약·시설
+      </Text>
+
+      <Text
+        style={[
+          styles.festivalEmptyText,
+          {
+            color:
+              theme.subText,
+          },
+        ]}
+      >
+        {`${
+          currentMapMeta?.shortTitle ??
+          '해당 지역'
+        }의 예약·시설 정보를 준비하고 있어요.`}
+      </Text>
+    </View>
+  )
+
+) : mapLevel ===
+  'gyeonggi' ? (
           <>
             <View
               style={[
@@ -6032,13 +11771,7 @@ export default function ExploreScreen() {
                 },
               ]}
             >
-              <View style={styles.sectionHeader}>
-                <View>
-                  <Text style={[styles.sectionTitle, { color: theme.text }]}>경기 31개 시·군 탐험 지도</Text>
-                  <Text style={[styles.sectionSubtitle, { color: theme.subText }]}>수원시부터 성남시까지 경기도 31개 시·군 전체 탐험이 열렸어요.</Text>
-                </View>
-                <Text style={[styles.openCount, { color: theme.text }]}>31/31개 지역</Text>
-              </View>
+
 
               <Pressable
                 onLayout={(event) => {
@@ -8832,153 +14565,14 @@ export default function ExploreScreen() {
               </View>
             </View>
           </>
+        ) : mapLevel === 'seoul' ? (
+          <SeoulTopPlacesPanel
+            places={seoulTopPlaces}
+            completedPlaceIds={completedPlaceIds}
+          />
         ) : (
           <>
-            <View
-          style={[
-            styles.mapCard,
-            {
-              backgroundColor: theme.card,
-              borderColor: theme.line,
-              borderRadius: isCityBlack ? 4 : 16,
-            },
-          ]}
-        >
-          <View style={styles.sectionHeader}>
-            <View>
-              <Text style={[styles.sectionTitle, { color: theme.text }]}>서울 25개 구 탐험 지도</Text>
-              <Text style={[styles.sectionSubtitle, { color: theme.subText }]}>{`현재 ${displayDistricts.filter((district) =>
-                isExplorationDistrictOpen(district.id, district.available)
-              ).length}개 지역이 열렸어요.`}</Text>
-            </View>
-            <Text style={[styles.openCount, { color: theme.text }]}>{displayDistricts.filter((district) =>
-                isExplorationDistrictOpen(district.id, district.available)
-              ).length}개 지역</Text>
-          </View>
 
-          <Pressable
-            onLayout={(event) => {
-              const { width, height } = event.nativeEvent.layout;
-              setMapLayout({ width, height });
-            }}
-            onPress={handleMapPress}
-            style={({ pressed }) => [
-              styles.svgBox,
-              {
-                backgroundColor: theme.background,
-                opacity: pressed ? 0.97 : 1,
-              },
-            ]}
-          >
-            <Svg
-              width="100%"
-              height="100%"
-              viewBox="0 0 360 330"
-              pointerEvents="none"
-            >
-              <G>
-                {SEOUL_DISTRICT_SHAPES.map((shape) => {
-                  const district = getExplorationDistrict(shape.id);
-                  const available = isExplorationDistrictOpen(
-                    shape.id,
-                    district?.available ?? null
-                  );
-                  const selected = selectedDistrictId === shape.id;
-
-                  return (
-                    <G key={shape.id}>
-                      <Polygon
-                        points={shape.points}
-                        fill={
-                          selected
-                            ? isCityBlack
-                              ? '#EFEFEF'
-                              : '#E7DDCF'
-                            : available
-                              ? isCityBlack
-                                ? '#666666'
-                                : '#F5EFE7'
-                              : isCityBlack
-                                ? '#272727'
-                                : '#F2F2F2'
-                        }
-                        stroke={
-                          selected
-                            ? theme.strongLine ?? theme.line
-                            : theme.line
-                        }
-                        strokeWidth={selected ? 2.5 : 1}
-                      />
-                      <SvgText
-                        x={shape.labelX}
-                        y={shape.labelY}
-                        fontSize={available ? 8.5 : 7.2}
-                        fontWeight={selected ? '700' : '500'}
-                        fill={
-                          selected
-                            ? isCityBlack
-                              ? '#111111'
-                              : '#4D4035'
-                            : available
-                              ? theme.text
-                              : theme.subText
-                        }
-                        textAnchor="middle"
-                      >
-                        {shape.name}
-                      </SvgText>
-                    </G>
-                  );
-                })}
-              </G>
-            </Svg>
-          </Pressable>
-
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.districtButtonRow}
-          >
-            {displayDistricts.map((district) => {
-              const districtPlaces = getExplorationPlacesByDistrict(district.id);
-              const districtVisited = districtPlaces.filter((place) =>
-                completedPlaceIds.includes(place.id)
-              ).length;
-              const selected = selectedDistrictId === district.id;
-              const districtOpen = isExplorationDistrictOpen(
-                district.id,
-                district.available
-              );
-
-              return (
-                <Pressable
-                  key={district.id}
-                  onPress={() => openDistrict(district.id)}
-                  style={({ pressed }) => [
-                    styles.districtButton,
-                    {
-                      backgroundColor: selected ? theme.background : theme.card,
-                      borderColor:
-                        selected || districtOpen
-                          ? theme.strongLine ?? theme.line
-                          : theme.line,
-                      borderRadius: isCityBlack ? 2 : 10,
-                      opacity: pressed ? 0.65 : districtOpen ? 1 : 0.6,
-                    },
-                  ]}
-                >
-                  <Text style={styles.districtIcon}>{district.icon}</Text>
-                  <Text style={[styles.districtName, { color: theme.text }]}>{district.name}</Text>
-                  <Text style={[styles.districtProgress, { color: theme.subText }]}> 
-                    {districtOpen
-                      ? `${districtVisited}/${districtPlaces.length}곳`
-                      : '준비 중'}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </ScrollView>
-        </View>
 
         <View
           style={[
@@ -9000,7 +14594,7 @@ export default function ExploreScreen() {
             </View>
             <Text style={[styles.districtSummaryPercent, { color: theme.text }]}>{districtPercent}%</Text>
           </View>
-          <View style={[styles.progressTrack, { backgroundColor: theme.background }]}> 
+          <View style={[styles.progressTrack, { backgroundColor: theme.background }]}>
             <View
               style={[
                 styles.progressFill,
@@ -9041,7 +14635,7 @@ export default function ExploreScreen() {
                   <Text style={[styles.themeName, { color: theme.text }]}>{item.name}</Text>
                   <Text style={[styles.themeDescription, { color: theme.subText }]} numberOfLines={2}>{item.description}</Text>
                   <Text style={[styles.themeCount, { color: theme.text }]}>{visitedCount}/{item.requiredPlaceIds.length}곳 방문</Text>
-                  <View style={[styles.themeProgressTrack, { backgroundColor: theme.background }]}> 
+                  <View style={[styles.themeProgressTrack, { backgroundColor: theme.background }]}>
                     <View style={[styles.themeProgressFill, { width: `${percent}%`, backgroundColor: theme.strongLine ?? theme.line }]} />
                   </View>
                   {completed && (
@@ -10372,24 +15966,26 @@ export default function ExploreScreen() {
 
 const styles = StyleSheet.create({
   explorationModeCard: {
-    marginBottom: 12,
-    padding: 5,
-    borderWidth: 1,
-    flexDirection: 'row',
-    gap: 5,
-  },
-  explorationModeButton: {
-    flex: 1,
-    minHeight: 48,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  explorationModeTitle: {
-    fontSize: 12,
-    fontWeight: '900',
-  },
+  marginBottom: 0,
+  padding: 4,
+  borderWidth: 1,
+  flexDirection: 'row',
+  gap: 4,
+},
+
+explorationModeButton: {
+  flex: 1,
+  minHeight: 40,
+  paddingHorizontal: 8,
+  borderWidth: 1,
+  alignItems: 'center',
+  justifyContent: 'center',
+},
+
+explorationModeTitle: {
+  fontSize: 11.5,
+  fontWeight: '900',
+},
   explorationModeCount: {
     marginTop: 3,
     fontSize: 9,
@@ -10427,6 +16023,69 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     textAlign: 'center',
   },
+monthlyEventRow: {
+  paddingTop: 4,
+  paddingRight: 16,
+  gap: 10,
+},
+
+monthlyEventCard: {
+  width: 250,
+  minHeight: 154,
+  padding: 14,
+  borderWidth: 1,
+},
+
+monthlyEventIcon: {
+  fontSize: 27,
+},
+
+monthlyEventBadge: {
+  marginTop: 8,
+  fontSize: 9.5,
+  fontWeight: '800',
+},
+
+monthlyEventName: {
+  marginTop: 5,
+  fontSize: 14,
+  lineHeight: 19,
+  fontWeight: '900',
+},
+
+monthlyEventMeta: {
+  marginTop: 7,
+  fontSize: 10.5,
+  lineHeight: 16,
+},
+
+monthlyEventCategory: {
+  marginTop: 8,
+  fontSize: 10.5,
+  fontWeight: '700',
+},
+
+monthlyEventAllText: {
+  fontSize: 11,
+  fontWeight: '800',
+},
+
+monthlyEventEmptyCard: {
+  marginTop: 10,
+  minHeight: 90,
+  padding: 16,
+  borderWidth: 1,
+  alignItems: 'center',
+  justifyContent: 'center',
+},
+
+monthlyEventEmptyText: {
+  fontSize: 10.5,
+  lineHeight: 17,
+  textAlign: 'center',
+},
+
+
   screen: { flex: 1 },
   content: { paddingHorizontal: 16, gap: 14 },
   headerRow: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', gap: 12 },
@@ -10447,30 +16106,30 @@ const styles = StyleSheet.create({
   progressTrack: { marginTop: 11, height: 6, overflow: 'hidden' },
   progressFill: { height: '100%' },
   mapCard: { borderWidth: 0.8, padding: 14 },
+koreaMapCard: {  position: 'relative',  padding: 10,},
+
+
   sectionHeader: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 },
   sectionTitle: { fontSize: 15, fontWeight: '800' },
   sectionSubtitle: { marginTop: 3, fontSize: 11, lineHeight: 16 },
   openCount: { fontSize: 12, fontWeight: '700' },
   svgBox: { marginTop: 12, height: 310, overflow: 'hidden' },
-  koreaSvgBox: { marginTop: 12, height: 430, overflow: 'hidden' },
-  koreaMapLegendRow: { marginTop: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: 12 },
-  koreaMapLegendItem: { flexDirection: 'row', alignItems: 'center', gap: 5 },
-  koreaMapLegendDot: { width: 9, height: 9, borderRadius: 5 },
-  koreaMapLegendText: { fontSize: 10 },
-  countryRegionButtonRow: { paddingTop: 13, gap: 8 },
-  countryRegionButton: { width: 112, minHeight: 92, paddingVertical: 10, paddingHorizontal: 8, borderWidth: 0.8, alignItems: 'center', justifyContent: 'center' },
-  countryRegionIcon: { fontSize: 21 },
-  countryRegionName: { marginTop: 5, fontSize: 11.5, fontWeight: '800', textAlign: 'center' },
-  countryRegionStatus: { marginTop: 4, fontSize: 9.5, textAlign: 'center' },
-  regionLaunchCard: { borderWidth: 1, padding: 13, flexDirection: 'row', alignItems: 'center', gap: 11 },
-  regionLaunchIconBox: { width: 52, height: 52, alignItems: 'center', justifyContent: 'center' },
-  regionLaunchIcon: { fontSize: 28 },
-  regionLaunchContent: { flex: 1, minWidth: 0 },
-  regionLaunchTitleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
-  regionLaunchTitle: { fontSize: 15, fontWeight: '800' },
-  regionLaunchPercent: { fontSize: 14, fontWeight: '800' },
-  regionLaunchSubtitle: { marginTop: 4, fontSize: 10.5 },
-  regionLaunchAction: { marginTop: 7, fontSize: 11, fontWeight: '800' },
+  koreaSvgBox: {  marginTop: 0,  height: 420,  overflow: 'hidden',},
+  koreaMapRewardButton: {
+  position: 'absolute',
+  top: 12,
+  right: 12,
+  zIndex: 10,
+  elevation: 3,
+},
+monthlyEventHeader: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent:
+    'space-between',
+  gap: 10,
+},
+
   nextRegionCard: { borderWidth: 0.8, padding: 12, flexDirection: 'row', alignItems: 'center', gap: 10 },
   nextRegionIcon: { fontSize: 25 },
   nextRegionContent: { flex: 1, minWidth: 0 },
@@ -10516,6 +16175,81 @@ const styles = StyleSheet.create({
   placeTag: { borderWidth: 0.7, paddingHorizontal: 6, paddingVertical: 2 },
   placeTagText: { fontSize: 9.5 },
   placeReward: { marginTop: 6, fontSize: 10.5 },
+  campingActionRow: {
+    marginTop: 9,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  campingActionButton: {
+    minHeight: 31,
+    paddingHorizontal: 10,
+    borderWidth: 0.8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  campingActionText: {
+    fontSize: 9.5,
+    fontWeight: '800',
+  },
+  seoulFacilityOverview: {
+    padding: 13,
+    borderWidth: 0.8,
+    gap: 11,
+  },
+  seoulFacilityOverviewTop: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: 10,
+  },
+  seoulFacilityCategoryCard: {
+    padding: 7,
+    borderWidth: 0.8,
+  },
+  seoulFacilityFilterRow: {
+    flexDirection: 'row',
+    gap: 5,
+  },
+  seoulFacilityFilterButton: {
+    flex: 1,
+    minHeight: 30,
+    paddingHorizontal: 4,
+    borderWidth: 0.8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  seoulFacilityFilterText: {
+    fontSize: 9.5,
+    fontWeight: '800',
+  },
+  seoulFacilityDistrictRow: {
+    paddingRight: 16,
+    gap: 7,
+  },
+  seoulFacilityDistrictButton: {
+    minHeight: 34,
+    paddingHorizontal: 11,
+    borderWidth: 0.8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  seoulFacilityDistrictText: {
+    fontSize: 10,
+    fontWeight: '800',
+  },
+  seoulFacilityLoadMoreButton: {
+    minHeight: 40,
+    marginTop: 2,
+    borderWidth: 0.8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  seoulFacilityLoadMoreText: {
+    fontSize: 10.5,
+    fontWeight: '800',
+  },
   cultureModalCard: {
     width: '100%',
     maxHeight: '91%',
@@ -10711,8 +16445,8 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     fontWeight: '700',
   },
-  
- 
+
+
   festivalEmptyDescription: {
     marginTop: 7,
     fontSize: 10,
@@ -10732,4 +16466,55 @@ const styles = StyleSheet.create({
   badgeNoticeName: { marginTop: 10, fontSize: 15, fontWeight: '800', textAlign: 'center' },
   badgeNoticeDescription: { marginTop: 8, fontSize: 11, lineHeight: 18, textAlign: 'center' },
   noticeMessage: { marginTop: 9, fontSize: 11, lineHeight: 18, textAlign: 'center' },
+ regionCompactHeader: {
+  paddingBottom: 10,
+  borderBottomWidth: 0.8,
+},
+
+regionCompactTitleRow: {
+  flexDirection: 'row',
+  alignItems: 'flex-start',
+  justifyContent:
+    'space-between',
+  gap: 10,
+},
+
+regionCompactTitleLeft: {
+  flex: 1,
+  minWidth: 0,
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: 9,
+},
+
+regionCompactTitle: {
+  flex: 1,
+  minWidth: 0,
+  fontSize: 20,
+  fontWeight: '900',
+},
+
+regionCompactStatsInline: {
+  paddingTop: 2,
+  alignItems: 'flex-end',
+  gap: 3,
+},
+
+regionCompactStatText: {
+  fontSize: 9.5,
+  lineHeight: 13,
+  fontWeight: '700',
+  textAlign: 'right',
+},
+
+
+regionMapSection: {
+  paddingVertical: 8,
+  borderBottomWidth: 0.8,
+},
+
+regionSeoulSvgBox: {
+  height: 310,
+  overflow: 'hidden',
+},
 });

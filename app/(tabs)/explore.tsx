@@ -52,7 +52,8 @@ type ExplorationMapLevel =
 type QuickMapLevel =
   | 'korea'
   | 'seoul'
-  | 'gyeonggi';
+  | 'gyeonggi'
+  | 'busan';
 
 type ExploreContentMode =
   | 'places'
@@ -412,6 +413,170 @@ const GYEONGGI_DISTRICT_SHAPES: GyeonggiDistrictShape[] = [
 
 
 
+type BusanDistrictShape = {
+  id: string;
+  name: string;
+  icon: string;
+  subtitle: string;
+  points: string;
+  labelX: number;
+  labelY: number;
+};
+
+/*
+ * 부산 16개 구·군의 단순화 지도입니다.
+ * 부산 16개 구·군의 실제 장소·GPS·테마 데이터를 연결하고,
+ * 원도심·역사공원·해운대·기장 추가 명소 30곳도 반영했습니다.
+ */
+const BUSAN_DISTRICT_SHAPES: BusanDistrictShape[] = [
+  {
+    id: 'busan-gangseo',
+    name: '강서구',
+    icon: '🌾',
+    subtitle: '가덕도·대항전망대·낙동강생태·명지수변 탐험',
+    points: '10,90 85,60 130,55 115,115 125,160 95,205 45,220 15,175',
+    labelX: 64,
+    labelY: 143,
+  },
+  {
+    id: 'busan-buk',
+    name: '북구',
+    icon: '🌳',
+    subtitle: '낙동강·수목원 탐험',
+    points: '130,55 190,25 180,80 155,130 115,115',
+    labelX: 151,
+    labelY: 79,
+  },
+  {
+    id: 'busan-geumjeong',
+    name: '금정구',
+    icon: '⛰️',
+    subtitle: '금정산성·범어사·회동수원지·온천천 탐험',
+    points: '190,25 250,20 265,110 220,115 180,80',
+    labelX: 220,
+    labelY: 68,
+  },
+  {
+    id: 'busan-gijang',
+    name: '기장군',
+    icon: '🌊',
+    subtitle: '동부산 해안·과학 탐험',
+    points: '250,20 335,35 350,90 330,145 290,150 265,110',
+    labelX: 307,
+    labelY: 83,
+  },
+  {
+    id: 'busan-sasang',
+    name: '사상구',
+    icon: '🌿',
+    subtitle: '삼락생태공원·감전문화·낙동강 숲길 탐험',
+    points: '95,205 125,160 165,160 175,215 135,240',
+    labelX: 136,
+    labelY: 199,
+  },
+  {
+    id: 'busan-busanjin',
+    name: '부산진구',
+    icon: '🌃',
+    subtitle: '서면·전포카페거리·시민공원·산복문화 탐험',
+    points: '165,160 155,130 180,80 220,115 220,165 195,195 175,215',
+    labelX: 188,
+    labelY: 147,
+  },
+  {
+    id: 'busan-dongnae',
+    name: '동래구',
+    icon: '🏯',
+    subtitle: '읍성·온천 역사 탐험',
+    points: '220,115 265,110 260,155 220,165',
+    labelX: 241,
+    labelY: 139,
+  },
+  {
+    id: 'busan-yeonje',
+    name: '연제구',
+    icon: '🏟️',
+    subtitle: '배산성지·온천천·시청·생활문화 탐험',
+    points: '220,165 260,155 275,185 240,205 195,195',
+    labelX: 238,
+    labelY: 183,
+  },
+  {
+    id: 'busan-haeundae',
+    name: '해운대구',
+    icon: '🏖️',
+    subtitle: '해운대·송정 바다 탐험',
+    points: '275,185 260,155 290,150 330,145 345,190 320,225 280,225',
+    labelX: 310,
+    labelY: 187,
+  },
+  {
+    id: 'busan-suyeong',
+    name: '수영구',
+    icon: '🌉',
+    subtitle: '광안리·민락수변·망미골목·수영사적 탐험',
+    points: '240,205 275,185 280,225 255,245 225,232',
+    labelX: 255,
+    labelY: 222,
+  },
+  {
+    id: 'busan-nam',
+    name: '남구',
+    icon: '🌅',
+    subtitle: '오륙도·역사문화 탐험',
+    points: '195,195 240,205 225,232 245,270 205,280 170,245',
+    labelX: 208,
+    labelY: 242,
+  },
+  {
+    id: 'busan-dong',
+    name: '동구',
+    icon: '🚉',
+    subtitle: '부산역·이바구길 탐험',
+    points: '175,215 195,195 170,245 155,255 135,240',
+    labelX: 169,
+    labelY: 230,
+  },
+  {
+    id: 'busan-jung',
+    name: '중구',
+    icon: '🗼',
+    subtitle: '부산 원도심·시장 탐험',
+    points: '135,240 155,255 145,275 122,272',
+    labelX: 139,
+    labelY: 260,
+  },
+  {
+    id: 'busan-seo',
+    name: '서구',
+    icon: '🚡',
+    subtitle: '송도·해안산책 탐험',
+    points: '95,205 135,240 122,272 90,260 72,235',
+    labelX: 104,
+    labelY: 243,
+  },
+  {
+    id: 'busan-saha',
+    name: '사하구',
+    icon: '🌇',
+    subtitle: '감천문화·다대포·을숙도·아미산 낙조 탐험',
+    points: '45,220 95,205 72,235 90,260 72,300 30,290 15,250',
+    labelX: 55,
+    labelY: 263,
+  },
+  {
+    id: 'busan-yeongdo',
+    name: '영도구',
+    icon: '⚓',
+    subtitle: '태종대·흰여울·봉래산·항구 해안 탐험',
+    points: '145,275 170,245 205,280 190,310 155,315 130,295',
+    labelX: 168,
+    labelY: 292,
+  },
+
+];
+
+
 function QuickShapeMap<
   T extends QuickShapeBase
 >({
@@ -625,6 +790,12 @@ function getQuickMapTitle(
     return '경기도 탐험';
   }
 
+  if (
+    mapLevel === 'busan'
+  ) {
+    return '부산광역시 탐험';
+  }
+
   return '대한민국 탐험';
 }
 
@@ -641,6 +812,12 @@ function getQuickMapSubtitle(
     mapLevel === 'gyeonggi'
   ) {
     return '시·군을 눌러 경기도 탐험을 시작하세요.';
+  }
+
+  if (
+    mapLevel === 'busan'
+  ) {
+    return '구·군을 눌러 부산 탐험을 시작하세요.';
   }
 
   return '지역을 눌러 ROOT 탐험을 시작하세요.';
@@ -821,7 +998,9 @@ export default function ExploreShellScreen() {
           regionId ===
             'seoul' ||
           regionId ===
-            'gyeonggi'
+            'gyeonggi' ||
+          regionId ===
+            'busan'
         ) {
           setShellMapLevel(
             regionId
@@ -831,7 +1010,10 @@ export default function ExploreShellScreen() {
             regionId ===
               'seoul'
               ? '서울 탐험 데이터를 준비하고 있어요.'
-              : '경기도 탐험 데이터를 준비하고 있어요.'
+              : regionId ===
+                  'gyeonggi'
+                ? '경기도 탐험 데이터를 준비하고 있어요.'
+                : '부산 탐험 데이터를 준비하고 있어요.'
           );
 
           return;
@@ -1208,7 +1390,9 @@ export default function ExploreShellScreen() {
                     : '#4D4035'
                 }
               />
-            ) : (
+            ) :
+            shellMapLevel ===
+            'gyeonggi' ? (
               <QuickShapeMap
                 shapes={
                   GYEONGGI_DISTRICT_SHAPES
@@ -1227,9 +1411,7 @@ export default function ExploreShellScreen() {
                 ) =>
                   shape.name
                 }
-                getFill={(
-                  shape
-                ) =>
+                getFill={() =>
                   isCityBlack
                     ? '#666666'
                     : '#E8D8B8'
@@ -1265,6 +1447,63 @@ export default function ExploreShellScreen() {
                   isCityBlack
                     ? '#FFFFFF'
                     : '#4D4035'
+                }
+              />
+            ) : (
+              <QuickShapeMap
+                shapes={
+                  BUSAN_DISTRICT_SHAPES
+                }
+                viewWidth={
+                  360
+                }
+                viewHeight={
+                  330
+                }
+                displayHeight={
+                  330
+                }
+                getLabel={(
+                  shape
+                ) =>
+                  shape.name
+                }
+                getFill={() =>
+                  isCityBlack
+                    ? '#666666'
+                    : '#D5E8F4'
+                }
+                getLabelSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 7.1
+                    : 8.2
+                }
+                getTouchSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 48
+                    : 52
+                }
+                onPress={(
+                  shape
+                ) =>
+                  openDistrict(
+                    shape.id,
+                    shape.name
+                  )
+                }
+                backgroundColor={
+                  theme.background
+                }
+                textColor={
+                  isCityBlack
+                    ? '#FFFFFF'
+                    : '#3D4A52'
                 }
               />
             )
@@ -1332,7 +1571,10 @@ export default function ExploreShellScreen() {
                   : shellMapLevel ===
                       'gyeonggi'
                     ? '경기도 지도부터 먼저 표시했어요.'
-                    : '지도부터 먼저 표시했어요.'
+                    : shellMapLevel ===
+                        'busan'
+                      ? '부산 지도부터 먼저 표시했어요.'
+                      : '지도부터 먼저 표시했어요.'
               }
             </Text>
 

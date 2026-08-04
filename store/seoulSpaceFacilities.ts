@@ -46,7 +46,7 @@ export type SeoulSpaceFacility = {
 };
 
 export const SEOUL_SPACE_RESERVATION_COUNT =
-  489;
+  488;
 
 export const SEOUL_SPACE_FACILITY_COUNT =
   286;
@@ -637,8 +637,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 127.03609,
     "latitude": 37.62512,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17402023279296BZLQ5OWAJOLZU8OSGUG91QY0",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250222142900323973",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1755910260156MZHIELAZ1CSQFWAEDZS4KC790",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250225141423643424",
     "reservationCount": 6,
     "reservations": [
       {
@@ -1808,8 +1808,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 126.93842,
     "latitude": 37.47025,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1767161718423MBDW2H56G9GKJYXWNOLLQRVLE",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251231150414851700",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1767334699963CBW4AHBOX1D8ACUCITPL9H8UX",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260102151732225649",
     "reservationCount": 3,
     "reservations": [
       {
@@ -2376,8 +2376,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "meetingRoom",
     "longitude": 127.07654,
     "latitude": 37.55223,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17685258005847KGJV38ZSTV17A46AYE4IH0BU",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260116100745600869",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1768523332485ECVXUX6VG5H07P7K519ZCQ9H0",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260116092315075496",
     "reservationCount": 3,
     "reservations": [
       {
@@ -5451,9 +5451,9 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "performance",
     "longitude": 126.92483194659683,
     "latitude": 37.55950113434951,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1765936475029CAJYOQ7R3UMC5QXG75Q6NLKET",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251217103900569464",
-    "reservationCount": 3,
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1785133044543Q85SVWGZQRL8B9KV3RKF5JLG9",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260727151618906092",
+    "reservationCount": 1,
     "reservations": [
       {
         "serviceId": "S260727151618906092",
@@ -5471,40 +5471,6 @@ export const SEOUL_SPACE_FACILITIES:
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1785133044543Q85SVWGZQRL8B9KV3RKF5JLG9",
         "telephone": "02-719-8830",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n경의선숲길공원(연남) 버스킹 신청 안내\r\n\r\n\r\n○운영시간 : 평일 11:00~19:00 /주말 및 공휴일 14:00~19:00\r\n        (13:00~14:00, 16:00~17:00 제외)\r\n\r\n○공연시간 : 회차별 1시간(준비 및 정리시간 포함)\r\n\r\n○사 용 료 : 무료\r\n\r\n○예약횟수 : 월 4회(일 1시간/최대 2회차 예약가능)\r\n       ※다양하고 보다 많은 버스커의 공연을 위해 예약 횟수를 제한합니다.\r\n\r\n○예약기간 : 전월 마지막 목요일 00:00부터 예약 가능\r\n        ※예약 및 취소는 이용일 1일 전까지 가능\r\n\r\n○공연장소 : 경의선숲길공원 홍대입구역 3번출구 부터연남파출소 방향\r\n        횡단보도(약 250m 구간) 내보행자 불편이 없는 유휴공간\r\n\r\n\r\n○예약 시 주의사항\r\n-예약자와 실제 이용자가 동일해야하며 타인에게 양도할 수 없습니다.(적발시 이용이 제한됨)\r\n\r\n- 순찰근무자(관리자)가 확인 요청 시 예약확인증(또는 예약확인문자 등)과\r\n 본인확인을 위한 신분증을 제시하시기 바랍니다.\r\n ※예약확인증 출력 : 마이페이지나의 예약내역『확인증』 버튼 클릭  출력\r\n\r\n\r\n공연 시 주의사항\r\n- 공연자 3인 이하만 가능하며 소형스피커만 활용가능합니다.\r\n\r\n- 공연에 필요한 장비 외 시설물(촬영장비, 모금함 등) 설치 불가합니다.\r\n\r\n- 공연 후 주변 정리 및 발생된 쓰레기를 수거해주세요.\r\n\r\n- 공연 외 상품, 기업홍보 및 행사성 등 상업(영업) 등 수익 창출 행위, 정치, 종교,\r\n 집회 등의 활동은 절대 불가하며, 타인에게 양도, 인원초과(1팀당 최대3명),\r\n 이용시간 미준수 시, 기 예약건 취소 및 익월예약이 제한됩니다.\r\n\r\n- 소음, 진동관리법 시행규칙에 따라 타인에게 피해를 줄 수 있는 소음은 금지되며,\r\n 지역주민, 상인, 보행자에게 소음으로 인한 피해가 없도록 유의해주세요.\r\n 공연으로 인한 소음민원 및 공원이용객의 불편을 주는 행위 등발생 시\r\n공연은 중단 될 수 있습니다.\r\n\r\n\r\n\r\n\r\n\r\n○문 의 처 : 경의선숲길공원 관리사무실 02-719-8830\r\n \r\n\r\n\r\n4. 주의사항\r\n공연 시 주의사항\r\n- 공연자 3인 이하만 가능하며 소형스피커만 활용가능합니다.\r\n\r\n- 공연에 필요한 장비 외 시설물(촬영장비, 모금함 등) 설치 불가합니다.\r\n\r\n- 공연 후 주변 정리 및 발생된 쓰레기를 수거해주세요.\r\n\r\n- 공연 외 상품, 기업홍보 및 행사성 등 상업(영업) 등 수익 창출 행위, 정치, 종교,\r\n 집회 등의 활동은 절대 불가하며, 타인에게 양도, 인원초과(1팀당 최대3명),\r\n 이용시간 미준수 시, 기 예약건 취소 및 익월예약이 제한됩니다.\r\n\r\n- 소음, 진동관리법 시행규칙에 따라 타인에게 피해를 줄 수 있는 소음은 금지되며,\r\n 지역주민, 상인, 보행자에게 소음으로 인한 피해가 없도록 유의해주세요.\r\n 공연으로 인한 소음민원 및 공원이용객의 불편을 주는 행위 등발생 시\r\n 공연은 중단 될 수 있습니다.\r\n\r\n※소음,진동관리법 제21조1항 및 동법시행규칙 제20조3항 \r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t공연시간대\r\n\t\t\t주간(10:00~18:00)\r\n\t\t\t야간(18:00~20:00)\r\n\t\t\r\n\t\t\r\n\t\t\t규제기준치\r\n\t\t\t65dB이하\r\n\t\t\t60dB이하\r\n\t\t\r\n\t\r\n\r\n\r\n- 공연자(공연팀)가공연으로 인해 공원의 환경을 훼손할 때는 관계법령에 의거과태료가 부과됩니다."
-      },
-      {
-        "serviceId": "S251217103900569464",
-        "title": "2026 경의선숲길공원(연남동구간) 버스킹 (1월)",
-        "statusText": "접수종료",
-        "majorCategory": "공간시설",
-        "category": "공연장",
-        "paidType": "무료",
-        "targetText": "제한없음",
-        "receptionStartAt": "2025-12-25T00:00:00",
-        "receptionEndAt": "2026-01-31T18:00:00",
-        "useStartAt": "2025-12-25T00:00:00",
-        "useEndAt": "2026-12-31T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251217103900569464",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1765936475029CAJYOQ7R3UMC5QXG75Q6NLKET",
-        "telephone": "02-719-8830",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용* 경의선숲길공원(연남동구간)버스킹 신청안내 / 예약 전 주의사항을 반드시 숙지 후 신청해주시기 바랍니다.\r\n\r\n○ 시 간\r\n - 평일11~13시, 14~16시, 17~19시\r\n - 토, 일, 공휴일14~16시, 17~19시\r\n\r\n○ 예약가능횟수: 월 4회(1시간 단위)\r\n\r\n○ 접수기간: 매월 마지막 목요일부터 다음달 예약 가능\r\n\r\n○공연시간: 회차별 1시간 이내(준비 철수 시간 포함)\r\n\r\n○공연장소: 경의선숲길공원 홍대입구역 3번출구 부터연남파출소 방향 횡단보도(약 250m 구간) 내보행자 불편이 없는 유휴공간\r\n\r\n○ 주의사항\r\n- 공연자 3인 이하만 가능\r\n- 소형스피커만 활용가능\r\n- 촬영장비 사용불가\r\n- 종교활동, 기업홍보 등 행사성, 수익 창출 공연은 절대불가\r\n- 시설물 및 모금함 설치 불가\r\n※ 문의사항은 사전에 사무실(02-719-8830)로 문의하여 주시기 바랍니다.\r\n\r\n\r\n○ 공원버스킹 6대 에티켓 준수사항\r\n- 자연과 사람들의 안전을 지켜요\r\n- 작은 볼륨으로 함께해요\r\n- 아름다운 노랫말을 들려주세요\r\n- 작은공연이 좋아요\r\n- 종교상업정치적 목적은 안 돼요\r\n- 공원이야기를 들려주세요\r\n\r\n\r\n※ 공연으로 인한 민원 발생 시 공연중단이 불가피함\r\n※ 공연자(공연팀)가공연으로 인해 공원의 환경을 훼손할 때는 관계법령에 의거 과태료가 부과됨\r\n\r\n\r\n○ 문의처: 경의선숲길공원 사무실 02-719-8830\r\n\r\n4. 주의사항* 민원발생 및 스피커 소리가 클 경우 공연이 중단됨\r\n* 시설물설치 통행제한 금지\r\n* 기타 공지사항 미 준수시 공연중단할 수 있음"
-      },
-      {
-        "serviceId": "S260116151445814215",
-        "title": "2026 경의선숲길공원(연남동구간) 버스킹 (2월)",
-        "statusText": "접수종료",
-        "majorCategory": "공간시설",
-        "category": "공연장",
-        "paidType": "무료",
-        "targetText": "제한없음",
-        "receptionStartAt": "2026-01-29T00:00:00",
-        "receptionEndAt": "2026-02-28T00:00:00",
-        "useStartAt": "2026-01-29T00:00:00",
-        "useEndAt": "2026-12-31T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260116151445814215",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1770362585082UDWEL4VS2Y8BEB0N7PY05M7Q8",
-        "telephone": "02-719-8830",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n경의선숲길공원(연남) 버스킹 신청 안내\r\n\r\n\r\n○운영시간 : 평일 11:00~19:00 /주말 및 공휴일 14:00~19:00\r\n        (13:00~14:00, 16:00~17:00 제외)\r\n\r\n○공연시간 : 회차별 1시간(준비 및 정리시간 포함)\r\n\r\n○사 용 료 : 무료\r\n\r\n○예약횟수 : 월 4회(일 1시간/최대 2회차 예약가능)\r\n       ※다양하고 보다 많은 버스커의 공연을 위해 예약 횟수를 제한합니다.\r\n\r\n○예약기간 : 전월 마지막 목요일 00:00부터 예약 가능\r\n        ※예약 및 취소는 이용일 1일 전까지 가능\r\n\r\n○공연장소 : 경의선숲길공원 홍대입구역 3번출구 부터연남파출소 방향\r\n        횡단보도(약 250m 구간) 내보행자 불편이 없는 유휴공간\r\n\r\n\r\n○예약 시 주의사항\r\n-예약자와 실제 이용자가 동일해야하며 타인에게 양도할 수 없습니다.(적발시 이용이 제한됨)\r\n\r\n- 순찰근무자(관리자)가 확인 요청 시 예약확인증(또는 예약확인문자 등)과\r\n 본인확인을 위한 신분증을 제시하시기 바랍니다.\r\n ※예약확인증 출력 : 마이페이지나의 예약내역『확인증』 버튼 클릭  출력\r\n\r\n\r\n\r\n\r\n○문 의 처 : 경의선숲길공원 관리사무실 02-719-8830\r\n \r\n\r\n\r\n4. 주의사항\r\n공연 시 주의사항\r\n- 공연자 3인 이하만 가능하며 소형스피커만 활용가능합니다.\r\n- 공연에 필요한 장비 외 시설물(촬영장비, 모금함 등) 설치 불가합니다.\r\n- 공연 후 주변 정리 및 발생된 쓰레기를 수거해주세요.\r\n- 공연 외 상품, 기업홍보 및 행사성 등 상업(영업) 등 수익 창출 행위, 정치, 종교,\r\n 집회 등의 활동은 절대 불가합니다.\r\n- 소음, 진동관리법 시행규칙에 따라 타인에게 피해를 줄 수 있는 소음은 금지되며,\r\n 지역주민, 상인, 보행자에게 소음으로 인한 피해가 없도록 유의해주세요.\r\n 공연으로 인한 소음민원 발생 시 공연은 중단 될 수 있습니다.\r\n\r\n※소음,진동관리법 제21조1항 및 동법시행규칙 제20조3항 \r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t공연시간대\r\n\t\t\t주간(10:00~18:00)\r\n\t\t\t야간(18:00~20:00)\r\n\t\t\r\n\t\t\r\n\t\t\t규제기준치\r\n\t\t\t65dB이하\r\n\t\t\t60dB이하\r\n\t\t\r\n\t\r\n\r\n\r\n- 공연자(공연팀)가공연으로 인해 공원의 환경을 훼손할 때는 관계법령에 의거과태료가 부과됩니다."
       }
     ]
   },
@@ -5575,8 +5541,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 126.93847,
     "latitude": 37.5546,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1766394427503HVUF3TKYK58PBTZKHNF75JUEG",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251222180551890400",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1766394051432ZWBHPXAHC07II9B68PZ3HNZ1F",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251222175254894962",
     "reservationCount": 2,
     "reservations": [
       {
@@ -7868,15 +7834,15 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260225162934067013",
         "title": "서초구립내곡도서관 배움실 예약",
-        "statusText": "접수종료",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "강의실",
         "paidType": "유료(요금안내문의)",
         "targetText": "성인(5인 이상)",
-        "receptionStartAt": "2026-07-01T00:00:00",
-        "receptionEndAt": "2026-07-15T00:00:00",
-        "useStartAt": "2026-06-01T00:00:00",
-        "useEndAt": "2026-08-31T00:00:00",
+        "receptionStartAt": "2026-08-04T00:00:00",
+        "receptionEndAt": "2026-08-15T00:00:00",
+        "useStartAt": "2026-07-31T00:00:00",
+        "useEndAt": "2026-09-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260225162934067013",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1772004573842WAZ8W2GK9V6Z36GZHM0UFXUMJ",
         "telephone": "02-3461-3074",
@@ -7885,15 +7851,15 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260226141500631393",
         "title": "서초구립내곡도서관 예움실 예약",
-        "statusText": "접수종료",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "강의실",
         "paidType": "유료(요금안내문의)",
         "targetText": "성인(5인 이상)",
-        "receptionStartAt": "2026-07-01T00:00:00",
-        "receptionEndAt": "2026-07-15T00:00:00",
-        "useStartAt": "2026-05-03T00:00:00",
-        "useEndAt": "2026-08-31T00:00:00",
+        "receptionStartAt": "2026-08-04T00:00:00",
+        "receptionEndAt": "2026-08-15T00:00:00",
+        "useStartAt": "2026-07-31T00:00:00",
+        "useEndAt": "2026-09-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260226141500631393",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1772082958904PLTF5T2EP948QZMLTZ2JMIPBR",
         "telephone": "02-3461-3074",
@@ -7902,15 +7868,15 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260401110149542868",
         "title": "서초구립내곡도서관 채움실 예약",
-        "statusText": "접수종료",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "강의실",
         "paidType": "유료(요금안내문의)",
         "targetText": "성인(5인 이상)",
-        "receptionStartAt": "2026-07-01T00:01:00",
-        "receptionEndAt": "2026-07-15T00:01:00",
-        "useStartAt": "2026-07-01T00:00:00",
-        "useEndAt": "2026-08-31T00:00:00",
+        "receptionStartAt": "2026-08-04T00:00:00",
+        "receptionEndAt": "2026-08-15T00:00:00",
+        "useStartAt": "2026-07-31T00:00:00",
+        "useEndAt": "2026-09-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260401110149542868",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1775008943432LUS32YHTVISR0VH73SNA9L22H",
         "telephone": "02-3461-3074",
@@ -8598,7 +8564,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S251222155448719556",
         "title": "[서울청년센터 성동] 다인원실(10명~30명) 다목적실2",
-        "statusText": "예약마감",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "청년공간",
         "paidType": "무료",
@@ -10125,8 +10091,25 @@ export const SEOUL_SPACE_FACILITIES:
     "latitude": 37.51834828002767,
     "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1783493903599FK9TF3VEJP32ROTS4JOYMBAX4",
     "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260708155614147428",
-    "reservationCount": 1,
+    "reservationCount": 2,
     "reservations": [
+      {
+        "serviceId": "S260708160157534275",
+        "title": "양천공원 키지트 온라인 사전예약 (0811~0816)",
+        "statusText": "접수중",
+        "majorCategory": "공간시설",
+        "category": "민원 등 기타",
+        "paidType": "무료",
+        "targetText": "성인, 어린이(8세 미만), 유아",
+        "receptionStartAt": "2026-08-04T09:00:00",
+        "receptionEndAt": "2026-08-09T12:00:00",
+        "useStartAt": "2026-08-04T00:00:00",
+        "useEndAt": "2026-08-16T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260708160157534275",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1783494136610380YRDH8HHSM72TK8XQA11GTL",
+        "telephone": "",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용*키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n- (아이 2명당 1명의 보호자가 입장하셔야 합니다)\r\n* 예약 시, 보호자 포함한 인원수로 예약 해주시면 됩니다\r\n- (예. 보호자 1명과 아이 1명이 입장 시 2명으로 예약)\r\n\r\n* 키지트 운영정보 : 매주 화요일 ~ 일요일\r\n 09시 - 18시\r\n 월요일과 국가 공휴일은 운영 되지 않습니다.\r\n\r\n* 키지트 운영시간 *\r\n1) 09 : 30 ~ 11 : 30\r\n2) 13 : 00 ~ 15 : 00\r\n3) 15 : 30 ~ 17 : 30\r\n\r\n 해당 시간에만 키지트 사용이 가능하며 그 외 시간은 키지트 청소 중입니다. *\r\n! 예약 전, 꼭 키지트 운영시간 확인을 부탁드립니다 !4. 주의사항* 키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n* 키지트는 9세 까지 (만 8세, 초등학교 2학년 이하) 까지 참여가 가능합니다."
+      },
       {
         "serviceId": "S260708155614147428",
         "title": "양천공원 키지트 온라인 사전예약 (0804~0809)",
@@ -10336,8 +10319,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "hall",
     "longitude": null,
     "latitude": null,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1776335113654YO3XN3MHQ7D8W1KE6LRPXNSEQ",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260416124649907466",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17766691074418A73ASEM39TGNUN3H3SNPM1OA",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260420160600802202",
     "reservationCount": 5,
     "reservations": [
       {
@@ -10901,13 +10884,30 @@ export const SEOUL_SPACE_FACILITIES:
     "categoryNames": [
       "청년공간"
     ],
-    "spaceKind": "meetingRoom",
+    "spaceKind": "multipurpose",
     "longitude": 126.96935,
     "latitude": 37.54134,
     "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706509980380LX6ZAN6GL4H31ONX5TFNVL44X",
     "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240129152832507143",
     "reservationCount": 8,
     "reservations": [
+      {
+        "serviceId": "S240201153828421138",
+        "title": "서울광역청년센터 다목적실",
+        "statusText": "접수중",
+        "majorCategory": "공간시설",
+        "category": "청년공간",
+        "paidType": "유료(요금안내문의)",
+        "targetText": "청년",
+        "receptionStartAt": "2026-01-01T00:00:00",
+        "receptionEndAt": "2026-10-31T00:00:00",
+        "useStartAt": "2026-01-01T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240201153828421138",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17067696277485GZWM7H2FSML890Q32YTYEUPH",
+        "telephone": "02-6358-0607",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용안녕하세요!서울광역청년센터입니다.\r\n센터는 용산 원효루미니 역세권청년주택 2층에 위치해 있으며(남영역 3분 거리)\r\n커뮤니티 광장, 청년미니쿡, 노마드오피스, 대소회의실, 종합상담실, 스튜디오, 화상면접실 등 다양한 목적의 공간을 보유하고 있습니다.\r\n커뮤니티 광장, 노마드오피스는청년이라면 누구나 대관없이 자유롭게 이용하실 수 있습니다.\r\n다른 공간은 사전 대관 예약해주시기 바랍니다.\r\n\r\n공간명: 서울광역청년센터 다목적실\r\n\r\n\r\n○ 공간 기본사항\r\n-구비 기자재: 폼롤러(5), 요가매트(10)\r\n* 구비물품 외 기타장비 대여 불가\r\n\r\n- 이용목적: 댄스, 요가, 가벼운 실내 체육활동\r\n- 대관시간: 월~금 10:00~21:00,토 10:00~16:00,공휴일 및 일요일 휴무\r\n- 대관비용: 20,000원(2시간 기준)\r\n* 사용시간이 기준시간(2시간) 미만인 경우, 기준시간으로 함\r\n* 기준시간 이상 대관할 경우 추가시간 1시간당 10,000원\r\n* 1인 1회 최대 8시간까지 대관 가능\r\n* 설비 설치 및 준비시간도 사용시간에 포함\r\n\r\n- 이용대상 및 대관 승인기준: 청년(수용 가능인원: 4~15명)\r\n* 이용 인원의 50% 이상이 청년(만 19세~만 39세 이하)이어야 함\r\n* 정치적, 종교적, 상업적, 사행성 목적일 경우 대관 불가\r\n* 정해진 대관 이용 인원을 초과한 경우 대관 불가\r\n* 청년 관련 행사나 일정이 아닌 경우 대관 불가\r\n\r\n\r\n○ 주의사항\r\n* 바닥훼손으로 인하여 신발을 신은 상태에서는 이용이 불가하며 맨발 또는 양말을 신은 상태에서 이용가능합니다.\r\n* 음료를 제외한 음식물 섭취 불가능\r\n* 금연 및 주류반입 금지\r\n* 퇴실 시 냉난방/전기 OFF\r\n* 대관 시 일어나는 사고에 따른 책임은 전적으로 사용자에게 있음\r\n* 대관 규정을 숙지하지 않아 발생하는 일에 관한 책임은 사용자에게 있음\r\n* 개인 소지품 확인(분실물 주의)\r\n* 대관 후 공간정리(청소 및 이용한 모든 비품 원상 복귀)\r\n* 대관 후 사용자로 인한 파손, 결손이 확인될 경우 배상을 요구할 수 있음\r\n* 예약시간 미준수, 노쇼, 불성실한 공간정리 등의 이유로 추후 사용에 제한이 있을 수 있음\r\n* 대관 사용권 양도 불가\r\n* 당일대관 불가, 사용일 기준 3일전까지 대관 예약신청\r\n\r\n\r\n○ 대관 예약 절차\r\n- 신청방법: 서울시공공서비스예약 홈페이지 신청(전화 및 현장 예약 불가) \r\n① 서울시공공서비스예약 홈페이지에서 예약자가 대관목적/신청자명(단체명)/이용인원,청년인원을기재하여 사용일 기준 3일전까지 신청\r\n② 대관 승인기준 적격일 경우 예약자에게 대관료 안내문자 전송\r\n③ 예약자는 안내 문자 전송일 2일 이내 대관비 입금(미입금 자동취소)\r\n④ 대관료 입금 확인 후 예약자에게 예약확정 문자 전송\r\n⑤ 대관 당일 안내소에 방문하여 대관 이용\r\n⑥ 대관 종료 후 대관실 정리 및 만족도 설문지 작성\r\n\r\n* 승인되지 않은 대관신청의 경우, 대관료 지불하여도 사용 불가\r\n* 대관료 입금은 지정계좌만 가능, 카드/현금/외상 등 불가\r\n* 대관료 입금 증빙이 필요한 경우, 납부확인서, 전자세금계산서 발급 가능\r\n* 예약사항이 신청내용과 변동이 생길 경우, 안내소에 문의\r\n* 사전에 협의 되지 않은 내용에 대해서는 대관에 제한이 있을 수 있음\r\n\r\n\r\n○ 환불절차\r\n- 신청방법:https://docs.google.com/forms/d/e/1FAIpQLSfxWWCiNUtpMRdB6o-N7HOAuqVqIDq8ce-ONMpFFHuCXYpeAQ/viewform?usp=sf_link\r\n위 링크에서 접속하여 환불신청 관련 내용 작성\r\n\r\n- 환불금액(예시)\r\n\r\n\t\r\n\t\t\r\n\t\t\t\r\n\t\t\t환불 금액\r\n\t\t\r\n\t\t\r\n\t\t\t사용 3일 전\r\n\t\t\t100% 환불\r\n\t\t\t20,000원\r\n\t\t\r\n\t\t\r\n\t\t\t사용 2일 전\r\n\t\t\t90% 환불\r\n\t\t\t18,000원\r\n\t\t\r\n\t\t\r\n\t\t\t사용 1일 전\r\n\t\t\t80% 환불\r\n\t\t\t16,000원\r\n\t\t\r\n\t\t\r\n\t\t\t사용 당일\r\n\t\t\t환불 불가\r\n\t\t\t0원\r\n\t\t\r\n\t\r\n\r\n\r\n○ 지출증빙서류\r\n- 공간 대관 관련하여 [사업자등록증, 대관납부확인서] 필요 하시는 분들은 신청해주시기 바랍니다.\r\n- 증빙서류 신청 구글 신청서:https://bit.ly/서울광역청년센터대관증빙서류신청\r\n\r\n○ 이용문의: 02-6358-06074. 주의사항원활한 운영을 위해 예약시간을 꼭 준수해주시기 바랍니다. (당일 연장 예약이 불가합니다.)\r\n대관의 경우 청년이거나, 단체일 경우 청년이 50% 이상인 경우만 대관 가능합니다. (만19~39세)\r\n수익성, 종교성, 정치성, 사행성 목적의 대관은 불가합니다.\r\n대관 후 사용자로 인한 기물 및 자산 파손 및 결손이 확인될 경우, 배상을 요구할 수 있습니다.\r\n공간 이용 중 개인 부주의로 인한 개인 물품의 파손 및 개인정보 노출 등에 대해서는 센터에서 책임지지 않습니다.\r\n공간에서 흡연과 음주는 불가합니다.\r\n승인받은 대관일정은 타인에게 양도할 수 없습니다.\r\n문의전화: 02-6358-0607"
+      },
       {
         "serviceId": "S240129152832507143",
         "title": "서울광역청년센터 대회의실",
@@ -10917,9 +10917,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료(요금안내문의)",
         "targetText": "청년",
         "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-09-30T00:00:00",
+        "receptionEndAt": "2026-10-31T00:00:00",
         "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-09-30T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240129152832507143",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706509980380LX6ZAN6GL4H31ONX5TFNVL44X",
         "telephone": "02-6358-0607",
@@ -10934,9 +10934,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료(요금안내문의)",
         "targetText": "청년",
         "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-09-30T00:00:00",
+        "receptionEndAt": "2026-10-31T00:00:00",
         "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-09-30T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240201152217571294",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706768642089TR7OQ2FUQBJETPLWXVEA7KK5V",
         "telephone": "02-6358-0607",
@@ -10951,9 +10951,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료(요금안내문의)",
         "targetText": "청년",
         "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-09-30T00:00:00",
+        "receptionEndAt": "2026-10-31T00:00:00",
         "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-09-30T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240201153148280157",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706769193211DKZ6F7IK1U30XCJCPJ20DODI5",
         "telephone": "02-6358-0607",
@@ -10968,9 +10968,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료(요금안내문의)",
         "targetText": "청년",
         "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-09-30T00:00:00",
+        "receptionEndAt": "2026-10-31T00:00:00",
         "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-09-30T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240201163539334445",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706773047524QE8F1NEQBRX6KG036UOJGMQQM",
         "telephone": "02-6358-0607",
@@ -10985,9 +10985,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료(요금안내문의)",
         "targetText": "청년",
         "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-09-30T00:00:00",
+        "receptionEndAt": "2026-10-31T00:00:00",
         "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-09-30T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240201163812272233",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706773316100BVDOSIRFVHFOWPTX2HWW5SHN9",
         "telephone": "02-6358-0607",
@@ -11002,9 +11002,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료(요금안내문의)",
         "targetText": "청년",
         "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-09-30T00:00:00",
+        "receptionEndAt": "2026-10-31T00:00:00",
         "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-09-30T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240202094231456682",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706834636162ODQU2RUZFPJFQXEGEEV2WZK0M",
         "telephone": "02-6358-0607",
@@ -11019,30 +11019,13 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료(요금안내문의)",
         "targetText": "청년",
         "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-09-30T00:00:00",
+        "receptionEndAt": "2026-10-31T00:00:00",
         "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-09-30T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260211135817886950",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17707864447256CQUXMGKMOAC900EAFX4GB8X9",
         "telephone": "02-6358-0605",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용안녕하세요!서울광역청년센터입니다.\r\n센터는 용산 원효루미니 역세권청년주택 2층에 위치해 있으며,\r\n커뮤니티 광장, 청년미니쿡, 노마드오피스, 대소회의실, 종합상담실, 스튜디오 등 다양한 목적의 공간을 보유하고 있습니다.\r\n커뮤니티 광장, 노마드오피스는청년이라면 누구나 대관없이 자유롭게 이용하실 수 있습니다.\r\n다른 공간은 사전 대관 예약해주시기 바랍니다.\r\n\r\n공간명: 서울광역청년센터 화상면접실②\r\n\r\n\r\n○ 공간 기본사항\r\n- 구비 기자재: PC(1), 키보드(1), 마우스(1), 웹캠(1), 마이크(1), 조명(1)\r\n* 구비물품 외 기타장비 대여 불가\r\n\r\n- 이용목적: 화상면접\r\n- 대관시간: 월~금 10:00~21:00,토 10:00~16:00,공휴일 및 일요일 휴무\r\n- 대관비용: 10,000원(2시간 기준)\r\n* 사용시간이 기준시간(2시간) 미만인 경우, 기준시간으로 함\r\n* 기준시간 이상 대관할 경우 추가시간 1시간당 5,000원\r\n* 1인 1회 최대 8시간까지 대관 가능\r\n* 설비 설치 및 준비시간도 사용시간에 포함\r\n\r\n- 이용대상 및 대관 승인기준: 청년(수용 가능인원: 1명)\r\n* 이용 인원의 50% 이상이 청년(만 19세~만 39세 이하)이어야 함\r\n* 정치적, 종교적, 상업적, 사행성 목적일 경우 대관 불가\r\n* 정해진 대관 이용 인원을 초과한 경우 대관 불가\r\n* 청년 관련 행사나 일정이 아닌 경우 대관 불가\r\n\r\n\r\n○ 주의사항\r\n* 음료를 제외한 음식물 섭취 불가능\r\n* 금연 및 주류반입 금지\r\n* 실내 마스크 착용, 퇴실 시 냉난방/전기 OFF\r\n* 대관 시 일어나는 사고에 따른 책임은 전적으로 사용자에게 있음\r\n* 대관 규정을 숙지하지 않아 발생하는 일에 관한 책임은 사용자에게 있음\r\n* 개인 소지품 확인(분실물 주의)\r\n* 대관 후 공간정리(청소 및 이용한 모든 비품 원상 복귀)\r\n* 대관 후 사용자로 인한 파손, 결손이 확인될 경우 배상을 요구할 수 있음\r\n* 예약시간 미준수, 노쇼, 불성실한 공간정리 등의 이유로 추후 사용에 제한이 있을 수 있음\r\n* 대관 사용권 양도 불가\r\n* 당일대관 불가, 사용일 기준 3일전까지 대관 예약신청\r\n\r\n\r\n○ 대관 예약 절차\r\n- 신청방법: 서울시공공서비스예약 홈페이지 신청(전화 및 현장 예약 불가)\r\n① 서울시공공서비스예약 홈페이지에서 예약자가 대관목적/신청자명(단체명)/이용인원,청년인원을기재하여 사용일 기준 3일전까지 신청\r\n② 대관 승인기준 적격일 경우 예약자에게 대관료 안내문자 전송\r\n③ 예약자는 안내 문자 전송일 2일 이내 대관비 입금(미입금 자동취소)\r\n④ 대관료 입금 확인 후 예약자에게 예약확정 문자 전송\r\n⑤ 대관 당일 안내소에 방문하여 대관 이용\r\n⑥ 대관 종료 후 대관실 정리 및 만족도 설문지 작성\r\n\r\n* 승인되지 않은 대관신청의 경우, 대관료 지불하여도 사용 불가\r\n* 대관료 입금은 지정계좌만 가능, 카드/현금/외상 등 불가\r\n* 대관료 입금 증빙이 필요한 경우, 납부확인서, 전자세금계산서 발급 가능\r\n* 예약사항이 신청내용과 변동이 생길 경우, 안내소에 문의\r\n* 사전에 협의 되지 않은 내용에 대해서는 대관에 제한이 있을 수 있음\r\n\r\n\r\n○ 환불절차\r\n- 신청방법:https://docs.google.com/forms/d/e/1FAIpQLSfxWWCiNUtpMRdB6o-N7HOAuqVqIDq8ce-ONMpFFHuCXYpeAQ/viewform?usp=sf_link\r\n위 링크에서 접속하여 환불신청 관련 내용 작성\r\n\r\n- 환불금액(예시)\r\n환불 금액\r\n사용 3일 전 100% 환불 10,000원\r\n사용 2일 전 90% 환불 9,000원\r\n사용 1일 전 80% 환불 8,000원\r\n사용 당일 환불 불가 0원\r\n\r\n○ 지출증빙서류\r\n- 공간 대관 관련하여 [사업자등록증, 대관납부확인서] 필요 하시는 분들은 신청해주시기 바랍니다.\r\n- 증빙서류 신청 구글 신청서:https://bit.ly/서울광역청년센터대관증빙서류신청\r\n\r\n○ 이용문의: 02-6358-0607\r\n4. 주의사항원활한 운영을 위해 예약시간을 꼭 준수해주시기 바랍니다. (당일 연장 예약이 불가합니다.)\r\n대관의 경우 청년이거나, 단체일 경우 청년이 50% 이상인 경우만 대관 가능합니다. (만19~39세)\r\n수익성, 종교성, 정치성, 사행성 목적의 대관은 불가합니다.\r\n대관 후 사용자로 인한 기물 및 자산 파손 및 결손이 확인될 경우, 배상을 요구할 수 있습니다.\r\n공간 이용 중 개인 부주의로 인한 개인 물품의 파손 및 개인정보 노출 등에 대해서는 센터에서 책임지지 않습니다.\r\n공간에서 흡연과 음주는 불가합니다.\r\n승인받은 대관일정은 타인에게 양도할 수 없습니다.\r\n문의전화: 02-6358-0607"
-      },
-      {
-        "serviceId": "S240201153828421138",
-        "title": "서울광역청년센터 다목적실",
-        "statusText": "예약마감",
-        "majorCategory": "공간시설",
-        "category": "청년공간",
-        "paidType": "유료(요금안내문의)",
-        "targetText": "청년",
-        "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-09-30T00:00:00",
-        "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-09-30T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240201153828421138",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17067696277485GZWM7H2FSML890Q32YTYEUPH",
-        "telephone": "02-6358-0607",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용안녕하세요!서울광역청년센터입니다.\r\n센터는 용산 원효루미니 역세권청년주택 2층에 위치해 있으며(남영역 3분 거리)\r\n커뮤니티 광장, 청년미니쿡, 노마드오피스, 대소회의실, 종합상담실, 스튜디오, 화상면접실 등 다양한 목적의 공간을 보유하고 있습니다.\r\n커뮤니티 광장, 노마드오피스는청년이라면 누구나 대관없이 자유롭게 이용하실 수 있습니다.\r\n다른 공간은 사전 대관 예약해주시기 바랍니다.\r\n\r\n공간명: 서울광역청년센터 다목적실\r\n\r\n\r\n○ 공간 기본사항\r\n-구비 기자재: 폼롤러(5), 요가매트(10)\r\n* 구비물품 외 기타장비 대여 불가\r\n\r\n- 이용목적: 댄스, 요가, 가벼운 실내 체육활동\r\n- 대관시간: 월~금 10:00~21:00,토 10:00~16:00,공휴일 및 일요일 휴무\r\n- 대관비용: 20,000원(2시간 기준)\r\n* 사용시간이 기준시간(2시간) 미만인 경우, 기준시간으로 함\r\n* 기준시간 이상 대관할 경우 추가시간 1시간당 10,000원\r\n* 1인 1회 최대 8시간까지 대관 가능\r\n* 설비 설치 및 준비시간도 사용시간에 포함\r\n\r\n- 이용대상 및 대관 승인기준: 청년(수용 가능인원: 4~15명)\r\n* 이용 인원의 50% 이상이 청년(만 19세~만 39세 이하)이어야 함\r\n* 정치적, 종교적, 상업적, 사행성 목적일 경우 대관 불가\r\n* 정해진 대관 이용 인원을 초과한 경우 대관 불가\r\n* 청년 관련 행사나 일정이 아닌 경우 대관 불가\r\n\r\n\r\n○ 주의사항\r\n* 바닥훼손으로 인하여 신발을 신은 상태에서는 이용이 불가하며 맨발 또는 양말을 신은 상태에서 이용가능합니다.\r\n* 음료를 제외한 음식물 섭취 불가능\r\n* 금연 및 주류반입 금지\r\n* 퇴실 시 냉난방/전기 OFF\r\n* 대관 시 일어나는 사고에 따른 책임은 전적으로 사용자에게 있음\r\n* 대관 규정을 숙지하지 않아 발생하는 일에 관한 책임은 사용자에게 있음\r\n* 개인 소지품 확인(분실물 주의)\r\n* 대관 후 공간정리(청소 및 이용한 모든 비품 원상 복귀)\r\n* 대관 후 사용자로 인한 파손, 결손이 확인될 경우 배상을 요구할 수 있음\r\n* 예약시간 미준수, 노쇼, 불성실한 공간정리 등의 이유로 추후 사용에 제한이 있을 수 있음\r\n* 대관 사용권 양도 불가\r\n* 당일대관 불가, 사용일 기준 3일전까지 대관 예약신청\r\n\r\n\r\n○ 대관 예약 절차\r\n- 신청방법: 서울시공공서비스예약 홈페이지 신청(전화 및 현장 예약 불가) \r\n① 서울시공공서비스예약 홈페이지에서 예약자가 대관목적/신청자명(단체명)/이용인원,청년인원을기재하여 사용일 기준 3일전까지 신청\r\n② 대관 승인기준 적격일 경우 예약자에게 대관료 안내문자 전송\r\n③ 예약자는 안내 문자 전송일 2일 이내 대관비 입금(미입금 자동취소)\r\n④ 대관료 입금 확인 후 예약자에게 예약확정 문자 전송\r\n⑤ 대관 당일 안내소에 방문하여 대관 이용\r\n⑥ 대관 종료 후 대관실 정리 및 만족도 설문지 작성\r\n\r\n* 승인되지 않은 대관신청의 경우, 대관료 지불하여도 사용 불가\r\n* 대관료 입금은 지정계좌만 가능, 카드/현금/외상 등 불가\r\n* 대관료 입금 증빙이 필요한 경우, 납부확인서, 전자세금계산서 발급 가능\r\n* 예약사항이 신청내용과 변동이 생길 경우, 안내소에 문의\r\n* 사전에 협의 되지 않은 내용에 대해서는 대관에 제한이 있을 수 있음\r\n\r\n\r\n○ 환불절차\r\n- 신청방법:https://docs.google.com/forms/d/e/1FAIpQLSfxWWCiNUtpMRdB6o-N7HOAuqVqIDq8ce-ONMpFFHuCXYpeAQ/viewform?usp=sf_link\r\n위 링크에서 접속하여 환불신청 관련 내용 작성\r\n\r\n- 환불금액(예시)\r\n\r\n\t\r\n\t\t\r\n\t\t\t\r\n\t\t\t환불 금액\r\n\t\t\r\n\t\t\r\n\t\t\t사용 3일 전\r\n\t\t\t100% 환불\r\n\t\t\t20,000원\r\n\t\t\r\n\t\t\r\n\t\t\t사용 2일 전\r\n\t\t\t90% 환불\r\n\t\t\t18,000원\r\n\t\t\r\n\t\t\r\n\t\t\t사용 1일 전\r\n\t\t\t80% 환불\r\n\t\t\t16,000원\r\n\t\t\r\n\t\t\r\n\t\t\t사용 당일\r\n\t\t\t환불 불가\r\n\t\t\t0원\r\n\t\t\r\n\t\r\n\r\n\r\n○ 지출증빙서류\r\n- 공간 대관 관련하여 [사업자등록증, 대관납부확인서] 필요 하시는 분들은 신청해주시기 바랍니다.\r\n- 증빙서류 신청 구글 신청서:https://bit.ly/서울광역청년센터대관증빙서류신청\r\n\r\n○ 이용문의: 02-6358-06074. 주의사항원활한 운영을 위해 예약시간을 꼭 준수해주시기 바랍니다. (당일 연장 예약이 불가합니다.)\r\n대관의 경우 청년이거나, 단체일 경우 청년이 50% 이상인 경우만 대관 가능합니다. (만19~39세)\r\n수익성, 종교성, 정치성, 사행성 목적의 대관은 불가합니다.\r\n대관 후 사용자로 인한 기물 및 자산 파손 및 결손이 확인될 경우, 배상을 요구할 수 있습니다.\r\n공간 이용 중 개인 부주의로 인한 개인 물품의 파손 및 개인정보 노출 등에 대해서는 센터에서 책임지지 않습니다.\r\n공간에서 흡연과 음주는 불가합니다.\r\n승인받은 대관일정은 타인에게 양도할 수 없습니다.\r\n문의전화: 02-6358-0607"
       }
     ]
   },
@@ -12596,7 +12579,7 @@ export const SEOUL_SPACE_FACILITIES:
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260514173248171466",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17787475670905QDHRKIN4U65OVBPJXRX5SMXB",
         "telephone": "",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n\r\nmeta charset=\"utf-8\" /\r\n\r\n[필수] 회의실 대관규정 동의서 제출 안내\r\n\r\n서울청년센터 중구 회의실을 처음 예약하는 대표자는 예약 신청 후 아래 링크를 통해 대관규정 동의서를 반드시 제출해주시기 바랍니다.\r\n\r\n▶ 대관규정 동의서 : [구글폼 링크 클릭]\r\n\r\n동의서는 예약 대표자별 최초 1회만 제출하면 됩니다.\r\n기존에 동의서를 제출한 대표자는 이후 예약 시 다시 제출하지 않아도 됩니다.\r\n동의서에는 서울시 공공서비스예약에 입력한 예약 대표자 이름과 동일한 이름을 작성해야 합니다.\r\n최초 예약자가 동의서를 제출하지 않았거나 예약자 이름이 일치하지 않는 경우에는 예약이 승인되지 않습니다.\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n안녕하세요. 서울청년센터 중구입니다.\r\n아래는 서울청년센터 중구 회의실 대관 규정이니 예약 전 반드시 확인해주시기 바랍니다.\r\n\r\n서울청년센터 중구 회의실 대관 규정\r\n\r\n\r\n1. 안내\r\n- 서울청년센터 중구는 서울특별시 조례에 의거하여 설립된 청년센터로, 청년(만 19세 이상 39세 이하)을 위한 공간입니다\r\n- 이용객의 50% 이상이 청년이어야 이용이 가능합니다.\r\n- 대관 공간은 서울청년센터 중구 회의실이며 최소 4인 ~ 최대 10인까지 이용 가능합니다.\r\n- 회의실은 월 5회, 회당 최대 5시간까지 대관 가능합니다.\r\n2. 예약 및 취소\r\n(1) 예약 및 승인\r\n- 대관 신청은 이용일 기준 최소 6일 전까지 가능하며, 신청일로부터 최대 30일 이내의 일정까지 예약할 수 있습니다.\r\n- 모든 대관은 신청 후 담당 매니저의 확인 및 승인 절차를 거쳐 확정됩니다. 예약 신청만으로는 이용이 확정되지 않으며, 승인 전 방문 시 회의실 이용이 불가합니다.\r\n- 승인 처리에는 운영일 기준 3일 정도 소요될 수 있습니다.\r\n(2) 예약 취소\r\n- 예약 취소는 이용일 1일 전까지 가능합니다.\r\n- 이용일 2일 전부터 당일까지 예약을 취소한 경우 기한 후 취소로 처리하며, 경고 1회가 누적됩니다.\r\n- 사전 연락 없이 예약 공간을 이용하지 않은 경우 무단불참으로 처리하며, 경고 2회가 누적됩니다.\r\n- 최근 6개월 이내 경고가 총 3회 이상 누적된 경우, 경고 누적일로부터 6개월간 신규 대관 신청이 제한됩니다.\r\n\r\n※ 관리자 승인 전에는 마이페이지에서 직접 취소 가능합니다.\r\n※ 관리자 승인 후 취소 요청 시에는 ***으로 예약자 이름과 예약 일시를 적어 취소 문자를 남겨주시기 바랍니다.\r\n\r\n3. 이용수칙\r\n(1) 입실 시\r\n- 예약 당일 입실 및 퇴실 시 안내데스크에서 방명록을 작성 해주시기 바랍니다.\r\n- 당일 이용 인원이 4명 미만인 경우, 예약 대표자가 참여하지 않은 경우 이용이 제한됩니다.\r\n- 15분 이상 지각 시 예약은 자동 취소되며 무단불참 처리됩니다.\r\n(2) 이용 시\r\n- 회의, 스터디, 면접 준비 등 일반적인 대화 수준의 활동을 위한 공간입니다. 다른 공간 이용자에게 불편을 주는 과도한 소음은 자제해주시기 바랍니다.\r\n- 회의실 내에서는 물 및 음료만 섭취 가능합니다. 음식물 섭취는 불가합니다.\r\n- 기자재 파손고장분실로 인해 비용이 발생할 경우 예약자에게 청구될 수 있습니다.\r\n- 대관 진행 중 발생하는 사고 및 안전사고에 대한 책임은 대관자에게 있습니다.\r\n(3) 퇴실 시\r\n- 예약 시간 종료 10분 전까지 회의실 정리 및 퇴실을 완료해주시기 바랍니다.\r\n- 공간 정리(청소, 책상 및 의자 정리 등)는 대관자가 직접 진행해주시기 바랍니다.\r\n- 퇴실 시 회의실 내 비치된 QR코드를 통해 만족도 조사를 제출해주시기 바랍니다.\r\n\r\n4. 이용 제한사항\r\n아래에 해당하는 경우 이후 대관이 제한되거나 당일 이용이 중단될 수 있습니다.\r\n- 수익성영리종교정치사행성 목적의 행사\r\n- 신청 목적과 다르게 공간을 이용하는 경우\r\n- 타 이용자에게 지속적인 불편을 유발하는 경우\r\n- 동일 이용자가 대표자만 변경하고 연속 예약하여 실질적으로 5시간을 초과하여 이용하는 경우\r\n- 예약자 외 인원이 시간대별로 교체방문하는 경우 (다수의 지원자를 대상으로 한 면접이나 오디션 등)\r\n- 외부에서 실제 상황으로 오인할 수 있는 큰 소리의 발성 및 연기 연습\r\n\r\n\r\n4. 주의사항"
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n\r\nmeta charset=\"utf-8\" /\r\n\r\n[필수] 회의실 대관규정 동의서 제출 안내\r\n\r\n서울청년센터 중구 회의실을 처음 예약하는 대표자는 예약 신청 후 아래 링크를 통해 대관규정 동의서를 반드시 제출해주시기 바랍니다.\r\n\r\n▶ 대관규정 동의서 : [구글폼 링크 클릭]\r\n\r\n동의서는 예약 대표자별 최초 1회만 제출하면 됩니다.\r\n기존에 동의서를 제출한 대표자는 이후 예약 시 다시 제출하지 않아도 됩니다.\r\n동의서에는 서울시 공공서비스예약에 입력한 예약 대표자 이름과 동일한 이름을 작성해야 합니다.\r\n최초 예약자가 동의서를 제출하지 않았거나 예약자 이름이 일치하지 않는 경우에는 예약이 승인되지 않습니다.\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n안녕하세요. 서울청년센터 중구입니다.\r\n아래는 서울청년센터 중구 회의실 대관 규정이니 예약 전 반드시 확인해주시기 바랍니다.\r\n\r\n서울청년센터 중구 회의실 대관 규정\r\n\r\n1. 안내\r\n- 서울청년센터 중구는 서울특별시 조례에 의거하여 설립된 청년센터로, 청년(만 19세 이상 39세 이하)을 위한 공간입니다\r\n- 이용객의 50% 이상이 청년이어야 이용이 가능합니다.\r\n- 대관 공간은 서울청년센터 중구 회의실이며 최소 4인 ~ 최대 10인까지 이용 가능합니다.\r\n- 회의실은 월 5회, 회당 최대 5시간까지 대관 가능합니다.\r\n2. 예약 및 취소\r\n(1) 예약 및 승인\r\n- 대관 신청은 이용일 기준 최소 6일 전까지 가능하며, 신청일로부터 최대 30일 이내의 일정까지 예약할 수 있습니다.\r\n- 모든 대관은 신청 후 담당 매니저의 확인 및 승인 절차를 거쳐 확정됩니다. 예약 신청만으로는 이용이 확정되지 않으며, 승인 전 방문 시 회의실 이용이 불가합니다.\r\n- 승인 처리에는 운영일 기준 3일 정도 소요될 수 있습니다.\r\n(2) 예약 취소\r\n- 예약 취소는 이용일 1일 전까지 가능합니다.\r\n- 이용일 2일 전부터 당일까지 예약을 취소한 경우 기한 후 취소로 처리하며, 경고 1회가 누적됩니다.\r\n- 사전 연락 없이 예약 공간을 이용하지 않은 경우 무단불참으로 처리하며, 경고 2회가 누적됩니다.\r\n- 최근 6개월 이내 경고가 총 3회 이상 누적된 경우, 경고 누적일로부터 6개월간 신규 대관 신청이 제한됩니다.\r\n\r\n※ 관리자 승인 전에는 마이페이지에서 직접 취소 가능합니다.\r\n※ 관리자 승인 후 취소 요청 시에는 ***으로 예약자 이름과 예약 일시를 적어 취소 문자를 남겨주시기 바랍니다.\r\n\r\n3. 이용수칙\r\n(1) 입실 시\r\n- 예약 당일 입실 및 퇴실 시 안내데스크에서 방명록을 작성 해주시기 바랍니다.\r\n- 당일 이용 인원이 4명 미만인 경우, 예약 대표자가 참여하지 않은 경우 이용이 제한됩니다.\r\n- 15분 이상 지각 시 예약은 자동 취소되며 무단불참 처리됩니다.\r\n(2) 이용 시\r\n- 회의, 스터디, 면접 준비 등 일반적인 대화 수준의 활동을 위한 공간입니다. 다른 공간 이용자에게 불편을 주는 과도한 소음은 자제해주시기 바랍니다.\r\n- 회의실 내에서는 물 및 음료만 섭취 가능합니다. 음식물 섭취는 불가합니다.\r\n- 기자재 파손고장분실로 인해 비용이 발생할 경우 예약자에게 청구될 수 있습니다.\r\n- 대관 진행 중 발생하는 사고 및 안전사고에 대한 책임은 대관자에게 있습니다.\r\n(3) 퇴실 시\r\n- 예약 시간 종료 10분 전까지 회의실 정리 및 퇴실을 완료해주시기 바랍니다.\r\n- 공간 정리(청소, 책상 및 의자 정리 등)는 대관자가 직접 진행해주시기 바랍니다.\r\n- 퇴실 시 회의실 내 비치된 QR코드를 통해 만족도 조사를 제출해주시기 바랍니다.\r\n\r\n4. 이용 제한사항\r\n아래에 해당하는 경우 이후 대관이 제한되거나 당일 이용이 중단될 수 있습니다.\r\n- 수익성영리종교정치사행성 목적의 행사\r\n- 신청 목적과 다르게 공간을 이용하는 경우\r\n- 타 이용자에게 지속적인 불편을 유발하는 경우\r\n- 동일 이용자가 대표자만 변경하고 연속 예약하여 실질적으로 5시간을 초과하여 이용하는 경우\r\n- 예약자 외 인원이 시간대별로 교체방문하는 경우 (다수의 지원자를 대상으로 한 면접이나 오디션 등)\r\n- 외부에서 실제 상황으로 오인할 수 있는 큰 소리의 발성 및 연기 연습\r\n\r\n\r\n4. 주의사항"
       }
     ]
   },
@@ -13305,7 +13288,7 @@ export const SEOUL_SPACE_FACILITIES:
         "useEndAt": "2026-12-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251128132526110716",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1764314741681PVKRCIJ40T6E973FB3Q3976UC",
-        "telephone": "02-2133-1610",
+        "telephone": "02-2133-1602",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n\r\n\r\n\r\n\r\n○ 신청서류 : 예약 신청 시, 이용 정보의 첨부파일에 1~3번 제출 서류 반드시 첨부 (4번 서류만 추후 보완 가능)\r\n 1. 신청서(붙임1) / 2. 서약서(붙임2) / 3. 행사계획(안) / 4. 단체 등 확인용 서류(사업자등록증, 고유번호증, 법인설립허가증, 학생증 등\r\n\r\n※ 1~3 번 서류 중 1개의 서류라도 미제출 시,\r\n  ① 예약 신청은 인정되지 않으며(즉, 우선순위 대상이 아니며)② 이후 절차(심사 절차 등)가 진행되지 않음\r\n   \r\n\r\n\r\n\r\n\r\n○ 거주지 인증이 안되는 경우 예약 불가\r\n\r\n○ 사용절차 : 온라인 예약 - 관련공문 송부 - 사용료 납부 - 사용허가\r\n \r\n○ 시설현황\r\n - 위   치 : 서울시 중구 덕수궁길 15, 서소문청사 후생동 4층\r\n- 수용규모 : 195석\r\n- 부대시설 : 빔프로젝트, 유무선 마이크(유선1, 무선2), 현수막 거치대(사이즈 :600cm*50cm)\r\n - 개방일시 : 토, 일요일 09:00~18:00*평일 이용불가\r\n\r\n○ 가능행사 : 토론회, 동아리 행사, 세미나, 시민모임 등\r\n ※ 단, 정치목적, 종교목적, 영리목적, 공공질서 및 미풍양속을 해할 우려가 있는 행사,\r\n   기타 다른 시민의 안전 및 시설물 유지상 사용을 제한 할 필요가 있는 경우는 사용불허또는 사용중이라도 정지가능\r\n   (서울특별시 공공시설의 유휴공간 개방 및 사용에 관한 조례 제11조 의거)\r\n\r\n○ 우선사용\r\n - 개인 대단체 사용신청 경합시 단체선정\r\n- 개인 대개인(또는 단체 대단체) 사용신청 경합시 우선 신청한 개인(또는 단체)으로 선정\r\n단, 같은 날 00시부터 09시까지 신청한 개인(또는 단체)은 같은 시간에 신청한것으로 간주하여 추첨으로 선정함.\r\n\r\n\r\n○ 사용료 :대관료+공공요금+부대장비사용료\r\n - 기본 2시간 사용료 부과. 2시간 초과 사용시 1시간마다 아래 기준금액(기본요금)의 50%씩 가산\r\n * 대관료 : (기본 2시간) 100,000원 + (초과 1시간당) 50,000원\r\n  *난방시 : (기본 2시간) 167,500원 + (초과 1시간당) 83,750원\r\n *냉방시 : (기본 2시간) 129,180원 + (초과 1시간당) 64,590원\r\n  * 빔프로젝터 및 마이크(개당) : (기본 2시간) 10,000원 + (초과 1시간당) 5,000원\r\n\r\n - 사용료 납부 : 발송 고지서에 따라 기한 내 납부\r\n ※ 사용료를기한 내 미납부 시 후생동 강당 사용이 취소됨을 알려드립니다.\r\n\r\n - 사용료반환 ※ 취소일로부터 7일이내 반환\r\n  *전액 반환\r\n    ①사용 3일전\r\n    ② 사용 전:천재지변 등 불가항력의 사유로 취소된 경우로, 사유 입증 시에 한해\r\n  *90%반환 : 사용 2일전\r\n  *80%반환 : 사용 1일전\r\n  *반환하지 않음 : 당일취소\r\n\r\n\r\n○ 주차 : 인근 유료주차장 이용\r\n ※ 서소문 지하주차장 이용 불가(덕수궁 차 없는 거리 운영, 토요일 기준 10~18시)\r\n\r\n○ 문의처 : 서울시청 총무과(02-2133-1610)\r\n\r\n\r\n○ 시민예식 관련 행사 중단 (시설 설비 문제로 2021년 02월부터~)4. 주의사항○ 인화물질 또는 위험물을 사용하지 않을 것\r\n○ 시장이 안전사고 예방을 위해 필요한 조치를 요구할 때에 즉시 응할 것\r\n○ 기타 시장이 요구하는 사항을 준수할 것"
       }
     ]

@@ -53,7 +53,8 @@ type QuickMapLevel =
   | 'korea'
   | 'seoul'
   | 'gyeonggi'
-  | 'busan';
+  | 'busan'
+  | 'incheon';
 
 type ExploreContentMode =
   | 'places'
@@ -577,6 +578,124 @@ const BUSAN_DISTRICT_SHAPES: BusanDistrictShape[] = [
 ];
 
 
+type IncheonDistrictShape = {
+  id: string;
+  name: string;
+  icon: string;
+  subtitle: string;
+  points: string;
+  labelX: number;
+  labelY: number;
+};
+
+/*
+ * 인천 11개 지역의 단순화 지도입니다.
+ * 제물포구·영종구·서해구·검단구를 포함한 현재 행정구역 기준으로
+ * 실제 장소·GPS·테마 데이터를 연결합니다.
+ */
+const INCHEON_DISTRICT_SHAPES: IncheonDistrictShape[] = [
+  {
+    id: 'incheon-ganghwa',
+    name: '강화군',
+    icon: '🏯',
+    subtitle: '고인돌·고려·평화·마니산·섬마을 탐험',
+    points: '15,25 92,18 116,58 98,108 44,120 10,82',
+    labelX: 62,
+    labelY: 67,
+  },
+  {
+    id: 'incheon-geomdan',
+    name: '검단구',
+    icon: '🏺',
+    subtitle: '선사·가현산·아라뱃길·신도시 탐험',
+    points: '112,55 172,45 191,92 166,125 108,113',
+    labelX: 148,
+    labelY: 87,
+  },
+  {
+    id: 'incheon-gyeyang',
+    name: '계양구',
+    icon: '⛰️',
+    subtitle: '계양산·산성·아라뱃길·역사문화 탐험',
+    points: '172,45 230,55 238,105 191,115 191,92',
+    labelX: 210,
+    labelY: 80,
+  },
+  {
+    id: 'incheon-seohae',
+    name: '서해구',
+    icon: '🌊',
+    subtitle: '청라호수·생태·도자·도시숲 탐험',
+    points: '108,113 166,125 182,171 145,205 92,178',
+    labelX: 137,
+    labelY: 157,
+  },
+  {
+    id: 'incheon-bupyeong',
+    name: '부평구',
+    icon: '🎵',
+    subtitle: '캠프마켓·문화거리·굴포천·나비공원 탐험',
+    points: '166,125 191,115 238,105 246,158 214,181 182,171',
+    labelX: 211,
+    labelY: 145,
+  },
+  {
+    id: 'incheon-namdong',
+    name: '남동구',
+    icon: '🌾',
+    subtitle: '소래·습지·대공원·시장 탐험',
+    points: '246,158 305,165 330,213 294,245 239,222 214,181',
+    labelX: 277,
+    labelY: 202,
+  },
+  {
+    id: 'incheon-michuhol',
+    name: '미추홀구',
+    icon: '🏟️',
+    subtitle: '문학산·도호부·수봉·생활문화 탐험',
+    points: '182,171 214,181 239,222 207,244 166,222 145,205',
+    labelX: 193,
+    labelY: 211,
+  },
+  {
+    id: 'incheon-jemulpo',
+    name: '제물포구',
+    icon: '⚓',
+    subtitle: '개항장·월미도·배다리 탐험',
+    points: '92,178 145,205 166,222 153,258 105,268 72,233',
+    labelX: 122,
+    labelY: 229,
+  },
+  {
+    id: 'incheon-yeonsu',
+    name: '연수구',
+    icon: '🌆',
+    subtitle: '송도·능허대·청량산 탐험',
+    points: '166,222 207,244 239,222 280,265 248,310 189,302 153,258',
+    labelX: 218,
+    labelY: 273,
+  },
+  {
+    id: 'incheon-yeongjong',
+    name: '영종구',
+    icon: '✈️',
+    subtitle: '공항·영종 해안·용유·무의 탐험',
+    points: '22,160 79,145 104,178 72,233 105,268 70,288 20,252 8,205',
+    labelX: 55,
+    labelY: 215,
+  },
+  {
+    id: 'incheon-ongjin',
+    name: '옹진군',
+    icon: '🏝️',
+    subtitle: '백령·대청·연평·덕적·영흥 섬과 지질·평화 탐험',
+    points: '18,280 75,288 104,318 65,326 22,315',
+    labelX: 57,
+    labelY: 307,
+  },
+];
+
+
 function QuickShapeMap<
   T extends QuickShapeBase
 >({
@@ -796,6 +915,12 @@ function getQuickMapTitle(
     return '부산광역시 탐험';
   }
 
+  if (
+    mapLevel === 'incheon'
+  ) {
+    return '인천광역시 탐험';
+  }
+
   return '대한민국 탐험';
 }
 
@@ -818,6 +943,12 @@ function getQuickMapSubtitle(
     mapLevel === 'busan'
   ) {
     return '구·군을 눌러 부산 탐험을 시작하세요.';
+  }
+
+  if (
+    mapLevel === 'incheon'
+  ) {
+    return '11개 지역을 눌러 인천 탐험을 시작하세요.';
   }
 
   return '지역을 눌러 ROOT 탐험을 시작하세요.';
@@ -1000,7 +1131,9 @@ export default function ExploreShellScreen() {
           regionId ===
             'gyeonggi' ||
           regionId ===
-            'busan'
+            'busan' ||
+          regionId ===
+            'incheon'
         ) {
           setShellMapLevel(
             regionId
@@ -1013,7 +1146,10 @@ export default function ExploreShellScreen() {
               : regionId ===
                   'gyeonggi'
                 ? '경기도 탐험 데이터를 준비하고 있어요.'
-                : '부산 탐험 데이터를 준비하고 있어요.'
+                : regionId ===
+                    'busan'
+                  ? '부산 탐험 데이터를 준비하고 있어요.'
+                  : '인천 탐험 데이터를 준비하고 있어요.'
           );
 
           return;
@@ -1449,7 +1585,9 @@ export default function ExploreShellScreen() {
                     : '#4D4035'
                 }
               />
-            ) : (
+            ) :
+            shellMapLevel ===
+            'busan' ? (
               <QuickShapeMap
                 shapes={
                   BUSAN_DISTRICT_SHAPES
@@ -1504,6 +1642,63 @@ export default function ExploreShellScreen() {
                   isCityBlack
                     ? '#FFFFFF'
                     : '#3D4A52'
+                }
+              />
+            ) : (
+              <QuickShapeMap
+                shapes={
+                  INCHEON_DISTRICT_SHAPES
+                }
+                viewWidth={
+                  360
+                }
+                viewHeight={
+                  340
+                }
+                displayHeight={
+                  340
+                }
+                getLabel={(
+                  shape
+                ) =>
+                  shape.name
+                }
+                getFill={() =>
+                  isCityBlack
+                    ? '#666666'
+                    : '#CFE4F3'
+                }
+                getLabelSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 7
+                    : 8.3
+                }
+                getTouchSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 50
+                    : 54
+                }
+                onPress={(
+                  shape
+                ) =>
+                  openDistrict(
+                    shape.id,
+                    shape.name
+                  )
+                }
+                backgroundColor={
+                  theme.background
+                }
+                textColor={
+                  isCityBlack
+                    ? '#FFFFFF'
+                    : '#334A5C'
                 }
               />
             )
@@ -1574,7 +1769,10 @@ export default function ExploreShellScreen() {
                     : shellMapLevel ===
                         'busan'
                       ? '부산 지도부터 먼저 표시했어요.'
-                      : '지도부터 먼저 표시했어요.'
+                      : shellMapLevel ===
+                          'incheon'
+                        ? '인천 지도부터 먼저 표시했어요.'
+                        : '지도부터 먼저 표시했어요.'
               }
             </Text>
 

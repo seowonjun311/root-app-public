@@ -1,25 +1,28 @@
-import { Ionicons } from '@expo/vector-icons';
+import {
+  Ionicons,
+} from '@expo/vector-icons';
 import {
     router,
-    useFocusEffect,
-    useLocalSearchParams,
-} from 'expo-router';
+  useFocusEffect,
+  useLocalSearchParams,
+  } from 'expo-router';
 import {
     useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from 'react';
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    Linking,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
+  InteractionManager,
+  ActivityIndicator,
+  Alert,
+  Linking,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 import MapView, {
     Marker,
@@ -41,14 +44,6 @@ import {
 } from '../../../store/explorationCloud';
 import { useRootTheme } from '../../../store/rootTheme';
 import {
-    type SeoulCampingReservation,
-} from '../../../store/seoulCampingFacilities';
-import {
-    getCampingStatusLabel,
-    getInsideSeoulCampingSummaries,
-    type SeoulCampingFacilitySummary,
-} from '../../../store/seoulCampingSelectors';
-import {
     fetchSeoulCultureEvents,
     formatSeoulCultureDateLabel,
     getSeoulCultureReservationLabel,
@@ -58,25 +53,6 @@ import {
     type SeoulCultureContentType,
     type SeoulCultureEvent,
 } from '../../../store/seoulCultureEvents';
-import {
-    getSportsStatusLabel,
-    getSportsSummariesByDistrict,
-    type SeoulSportsFacilitySummary,
-} from '../../../store/seoulSportsSelectors';
-import {
-    getSpaceKindLabel,
-    getSpaceStatusLabel,
-    getSpaceSummariesByDistrict,
-    type SeoulSpaceFacilitySummary,
-} from '../../../store/seoulSpaceSelectors';
-import {
-    getEducationCategoryLabel,
-    getEducationSummariesByDistrict,
-    type SeoulEducationPlaceSummary,
-} from '../../../store/seoulEducationSelectors';
-import type {
-    SeoulEducationCategory,
-} from '../../../store/seoulEducationPrograms';
 
 type PlaceFilter =
   | 'all'
@@ -787,601 +763,6 @@ function isCurrentOrUpcomingEvent(
   );
 }
 
-function getCampingCoordinate(
-  summary: SeoulCampingFacilitySummary
-): LatLng | null {
-  const latitude = getNumber(
-    summary.facility.latitude
-  );
-
-  const longitude = getNumber(
-    summary.facility.longitude
-  );
-
-  if (
-    latitude === null ||
-    longitude === null
-  ) {
-    return null;
-  }
-
-  return {
-    latitude,
-    longitude,
-  };
-}
-
-function getCampingIcon(
-  summary: SeoulCampingFacilitySummary
-) {
-  return summary.facility.facilityKind ===
-    'picnic'
-    ? '🧺'
-    : '🏕️';
-}
-
-function getCampingKindLabel(
-  summary: SeoulCampingFacilitySummary
-) {
-  return summary.facility.facilityKind ===
-    'picnic'
-    ? '피크닉장'
-    : '캠핑장';
-}
-
-function formatCampingDatePart(
-  value: string | null | undefined
-) {
-  const match = String(value ?? '').match(
-    /^(\d{4})-(\d{2})-(\d{2})/
-  );
-
-  if (!match) {
-    return '';
-  }
-
-  return `${Number(match[2])}.${Number(
-    match[3]
-  )}`;
-}
-
-function getCampingReceptionText(
-  reservation:
-    | SeoulCampingReservation
-    | null
-) {
-  if (!reservation) {
-    return '예약 일정 확인';
-  }
-
-  const start =
-    formatCampingDatePart(
-      reservation.receptionStartAt
-    );
-
-  const end =
-    formatCampingDatePart(
-      reservation.receptionEndAt
-    );
-
-  if (start && end) {
-    return `접수 ${start}~${end}`;
-  }
-
-  if (start) {
-    return `접수 ${start}부터`;
-  }
-
-  if (end) {
-    return `접수 ${end}까지`;
-  }
-
-  return '예약 일정 확인';
-}
-
-function getSportsCoordinate(
-  summary: SeoulSportsFacilitySummary
-): LatLng | null {
-  const latitude = getNumber(
-    summary.facility.latitude
-  );
-
-  const longitude = getNumber(
-    summary.facility.longitude
-  );
-
-  if (
-    latitude === null ||
-    longitude === null
-  ) {
-    return null;
-  }
-
-  return {
-    latitude,
-    longitude,
-  };
-}
-
-function getSportsIcon(
-  category: string
-) {
-  const normalized =
-    String(category ?? '').trim();
-
-  if (normalized.includes('테니스')) {
-    return '🎾';
-  }
-
-  if (
-    normalized.includes('축구') ||
-    normalized.includes('풋살')
-  ) {
-    return '⚽';
-  }
-
-  if (normalized.includes('야구')) {
-    return '⚾';
-  }
-
-  if (normalized.includes('농구')) {
-    return '🏀';
-  }
-
-  if (normalized.includes('배구')) {
-    return '🏐';
-  }
-
-  if (
-    normalized.includes('배드민턴') ||
-    normalized.includes('피클볼')
-  ) {
-    return '🏸';
-  }
-
-  if (normalized.includes('탁구')) {
-    return '🏓';
-  }
-
-  if (normalized.includes('수영')) {
-    return '🏊';
-  }
-
-  if (normalized.includes('골프')) {
-    return '⛳';
-  }
-
-  return '🏟️';
-}
-
-function getSportsReceptionText(
-  reservation:
-    SeoulSportsFacilitySummary['primaryReservation']
-) {
-  if (!reservation) {
-    return '예약 일정 확인';
-  }
-
-  const start =
-    formatCampingDatePart(
-      reservation.receptionStartAt
-    );
-
-  const end =
-    formatCampingDatePart(
-      reservation.receptionEndAt
-    );
-
-  if (start && end) {
-    return `접수 ${start}~${end}`;
-  }
-
-  if (start) {
-    return `접수 ${start}부터`;
-  }
-
-  if (end) {
-    return `접수 ${end}까지`;
-  }
-
-  return '예약 일정 확인';
-}
-
-function getFacilityStatusRank(
-  status: DistrictFacilityStatus
-) {
-  if (status === 'open') {
-    return 0;
-  }
-
-  if (status === 'scheduled') {
-    return 1;
-  }
-
-  if (status === 'unknown') {
-    return 2;
-  }
-
-  return 3;
-}
-
-function createCampingFacilityItem(
-  summary: SeoulCampingFacilitySummary
-): DistrictFacilityItem {
-  const reservation =
-    summary.primaryReservation;
-
-  return {
-    id: `camping:${summary.facility.id}`,
-    sourceId: summary.facility.id,
-    kind: 'camping',
-    name: summary.facility.name,
-    icon: getCampingIcon(summary),
-    district:
-      String(
-        summary.facility.district ?? ''
-      ).trim(),
-    categoryLabel:
-      getCampingKindLabel(summary),
-    paidType:
-      reservation?.paidType ||
-      '요금 확인',
-    reservationCount:
-      summary.facility.reservationCount,
-    status:
-  summary.primaryStatus ===
-  'upcoming'
-    ? 'scheduled'
-    : summary.primaryStatus ===
-        'cancelled'
-      ? 'closed'
-      : summary.primaryStatus,
-    statusLabel:
-      getCampingStatusLabel(
-        summary.primaryStatus
-      ),
-    coordinate:
-      getCampingCoordinate(summary),
-    receptionText:
-      getCampingReceptionText(
-        reservation
-      ),
-    primaryTitle:
-      reservation?.title ?? '',
-    reservationUrl:
-      reservation?.reservationUrl ??
-      summary.facility.officialUrl ??
-      '',
-  };
-}
-
-function createSportsFacilityItem(
-  summary: SeoulSportsFacilitySummary
-): DistrictFacilityItem {
-  const reservation =
-    summary.primaryReservation;
-
-  return {
-    id: `sports:${summary.facility.id}`,
-    sourceId: summary.facility.id,
-    kind: 'sports',
-    name: summary.facility.name,
-    icon: getSportsIcon(
-      summary.facility.primaryCategory
-    ),
-    district:
-      String(
-        summary.facility.district ?? ''
-      ).trim(),
-    categoryLabel:
-      summary.facility.primaryCategory ||
-      '체육시설',
-    paidType:
-      reservation?.paidType ||
-      '요금 확인',
-    reservationCount:
-      summary.facility.reservationCount,
-    status:
-      summary.status,
-    statusLabel:
-      getSportsStatusLabel(
-        summary.status
-      ),
-    coordinate:
-      getSportsCoordinate(summary),
-    receptionText:
-      getSportsReceptionText(
-        reservation
-      ),
-    primaryTitle:
-      reservation?.title ?? '',
-    reservationUrl:
-      reservation?.serviceUrl ??
-      summary.facility.officialUrl ??
-      '',
-  };
-}
-
-function getSpaceCoordinate(
-  summary: SeoulSpaceFacilitySummary
-): LatLng | null {
-  const latitude = getNumber(
-    summary.facility.latitude
-  );
-
-  const longitude = getNumber(
-    summary.facility.longitude
-  );
-
-  if (
-    latitude === null ||
-    longitude === null
-  ) {
-    return null;
-  }
-
-  return {
-    latitude,
-    longitude,
-  };
-}
-
-function getSpaceIcon(
-  kind: string
-) {
-  if (kind === 'meetingRoom') {
-    return '🗣️';
-  }
-
-  if (kind === 'lectureRoom') {
-    return '🧑‍🏫';
-  }
-
-  if (kind === 'hall') {
-    return '🏛️';
-  }
-
-  if (kind === 'multipurpose') {
-    return '🧩';
-  }
-
-  if (kind === 'performance') {
-    return '🎭';
-  }
-
-  if (kind === 'exhibition') {
-    return '🖼️';
-  }
-
-  if (kind === 'studio') {
-    return '🎙️';
-  }
-
-  if (kind === 'plaza') {
-    return '🏙️';
-  }
-
-  if (kind === 'community') {
-    return '🤝';
-  }
-
-  return '🏢';
-}
-
-function getSpaceReceptionText(
-  reservation:
-    SeoulSpaceFacilitySummary['primaryReservation']
-) {
-  if (!reservation) {
-    return '예약 일정 확인';
-  }
-
-  const start =
-    formatCampingDatePart(
-      reservation.receptionStartAt
-    );
-
-  const end =
-    formatCampingDatePart(
-      reservation.receptionEndAt
-    );
-
-  if (start && end) {
-    return `접수 ${start}~${end}`;
-  }
-
-  if (start) {
-    return `접수 ${start}부터`;
-  }
-
-  if (end) {
-    return `접수 ${end}까지`;
-  }
-
-  return '예약 일정 확인';
-}
-
-function createSpaceFacilityItem(
-  summary: SeoulSpaceFacilitySummary
-): DistrictFacilityItem {
-  const reservation =
-    summary.primaryReservation;
-
-  return {
-    id: `space:${summary.facility.id}`,
-    sourceId: summary.facility.id,
-    kind: 'space',
-    name: summary.facility.name,
-    icon: getSpaceIcon(
-      summary.facility.spaceKind
-    ),
-    district:
-      String(
-        summary.facility.district ?? ''
-      ).trim(),
-    categoryLabel:
-      getSpaceKindLabel(
-        summary.facility.spaceKind
-      ),
-    paidType:
-      reservation?.paidType ||
-      '요금 확인',
-    reservationCount:
-      summary.facility.reservationCount,
-    status:
-      summary.status,
-    statusLabel:
-      getSpaceStatusLabel(
-        summary.status
-      ),
-    coordinate:
-      getSpaceCoordinate(summary),
-    receptionText:
-      getSpaceReceptionText(
-        reservation
-      ),
-    primaryTitle:
-      reservation?.title ?? '',
-    reservationUrl:
-      reservation?.serviceUrl ??
-      summary.facility.officialUrl ??
-      '',
-  };
-}
-
-
-function getEducationCoordinate(
-  summary: SeoulEducationPlaceSummary
-): LatLng | null {
-  const latitude = getNumber(
-    summary.place.latitude
-  );
-  const longitude = getNumber(
-    summary.place.longitude
-  );
-
-  if (
-    latitude === null ||
-    longitude === null
-  ) {
-    return null;
-  }
-
-  return {
-    latitude,
-    longitude,
-  };
-}
-
-function getEducationIcon(
-  category: SeoulEducationCategory
-) {
-  if (category === 'craftMaking') {
-    return '🎨';
-  }
-
-  if (category === 'cookingFood') {
-    return '🍳';
-  }
-
-  if (
-    category === 'natureEnvironment' ||
-    category === 'urbanAgriculture'
-  ) {
-    return '🌿';
-  }
-
-  if (category === 'historyCulture') {
-    return '🏛️';
-  }
-
-  if (category === 'scienceDigital') {
-    return '🔬';
-  }
-
-  if (category === 'healthSportsSafety') {
-    return '🧘';
-  }
-
-  if (category === 'careerYouth') {
-    return '💼';
-  }
-
-  if (category === 'liberalArtsLanguage') {
-    return '📚';
-  }
-
-  return '🧑‍🏫';
-}
-
-function getEducationReceptionText(
-  program:
-    SeoulEducationPlaceSummary['primaryProgram']
-) {
-  if (!program) {
-    return '접수 일정 확인';
-  }
-
-  const start = formatCampingDatePart(
-    program.receptionStartAt
-  );
-  const end = formatCampingDatePart(
-    program.receptionEndAt
-  );
-
-  if (start && end) {
-    return `접수 ${start}~${end}`;
-  }
-
-  if (start) {
-    return `접수 ${start}부터`;
-  }
-
-  if (end) {
-    return `접수 ${end}까지`;
-  }
-
-  return '접수 일정 확인';
-}
-
-function createEducationFacilityItem(
-  summary: SeoulEducationPlaceSummary
-): DistrictFacilityItem {
-  const program = summary.primaryProgram;
-
-  return {
-    id: `education:${summary.place.id}`,
-    sourceId: summary.place.id,
-    kind: 'education',
-    name: summary.place.name,
-    icon: getEducationIcon(
-      summary.place.primaryCategory
-    ),
-    district: String(
-      summary.place.district ?? ''
-    ).trim(),
-    categoryLabel:
-      getEducationCategoryLabel(
-        summary.place.primaryCategory
-      ),
-    paidType:
-      program?.paidType || '요금 확인',
-    reservationCount:
-      summary.place.programCount,
-    status: summary.status,
-    statusLabel: summary.statusLabel,
-    coordinate:
-      getEducationCoordinate(summary),
-    receptionText:
-      getEducationReceptionText(program),
-    primaryTitle: program?.title ?? '',
-    reservationUrl:
-      program?.serviceUrl ??
-      summary.place.officialUrl ??
-      '',
-  };
-}
-
 export default function DistrictMapScreen() {
   const {
     districtId: rawDistrictId,
@@ -1478,6 +859,21 @@ export default function DistrictMapScreen() {
     mapReady,
     setMapReady,
   ] = useState(false);
+
+  const [
+    districtMapMounted,
+    setDistrictMapMounted,
+  ] = useState(false);
+
+  const [
+    placeMarkerRenderCount,
+    setPlaceMarkerRenderCount,
+  ] = useState(0);
+
+  const [
+    placeListRenderCount,
+    setPlaceListRenderCount,
+  ] = useState(8);
 
   const [
     trackMarkerChanges,
@@ -1647,140 +1043,40 @@ export default function DistrictMapScreen() {
     );
 
   const districtCampingFacilityItems =
-    useMemo(() => {
-      const normalizedTarget =
-        normalizeDistrictName(
-          districtName
-        );
-
-      return getInsideSeoulCampingSummaries()
-        .filter(
-          (summary) =>
-            normalizeDistrictName(
-              String(
-                summary.facility.district ??
-                  ''
-              )
-            ) === normalizedTarget
-        )
-        .map(
-          createCampingFacilityItem
-        );
-    }, [districtName]);
+    useMemo<DistrictFacilityItem[]>(
+      () => [],
+      []
+    );
 
   const districtSportsFacilityItems =
-    useMemo(
-      () =>
-        getSportsSummariesByDistrict(
-          districtName
-        ).map(
-          createSportsFacilityItem
-        ),
-      [districtName]
+    useMemo<DistrictFacilityItem[]>(
+      () => [],
+      []
     );
 
   const districtSpaceFacilityItems =
-    useMemo(
-      () =>
-        getSpaceSummariesByDistrict(
-          districtName
-        ).map(
-          createSpaceFacilityItem
-        ),
-      [districtName]
+    useMemo<DistrictFacilityItem[]>(
+      () => [],
+      []
     );
 
   const districtEducationFacilityItems =
-    useMemo(
-      () =>
-        getEducationSummariesByDistrict(
-          districtName
-        ).map(
-          createEducationFacilityItem
-        ),
-      [districtName]
-    );
-
-  const allDistrictFacilityItems =
-    useMemo(
-      () =>
-        [
-          ...districtCampingFacilityItems,
-          ...districtSportsFacilityItems,
-          ...districtSpaceFacilityItems,
-          ...districtEducationFacilityItems,
-        ].sort((first, second) => {
-          const statusDifference =
-            getFacilityStatusRank(
-              first.status
-            ) -
-            getFacilityStatusRank(
-              second.status
-            );
-
-          if (statusDifference !== 0) {
-            return statusDifference;
-          }
-
-          const categoryDifference =
-            first.categoryLabel.localeCompare(
-              second.categoryLabel,
-              'ko'
-            );
-
-          if (categoryDifference !== 0) {
-            return categoryDifference;
-          }
-
-          return first.name.localeCompare(
-            second.name,
-            'ko'
-          );
-        }),
-      [
-        districtCampingFacilityItems,
-        districtEducationFacilityItems,
-        districtSpaceFacilityItems,
-        districtSportsFacilityItems,
-      ]
+    useMemo<DistrictFacilityItem[]>(
+      () => [],
+      []
     );
 
   const districtFacilityItems =
-    useMemo(
-      () =>
-        allDistrictFacilityItems.filter(
-          (item) =>
-            facilityCategoryFilter ===
-              'all' ||
-            item.kind ===
-              facilityCategoryFilter
-        ),
-      [
-        allDistrictFacilityItems,
-        facilityCategoryFilter,
-      ]
+    useMemo<DistrictFacilityItem[]>(
+      () => [],
+      []
     );
 
   const facilityMarkerItems =
     useMemo<FacilityWithCoordinate[]>(
-      () =>
-        districtFacilityItems
-          .filter(
-            (
-              item
-            ): item is DistrictFacilityItem & {
-              coordinate: LatLng;
-            } =>
-              item.coordinate !== null
-          )
-          .map((item) => ({
-            item,
-            coordinate:
-              item.coordinate,
-          })),
-      [districtFacilityItems]
+      () => [],
+      []
     );
-
   const visitedCount =
     useMemo(
       () =>
@@ -1824,6 +1120,32 @@ export default function DistrictMapScreen() {
         completedPlaceIds,
         places,
         selectedFilter,
+      ]
+    );
+
+  const visiblePlaceMarkerItems =
+    useMemo(
+      () =>
+        markerItems.slice(
+          0,
+          placeMarkerRenderCount
+        ),
+      [
+        markerItems,
+        placeMarkerRenderCount,
+      ]
+    );
+
+  const visibleFilteredPlaces =
+    useMemo(
+      () =>
+        filteredPlaces.slice(
+          0,
+          placeListRenderCount
+        ),
+      [
+        filteredPlaces,
+        placeListRenderCount,
       ]
     );
 
@@ -2000,53 +1322,284 @@ export default function DistrictMapScreen() {
     useCallback(() => {
       let active = true;
 
-      const load = async () => {
-        setLoading(true);
+      let backgroundDelay:
+        ReturnType<typeof setTimeout> | null =
+          null;
 
-        try {
-          const local =
-            await loadLocalExplorationData();
+      const loadLocal =
+        async () => {
+          setLoading(true);
 
-          if (active) {
-            applyExplorationData(
-              local
+          try {
+            const local =
+              await loadLocalExplorationData();
+
+            if (active) {
+              applyExplorationData(
+                local
+              );
+            }
+          } catch (error) {
+            console.log(
+              'DISTRICT MAP LOCAL LOAD ERROR',
+              error
             );
+          } finally {
+            if (active) {
+              setLoading(false);
+            }
           }
-        } catch (error) {
-          console.log(
-            'DISTRICT MAP LOCAL LOAD ERROR',
-            error
-          );
-        }
+        };
 
-        try {
-          const synced =
-            await syncExplorationData();
+      void loadLocal();
 
-          if (active) {
-            applyExplorationData(
-              synced
-            );
+      const interactionTask =
+        InteractionManager.runAfterInteractions(
+          () => {
+            backgroundDelay =
+              setTimeout(
+                () => {
+                  if (!active) {
+                    return;
+                  }
+
+                  console.log(
+                    'DISTRICT MAP BACKGROUND SYNC START'
+                  );
+
+                  void syncExplorationData()
+                    .then(
+                      (synced) => {
+                        if (active) {
+                          applyExplorationData(
+                            synced
+                          );
+                        }
+                      }
+                    )
+                    .catch(
+                      (error) => {
+                        console.log(
+                          'DISTRICT MAP BACKGROUND SYNC ERROR',
+                          error
+                        );
+                      }
+                    );
+                },
+                24 * 60 * 60 * 1_000
+              );
           }
-        } catch (error) {
-          console.log(
-            'DISTRICT MAP CLOUD LOAD ERROR',
-            error
-          );
-        } finally {
-          if (active) {
-            setLoading(false);
-          }
-        }
-      };
-
-      void load();
+        );
 
       return () => {
         active = false;
+
+        interactionTask.cancel?.();
+
+        if (backgroundDelay) {
+          clearTimeout(
+            backgroundDelay
+          );
+        }
       };
     }, [applyExplorationData])
   );
+
+  useEffect(() => {
+    setDistrictMapMounted(false);
+    setMapReady(false);
+    setPlaceMarkerRenderCount(0);
+
+    setPlaceListRenderCount(
+      Math.min(
+        8,
+        filteredPlaces.length
+      )
+    );
+
+    if (!normalizedDistrictId) {
+      return;
+    }
+
+    let mapMountDelay:
+      ReturnType<typeof setTimeout> | null =
+        null;
+
+    const interactionTask =
+      InteractionManager.runAfterInteractions(
+        () => {
+          console.log(
+            'DISTRICT INITIAL UI READY',
+            {
+              districtId:
+                normalizedDistrictId,
+            }
+          );
+
+          mapMountDelay =
+            setTimeout(
+              () => {
+                console.log(
+                  'DISTRICT MAP DEFERRED MOUNT START',
+                  {
+                    districtId:
+                      normalizedDistrictId,
+                  }
+                );
+
+                setDistrictMapMounted(
+                  true
+                );
+              },
+              2_000
+            );
+        }
+      );
+
+    return () => {
+      interactionTask.cancel?.();
+
+      if (mapMountDelay) {
+        clearTimeout(
+          mapMountDelay
+        );
+      }
+    };
+  }, [
+    normalizedDistrictId,
+  ]);
+
+  useEffect(() => {
+    if (
+      contentMode !== 'places'
+    ) {
+      return;
+    }
+
+    setPlaceListRenderCount(
+      Math.min(
+        4,
+        filteredPlaces.length
+      )
+    );
+
+    const secondListTimer =
+      setTimeout(
+        () => {
+          setPlaceListRenderCount(
+            Math.min(
+              16,
+              filteredPlaces.length
+            )
+          );
+        },
+        1_200
+      );
+
+    const finalListTimer =
+      setTimeout(
+        () => {
+          setPlaceListRenderCount(
+            filteredPlaces.length
+          );
+
+          console.log(
+            'DISTRICT PLACE LIST READY',
+            {
+              count:
+                filteredPlaces.length,
+              districtId:
+                normalizedDistrictId,
+            }
+          );
+        },
+        3_000
+      );
+
+    return () => {
+      clearTimeout(
+        secondListTimer
+      );
+
+      clearTimeout(
+        finalListTimer
+      );
+    };
+  }, [
+    contentMode,
+    filteredPlaces.length,
+    normalizedDistrictId,
+  ]);
+
+  useEffect(() => {
+    if (
+      !districtMapMounted ||
+      !mapReady ||
+      contentMode !== 'places'
+    ) {
+      setPlaceMarkerRenderCount(
+        0
+      );
+
+      return;
+    }
+
+    setPlaceMarkerRenderCount(
+      Math.min(
+        6,
+        markerItems.length
+      )
+    );
+
+    const secondMarkerTimer =
+      setTimeout(
+        () => {
+          setPlaceMarkerRenderCount(
+            Math.min(
+              14,
+              markerItems.length
+            )
+          );
+        },
+        220
+      );
+
+    const finalMarkerTimer =
+      setTimeout(
+        () => {
+          setPlaceMarkerRenderCount(
+            markerItems.length
+          );
+
+          console.log(
+            'DISTRICT PLACE MARKERS READY',
+            {
+              count:
+                markerItems.length,
+              districtId:
+                normalizedDistrictId,
+            }
+          );
+        },
+        650
+      );
+
+    return () => {
+      clearTimeout(
+        secondMarkerTimer
+      );
+
+      clearTimeout(
+        finalMarkerTimer
+      );
+    };
+  }, [
+    contentMode,
+    districtMapMounted,
+    mapReady,
+    markerItems.length,
+    normalizedDistrictId,
+  ]);
 
   useEffect(() => {
     if (
@@ -2109,7 +1662,7 @@ export default function DistrictMapScreen() {
     const timeoutId =
       setTimeout(() => {
         setTrackMarkerChanges(false);
-      }, 1500);
+      }, 300);
 
     return () => {
       clearTimeout(timeoutId);
@@ -2630,11 +2183,35 @@ export default function DistrictMapScreen() {
               return (
                 <Pressable
                   key={option.id}
-                  onPress={() =>
+                  onPress={() => {
+                    if (
+                      option.id ===
+                      'facilities'
+                    ) {
+                      console.log(
+                        'DISTRICT FACILITIES NAVIGATION START',
+                        {
+                          districtId:
+                            normalizedDistrictId,
+                        }
+                      );
+
+                      router.push({
+                        pathname:
+                          '/explore/district-facilities/[districtId]',
+                        params: {
+                          districtId:
+                            normalizedDistrictId,
+                        },
+                      } as any);
+
+                      return;
+                    }
+
                     setContentMode(
                       option.id
-                    )
-                  }
+                    );
+                  }}
                   style={({ pressed }) => [
                     styles.contentModeButton,
                     {
@@ -2690,6 +2267,7 @@ export default function DistrictMapScreen() {
             },
           ]}
         >
+{districtMapMounted ? (
           <MapView
             ref={mapRef}
             style={
@@ -2707,9 +2285,17 @@ export default function DistrictMapScreen() {
                 ? ROOT_WARM_MAP_STYLE
                 : []
             }
-            onMapReady={() =>
-              setMapReady(true)
-            }
+            onMapReady={() => {
+              console.log(
+                'DISTRICT MAP READY',
+                {
+                  districtId:
+                    normalizedDistrictId,
+                }
+              );
+
+              setMapReady(true);
+            }}
             showsUserLocation
             showsMyLocationButton
             showsCompass
@@ -2718,7 +2304,7 @@ export default function DistrictMapScreen() {
           >
             {contentMode ===
             'places'
-              ? markerItems.map(
+              ? visiblePlaceMarkerItems.map(
                   ({
                     place,
                     coordinate,
@@ -3003,6 +2589,38 @@ export default function DistrictMapScreen() {
                     )
                   : null}
           </MapView>
+          ) : (
+            <View
+              style={[
+                styles.map,
+                {
+                  alignItems:
+                    'center',
+                  justifyContent:
+                    'center',
+                  backgroundColor:
+                    theme.background,
+                },
+              ]}
+            >
+              <ActivityIndicator
+                size="small"
+                color={theme.text}
+              />
+
+              <Text
+                style={{
+                  marginTop: 8,
+                  fontSize: 12,
+                  fontWeight: '700',
+                  color:
+                    theme.subText,
+                }}
+              >
+                지도와 장소 표시를 준비하고 있어요.
+              </Text>
+            </View>
+          )}
 
           <View
             style={[
@@ -3606,7 +3224,7 @@ export default function DistrictMapScreen() {
                   styles.itemList
                 }
               >
-                {filteredPlaces.map(
+                {visibleFilteredPlaces.map(
                   (place) => {
                     const placeId =
                       String(

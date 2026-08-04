@@ -23,6 +23,7 @@ import {
 } from 'react-native-safe-area-context';
 
 import { useRootTheme } from '../../../store/rootTheme';
+import { useSeoulReservationData } from '../../../store/seoulReservationRemote';
 import {
   getCampingStatusLabel,
   getInsideSeoulCampingSummaries,
@@ -745,6 +746,11 @@ export default function FacilityDetailScreen() {
     useRootTheme();
   const insets = useSafeAreaInsets();
 
+  const seoulReservationData =
+    useSeoulReservationData(
+      false
+    );
+
   const facilityId =
     getParam(rawFacilityId);
   const kindParam =
@@ -763,7 +769,7 @@ export default function FacilityDetailScreen() {
         kind,
         facilityId
       ),
-    [facilityId, kind]
+    [facilityId, kind, seoulReservationData.revision]
   );
 
   if (!detail) {

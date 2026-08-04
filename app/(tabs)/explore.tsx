@@ -49,6 +49,10 @@ type ExplorationMapLevel =
   | 'sejong'
   | 'ulsan';
 
+type QuickMapLevel =
+  | 'korea'
+  | 'seoul'
+  | 'gyeonggi';
 
 type ExploreContentMode =
   | 'places'
@@ -66,6 +70,41 @@ type HeavyExploreComponent =
   ComponentType<
     HeavyExploreProps
   >;
+
+type QuickShapeBase = {
+  id: string;
+  points: string;
+  labelX: number;
+  labelY: number;
+  labelSize?: number;
+  touchRadius?: number;
+};
+
+type QuickShapeMapProps<
+  T extends QuickShapeBase
+> = {
+  shapes: readonly T[];
+  viewWidth: number;
+  viewHeight: number;
+  displayHeight: number;
+  getLabel: (
+    shape: T
+  ) => string;
+  getFill: (
+    shape: T
+  ) => string;
+  getLabelSize?: (
+    shape: T
+  ) => number;
+  getTouchSize?: (
+    shape: T
+  ) => number;
+  onPress: (
+    shape: T
+  ) => void;
+  backgroundColor: string;
+  textColor: string;
+};
 
 type KoreaRegionShape = {
   id: Exclude<
@@ -280,6 +319,7 @@ const KOREA_REGION_SHAPES: KoreaRegionShape[] = [
 
 
 
+
 type SeoulDistrictShape = {
   id: string;
   name: string;
@@ -320,6 +360,292 @@ const SEOUL_DISTRICT_SHAPES: SeoulDistrictShape[] = [
 
 
 
+
+type GyeonggiDistrictShape = {
+  id: string;
+  name: string;
+  icon: string;
+  subtitle: string;
+  points: string;
+  labelX: number;
+  labelY: number;
+};
+
+/*
+ * 경기도 31개 시·군의 단순화 지도입니다.
+ * 경기도 31개 시·군의 대표 장소·GPS·테마 탐험이 모두 연결되어 있습니다.
+ */
+const GYEONGGI_DISTRICT_SHAPES: GyeonggiDistrictShape[] = [
+  { id: 'gyeonggi-yeoncheon', name: '연천군', icon: '🦕', subtitle: '구석기·한탄강 지질·고구려·고려·평화 탐험', points: '100,15 178,15 190,58 135,68 95,42', labelX: 137, labelY: 39 },
+  { id: 'gyeonggi-pocheon', name: '포천시', icon: '🏞️', subtitle: '아트밸리·산정호수·한탄강 지질·숲과 계곡 탐험', points: '190,20 266,32 270,92 220,112 190,58', labelX: 230, labelY: 60 },
+  { id: 'gyeonggi-paju', name: '파주시', icon: '🕊️', subtitle: 'DMZ·예술·책·호수산림 탐험', points: '28,60 95,42 135,68 116,122 48,120', labelX: 78, labelY: 87 },
+  { id: 'gyeonggi-dongducheon', name: '동두천시', icon: '🌲', subtitle: '소요산·평화역사·숲모험·레트로거리 탐험', points: '135,68 190,58 188,100 158,117 116,96', labelX: 153, labelY: 91 },
+  { id: 'gyeonggi-yangju', name: '양주시', icon: '🎨', subtitle: '회암사지·양주목·별산대·장흥예술·꽃숲산길 탐험', points: '116,96 158,117 188,100 211,128 178,155 120,145', labelX: 156, labelY: 130 },
+  { id: 'gyeonggi-uijeongbu', name: '의정부시', icon: '🥾', subtitle: '산사·수락산·예술도서관·경전철·원도심 탐험', points: '178,155 211,128 238,146 228,180 190,184', labelX: 209, labelY: 159 },
+  { id: 'gyeonggi-gapyeong', name: '가평군', icon: '🌲', subtitle: '자라섬·아침고요·산과 계곡 탐험', points: '270,92 330,76 350,132 320,184 270,166 220,112', labelX: 302, labelY: 128 },
+  { id: 'gyeonggi-gimpo', name: '김포시', icon: '🌉', subtitle: '애기봉·왕릉·성곽·항구·수로문화·한강생태 탐험', points: '15,130 72,122 83,169 53,197 10,176', labelX: 45, labelY: 158 },
+  { id: 'gyeonggi-goyang', name: '고양시', icon: '🌸', subtitle: '호수공원·행주산성·왕릉·습지 탐험', points: '72,122 120,145 116,192 70,205 53,197 83,169', labelX: 94, labelY: 166 },
+  { id: 'gyeonggi-guri', name: '구리시', icon: '🏺', subtitle: '동구릉·고구려·호수·한강·시장·생태 탐험', points: '228,180 250,172 260,199 238,218 218,204', labelX: 240, labelY: 197 },
+  { id: 'gyeonggi-namyangju', name: '남양주시', icon: '🌿', subtitle: '다산·왕릉·사찰·호수·산림 탐험', points: '238,146 270,166 320,184 303,228 260,224 238,218 260,199', labelX: 279, labelY: 192 },
+  { id: 'gyeonggi-yangpyeong', name: '양평군', icon: '🌿', subtitle: '두물머리·연꽃정원·용문산·문학·철도 탐험', points: '303,228 320,184 350,196 355,254 323,275 286,253', labelX: 329, labelY: 228 },
+  { id: 'gyeonggi-bucheon', name: '부천시', icon: '🎬', subtitle: '만화·예술·꽃·생태 탐험', points: '18,210 62,205 70,239 45,257 12,242', labelX: 42, labelY: 231 },
+  { id: 'gyeonggi-gwangmyeong', name: '광명시', icon: '💎', subtitle: '광명동굴·시장·문학·숲과 습지 탐험', points: '62,205 104,207 108,241 70,239', labelX: 85, labelY: 225 },
+  { id: 'gyeonggi-anyang', name: '안양시', icon: '🎨', subtitle: '예술공원·건축·산사·안양천·도심공원 탐험', points: '104,207 145,205 151,241 108,241', labelX: 128, labelY: 225 },
+  { id: 'gyeonggi-gwacheon', name: '과천시', icon: '🦁', subtitle: '대공원·동물원·과학·미술·역사·관악산 탐험', points: '145,205 183,202 190,238 151,241', labelX: 168, labelY: 223 },
+  { id: 'gyeonggi-seongnam', name: '성남시', icon: '🌆', subtitle: '판교역사·예술·미래산업·공원생태·전통시장 탐험', points: '183,202 218,204 238,218 230,252 190,238', labelX: 211, labelY: 226 },
+  { id: 'gyeonggi-hanam', name: '하남시', icon: '🌳', subtitle: '검단산·미사·도시전망·역사문화 탐험', points: '238,218 260,224 268,255 230,252', labelX: 250, labelY: 240 },
+  { id: 'gyeonggi-gwangju', name: '광주시', icon: '🏯', subtitle: '남한산성·왕실도자·팔당습지·화담숲 탐험', points: '260,224 303,228 286,253 290,287 250,284 268,255', labelX: 277, labelY: 257 },
+  { id: 'gyeonggi-siheung', name: '시흥시', icon: '🌅', subtitle: '오이도·선사·갯골·연꽃·호수·해양레저 탐험', points: '20,258 70,239 80,278 50,302 15,287', labelX: 48, labelY: 273 },
+  { id: 'gyeonggi-ansan', name: '안산시', icon: '🌊', subtitle: '대부도·서해낙조·갯벌생태·예술·다문화 탐험', points: '70,239 108,241 118,281 80,278', labelX: 95, labelY: 263 },
+  { id: 'gyeonggi-gunpo', name: '군포시', icon: '🌺', subtitle: '수리산·사찰·호수·철쭉·생태·도시문화 탐험', points: '108,241 151,241 156,278 118,281', labelX: 133, labelY: 262 },
+  { id: 'gyeonggi-uiwang', name: '의왕시', icon: '🚂', subtitle: '왕송호수·철도·조류생태·백운호수·산사·한글문화 탐험', points: '151,241 190,238 194,276 156,278', labelX: 174, labelY: 260 },
+  { id: 'gyeonggi-suwon', name: '수원시', icon: '🏰', subtitle: '수원화성·행궁동·호수공원 탐험', points: '194,276 230,252 250,284 237,316 194,315', labelX: 219, labelY: 288 },
+  { id: 'gyeonggi-yongin', name: '용인시', icon: '🎢', subtitle: '에버랜드·민속촌·미술·숲정원 탐험', points: '230,252 268,255 290,287 280,325 237,316 250,284', labelX: 261, labelY: 288 },
+  { id: 'gyeonggi-icheon', name: '이천시', icon: '🏺', subtitle: '도자예술·설봉역사·온천·농촌문화 탐험', points: '290,287 323,275 350,298 344,337 305,342 280,325', labelX: 318, labelY: 310 },
+  { id: 'gyeonggi-hwaseong', name: '화성시', icon: '🌊', subtitle: '제부도·궁평항·융건릉·공룡화석 탐험', points: '50,302 80,278 118,281 156,278 194,315 174,350 110,360 55,342', labelX: 117, labelY: 320 },
+  { id: 'gyeonggi-osan', name: '오산시', icon: '🕊️', subtitle: '독산성·평화·미니어처·수목원 탐험', points: '174,350 194,315 237,316 232,352 198,368', labelX: 207, labelY: 339 },
+  { id: 'gyeonggi-pyeongtaek', name: '평택시', icon: '⚓', subtitle: '평택호·항만·생태정원·역사·국제문화 탐험', points: '110,360 174,350 198,368 190,410 118,414 85,388', labelX: 143, labelY: 384 },
+  { id: 'gyeonggi-anseong', name: '안성시', icon: '🎭', subtitle: '남사당·농촌체험·사찰·성지·산성·호수 탐험', points: '198,368 232,352 280,325 305,342 300,390 250,414 190,410', labelX: 251, labelY: 375 },
+  { id: 'gyeonggi-yeoju', name: '여주시', icon: '👑', subtitle: '왕릉·왕비생가·고찰·도자·남한강 생태 탐험', points: '305,342 344,337 355,370 340,410 300,390', labelX: 329, labelY: 371 },
+];
+
+
+
+
+function QuickShapeMap<
+  T extends QuickShapeBase
+>({
+  shapes,
+  viewWidth,
+  viewHeight,
+  displayHeight,
+  getLabel,
+  getFill,
+  getLabelSize,
+  getTouchSize,
+  onPress,
+  backgroundColor,
+  textColor,
+}: QuickShapeMapProps<T>) {
+  return (
+    <View
+      style={[
+        styles.shellMapStage,
+        {
+          height:
+            displayHeight,
+        },
+      ]}
+    >
+      <Svg
+        width="100%"
+        height={
+          displayHeight
+        }
+        viewBox={`0 0 ${viewWidth} ${viewHeight}`}
+        pointerEvents="none"
+      >
+        {
+          shapes.map(
+            (shape) => (
+              <G
+                key={
+                  shape.id
+                }
+              >
+                <Polygon
+                  points={
+                    shape.points
+                  }
+                  fill={
+                    getFill(
+                      shape
+                    )
+                  }
+                  stroke={
+                    backgroundColor
+                  }
+                  strokeWidth="1.8"
+                />
+
+                <SvgText
+                  x={
+                    shape.labelX
+                  }
+                  y={
+                    shape.labelY + 3
+                  }
+                  fontSize={
+                    getLabelSize
+                      ? getLabelSize(
+                          shape
+                        )
+                      : shape.labelSize ??
+                        9
+                  }
+                  fontWeight="800"
+                  fill={
+                    textColor
+                  }
+                  textAnchor="middle"
+                >
+                  {
+                    getLabel(
+                      shape
+                    )
+                  }
+                </SvgText>
+              </G>
+            )
+          )
+        }
+
+        {
+          viewWidth === 360 &&
+          viewHeight === 490 ? (
+            <>
+              <Circle
+                cx="331"
+                cy="170"
+                r="5"
+                fill="#F4B16A"
+                stroke={
+                  backgroundColor
+                }
+                strokeWidth="1.2"
+              />
+
+              <Circle
+                cx="346"
+                cy="182"
+                r="2.8"
+                fill="#F4B16A"
+                stroke={
+                  backgroundColor
+                }
+                strokeWidth="1"
+              />
+            </>
+          ) : null
+        }
+      </Svg>
+
+      <View
+        pointerEvents="box-none"
+        style={
+          styles.shellMapTouchLayer
+        }
+      >
+        {
+          shapes.map(
+            (shape) => {
+              const touchSize =
+                getTouchSize
+                  ? getTouchSize(
+                      shape
+                    )
+                  : shape.touchRadius
+                    ? 44
+                    : 58;
+
+              return (
+                <Pressable
+                  key={`quick-map-touch-${shape.id}`}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${getLabel(shape)} 탐험 열기`}
+                  onPress={() =>
+                    onPress(
+                      shape
+                    )
+                  }
+                  style={({
+                    pressed,
+                  }) => [
+                    styles.shellMapTouchTarget,
+                    {
+                      left:
+                        `${
+                          (
+                            shape.labelX /
+                            viewWidth
+                          ) * 100
+                        }%`,
+                      top:
+                        (
+                          shape.labelY /
+                          viewHeight
+                        ) *
+                        displayHeight,
+                      width:
+                        touchSize,
+                      height:
+                        touchSize,
+                      borderRadius:
+                        touchSize / 2,
+                      transform: [
+                        {
+                          translateX:
+                            -touchSize /
+                            2,
+                        },
+                        {
+                          translateY:
+                            -touchSize /
+                            2,
+                        },
+                      ],
+                      opacity:
+                        pressed
+                          ? 0.45
+                          : 1,
+                    },
+                  ]}
+                />
+              );
+            }
+          )
+        }
+      </View>
+    </View>
+  );
+}
+
+function getQuickMapTitle(
+  mapLevel: QuickMapLevel
+) {
+  if (
+    mapLevel === 'seoul'
+  ) {
+    return '서울특별시 탐험';
+  }
+
+  if (
+    mapLevel === 'gyeonggi'
+  ) {
+    return '경기도 탐험';
+  }
+
+  return '대한민국 탐험';
+}
+
+function getQuickMapSubtitle(
+  mapLevel: QuickMapLevel
+) {
+  if (
+    mapLevel === 'seoul'
+  ) {
+    return '자치구를 눌러 탐험장소·축제·예약시설을 확인하세요.';
+  }
+
+  if (
+    mapLevel === 'gyeonggi'
+  ) {
+    return '시·군을 눌러 경기도 탐험을 시작하세요.';
+  }
+
+  return '지역을 눌러 ROOT 탐험을 시작하세요.';
+}
+
 export default function ExploreShellScreen() {
   const {
     theme,
@@ -333,7 +659,7 @@ export default function ExploreShellScreen() {
     shellMapLevel,
     setShellMapLevel,
   ] = useState<
-    'korea' | 'seoul'
+    QuickMapLevel
   >('korea');
 
   const [
@@ -386,7 +712,9 @@ export default function ExploreShellScreen() {
       heavyLoadStartedRef.current =
         true;
 
-      setHeavyLoading(true);
+      setHeavyLoading(
+        true
+      );
 
       console.log(
         'EXPLORE HEAVY LOAD START',
@@ -396,63 +724,73 @@ export default function ExploreShellScreen() {
         }
       );
 
-      requestAnimationFrame(() => {
-        try {
-          const module =
-            require(
-              '../../components/explore/ExploreHeavyScreen'
-            ) as {
-              default:
-                HeavyExploreComponent;
-            };
+      requestAnimationFrame(
+        () => {
+          try {
+            const module =
+              require(
+                '../../components/explore/ExploreHeavyScreen'
+              ) as {
+                default:
+                  HeavyExploreComponent;
+              };
 
-          if (
-            !mountedRef.current
-          ) {
-            return;
-          }
-
-          setHeavyExploreScreen(
-            () => module.default
-          );
-
-          console.log(
-            'EXPLORE HEAVY LOAD READY',
-            {
-              requestedRegion:
-                requestedRegionRef.current,
+            if (
+              !mountedRef.current
+            ) {
+              return;
             }
-          );
-        } catch (error) {
-          heavyLoadStartedRef.current =
-            false;
 
-          if (
-            mountedRef.current
+            setHeavyExploreScreen(
+              () =>
+                module.default
+            );
+
+            console.log(
+              'EXPLORE HEAVY LOAD READY',
+              {
+                requestedRegion:
+                  requestedRegionRef.current,
+              }
+            );
+          } catch (
+            error
           ) {
-            setHeavyLoading(false);
-            setWaitingLabel(
-              '탐험 화면을 준비하지 못했어요. 다시 눌러 주세요.'
+            heavyLoadStartedRef.current =
+              false;
+
+            if (
+              mountedRef.current
+            ) {
+              setHeavyLoading(
+                false
+              );
+
+              setWaitingLabel(
+                '탐험 화면을 준비하지 못했어요. 다시 눌러 주세요.'
+              );
+            }
+
+            console.log(
+              'EXPLORE HEAVY LOAD ERROR',
+              error
             );
           }
-
-          console.log(
-            'EXPLORE HEAVY LOAD ERROR',
-            error
-          );
         }
-      });
+      );
     }, []);
 
   useEffect(() => {
-    mountedRef.current = true;
+    mountedRef.current =
+      true;
 
     console.log(
       'EXPLORE SHELL READY'
     );
 
     return () => {
-      mountedRef.current = false;
+      mountedRef.current =
+        false;
     };
   }, []);
 
@@ -480,14 +818,20 @@ export default function ExploreShellScreen() {
         );
 
         if (
-          regionId === 'seoul'
+          regionId ===
+            'seoul' ||
+          regionId ===
+            'gyeonggi'
         ) {
           setShellMapLevel(
-            'seoul'
+            regionId
           );
 
           setWaitingLabel(
-            '서울 탐험 데이터를 준비하고 있어요.'
+            regionId ===
+              'seoul'
+              ? '서울 탐험 데이터를 준비하고 있어요.'
+              : '경기도 탐험 데이터를 준비하고 있어요.'
           );
 
           return;
@@ -506,7 +850,9 @@ export default function ExploreShellScreen() {
 
         loadHeavyScreen();
       },
-      [loadHeavyScreen]
+      [
+        loadHeavyScreen,
+      ]
     );
 
   const openDistrict =
@@ -536,6 +882,20 @@ export default function ExploreShellScreen() {
       []
     );
 
+  const goBackToKorea =
+    useCallback(() => {
+      requestedRegionRef.current =
+        'korea';
+
+      setShellMapLevel(
+        'korea'
+      );
+
+      setRequestedRegion(
+        'korea'
+      );
+    }, []);
+
   if (
     HeavyExploreScreen
   ) {
@@ -548,6 +908,16 @@ export default function ExploreShellScreen() {
       />
     );
   }
+
+  const quickMapTitle =
+    getQuickMapTitle(
+      shellMapLevel
+    );
+
+  const quickMapSubtitle =
+    getQuickMapSubtitle(
+      shellMapLevel
+    );
 
   return (
     <View
@@ -562,27 +932,22 @@ export default function ExploreShellScreen() {
       ]}
     >
       <View
-        style={styles.header}
+        style={
+          styles.header
+        }
       >
         <View
-          style={styles.headerLeft}
+          style={
+            styles.headerLeft
+          }
         >
           {
-            shellMapLevel ===
-            'seoul' ? (
+            shellMapLevel !==
+            'korea' ? (
               <Pressable
-                onPress={() => {
-                  requestedRegionRef.current =
-                    'korea';
-
-                  setShellMapLevel(
-                    'korea'
-                  );
-
-                  setRequestedRegion(
-                    'korea'
-                  );
-                }}
+                onPress={
+                  goBackToKorea
+                }
                 style={({
                   pressed,
                 }) => [
@@ -627,10 +992,7 @@ export default function ExploreShellScreen() {
               ]}
             >
               {
-                shellMapLevel ===
-                'seoul'
-                  ? '서울특별시 탐험'
-                  : '대한민국 탐험'
+                quickMapTitle
               }
             </Text>
 
@@ -644,10 +1006,7 @@ export default function ExploreShellScreen() {
               ]}
             >
               {
-                shellMapLevel ===
-                'seoul'
-                  ? '자치구를 눌러 탐험장소·축제·예약시설을 확인하세요.'
-                  : '지역을 눌러 ROOT 탐험을 시작하세요.'
+                quickMapSubtitle
               }
             </Text>
           </View>
@@ -713,7 +1072,8 @@ export default function ExploreShellScreen() {
           styles.content,
           {
             paddingBottom:
-              insets.bottom + 28,
+              insets.bottom +
+              28,
           },
         ]}
       >
@@ -735,303 +1095,178 @@ export default function ExploreShellScreen() {
           {
             shellMapLevel ===
             'korea' ? (
-              <View
-                style={[
-                  styles.shellMapStage,
-                  {
-                    height: 470,
-                  },
-                ]}
-              >
-                <Svg
-                  width="100%"
-                  height={470}
-                  viewBox="0 0 360 490"
-                  pointerEvents="none"
-                >
-                  {
-                    KOREA_REGION_SHAPES.map(
-                      (shape) => (
-                        <G
-                          key={
-                            shape.id
-                          }
-                        >
-                          <Polygon
-                            points={
-                              shape.points
-                            }
-                            fill={
-                              isCityBlack
-                                ? '#666666'
-                                : shape.fill
-                            }
-                            stroke={
-                              theme.background
-                            }
-                            strokeWidth="2"
-                          />
-
-                          <SvgText
-                            x={
-                              shape.labelX
-                            }
-                            y={
-                              shape.labelY + 3
-                            }
-                            fontSize={
-                              shape.labelSize ??
-                              10
-                            }
-                            fontWeight="800"
-                            fill={
-                              isCityBlack
-                                ? '#FFFFFF'
-                                : '#3E342B'
-                            }
-                            textAnchor="middle"
-                          >
-                            {
-                              shape.shortLabel
-                            }
-                          </SvgText>
-                        </G>
-                      )
-                    )
-                  }
-
-                  <Circle
-                    cx="331"
-                    cy="170"
-                    r="5"
-                    fill={
-                      isCityBlack
-                        ? '#666666'
-                        : '#F4B16A'
-                    }
-                    stroke={
-                      theme.background
-                    }
-                    strokeWidth="1.2"
-                  />
-
-                  <Circle
-                    cx="346"
-                    cy="182"
-                    r="2.8"
-                    fill={
-                      isCityBlack
-                        ? '#666666'
-                        : '#F4B16A'
-                    }
-                    stroke={
-                      theme.background
-                    }
-                    strokeWidth="1"
-                  />
-                </Svg>
-
-                <View
-                  pointerEvents="box-none"
-                  style={
-                    styles.shellMapTouchLayer
-                  }
-                >
-                  {
-                    KOREA_REGION_SHAPES.map(
-                      (shape) => {
-                        const touchSize =
-                          shape.touchRadius
-                            ? 44
-                            : 66;
-
-                        return (
-                          <Pressable
-                            key={`region-touch-${shape.id}`}
-                            accessibilityRole="button"
-                            accessibilityLabel={`${shape.shortLabel} 탐험 열기`}
-                            onPress={() =>
-                              openRegion(
-                                shape.id
-                              )
-                            }
-                            style={({
-                              pressed,
-                            }) => [
-                              styles.shellMapTouchTarget,
-                              {
-                                left:
-                                  `${
-                                    (shape.labelX / 360) *
-                                    100
-                                  }%`,
-                                top:
-                                  (shape.labelY / 490) *
-                                  470,
-                                width:
-                                  touchSize,
-                                height:
-                                  touchSize,
-                                borderRadius:
-                                  touchSize / 2,
-                                transform: [
-                                  {
-                                    translateX:
-                                      -touchSize / 2,
-                                  },
-                                  {
-                                    translateY:
-                                      -touchSize / 2,
-                                  },
-                                ],
-                                opacity:
-                                  pressed
-                                    ? 0.45
-                                    : 1,
-                              },
-                            ]}
-                          />
-                        );
-                      }
-                    )
-                  }
-                </View>
-              </View>
+              <QuickShapeMap
+                shapes={
+                  KOREA_REGION_SHAPES
+                }
+                viewWidth={
+                  360
+                }
+                viewHeight={
+                  490
+                }
+                displayHeight={
+                  470
+                }
+                getLabel={(
+                  shape
+                ) =>
+                  shape.shortLabel
+                }
+                getFill={(
+                  shape
+                ) =>
+                  isCityBlack
+                    ? '#666666'
+                    : shape.fill
+                }
+                getLabelSize={(
+                  shape
+                ) =>
+                  shape.labelSize ??
+                  10
+                }
+                getTouchSize={(
+                  shape
+                ) =>
+                  shape.touchRadius
+                    ? 44
+                    : 66
+                }
+                onPress={(
+                  shape
+                ) =>
+                  openRegion(
+                    shape.id
+                  )
+                }
+                backgroundColor={
+                  theme.background
+                }
+                textColor={
+                  isCityBlack
+                    ? '#FFFFFF'
+                    : '#3E342B'
+                }
+              />
+            ) :
+            shellMapLevel ===
+            'seoul' ? (
+              <QuickShapeMap
+                shapes={
+                  SEOUL_DISTRICT_SHAPES
+                }
+                viewWidth={
+                  360
+                }
+                viewHeight={
+                  330
+                }
+                displayHeight={
+                  330
+                }
+                getLabel={(
+                  shape
+                ) =>
+                  shape.name
+                }
+                getFill={() =>
+                  isCityBlack
+                    ? '#666666'
+                    : '#E8D8B8'
+                }
+                getLabelSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 7.1
+                    : 8.5
+                }
+                getTouchSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 48
+                    : 52
+                }
+                onPress={(
+                  shape
+                ) =>
+                  openDistrict(
+                    shape.id,
+                    shape.name
+                  )
+                }
+                backgroundColor={
+                  theme.background
+                }
+                textColor={
+                  isCityBlack
+                    ? '#FFFFFF'
+                    : '#4D4035'
+                }
+              />
             ) : (
-              <View
-                style={[
-                  styles.shellMapStage,
-                  {
-                    height: 330,
-                  },
-                ]}
-              >
-                <Svg
-                  width="100%"
-                  height={330}
-                  viewBox="0 0 360 330"
-                  pointerEvents="none"
-                >
-                  {
-                    SEOUL_DISTRICT_SHAPES.map(
-                      (shape) => (
-                        <G
-                          key={
-                            shape.id
-                          }
-                        >
-                          <Polygon
-                            points={
-                              shape.points
-                            }
-                            fill={
-                              isCityBlack
-                                ? '#666666'
-                                : '#E8D8B8'
-                            }
-                            stroke={
-                              theme.background
-                            }
-                            strokeWidth="1.5"
-                          />
-
-                          <SvgText
-                            x={
-                              shape.labelX
-                            }
-                            y={
-                              shape.labelY + 3
-                            }
-                            fontSize={
-                              shape.name.length >
-                              3
-                                ? 7.1
-                                : 8.5
-                            }
-                            fontWeight="700"
-                            fill={
-                              isCityBlack
-                                ? '#FFFFFF'
-                                : '#4D4035'
-                            }
-                            textAnchor="middle"
-                          >
-                            {
-                              shape.name
-                            }
-                          </SvgText>
-                        </G>
-                      )
-                    )
-                  }
-                </Svg>
-
-                <View
-                  pointerEvents="box-none"
-                  style={
-                    styles.shellMapTouchLayer
-                  }
-                >
-                  {
-                    SEOUL_DISTRICT_SHAPES.map(
-                      (shape) => {
-                        const touchSize =
-                          shape.name.length > 3
-                            ? 48
-                            : 52;
-
-                        return (
-                          <Pressable
-                            key={`district-touch-${shape.id}`}
-                            accessibilityRole="button"
-                            accessibilityLabel={`${shape.name} 탐험 열기`}
-                            onPress={() =>
-                              openDistrict(
-                                shape.id,
-                                shape.name
-                              )
-                            }
-                            style={({
-                              pressed,
-                            }) => [
-                              styles.shellMapTouchTarget,
-                              {
-                                left:
-                                  `${
-                                    (shape.labelX / 360) *
-                                    100
-                                  }%`,
-                                top:
-                                  shape.labelY,
-                                width:
-                                  touchSize,
-                                height:
-                                  touchSize,
-                                borderRadius:
-                                  touchSize / 2,
-                                transform: [
-                                  {
-                                    translateX:
-                                      -touchSize / 2,
-                                  },
-                                  {
-                                    translateY:
-                                      -touchSize / 2,
-                                  },
-                                ],
-                                opacity:
-                                  pressed
-                                    ? 0.45
-                                    : 1,
-                              },
-                            ]}
-                          />
-                        );
-                      }
-                    )
-                  }
-                </View>
-              </View>
+              <QuickShapeMap
+                shapes={
+                  GYEONGGI_DISTRICT_SHAPES
+                }
+                viewWidth={
+                  370
+                }
+                viewHeight={
+                  430
+                }
+                displayHeight={
+                  430
+                }
+                getLabel={(
+                  shape
+                ) =>
+                  shape.name
+                }
+                getFill={(
+                  shape
+                ) =>
+                  isCityBlack
+                    ? '#666666'
+                    : '#E8D8B8'
+                }
+                getLabelSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 6.8
+                    : 7.8
+                }
+                getTouchSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 46
+                    : 50
+                }
+                onPress={(
+                  shape
+                ) =>
+                  openDistrict(
+                    shape.id,
+                    shape.name
+                  )
+                }
+                backgroundColor={
+                  theme.background
+                }
+                textColor={
+                  isCityBlack
+                    ? '#FFFFFF'
+                    : '#4D4035'
+                }
+              />
             )
           }
         </View>
@@ -1078,7 +1313,9 @@ export default function ExploreShellScreen() {
           </View>
 
           <View
-            style={styles.noticeText}
+            style={
+              styles.noticeText
+            }
           >
             <Text
               style={[
@@ -1092,7 +1329,10 @@ export default function ExploreShellScreen() {
               {
                 heavyLoading
                   ? waitingLabel
-                  : '지도부터 먼저 표시했어요.'
+                  : shellMapLevel ===
+                      'gyeonggi'
+                    ? '경기도 지도부터 먼저 표시했어요.'
+                    : '지도부터 먼저 표시했어요.'
               }
             </Text>
 
@@ -1156,8 +1396,10 @@ export default function ExploreShellScreen() {
 const styles =
   StyleSheet.create({
     shellMapStage: {
-      position: 'relative',
-      width: '100%',
+      position:
+        'relative',
+      width:
+        '100%',
     },
 
     shellMapTouchLayer: {
@@ -1166,104 +1408,138 @@ const styles =
     },
 
     shellMapTouchTarget: {
-      position: 'absolute',
-      backgroundColor: 'rgba(255,255,255,0.001)',
+      position:
+        'absolute',
+      backgroundColor:
+        'rgba(255,255,255,0.001)',
       zIndex: 6,
     },
 
     screen: {
       flex: 1,
     },
+
     header: {
+      minHeight: 68,
       paddingHorizontal: 16,
       paddingBottom: 10,
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
+      justifyContent:
+        'space-between',
       gap: 10,
     },
+
     headerLeft: {
       flex: 1,
       minWidth: 0,
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 10,
+      gap: 9,
     },
+
+    backButton: {
+      width: 34,
+      height: 34,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      alignItems: 'center',
+      justifyContent:
+        'center',
+    },
+
     headerText: {
       flex: 1,
       minWidth: 0,
     },
+
     title: {
-      fontSize: 18,
+      fontSize: 19,
       fontWeight: '900',
+      letterSpacing: -0.4,
     },
+
     subtitle: {
       marginTop: 3,
-      fontSize: 10,
-      lineHeight: 14,
+      fontSize: 10.5,
+      fontWeight: '700',
+      lineHeight: 15,
     },
-    backButton: {
-      width: 34,
-      height: 34,
-      borderWidth: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
+
     readyBadge: {
       minHeight: 32,
       paddingHorizontal: 9,
-      borderWidth: 1,
+      borderWidth:
+        StyleSheet.hairlineWidth,
       flexDirection: 'row',
       alignItems: 'center',
       gap: 5,
     },
+
     readyBadgeText: {
-      fontSize: 9,
+      fontSize: 9.5,
       fontWeight: '800',
     },
+
     content: {
       paddingHorizontal: 14,
       gap: 11,
     },
+
     mapCard: {
-      borderWidth: 1,
-      paddingHorizontal: 8,
-      paddingTop: 8,
       overflow: 'hidden',
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      paddingHorizontal: 4,
+      paddingVertical: 6,
     },
+
     noticeCard: {
-      borderWidth: 1,
-      padding: 11,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      paddingHorizontal: 12,
+      paddingVertical: 11,
       flexDirection: 'row',
       alignItems: 'center',
       gap: 9,
     },
+
     noticeIcon: {
       width: 34,
       height: 34,
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent:
+        'center',
     },
+
     noticeText: {
       flex: 1,
       minWidth: 0,
     },
+
     noticeTitle: {
-      fontSize: 11,
+      fontSize: 11.5,
       fontWeight: '900',
     },
+
     noticeDescription: {
       marginTop: 3,
       fontSize: 9.5,
+      fontWeight: '700',
       lineHeight: 14,
     },
+
     loadButton: {
-      minHeight: 30,
-      paddingHorizontal: 10,
-      borderWidth: 1,
+      minWidth: 62,
+      height: 30,
+      paddingHorizontal: 9,
+      borderWidth:
+        StyleSheet.hairlineWidth,
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent:
+        'center',
     },
+
     loadButtonText: {
       fontSize: 9.5,
       fontWeight: '900',

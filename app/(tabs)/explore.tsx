@@ -54,7 +54,8 @@ type QuickMapLevel =
   | 'seoul'
   | 'gyeonggi'
   | 'busan'
-  | 'incheon';
+  | 'incheon'
+  | 'daegu';
 
 type ExploreContentMode =
   | 'places'
@@ -696,6 +697,106 @@ const INCHEON_DISTRICT_SHAPES: IncheonDistrictShape[] = [
 ];
 
 
+type DaeguDistrictShape = {
+  id: string;
+  name: string;
+  icon: string;
+  subtitle: string;
+  points: string;
+  labelX: number;
+  labelY: number;
+};
+
+/*
+ * 대구광역시 9개 구·군의 단순화 지도입니다.
+ * 중구·동구·서구·남구·북구·수성구·달서구·달성군·군위군의
+ * 실제 장소·GPS·테마 데이터를 기존 지역 상세 화면에 연결합니다.
+ */
+const DAEGU_DISTRICT_SHAPES: DaeguDistrictShape[] = [
+  {
+    id: 'daegu-gunwi',
+    name: '군위군',
+    icon: '🛕',
+    subtitle: '삼국유사·화본역·팔공산 북부·한밤마을 탐험',
+    points: '150,12 245,18 312,55 300,112 236,126 178,94 132,55',
+    labelX: 221,
+    labelY: 64,
+  },
+  {
+    id: 'daegu-buk',
+    name: '북구',
+    icon: '🌉',
+    subtitle: '금호강·구암동고분군·침산 탐험',
+    points: '92,90 132,55 178,94 200,137 168,170 112,158 78,126',
+    labelX: 139,
+    labelY: 127,
+  },
+  {
+    id: 'daegu-dong',
+    name: '동구',
+    icon: '🏔️',
+    subtitle: '팔공산·동화사·동촌유원지 탐험',
+    points: '178,94 236,126 300,112 342,148 326,214 270,226 214,184 200,137',
+    labelX: 269,
+    labelY: 166,
+  },
+  {
+    id: 'daegu-seo',
+    name: '서구',
+    icon: '🌿',
+    subtitle: '이현공원·달성토성·생활문화 탐험',
+    points: '40,143 78,126 112,158 118,201 82,225 38,200',
+    labelX: 77,
+    labelY: 177,
+  },
+  {
+    id: 'daegu-jung',
+    name: '중구',
+    icon: '🏙️',
+    subtitle: '근대골목·서문시장·김광석길 탐험',
+    points: '112,158 168,170 174,210 139,230 118,201',
+    labelX: 143,
+    labelY: 194,
+  },
+  {
+    id: 'daegu-nam',
+    name: '남구',
+    icon: '🎨',
+    subtitle: '앞산·안지랑·대명공연거리 탐험',
+    points: '118,201 139,230 174,210 198,247 165,276 116,258 82,225',
+    labelX: 145,
+    labelY: 240,
+  },
+  {
+    id: 'daegu-suseong',
+    name: '수성구',
+    icon: '🌊',
+    subtitle: '수성못·미술관·진밭골 탐험',
+    points: '174,210 214,184 270,226 282,282 232,310 198,247',
+    labelX: 232,
+    labelY: 252,
+  },
+  {
+    id: 'daegu-dalseo',
+    name: '달서구',
+    icon: '🗼',
+    subtitle: '이월드·수목원·월광수변·선사문화 탐험',
+    points: '38,200 82,225 116,258 106,310 55,322 18,278',
+    labelX: 70,
+    labelY: 270,
+  },
+  {
+    id: 'daegu-dalseong',
+    name: '달성군',
+    icon: '🌸',
+    subtitle: '비슬산·사문진·달성습지·도동서원 탐험',
+    points: '106,310 116,258 165,276 198,247 232,310 214,335 145,342 55,322',
+    labelX: 151,
+    labelY: 311,
+  },
+];
+
+
 function QuickShapeMap<
   T extends QuickShapeBase
 >({
@@ -921,6 +1022,12 @@ function getQuickMapTitle(
     return '인천광역시 탐험';
   }
 
+  if (
+    mapLevel === 'daegu'
+  ) {
+    return '대구광역시 탐험';
+  }
+
   return '대한민국 탐험';
 }
 
@@ -949,6 +1056,12 @@ function getQuickMapSubtitle(
     mapLevel === 'incheon'
   ) {
     return '11개 지역을 눌러 인천 탐험을 시작하세요.';
+  }
+
+  if (
+    mapLevel === 'daegu'
+  ) {
+    return '9개 구·군을 눌러 대구 탐험을 시작하세요.';
   }
 
   return '지역을 눌러 ROOT 탐험을 시작하세요.';
@@ -1133,7 +1246,9 @@ export default function ExploreShellScreen() {
           regionId ===
             'busan' ||
           regionId ===
-            'incheon'
+            'incheon' ||
+          regionId ===
+            'daegu'
         ) {
           setShellMapLevel(
             regionId
@@ -1149,7 +1264,10 @@ export default function ExploreShellScreen() {
                 : regionId ===
                     'busan'
                   ? '부산 탐험 데이터를 준비하고 있어요.'
-                  : '인천 탐험 데이터를 준비하고 있어요.'
+                  : regionId ===
+                      'incheon'
+                    ? '인천 탐험 데이터를 준비하고 있어요.'
+                    : '대구 탐험 데이터를 준비하고 있어요.'
           );
 
           return;
@@ -1644,7 +1762,9 @@ export default function ExploreShellScreen() {
                     : '#3D4A52'
                 }
               />
-            ) : (
+            ) :
+            shellMapLevel ===
+            'incheon' ? (
               <QuickShapeMap
                 shapes={
                   INCHEON_DISTRICT_SHAPES
@@ -1699,6 +1819,63 @@ export default function ExploreShellScreen() {
                   isCityBlack
                     ? '#FFFFFF'
                     : '#334A5C'
+                }
+              />
+            ) : (
+              <QuickShapeMap
+                shapes={
+                  DAEGU_DISTRICT_SHAPES
+                }
+                viewWidth={
+                  360
+                }
+                viewHeight={
+                  350
+                }
+                displayHeight={
+                  350
+                }
+                getLabel={(
+                  shape
+                ) =>
+                  shape.name
+                }
+                getFill={() =>
+                  isCityBlack
+                    ? '#666666'
+                    : '#E7D9B5'
+                }
+                getLabelSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 7
+                    : 8.4
+                }
+                getTouchSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 50
+                    : 54
+                }
+                onPress={(
+                  shape
+                ) =>
+                  openDistrict(
+                    shape.id,
+                    shape.name
+                  )
+                }
+                backgroundColor={
+                  theme.background
+                }
+                textColor={
+                  isCityBlack
+                    ? '#FFFFFF'
+                    : '#4B4031'
                 }
               />
             )

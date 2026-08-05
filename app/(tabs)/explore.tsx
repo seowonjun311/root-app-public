@@ -56,6 +56,7 @@ type QuickMapLevel =
   | 'gangwon'
   | 'chungbuk'
   | 'chungnam'
+  | 'jeonbuk'
   | 'busan'
   | 'incheon'
   | 'daegu'
@@ -1384,6 +1385,151 @@ const CHUNGNAM_DISTRICT_SHAPES: ChungnamDistrictShape[] = [
 ];
 
 
+
+type JeonbukDistrictShape = {
+  id: string;
+  name: string;
+  icon: string;
+  subtitle: string;
+  points: string;
+  labelX: number;
+  labelY: number;
+};
+
+/*
+ * 전북특별자치도 14개 시·군의 단순화 지도입니다.
+ * 기존 장소·GPS·테마 데이터는 지역 상세 화면에서 그대로 사용합니다.
+ */
+const JEONBUK_DISTRICT_SHAPES: JeonbukDistrictShape[] = [
+  {
+    id: 'jeonbuk-gunsan',
+    name: '군산시',
+    icon: '🌊',
+    subtitle: '근대문화·고군산군도·항구·철길 탐험',
+    points: '22,42 86,24 126,58 114,116 52,126 16,88',
+    labelX: 69,
+    labelY: 75,
+  },
+  {
+    id: 'jeonbuk-iksan',
+    name: '익산시',
+    icon: '👑',
+    subtitle: '미륵사지·왕궁리·보석·근대문화 탐험',
+    points: '126,58 194,34 232,70 218,126 154,138 114,116',
+    labelX: 173,
+    labelY: 83,
+  },
+  {
+    id: 'jeonbuk-wanju',
+    name: '완주군',
+    icon: '🌲',
+    subtitle: '대둔산·삼례문화·편백숲·마을 탐험',
+    points: '232,70 300,50 348,92 330,146 270,156 218,126',
+    labelX: 283,
+    labelY: 103,
+  },
+  {
+    id: 'jeonbuk-buan',
+    name: '부안군',
+    icon: '🏖️',
+    subtitle: '변산반도·채석강·내소사·해안 탐험',
+    points: '16,88 52,126 78,184 54,238 16,224 6,160',
+    labelX: 40,
+    labelY: 168,
+  },
+  {
+    id: 'jeonbuk-gimje',
+    name: '김제시',
+    icon: '🌾',
+    subtitle: '지평선·금산사·벽골제·평야 탐험',
+    points: '52,126 114,116 154,138 148,196 90,210 78,184',
+    labelX: 110,
+    labelY: 161,
+  },
+  {
+    id: 'jeonbuk-jeonju',
+    name: '전주시',
+    icon: '🏘️',
+    subtitle: '한옥마을·경기전·전동성당·미식 탐험',
+    points: '154,138 218,126 232,170 214,212 168,206 148,196',
+    labelX: 190,
+    labelY: 171,
+  },
+  {
+    id: 'jeonbuk-jinan',
+    name: '진안군',
+    icon: '⛰️',
+    subtitle: '마이산·용담호·홍삼·고원 탐험',
+    points: '218,126 270,156 286,210 242,234 214,212 232,170',
+    labelX: 251,
+    labelY: 183,
+  },
+  {
+    id: 'jeonbuk-muju',
+    name: '무주군',
+    icon: '🏔️',
+    subtitle: '덕유산·태권도원·구천동·반디 탐험',
+    points: '270,156 330,146 358,198 338,250 286,210',
+    labelX: 319,
+    labelY: 191,
+  },
+  {
+    id: 'jeonbuk-gochang',
+    name: '고창군',
+    icon: '🪨',
+    subtitle: '고인돌·선운사·읍성·갯벌 탐험',
+    points: '16,224 54,238 92,278 74,344 20,356 4,292',
+    labelX: 47,
+    labelY: 287,
+  },
+  {
+    id: 'jeonbuk-jeongeup',
+    name: '정읍시',
+    icon: '🍁',
+    subtitle: '내장산·동학·구절초·전통문화 탐험',
+    points: '54,238 90,210 148,196 164,252 128,294 92,278',
+    labelX: 111,
+    labelY: 246,
+  },
+  {
+    id: 'jeonbuk-imsil',
+    name: '임실군',
+    icon: '🧀',
+    subtitle: '치즈·옥정호·성수산·농촌문화 탐험',
+    points: '148,196 168,206 214,212 228,266 184,290 164,252',
+    labelX: 191,
+    labelY: 242,
+  },
+  {
+    id: 'jeonbuk-jangsu',
+    name: '장수군',
+    icon: '🐎',
+    subtitle: '승마·논개·고원·산림 탐험',
+    points: '214,212 242,234 286,210 314,266 278,310 228,266',
+    labelX: 264,
+    labelY: 259,
+  },
+  {
+    id: 'jeonbuk-sunchang',
+    name: '순창군',
+    icon: '🌶️',
+    subtitle: '고추장·강천산·섬진강·전통마을 탐험',
+    points: '128,294 164,252 184,290 194,350 142,374 92,342',
+    labelX: 145,
+    labelY: 323,
+  },
+  {
+    id: 'jeonbuk-namwon',
+    name: '남원시',
+    icon: '🌸',
+    subtitle: '광한루원·춘향·지리산·국악 탐험',
+    points: '184,290 228,266 278,310 270,370 194,350',
+    labelX: 228,
+    labelY: 326,
+  },
+];
+
+
 type SejongDistrictShape = {
   id: 'sejong';
   name: string;
@@ -1708,6 +1854,12 @@ function getQuickMapTitle(
   }
 
   if (
+    mapLevel === 'jeonbuk'
+  ) {
+    return '전북특별자치도 탐험';
+  }
+
+  if (
     mapLevel === 'busan'
   ) {
     return '부산광역시 탐험';
@@ -1783,6 +1935,12 @@ function getQuickMapSubtitle(
     mapLevel === 'chungnam'
   ) {
     return '15개 시·군을 눌러 충남 탐험을 시작하세요.';
+  }
+
+  if (
+    mapLevel === 'jeonbuk'
+  ) {
+    return '14개 시·군을 눌러 전북 탐험을 시작하세요.';
   }
 
   if (
@@ -2013,6 +2171,8 @@ export default function ExploreShellScreen() {
           regionId ===
             'chungnam' ||
           regionId ===
+            'jeonbuk' ||
+          regionId ===
             'busan' ||
           regionId ===
             'incheon' ||
@@ -2048,7 +2208,10 @@ export default function ExploreShellScreen() {
                         'chungnam'
                       ? '충남 탐험 데이터를 준비하고 있어요.'
                       : regionId ===
-                          'busan'
+                          'jeonbuk'
+                        ? '전북 탐험 데이터를 준비하고 있어요.'
+                        : regionId ===
+                            'busan'
                         ? '부산 탐험 데이터를 준비하고 있어요.'
                     : regionId ===
                         'incheon'
@@ -2676,6 +2839,65 @@ export default function ExploreShellScreen() {
                   isCityBlack
                     ? '#FFFFFF'
                     : '#46503A'
+                }
+              />
+            ) :
+            shellMapLevel ===
+            'jeonbuk' ? (
+              <QuickShapeMap
+                shapes={
+                  JEONBUK_DISTRICT_SHAPES
+                }
+                viewWidth={
+                  370
+                }
+                viewHeight={
+                  390
+                }
+                displayHeight={
+                  390
+                }
+                getLabel={(
+                  shape
+                ) =>
+                  shape.name
+                }
+                getFill={() =>
+                  isCityBlack
+                    ? '#666666'
+                    : '#E8DCC9'
+                }
+                getLabelSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 6.6
+                    : 7.6
+                }
+                getTouchSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 44
+                    : 48
+                }
+                onPress={(
+                  shape
+                ) =>
+                  openDistrict(
+                    shape.id,
+                    shape.name
+                  )
+                }
+                backgroundColor={
+                  theme.background
+                }
+                textColor={
+                  isCityBlack
+                    ? '#FFFFFF'
+                    : '#51483D'
                 }
               />
             ) :

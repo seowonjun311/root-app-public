@@ -53,6 +53,7 @@ type QuickMapLevel =
   | 'korea'
   | 'seoul'
   | 'gyeonggi'
+  | 'gangwon'
   | 'busan'
   | 'incheon'
   | 'daegu'
@@ -930,6 +931,186 @@ const GWANGJU_DISTRICT_SHAPES: GwangjuDistrictShape[] = [
 
 
 
+
+type GangwonDistrictShape = {
+  id: string;
+  name: string;
+  icon: string;
+  subtitle: string;
+  points: string;
+  labelX: number;
+  labelY: number;
+};
+
+/*
+ * 강원특별자치도 18개 시·군의 단순화 지도입니다.
+ * 기존 장소·GPS·테마 데이터는 지역 상세 화면에서 그대로 사용합니다.
+ */
+const GANGWON_DISTRICT_SHAPES: GangwonDistrictShape[] = [
+  {
+    id: 'gangwon-cheorwon',
+    name: '철원군',
+    icon: '🕊️',
+    subtitle: '한탄강 지질·DMZ 평화·태봉역사·사찰 탐험',
+    points: '20,30 90,20 110,65 80,95 25,90',
+    labelX: 61,
+    labelY: 58,
+  },
+  {
+    id: 'gangwon-hwacheon',
+    name: '화천군',
+    icon: '🐟',
+    subtitle: '파로호·산소길·DMZ 평화·별·계곡 탐험',
+    points: '90,20 145,25 160,70 110,65',
+    labelX: 127,
+    labelY: 47,
+  },
+  {
+    id: 'gangwon-yanggu',
+    name: '양구군',
+    icon: '🌿',
+    subtitle: '파로호·숲·예술·국토정중앙·DMZ 생태 탐험',
+    points: '145,25 200,30 205,78 160,70',
+    labelX: 181,
+    labelY: 52,
+  },
+  {
+    id: 'gangwon-goseong',
+    name: '고성군',
+    icon: '🌊',
+    subtitle: 'DMZ·화진포·송지호·왕곡마을·동해 누정 탐험',
+    points: '250,20 320,25 340,90 295,100 260,70',
+    labelX: 298,
+    labelY: 59,
+  },
+  {
+    id: 'gangwon-chuncheon',
+    name: '춘천시',
+    icon: '🌊',
+    subtitle: '남이섬·강촌·소양강·의암호·문학문화 탐험',
+    points: '65,90 110,65 160,70 170,120 125,145 75,135',
+    labelX: 119,
+    labelY: 107,
+  },
+  {
+    id: 'gangwon-inje',
+    name: '인제군',
+    icon: '🏞️',
+    subtitle: '설악고산·백담계곡·자작나무·평화생태 탐험',
+    points: '160,70 205,78 260,70 295,100 275,145 215,150 170,120',
+    labelX: 229,
+    labelY: 109,
+  },
+  {
+    id: 'gangwon-sokcho',
+    name: '속초시',
+    icon: '🏔️',
+    subtitle: '권금성·울산바위·청초호·대포항·외옹치 탐험',
+    points: '295,100 340,90 345,135 310,150 275,145',
+    labelX: 316,
+    labelY: 122,
+  },
+  {
+    id: 'gangwon-yangyang',
+    name: '양양군',
+    icon: '🏄',
+    subtitle: '낙산사·서핑해안·오색·미천골·남애항 탐험',
+    points: '275,145 310,150 338,185 310,220 270,205',
+    labelX: 306,
+    labelY: 183,
+  },
+  {
+    id: 'gangwon-hongcheon',
+    name: '홍천군',
+    icon: '🌲',
+    subtitle: '팔봉산·수타사·무궁화·숲·산악레저 탐험',
+    points: '75,135 125,145 170,120 215,150 205,195 145,205 90,185',
+    labelX: 145,
+    labelY: 166,
+  },
+  {
+    id: 'gangwon-hoengseong',
+    name: '횡성군',
+    icon: '🐄',
+    subtitle: '호수·고원숲·근대문화·가족레저 탐험',
+    points: '90,185 145,205 150,250 95,250 65,215',
+    labelX: 112,
+    labelY: 222,
+  },
+  {
+    id: 'gangwon-pyeongchang',
+    name: '평창군',
+    icon: '🏂',
+    subtitle: '대관령목장·발왕산·오대산·백룡동굴·효석마을 탐험',
+    points: '145,205 205,195 250,215 245,265 190,280 150,250',
+    labelX: 199,
+    labelY: 235,
+  },
+  {
+    id: 'gangwon-gangneung',
+    name: '강릉시',
+    icon: '🌅',
+    subtitle: '경포·주문진·헌화로·안반데기·커피문화 탐험',
+    points: '270,205 310,220 330,270 285,280 245,265 250,215',
+    labelX: 291,
+    labelY: 244,
+  },
+  {
+    id: 'gangwon-wonju',
+    name: '원주시',
+    icon: '🌉',
+    subtitle: '소금산·치악산·예술·역사 탐험',
+    points: '65,215 95,250 150,250 145,300 85,310 45,270',
+    labelX: 98,
+    labelY: 275,
+  },
+  {
+    id: 'gangwon-jeongseon',
+    name: '정선군',
+    icon: '🚂',
+    subtitle: '민둥산·정암사·병방치·아우라지·운탄고도 탐험',
+    points: '190,280 245,265 285,280 275,320 220,335 175,315',
+    labelX: 232,
+    labelY: 301,
+  },
+  {
+    id: 'gangwon-yeongwol',
+    name: '영월군',
+    icon: '🌌',
+    subtitle: '단종역사·동강지질·래프팅·별빛·박물관 탐험',
+    points: '145,300 175,315 220,335 180,355 125,345 85,310',
+    labelX: 155,
+    labelY: 329,
+  },
+  {
+    id: 'gangwon-donghae',
+    name: '동해시',
+    icon: '🌊',
+    subtitle: '무릉계곡·베틀바위·묵호·추암·망상 탐험',
+    points: '285,280 330,270 342,305 312,325 275,320',
+    labelX: 310,
+    labelY: 300,
+  },
+  {
+    id: 'gangwon-taebaek',
+    name: '태백시',
+    icon: '⛰️',
+    subtitle: '태백산·발원지·지질·탄광문화·고원 탐험',
+    points: '220,335 275,320 312,325 290,355 240,360',
+    labelX: 268,
+    labelY: 343,
+  },
+  {
+    id: 'gangwon-samcheok',
+    name: '삼척시',
+    icon: '🌊',
+    subtitle: '환선굴·대금굴·초곡해안·장호항·덕풍계곡 탐험',
+    points: '312,325 342,305 350,345 320,365 290,355',
+    labelX: 323,
+    labelY: 341,
+  },
+];
+
 type SejongDistrictShape = {
   id: 'sejong';
   name: string;
@@ -1236,6 +1417,12 @@ function getQuickMapTitle(
   }
 
   if (
+    mapLevel === 'gangwon'
+  ) {
+    return '강원특별자치도 탐험';
+  }
+
+  if (
     mapLevel === 'busan'
   ) {
     return '부산광역시 탐험';
@@ -1293,6 +1480,12 @@ function getQuickMapSubtitle(
     mapLevel === 'gyeonggi'
   ) {
     return '시·군을 눌러 경기도 탐험을 시작하세요.';
+  }
+
+  if (
+    mapLevel === 'gangwon'
+  ) {
+    return '18개 시·군을 눌러 강원 탐험을 시작하세요.';
   }
 
   if (
@@ -1517,6 +1710,8 @@ export default function ExploreShellScreen() {
           regionId ===
             'gyeonggi' ||
           regionId ===
+            'gangwon' ||
+          regionId ===
             'busan' ||
           regionId ===
             'incheon' ||
@@ -1543,24 +1738,27 @@ export default function ExploreShellScreen() {
                   'gyeonggi'
                 ? '경기도 탐험 데이터를 준비하고 있어요.'
                 : regionId ===
-                    'busan'
-                  ? '부산 탐험 데이터를 준비하고 있어요.'
+                    'gangwon'
+                  ? '강원 탐험 데이터를 준비하고 있어요.'
                   : regionId ===
-                      'incheon'
-                    ? '인천 탐험 데이터를 준비하고 있어요.'
+                      'busan'
+                    ? '부산 탐험 데이터를 준비하고 있어요.'
                     : regionId ===
-                        'daegu'
-                      ? '대구 탐험 데이터를 준비하고 있어요.'
+                        'incheon'
+                      ? '인천 탐험 데이터를 준비하고 있어요.'
                       : regionId ===
-                          'daejeon'
-                        ? '대전 탐험 데이터를 준비하고 있어요.'
+                          'daegu'
+                        ? '대구 탐험 데이터를 준비하고 있어요.'
                         : regionId ===
-                            'gwangju'
-                          ? '광주 탐험 데이터를 준비하고 있어요.'
+                            'daejeon'
+                          ? '대전 탐험 데이터를 준비하고 있어요.'
                           : regionId ===
-                              'sejong'
-                            ? '세종 탐험 데이터를 준비하고 있어요.'
-                            : '울산 탐험 데이터를 준비하고 있어요.'
+                              'gwangju'
+                            ? '광주 탐험 데이터를 준비하고 있어요.'
+                            : regionId ===
+                                'sejong'
+                              ? '세종 탐험 데이터를 준비하고 있어요.'
+                              : '울산 탐험 데이터를 준비하고 있어요.'
           );
 
           return;
@@ -1994,6 +2192,65 @@ export default function ExploreShellScreen() {
                   isCityBlack
                     ? '#FFFFFF'
                     : '#4D4035'
+                }
+              />
+            ) :
+            shellMapLevel ===
+            'gangwon' ? (
+              <QuickShapeMap
+                shapes={
+                  GANGWON_DISTRICT_SHAPES
+                }
+                viewWidth={
+                  370
+                }
+                viewHeight={
+                  390
+                }
+                displayHeight={
+                  390
+                }
+                getLabel={(
+                  shape
+                ) =>
+                  shape.name
+                }
+                getFill={() =>
+                  isCityBlack
+                    ? '#666666'
+                    : '#DDE7D2'
+                }
+                getLabelSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 6.4
+                    : 7.4
+                }
+                getTouchSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 44
+                    : 48
+                }
+                onPress={(
+                  shape
+                ) =>
+                  openDistrict(
+                    shape.id,
+                    shape.name
+                  )
+                }
+                backgroundColor={
+                  theme.background
+                }
+                textColor={
+                  isCityBlack
+                    ? '#FFFFFF'
+                    : '#3E4A37'
                 }
               />
             ) :

@@ -768,6 +768,95 @@ const buildLegacyRewards = (
   unlockedThemeBadgeIds: data.completedThemeIds,
 });
 
+const isCanonicalLocalExplorationData =
+  ({
+    data,
+    newDataRaw,
+    legacyRecordsRaw,
+    legacyRewardsRaw,
+    legacyMainBadgeRaw,
+    rootStoredExplorationData,
+    rootMainBadgeId,
+    rootUid,
+    currentUid,
+  }: {
+    data: RootExplorationData;
+    newDataRaw: string | null;
+    legacyRecordsRaw: string | null;
+    legacyRewardsRaw: string | null;
+    legacyMainBadgeRaw: string | null;
+    rootStoredExplorationData: unknown;
+    rootMainBadgeId: unknown;
+    rootUid: unknown;
+    currentUid: string | null;
+  }) => {
+    const normalized =
+      normalizeExplorationData(
+        data
+      );
+
+    const normalizedRaw =
+      JSON.stringify(
+        normalized
+      );
+
+    const newDataMatches =
+      newDataRaw ===
+      normalizedRaw;
+
+    const legacyRecordsMatch =
+      legacyRecordsRaw ===
+      JSON.stringify(
+        normalized.visitRecords
+      );
+
+    const legacyRewardsMatch =
+      legacyRewardsRaw ===
+      JSON.stringify(
+        buildLegacyRewards(
+          normalized
+        )
+      );
+
+    const legacyBadgeMatches =
+      normalized.mainBadgeId
+        ? legacyMainBadgeRaw ===
+          normalized.mainBadgeId
+        : !legacyMainBadgeRaw;
+
+    const rootDataMatches =
+      isPlainObject(
+        rootStoredExplorationData
+      ) &&
+      JSON.stringify(
+        normalizeExplorationData(
+          rootStoredExplorationData
+        )
+      ) === normalizedRaw;
+
+    const rootBadgeMatches =
+      normalizeId(
+        rootMainBadgeId
+      ) ===
+      normalized.mainBadgeId;
+
+    const rootUidMatches =
+      !currentUid ||
+      normalizeId(
+        rootUid
+      ) === currentUid;
+
+    return (
+      newDataMatches &&
+      legacyRecordsMatch &&
+      legacyRewardsMatch &&
+      legacyBadgeMatches &&
+      rootDataMatches &&
+      rootBadgeMatches &&
+      rootUidMatches
+    );
+  };
+
 const persistLocalExplorationData = async (
   inputData: RootExplorationData,
   touchUpdatedAt: boolean
@@ -902,16 +991,58 @@ export const loadLocalExplorationData = async (): Promise<
     rootExplorationData
   );
 
-  const saved = await persistLocalExplorationData(
-    {
+  const nextLocalData =
+    normalizeExplorationData({
       ...migratedData,
       updatedAt:
         migratedData.updatedAt === EPOCH_ISO
           ? createNowIso()
           : migratedData.updatedAt,
-    },
-    false
-  );
+    });
+
+  const currentUid =
+    firebaseAuth.currentUser?.uid ??
+    null;
+
+  const canUseFastPath =
+    isCanonicalLocalExplorationData({
+      data: nextLocalData,
+      newDataRaw,
+      legacyRecordsRaw,
+      legacyRewardsRaw,
+      legacyMainBadgeRaw,
+      rootStoredExplorationData:
+        currentRootData?.explorationData,
+      rootMainBadgeId:
+        currentRootData?.explorationMainBadgeId,
+      rootUid:
+        currentRootData?.uid,
+      currentUid,
+    });
+
+  if (canUseFastPath) {
+    console.log(
+      'EXPLORATION LOCAL LOAD FAST PATH',
+      {
+        points:
+          nextLocalData.points,
+        visitedCount:
+          nextLocalData
+            .visitedPlaceIds
+            .length,
+        mainBadgeId:
+          nextLocalData.mainBadgeId,
+      }
+    );
+
+    return nextLocalData;
+  }
+
+  const saved =
+    await persistLocalExplorationData(
+      nextLocalData,
+      false
+    );
 
   console.log('EXPLORATION LOCAL MIGRATION DONE', {
     hadNewData: Boolean(newDataRaw),

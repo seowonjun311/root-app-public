@@ -58,6 +58,7 @@ type QuickMapLevel =
   | 'daegu'
   | 'daejeon'
   | 'gwangju'
+  | 'sejong'
   | 'ulsan';
 
 type ExploreContentMode =
@@ -928,6 +929,35 @@ const GWANGJU_DISTRICT_SHAPES: GwangjuDistrictShape[] = [
 ];
 
 
+
+type SejongDistrictShape = {
+  id: 'sejong';
+  name: string;
+  icon: string;
+  subtitle: string;
+  points: string;
+  labelX: number;
+  labelY: number;
+};
+
+/*
+ * 세종특별자치시는 자치구·군 없이 하나의 단일 행정지역으로 연결됩니다.
+ * 전체 탐험 데이터를 불러오기 전에 세종 지도를 먼저 표시합니다.
+ */
+const SEJONG_DISTRICT_SHAPES: SejongDistrictShape[] = [
+  {
+    id: 'sejong',
+    name: '세종특별자치시',
+    icon: '🏛️',
+    subtitle: '행정수도·호수·정원·기록문화·원도심 탐험',
+    points:
+      '112,18 208,12 272,54 292,118 270,182 300,238 246,306 164,316 92,276 58,210 74,146 54,84',
+    labelX: 177,
+    labelY: 164,
+  },
+];
+
+
 type UlsanDistrictShape = {
   id: string;
   name: string;
@@ -1236,6 +1266,12 @@ function getQuickMapTitle(
   }
 
   if (
+    mapLevel === 'sejong'
+  ) {
+    return '세종특별자치시 탐험';
+  }
+
+  if (
     mapLevel === 'ulsan'
   ) {
     return '울산광역시 탐험';
@@ -1287,6 +1323,12 @@ function getQuickMapSubtitle(
     mapLevel === 'gwangju'
   ) {
     return '5개 구를 눌러 광주 탐험을 시작하세요.';
+  }
+
+  if (
+    mapLevel === 'sejong'
+  ) {
+    return '세종특별자치시를 눌러 탐험을 시작하세요.';
   }
 
   if (
@@ -1485,6 +1527,8 @@ export default function ExploreShellScreen() {
           regionId ===
             'gwangju' ||
           regionId ===
+            'sejong' ||
+          regionId ===
             'ulsan'
         ) {
           setShellMapLevel(
@@ -1513,7 +1557,10 @@ export default function ExploreShellScreen() {
                         : regionId ===
                             'gwangju'
                           ? '광주 탐험 데이터를 준비하고 있어요.'
-                          : '울산 탐험 데이터를 준비하고 있어요.'
+                          : regionId ===
+                              'sejong'
+                            ? '세종 탐험 데이터를 준비하고 있어요.'
+                            : '울산 탐험 데이터를 준비하고 있어요.'
           );
 
           return;
@@ -2242,6 +2289,55 @@ export default function ExploreShellScreen() {
                   isCityBlack
                     ? '#FFFFFF'
                     : '#4A3F50'
+                }
+              />
+            ) :
+            shellMapLevel ===
+            'sejong' ? (
+              <QuickShapeMap
+                shapes={
+                  SEJONG_DISTRICT_SHAPES
+                }
+                viewWidth={
+                  360
+                }
+                viewHeight={
+                  330
+                }
+                displayHeight={
+                  330
+                }
+                getLabel={(
+                  shape
+                ) =>
+                  shape.name
+                }
+                getFill={() =>
+                  isCityBlack
+                    ? '#666666'
+                    : '#E7D7B8'
+                }
+                getLabelSize={() =>
+                  11
+                }
+                getTouchSize={() =>
+                  180
+                }
+                onPress={(
+                  shape
+                ) =>
+                  openDistrict(
+                    shape.id,
+                    shape.name
+                  )
+                }
+                backgroundColor={
+                  theme.background
+                }
+                textColor={
+                  isCityBlack
+                    ? '#FFFFFF'
+                    : '#4A4032'
                 }
               />
             ) : (

@@ -58,6 +58,7 @@ type QuickMapLevel =
   | 'chungnam'
   | 'jeonbuk'
   | 'jeonnam'
+  | 'gyeongbuk'
   | 'busan'
   | 'incheon'
   | 'daegu'
@@ -1748,6 +1749,223 @@ const JEONNAM_DISTRICT_SHAPES: JeonnamDistrictShape[] = [
 ];
 
 
+type GyeongbukDistrictShape = {
+  id: string;
+  name: string;
+  icon: string;
+  subtitle: string;
+  points: string;
+  labelX: number;
+  labelY: number;
+};
+
+/*
+ * 경상북도 22개 시·군의 단순화 지도입니다.
+ * 울릉군은 동해의 별도 섬 영역으로 표시하고,
+ * 기존 장소·GPS·테마 데이터는 지역 상세 화면에서 그대로 사용합니다.
+ */
+const GYEONGBUK_DISTRICT_SHAPES: GyeongbukDistrictShape[] = [
+  {
+    id: 'gyeongbuk-yeongju',
+    name: '영주시',
+    icon: '🏯',
+    subtitle: '부석사·소수서원·선비문화·소백산 탐험',
+    points: '45,55 70,30 125,20 145,70 115,110 65,95',
+    labelX: 91,
+    labelY: 68,
+  },
+  {
+    id: 'gyeongbuk-bonghwa',
+    name: '봉화군',
+    icon: '🌲',
+    subtitle: '백두대간·청량산·산타마을·숲 탐험',
+    points: '125,20 205,20 225,75 190,115 145,70',
+    labelX: 177,
+    labelY: 66,
+  },
+  {
+    id: 'gyeongbuk-uljin',
+    name: '울진군',
+    icon: '🌊',
+    subtitle: '금강송·성류굴·온천·동해안 탐험',
+    points: '205,20 270,35 300,90 285,160 235,145 225,75',
+    labelX: 260,
+    labelY: 91,
+  },
+  {
+    id: 'gyeongbuk-mungyeong',
+    name: '문경시',
+    icon: '⛰️',
+    subtitle: '문경새재·철로자전거·도자기·산악 탐험',
+    points: '25,150 30,95 65,95 115,110 120,165 65,180',
+    labelX: 70,
+    labelY: 136,
+  },
+  {
+    id: 'gyeongbuk-yecheon',
+    name: '예천군',
+    icon: '🌀',
+    subtitle: '회룡포·삼강주막·천문·곤충생태 탐험',
+    points: '115,110 190,115 195,170 150,195 120,165',
+    labelX: 157,
+    labelY: 151,
+  },
+  {
+    id: 'gyeongbuk-andong',
+    name: '안동시',
+    icon: '🎭',
+    subtitle: '하회마을·서원·탈춤·유교문화 탐험',
+    points: '190,115 235,145 245,210 195,225 195,170',
+    labelX: 217,
+    labelY: 174,
+  },
+  {
+    id: 'gyeongbuk-yeongyang',
+    name: '영양군',
+    icon: '🌌',
+    subtitle: '국제밤하늘·두들마을·산나물·문학 탐험',
+    points: '235,145 285,160 300,215 270,250 245,210',
+    labelX: 270,
+    labelY: 197,
+  },
+  {
+    id: 'gyeongbuk-yeongdeok',
+    name: '영덕군',
+    icon: '🦀',
+    subtitle: '블루로드·대게·해맞이·해안 탐험',
+    points: '285,160 315,170 330,240 295,280 270,250 300,215',
+    labelX: 306,
+    labelY: 222,
+  },
+  {
+    id: 'gyeongbuk-sangju',
+    name: '상주시',
+    icon: '🚲',
+    subtitle: '경천대·자전거·곶감·낙동강 탐험',
+    points: '25,150 65,180 150,195 145,255 85,270 25,235',
+    labelX: 83,
+    labelY: 218,
+  },
+  {
+    id: 'gyeongbuk-uiseong',
+    name: '의성군',
+    icon: '🧄',
+    subtitle: '조문국·산운마을·마늘·빙계계곡 탐험',
+    points: '150,195 195,170 195,225 245,210 260,260 215,285 145,255',
+    labelX: 205,
+    labelY: 239,
+  },
+  {
+    id: 'gyeongbuk-cheongsong',
+    name: '청송군',
+    icon: '🍎',
+    subtitle: '주왕산·주산지·사과·백자 탐험',
+    points: '245,210 270,250 295,280 275,325 235,305 260,260',
+    labelX: 267,
+    labelY: 274,
+  },
+  {
+    id: 'gyeongbuk-gimcheon',
+    name: '김천시',
+    icon: '🏞️',
+    subtitle: '직지사·부항댐·황악산·포도 탐험',
+    points: '10,300 25,235 85,270 95,325 40,345',
+    labelX: 50,
+    labelY: 295,
+  },
+  {
+    id: 'gyeongbuk-gumi',
+    name: '구미시',
+    icon: '🌉',
+    subtitle: '금오산·낙동강·산업문화·도시공원 탐험',
+    points: '85,270 145,255 160,310 125,345 95,325',
+    labelX: 126,
+    labelY: 301,
+  },
+  {
+    id: 'gyeongbuk-chilgok',
+    name: '칠곡군',
+    icon: '🕊️',
+    subtitle: '호국평화·가산산성·왜관·숲 탐험',
+    points: '145,255 215,285 210,335 160,350 160,310',
+    labelX: 183,
+    labelY: 307,
+  },
+  {
+    id: 'gyeongbuk-gyeongsan',
+    name: '경산시',
+    icon: '🎓',
+    subtitle: '갓바위·반곡지·삼성현·대학문화 탐험',
+    points: '195,365 210,335 235,305 275,325 280,370 235,390',
+    labelX: 239,
+    labelY: 352,
+  },
+  {
+    id: 'gyeongbuk-yeongcheon',
+    name: '영천시',
+    icon: '⭐',
+    subtitle: '보현산·별빛·와인·호국문화 탐험',
+    points: '235,305 275,325 295,280 315,330 310,390 280,370',
+    labelX: 284,
+    labelY: 339,
+  },
+  {
+    id: 'gyeongbuk-pohang',
+    name: '포항시',
+    icon: '🌅',
+    subtitle: '호미곶·영일대·스페이스워크·해양 탐험',
+    points: '295,280 330,240 345,310 340,380 310,390 315,330',
+    labelX: 326,
+    labelY: 321,
+  },
+  {
+    id: 'gyeongbuk-seongju',
+    name: '성주군',
+    icon: '🍈',
+    subtitle: '성밖숲·세종대왕자태실·참외·가야산 탐험',
+    points: '25,385 40,345 95,325 125,345 115,400 60,410',
+    labelX: 76,
+    labelY: 369,
+  },
+  {
+    id: 'gyeongbuk-goryeong',
+    name: '고령군',
+    icon: '👑',
+    subtitle: '대가야·고분군·우륵·낙동강 탐험',
+    points: '60,410 115,400 160,350 170,410 125,450 70,455',
+    labelX: 118,
+    labelY: 414,
+  },
+  {
+    id: 'gyeongbuk-cheongdo',
+    name: '청도군',
+    icon: '🌸',
+    subtitle: '프로방스·운문사·레일바이크·감 탐험',
+    points: '125,450 170,410 195,365 235,390 245,445 200,465',
+    labelX: 194,
+    labelY: 425,
+  },
+  {
+    id: 'gyeongbuk-gyeongju',
+    name: '경주시',
+    icon: '🏺',
+    subtitle: '불국사·대릉원·남산·신라문화 탐험',
+    points: '230,475 235,390 280,370 310,390 325,455 285,490',
+    labelX: 278,
+    labelY: 432,
+  },
+  {
+    id: 'gyeongbuk-ulleung',
+    name: '울릉군',
+    icon: '🏝️',
+    subtitle: '울릉도·독도·성인봉·해안 탐험',
+    points: '326,55 349,45 365,65 362,95 340,110 322,88',
+    labelX: 344,
+    labelY: 78,
+  },
+];
+
+
 type SejongDistrictShape = {
   id: 'sejong';
   name: string;
@@ -2084,6 +2302,12 @@ function getQuickMapTitle(
   }
 
   if (
+    mapLevel === 'gyeongbuk'
+  ) {
+    return '경상북도 탐험';
+  }
+
+  if (
     mapLevel === 'busan'
   ) {
     return '부산광역시 탐험';
@@ -2171,6 +2395,12 @@ function getQuickMapSubtitle(
     mapLevel === 'jeonnam'
   ) {
     return '22개 시·군을 눌러 전남 탐험을 시작하세요.';
+  }
+
+  if (
+    mapLevel === 'gyeongbuk'
+  ) {
+    return '22개 시·군을 눌러 경북 탐험을 시작하세요.';
   }
 
   if (
@@ -2405,6 +2635,8 @@ export default function ExploreShellScreen() {
           regionId ===
             'jeonnam' ||
           regionId ===
+            'gyeongbuk' ||
+          regionId ===
             'busan' ||
           regionId ===
             'incheon' ||
@@ -2446,8 +2678,11 @@ export default function ExploreShellScreen() {
                             'jeonnam'
                           ? '전남 탐험 데이터를 준비하고 있어요.'
                           : regionId ===
-                              'busan'
-                        ? '부산 탐험 데이터를 준비하고 있어요.'
+                              'gyeongbuk'
+                            ? '경북 탐험 데이터를 준비하고 있어요.'
+                            : regionId ===
+                                'busan'
+                              ? '부산 탐험 데이터를 준비하고 있어요.'
                     : regionId ===
                         'incheon'
                       ? '인천 탐험 데이터를 준비하고 있어요.'
@@ -3192,6 +3427,65 @@ export default function ExploreShellScreen() {
                   isCityBlack
                     ? '#FFFFFF'
                     : '#365149'
+                }
+              />
+            ) :
+            shellMapLevel ===
+            'gyeongbuk' ? (
+              <QuickShapeMap
+                shapes={
+                  GYEONGBUK_DISTRICT_SHAPES
+                }
+                viewWidth={
+                  370
+                }
+                viewHeight={
+                  510
+                }
+                displayHeight={
+                  450
+                }
+                getLabel={(
+                  shape
+                ) =>
+                  shape.name
+                }
+                getFill={() =>
+                  isCityBlack
+                    ? '#666666'
+                    : '#E4E4D2'
+                }
+                getLabelSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 5.9
+                    : 6.8
+                }
+                getTouchSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 36
+                    : 40
+                }
+                onPress={(
+                  shape
+                ) =>
+                  openDistrict(
+                    shape.id,
+                    shape.name
+                  )
+                }
+                backgroundColor={
+                  theme.background
+                }
+                textColor={
+                  isCityBlack
+                    ? '#FFFFFF'
+                    : '#48503A'
                 }
               />
             ) :

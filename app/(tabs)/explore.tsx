@@ -55,6 +55,7 @@ type QuickMapLevel =
   | 'gyeonggi'
   | 'gangwon'
   | 'chungbuk'
+  | 'chungnam'
   | 'busan'
   | 'incheon'
   | 'daegu'
@@ -1230,6 +1231,159 @@ const CHUNGBUK_DISTRICT_SHAPES: ChungbukDistrictShape[] = [
 ];
 
 
+type ChungnamDistrictShape = {
+  id: string;
+  name: string;
+  icon: string;
+  subtitle: string;
+  points: string;
+  labelX: number;
+  labelY: number;
+};
+
+/*
+ * 충청남도 15개 시·군의 단순화 지도입니다.
+ * 기존 장소·GPS·테마 데이터는 지역 상세 화면에서 그대로 사용합니다.
+ */
+const CHUNGNAM_DISTRICT_SHAPES: ChungnamDistrictShape[] = [
+  {
+    id: 'chungnam-dangjin',
+    name: '당진시',
+    icon: '🌅',
+    subtitle: '서해대교·왜목마을·삽교호·해안문화 탐험',
+    points: '58,30 128,18 164,54 148,102 82,112 42,72',
+    labelX: 102,
+    labelY: 66,
+  },
+  {
+    id: 'chungnam-asan',
+    name: '아산시',
+    icon: '♨️',
+    subtitle: '온양온천·현충사·외암마을·호수 탐험',
+    points: '164,54 226,30 260,66 246,116 184,126 148,102',
+    labelX: 205,
+    labelY: 80,
+  },
+  {
+    id: 'chungnam-cheonan',
+    name: '천안시',
+    icon: '🏛️',
+    subtitle: '독립기념관·유관순·박물관·산책 탐험',
+    points: '260,66 326,48 350,96 332,150 270,150 246,116',
+    labelX: 299,
+    labelY: 101,
+  },
+  {
+    id: 'chungnam-taean',
+    name: '태안군',
+    icon: '🌊',
+    subtitle: '해안국립공원·꽃지·신두리·섬 탐험',
+    points: '14,70 42,72 82,112 68,174 34,224 10,180',
+    labelX: 42,
+    labelY: 137,
+  },
+  {
+    id: 'chungnam-seosan',
+    name: '서산시',
+    icon: '🪨',
+    subtitle: '해미읍성·마애삼존불·간월암·철새 탐험',
+    points: '82,112 148,102 184,126 174,184 112,204 68,174',
+    labelX: 126,
+    labelY: 151,
+  },
+  {
+    id: 'chungnam-yesan',
+    name: '예산군',
+    icon: '🌳',
+    subtitle: '수덕사·예당호·덕산온천·시장 탐험',
+    points: '184,126 246,116 270,150 250,204 190,216 174,184',
+    labelX: 221,
+    labelY: 164,
+  },
+  {
+    id: 'chungnam-hongseong',
+    name: '홍성군',
+    icon: '🏯',
+    subtitle: '홍주읍성·김좌진·남당항·역사문화 탐험',
+    points: '68,174 112,204 126,252 70,268 34,224',
+    labelX: 79,
+    labelY: 220,
+  },
+  {
+    id: 'chungnam-cheongyang',
+    name: '청양군',
+    icon: '⛰️',
+    subtitle: '칠갑산·천장호·장곡사·알프스마을 탐험',
+    points: '112,204 174,184 190,216 184,268 126,252',
+    labelX: 153,
+    labelY: 228,
+  },
+  {
+    id: 'chungnam-gongju',
+    name: '공주시',
+    icon: '👑',
+    subtitle: '공산성·무령왕릉·마곡사·백제문화 탐험',
+    points: '250,204 270,150 332,150 336,214 286,246 236,238',
+    labelX: 291,
+    labelY: 192,
+  },
+  {
+    id: 'chungnam-gyeryong',
+    name: '계룡시',
+    icon: '🌲',
+    subtitle: '계룡산·군문화·숲길·신도안 탐험',
+    points: '286,246 336,214 352,250 330,282 292,278',
+    labelX: 320,
+    labelY: 251,
+  },
+  {
+    id: 'chungnam-boryeong',
+    name: '보령시',
+    icon: '🏖️',
+    subtitle: '대천해수욕장·머드·성주산·섬 탐험',
+    points: '34,224 70,268 114,292 100,342 46,354 14,306',
+    labelX: 64,
+    labelY: 293,
+  },
+  {
+    id: 'chungnam-buyeo',
+    name: '부여군',
+    icon: '🏺',
+    subtitle: '부소산성·궁남지·백제문화·사찰 탐험',
+    points: '126,252 184,268 236,238 250,292 202,322 146,308 114,292',
+    labelX: 184,
+    labelY: 282,
+  },
+  {
+    id: 'chungnam-nonsan',
+    name: '논산시',
+    icon: '🌉',
+    subtitle: '탑정호·관촉사·선샤인랜드·딸기 탐험',
+    points: '236,238 286,246 292,278 330,282 312,334 250,292',
+    labelX: 275,
+    labelY: 286,
+  },
+  {
+    id: 'chungnam-seocheon',
+    name: '서천군',
+    icon: '🌾',
+    subtitle: '국립생태원·신성리갈대밭·해안·한산모시 탐험',
+    points: '14,306 46,354 106,372 146,342 146,308 114,292 70,268',
+    labelX: 84,
+    labelY: 333,
+  },
+  {
+    id: 'chungnam-geumsan',
+    name: '금산군',
+    icon: '🌿',
+    subtitle: '인삼·금강·산림문화·폭포 탐험',
+    points: '250,292 312,334 300,376 232,372 202,322',
+    labelX: 261,
+    labelY: 337,
+  },
+];
+
+
 type SejongDistrictShape = {
   id: 'sejong';
   name: string;
@@ -1548,6 +1702,12 @@ function getQuickMapTitle(
   }
 
   if (
+    mapLevel === 'chungnam'
+  ) {
+    return '충청남도 탐험';
+  }
+
+  if (
     mapLevel === 'busan'
   ) {
     return '부산광역시 탐험';
@@ -1617,6 +1777,12 @@ function getQuickMapSubtitle(
     mapLevel === 'chungbuk'
   ) {
     return '11개 시·군을 눌러 충북 탐험을 시작하세요.';
+  }
+
+  if (
+    mapLevel === 'chungnam'
+  ) {
+    return '15개 시·군을 눌러 충남 탐험을 시작하세요.';
   }
 
   if (
@@ -1845,6 +2011,8 @@ export default function ExploreShellScreen() {
           regionId ===
             'chungbuk' ||
           regionId ===
+            'chungnam' ||
+          regionId ===
             'busan' ||
           regionId ===
             'incheon' ||
@@ -1877,8 +2045,11 @@ export default function ExploreShellScreen() {
                       'chungbuk'
                     ? '충북 탐험 데이터를 준비하고 있어요.'
                     : regionId ===
-                        'busan'
-                      ? '부산 탐험 데이터를 준비하고 있어요.'
+                        'chungnam'
+                      ? '충남 탐험 데이터를 준비하고 있어요.'
+                      : regionId ===
+                          'busan'
+                        ? '부산 탐험 데이터를 준비하고 있어요.'
                     : regionId ===
                         'incheon'
                       ? '인천 탐험 데이터를 준비하고 있어요.'
@@ -2450,6 +2621,65 @@ export default function ExploreShellScreen() {
               />
             ) :
             shellMapLevel ===
+            'chungnam' ? (
+              <QuickShapeMap
+                shapes={
+                  CHUNGNAM_DISTRICT_SHAPES
+                }
+                viewWidth={
+                  370
+                }
+                viewHeight={
+                  390
+                }
+                displayHeight={
+                  390
+                }
+                getLabel={(
+                  shape
+                ) =>
+                  shape.name
+                }
+                getFill={() =>
+                  isCityBlack
+                    ? '#666666'
+                    : '#DDE4C9'
+                }
+                getLabelSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 6.6
+                    : 7.6
+                }
+                getTouchSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 44
+                    : 48
+                }
+                onPress={(
+                  shape
+                ) =>
+                  openDistrict(
+                    shape.id,
+                    shape.name
+                  )
+                }
+                backgroundColor={
+                  theme.background
+                }
+                textColor={
+                  isCityBlack
+                    ? '#FFFFFF'
+                    : '#46503A'
+                }
+              />
+            ) :
+            shellMapLevel ===
             'busan' ? (
               <QuickShapeMap
                 shapes={
@@ -2915,7 +3145,10 @@ export default function ExploreShellScreen() {
                       'gyeonggi'
                     ? '경기도 지도부터 먼저 표시했어요.'
                     : shellMapLevel ===
-                        'busan'
+                        'chungnam'
+                      ? '충남 지도부터 먼저 표시했어요.'
+                      : shellMapLevel ===
+                          'busan'
                       ? '부산 지도부터 먼저 표시했어요.'
                       : shellMapLevel ===
                           'incheon'

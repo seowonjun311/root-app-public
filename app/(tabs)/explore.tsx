@@ -57,7 +57,8 @@ type QuickMapLevel =
   | 'incheon'
   | 'daegu'
   | 'daejeon'
-  | 'gwangju';
+  | 'gwangju'
+  | 'ulsan';
 
 type ExploreContentMode =
   | 'places'
@@ -927,6 +928,70 @@ const GWANGJU_DISTRICT_SHAPES: GwangjuDistrictShape[] = [
 ];
 
 
+type UlsanDistrictShape = {
+  id: string;
+  name: string;
+  icon: string;
+  subtitle: string;
+  points: string;
+  labelX: number;
+  labelY: number;
+};
+
+/*
+ * 울산광역시 5개 구·군의 단순화 지도입니다.
+ * 중구·남구·동구·북구·울주군의 기존 장소·GPS·테마 데이터를
+ * 기존 지역 상세 화면에 그대로 연결합니다.
+ */
+const ULSAN_DISTRICT_SHAPES: UlsanDistrictShape[] = [
+  {
+    id: 'ulsan-ulju',
+    name: '울주군',
+    icon: '⛰️',
+    subtitle: '영남알프스·간절곶·옹기·생태문화 탐험',
+    points: '15,45 165,20 205,75 190,145 165,205 185,275 110,320 25,270 45,170',
+    labelX: 102,
+    labelY: 166,
+  },
+  {
+    id: 'ulsan-buk',
+    name: '북구',
+    icon: '🌊',
+    subtitle: '강동해안·정자항·산업역사·숲길 탐험',
+    points: '205,40 330,55 335,135 275,165 190,145 205,75',
+    labelX: 262,
+    labelY: 102,
+  },
+  {
+    id: 'ulsan-jung',
+    name: '중구',
+    icon: '🏯',
+    subtitle: '태화강·원도심·병영성·문화거리 탐험',
+    points: '165,145 190,145 275,165 260,220 180,215 165,205',
+    labelX: 218,
+    labelY: 183,
+  },
+  {
+    id: 'ulsan-nam',
+    name: '남구',
+    icon: '🐋',
+    subtitle: '장생포·태화강·대공원·산업문화 탐험',
+    points: '165,205 180,215 260,220 290,280 215,315 185,275',
+    labelX: 225,
+    labelY: 261,
+  },
+  {
+    id: 'ulsan-dong',
+    name: '동구',
+    icon: '🌅',
+    subtitle: '대왕암·일산해수욕장·조선해양·해안길 탐험',
+    points: '275,165 335,135 350,210 330,290 290,280 260,220',
+    labelX: 311,
+    labelY: 221,
+  },
+];
+
+
 function QuickShapeMap<
   T extends QuickShapeBase
 >({
@@ -1170,6 +1235,12 @@ function getQuickMapTitle(
     return '광주광역시 탐험';
   }
 
+  if (
+    mapLevel === 'ulsan'
+  ) {
+    return '울산광역시 탐험';
+  }
+
   return '대한민국 탐험';
 }
 
@@ -1216,6 +1287,12 @@ function getQuickMapSubtitle(
     mapLevel === 'gwangju'
   ) {
     return '5개 구를 눌러 광주 탐험을 시작하세요.';
+  }
+
+  if (
+    mapLevel === 'ulsan'
+  ) {
+    return '5개 구·군을 눌러 울산 탐험을 시작하세요.';
   }
 
   return '지역을 눌러 ROOT 탐험을 시작하세요.';
@@ -1406,7 +1483,9 @@ export default function ExploreShellScreen() {
           regionId ===
             'daejeon' ||
           regionId ===
-            'gwangju'
+            'gwangju' ||
+          regionId ===
+            'ulsan'
         ) {
           setShellMapLevel(
             regionId
@@ -1431,7 +1510,10 @@ export default function ExploreShellScreen() {
                       : regionId ===
                           'daejeon'
                         ? '대전 탐험 데이터를 준비하고 있어요.'
-                        : '광주 탐험 데이터를 준비하고 있어요.'
+                        : regionId ===
+                            'gwangju'
+                          ? '광주 탐험 데이터를 준비하고 있어요.'
+                          : '울산 탐험 데이터를 준비하고 있어요.'
           );
 
           return;
@@ -2103,7 +2185,9 @@ export default function ExploreShellScreen() {
                     : '#3D4A36'
                 }
               />
-            ) : (
+            ) :
+            shellMapLevel ===
+            'gwangju' ? (
               <QuickShapeMap
                 shapes={
                   GWANGJU_DISTRICT_SHAPES
@@ -2158,6 +2242,63 @@ export default function ExploreShellScreen() {
                   isCityBlack
                     ? '#FFFFFF'
                     : '#4A3F50'
+                }
+              />
+            ) : (
+              <QuickShapeMap
+                shapes={
+                  ULSAN_DISTRICT_SHAPES
+                }
+                viewWidth={
+                  360
+                }
+                viewHeight={
+                  330
+                }
+                displayHeight={
+                  330
+                }
+                getLabel={(
+                  shape
+                ) =>
+                  shape.name
+                }
+                getFill={() =>
+                  isCityBlack
+                    ? '#666666'
+                    : '#CFE6E2'
+                }
+                getLabelSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 7.2
+                    : 8.6
+                }
+                getTouchSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 52
+                    : 56
+                }
+                onPress={(
+                  shape
+                ) =>
+                  openDistrict(
+                    shape.id,
+                    shape.name
+                  )
+                }
+                backgroundColor={
+                  theme.background
+                }
+                textColor={
+                  isCityBlack
+                    ? '#FFFFFF'
+                    : '#36514D'
                 }
               />
             )
@@ -2240,7 +2381,10 @@ export default function ExploreShellScreen() {
                             : shellMapLevel ===
                                 'gwangju'
                               ? '광주 지도부터 먼저 표시했어요.'
-                              : '지도부터 먼저 표시했어요.'
+                              : shellMapLevel ===
+                                  'ulsan'
+                                ? '울산 지도부터 먼저 표시했어요.'
+                                : '지도부터 먼저 표시했어요.'
               }
             </Text>
 

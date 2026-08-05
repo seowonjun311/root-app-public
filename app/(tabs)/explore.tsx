@@ -54,6 +54,7 @@ type QuickMapLevel =
   | 'seoul'
   | 'gyeonggi'
   | 'gangwon'
+  | 'chungbuk'
   | 'busan'
   | 'incheon'
   | 'daegu'
@@ -1111,6 +1112,124 @@ const GANGWON_DISTRICT_SHAPES: GangwonDistrictShape[] = [
   },
 ];
 
+
+type ChungbukDistrictShape = {
+  id: string;
+  name: string;
+  icon: string;
+  subtitle: string;
+  points: string;
+  labelX: number;
+  labelY: number;
+};
+
+/*
+ * 충청북도 11개 시·군의 단순화 지도입니다.
+ * 기존 장소·GPS·테마 데이터는 지역 상세 화면에서 그대로 사용합니다.
+ */
+const CHUNGBUK_DISTRICT_SHAPES: ChungbukDistrictShape[] = [
+  {
+    id: 'chungbuk-chungju',
+    name: '충주시',
+    icon: '🏞️',
+    subtitle: '호수·온천·중원문화·동굴·산성 탐험',
+    points: '32,38 116,22 154,58 142,112 88,136 30,104',
+    labelX: 91,
+    labelY: 76,
+  },
+  {
+    id: 'chungbuk-jecheon',
+    name: '제천시',
+    icon: '🌊',
+    subtitle: '청풍호·월악산·의림지·약초문화 탐험',
+    points: '154,58 224,28 276,54 266,116 210,142 142,112',
+    labelX: 207,
+    labelY: 82,
+  },
+  {
+    id: 'chungbuk-danyang',
+    name: '단양군',
+    icon: '⛰️',
+    subtitle: '도담삼봉·소백산·동굴·스카이워크 탐험',
+    points: '276,54 332,42 350,96 330,152 278,150 266,116',
+    labelX: 309,
+    labelY: 99,
+  },
+  {
+    id: 'chungbuk-eumseong',
+    name: '음성군',
+    icon: '🌳',
+    subtitle: '평화기념·숲·성당·박물관 탐험',
+    points: '30,104 88,136 104,190 52,212 18,172',
+    labelX: 62,
+    labelY: 160,
+  },
+  {
+    id: 'chungbuk-jincheon',
+    name: '진천군',
+    icon: '🌉',
+    subtitle: '농다리·초평호·보탑사·생거문화 탐험',
+    points: '88,136 142,112 172,162 156,210 104,190',
+    labelX: 131,
+    labelY: 163,
+  },
+  {
+    id: 'chungbuk-jeungpyeong',
+    name: '증평군',
+    icon: '🌲',
+    subtitle: '좌구산·보강천·자전거·역사문화 탐험',
+    points: '156,210 172,162 214,160 224,202 194,226',
+    labelX: 190,
+    labelY: 190,
+  },
+  {
+    id: 'chungbuk-goesan',
+    name: '괴산군',
+    icon: '🏔️',
+    subtitle: '산막이옛길·화양구곡·계곡·호수 탐험',
+    points: '210,142 266,116 278,150 306,206 264,242 224,202 214,160',
+    labelX: 258,
+    labelY: 184,
+  },
+  {
+    id: 'chungbuk-cheongju',
+    name: '청주시',
+    icon: '📚',
+    subtitle: '직지·상당산성·청남대·현대미술 탐험',
+    points: '18,172 52,212 104,190 156,210 194,226 178,282 108,302 42,264',
+    labelX: 106,
+    labelY: 240,
+  },
+  {
+    id: 'chungbuk-boeun',
+    name: '보은군',
+    icon: '🌲',
+    subtitle: '속리산·법주사·말티재·산성 탐험',
+    points: '194,226 224,202 264,242 250,292 206,306 178,282',
+    labelX: 220,
+    labelY: 261,
+  },
+  {
+    id: 'chungbuk-okcheon',
+    name: '옥천군',
+    icon: '📖',
+    subtitle: '정지용문학·대청호·근대문화·숲 탐험',
+    points: '108,302 178,282 206,306 208,350 146,364 94,340',
+    labelX: 156,
+    labelY: 325,
+  },
+  {
+    id: 'chungbuk-yeongdong',
+    name: '영동군',
+    icon: '🎵',
+    subtitle: '국악·와인·월류봉·폭포·사찰 탐험',
+    points: '206,306 250,292 306,322 286,374 208,350',
+    labelX: 252,
+    labelY: 334,
+  },
+];
+
+
 type SejongDistrictShape = {
   id: 'sejong';
   name: string;
@@ -1423,6 +1542,12 @@ function getQuickMapTitle(
   }
 
   if (
+    mapLevel === 'chungbuk'
+  ) {
+    return '충청북도 탐험';
+  }
+
+  if (
     mapLevel === 'busan'
   ) {
     return '부산광역시 탐험';
@@ -1486,6 +1611,12 @@ function getQuickMapSubtitle(
     mapLevel === 'gangwon'
   ) {
     return '18개 시·군을 눌러 강원 탐험을 시작하세요.';
+  }
+
+  if (
+    mapLevel === 'chungbuk'
+  ) {
+    return '11개 시·군을 눌러 충북 탐험을 시작하세요.';
   }
 
   if (
@@ -1712,6 +1843,8 @@ export default function ExploreShellScreen() {
           regionId ===
             'gangwon' ||
           regionId ===
+            'chungbuk' ||
+          regionId ===
             'busan' ||
           regionId ===
             'incheon' ||
@@ -1741,8 +1874,11 @@ export default function ExploreShellScreen() {
                     'gangwon'
                   ? '강원 탐험 데이터를 준비하고 있어요.'
                   : regionId ===
-                      'busan'
-                    ? '부산 탐험 데이터를 준비하고 있어요.'
+                      'chungbuk'
+                    ? '충북 탐험 데이터를 준비하고 있어요.'
+                    : regionId ===
+                        'busan'
+                      ? '부산 탐험 데이터를 준비하고 있어요.'
                     : regionId ===
                         'incheon'
                       ? '인천 탐험 데이터를 준비하고 있어요.'
@@ -2251,6 +2387,65 @@ export default function ExploreShellScreen() {
                   isCityBlack
                     ? '#FFFFFF'
                     : '#3E4A37'
+                }
+              />
+            ) :
+            shellMapLevel ===
+            'chungbuk' ? (
+              <QuickShapeMap
+                shapes={
+                  CHUNGBUK_DISTRICT_SHAPES
+                }
+                viewWidth={
+                  370
+                }
+                viewHeight={
+                  390
+                }
+                displayHeight={
+                  390
+                }
+                getLabel={(
+                  shape
+                ) =>
+                  shape.name
+                }
+                getFill={() =>
+                  isCityBlack
+                    ? '#666666'
+                    : '#E5E0C7'
+                }
+                getLabelSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 6.8
+                    : 7.8
+                }
+                getTouchSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 46
+                    : 50
+                }
+                onPress={(
+                  shape
+                ) =>
+                  openDistrict(
+                    shape.id,
+                    shape.name
+                  )
+                }
+                backgroundColor={
+                  theme.background
+                }
+                textColor={
+                  isCityBlack
+                    ? '#FFFFFF'
+                    : '#494536'
                 }
               />
             ) :

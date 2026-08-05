@@ -60,6 +60,7 @@ type QuickMapLevel =
   | 'jeonnam'
   | 'gyeongbuk'
   | 'gyeongnam'
+  | 'jeju'
   | 'busan'
   | 'incheon'
   | 'daegu'
@@ -2148,6 +2149,44 @@ const GYEONGNAM_DISTRICT_SHAPES: GyeongnamDistrictShape[] = [
 ];
 
 
+type JejuCityShape = {
+  id: 'jeju-si' | 'seogwipo-si';
+  name: string;
+  icon: string;
+  subtitle: string;
+  points: string;
+  labelX: number;
+  labelY: number;
+};
+
+/*
+ * 기존 탐험 데이터에서 사용하는 실제 행정시 ID와 지도 형상입니다.
+ * 제주시·서귀포시의 장소·GPS·테마 데이터는 기존 지역 상세 화면에서 그대로 사용합니다.
+ */
+const JEJU_CITY_SHAPES: JejuCityShape[] = [
+  {
+    id: 'jeju-si',
+    name: '제주시',
+    icon: '🍊',
+    subtitle: '한라산 북쪽·동서 해안 탐험',
+    points:
+      '34,108 50,78 82,52 126,35 176,27 226,33 270,51 309,79 326,105 290,112 250,109 210,104 168,108 125,104 80,111',
+    labelX: 176,
+    labelY: 72,
+  },
+  {
+    id: 'seogwipo-si',
+    name: '서귀포시',
+    icon: '🌴',
+    subtitle: '한라산 남쪽·폭포와 올레 탐험',
+    points:
+      '34,108 80,111 125,104 168,108 210,104 250,109 290,112 326,105 313,137 279,163 231,182 176,191 118,181 72,158 44,134',
+    labelX: 180,
+    labelY: 151,
+  },
+];
+
+
 type SejongDistrictShape = {
   id: 'sejong';
   name: string;
@@ -2496,6 +2535,12 @@ function getQuickMapTitle(
   }
 
   if (
+    mapLevel === 'jeju'
+  ) {
+    return '제주특별자치도 탐험';
+  }
+
+  if (
     mapLevel === 'busan'
   ) {
     return '부산광역시 탐험';
@@ -2595,6 +2640,12 @@ function getQuickMapSubtitle(
     mapLevel === 'gyeongnam'
   ) {
     return '18개 시·군을 눌러 경남 탐험을 시작하세요.';
+  }
+
+  if (
+    mapLevel === 'jeju'
+  ) {
+    return '제주시·서귀포시를 눌러 제주 탐험을 시작하세요.';
   }
 
   if (
@@ -2833,6 +2884,8 @@ export default function ExploreShellScreen() {
           regionId ===
             'gyeongnam' ||
           regionId ===
+            'jeju' ||
+          regionId ===
             'busan' ||
           regionId ===
             'incheon' ||
@@ -2880,8 +2933,11 @@ export default function ExploreShellScreen() {
                                 'gyeongnam'
                               ? '경남 탐험 데이터를 준비하고 있어요.'
                               : regionId ===
-                                  'busan'
-                                ? '부산 탐험 데이터를 준비하고 있어요.'
+                                  'jeju'
+                                ? '제주 탐험 데이터를 준비하고 있어요.'
+                                : regionId ===
+                                    'busan'
+                                  ? '부산 탐험 데이터를 준비하고 있어요.'
                     : regionId ===
                         'incheon'
                       ? '인천 탐험 데이터를 준비하고 있어요.'
@@ -3748,6 +3804,60 @@ export default function ExploreShellScreen() {
               />
             ) :
             shellMapLevel ===
+            'jeju' ? (
+              <QuickShapeMap
+                shapes={
+                  JEJU_CITY_SHAPES
+                }
+                viewWidth={
+                  360
+                }
+                viewHeight={
+                  220
+                }
+                displayHeight={
+                  265
+                }
+                getLabel={(
+                  shape
+                ) =>
+                  shape.name
+                }
+                getFill={(
+                  shape
+                ) =>
+                  isCityBlack
+                    ? '#666666'
+                    : shape.id ===
+                        'jeju-si'
+                      ? '#F3E4B6'
+                      : '#DCEBC8'
+                }
+                getLabelSize={() =>
+                  10
+                }
+                getTouchSize={() =>
+                  76
+                }
+                onPress={(
+                  shape
+                ) =>
+                  openDistrict(
+                    shape.id,
+                    shape.name
+                  )
+                }
+                backgroundColor={
+                  theme.background
+                }
+                textColor={
+                  isCityBlack
+                    ? '#FFFFFF'
+                    : '#48503A'
+                }
+              />
+            ) :
+            shellMapLevel ===
             'busan' ? (
               <QuickShapeMap
                 shapes={
@@ -4219,8 +4329,11 @@ export default function ExploreShellScreen() {
                           'jeonnam'
                         ? '전남 지도부터 먼저 표시했어요.'
                         : shellMapLevel ===
-                            'busan'
-                      ? '부산 지도부터 먼저 표시했어요.'
+                            'jeju'
+                          ? '제주 지도부터 먼저 표시했어요.'
+                          : shellMapLevel ===
+                              'busan'
+                            ? '부산 지도부터 먼저 표시했어요.'
                       : shellMapLevel ===
                           'incheon'
                         ? '인천 지도부터 먼저 표시했어요.'

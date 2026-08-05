@@ -186,6 +186,33 @@ const DISTRICT_MAP_TYPE_OPTIONS: readonly {
   },
 ];
 
+const DISTRICT_MAP_FAST_MOUNT_DELAY_MS =
+  120;
+
+const DISTRICT_INITIAL_PLACE_LIST_COUNT =
+  6;
+
+const DISTRICT_SECOND_PLACE_LIST_COUNT =
+  18;
+
+const DISTRICT_PLACE_LIST_SECOND_BATCH_DELAY_MS =
+  160;
+
+const DISTRICT_PLACE_LIST_FINAL_BATCH_DELAY_MS =
+  700;
+
+const DISTRICT_INITIAL_MARKER_COUNT =
+  8;
+
+const DISTRICT_SECOND_MARKER_COUNT =
+  18;
+
+const DISTRICT_MARKER_SECOND_BATCH_DELAY_MS =
+  80;
+
+const DISTRICT_MARKER_FINAL_BATCH_DELAY_MS =
+  260;
+
 const PLACE_FILTER_OPTIONS: readonly {
   id: PlaceFilter;
   label: string;
@@ -789,6 +816,12 @@ export default function DistrictMapScreen() {
   const mapRef =
     useRef<MapView | null>(null);
 
+  const districtMapStartedAtRef =
+    useRef(Date.now());
+
+  const skipInitialMapFitRef =
+    useRef(true);
+
   const [loading, setLoading] =
     useState(true);
 
@@ -873,7 +906,9 @@ export default function DistrictMapScreen() {
   const [
     placeListRenderCount,
     setPlaceListRenderCount,
-  ] = useState(8);
+  ] = useState(
+    DISTRICT_INITIAL_PLACE_LIST_COUNT
+  );
 
   const [
     trackMarkerChanges,
@@ -1406,13 +1441,19 @@ export default function DistrictMapScreen() {
   );
 
   useEffect(() => {
+    districtMapStartedAtRef.current =
+      Date.now();
+
+    skipInitialMapFitRef.current =
+      true;
+
     setDistrictMapMounted(false);
     setMapReady(false);
     setPlaceMarkerRenderCount(0);
 
     setPlaceListRenderCount(
       Math.min(
-        8,
+        DISTRICT_INITIAL_PLACE_LIST_COUNT,
         filteredPlaces.length
       )
     );
@@ -1421,49 +1462,39 @@ export default function DistrictMapScreen() {
       return;
     }
 
-    let mapMountDelay:
-      ReturnType<typeof setTimeout> | null =
-        null;
+    console.log(
+      'DISTRICT INITIAL UI READY',
+      {
+        districtId:
+          normalizedDistrictId,
+      }
+    );
 
-    const interactionTask =
-      InteractionManager.runAfterInteractions(
+    const mapMountTimer =
+      setTimeout(
         () => {
           console.log(
-            'DISTRICT INITIAL UI READY',
+            'DISTRICT MAP FAST MOUNT START',
             {
               districtId:
                 normalizedDistrictId,
+              elapsedMs:
+                Date.now() -
+                districtMapStartedAtRef.current,
             }
           );
 
-          mapMountDelay =
-            setTimeout(
-              () => {
-                console.log(
-                  'DISTRICT MAP DEFERRED MOUNT START',
-                  {
-                    districtId:
-                      normalizedDistrictId,
-                  }
-                );
-
-                setDistrictMapMounted(
-                  true
-                );
-              },
-              2_000
-            );
-        }
+          setDistrictMapMounted(
+            true
+          );
+        },
+        DISTRICT_MAP_FAST_MOUNT_DELAY_MS
       );
 
     return () => {
-      interactionTask.cancel?.();
-
-      if (mapMountDelay) {
-        clearTimeout(
-          mapMountDelay
-        );
-      }
+      clearTimeout(
+        mapMountTimer
+      );
     };
   }, [
     normalizedDistrictId,
@@ -1478,22 +1509,26 @@ export default function DistrictMapScreen() {
 
     setPlaceListRenderCount(
       Math.min(
-        4,
+        DISTRICT_INITIAL_PLACE_LIST_COUNT,
         filteredPlaces.length
       )
     );
+
+    if (!mapReady) {
+      return;
+    }
 
     const secondListTimer =
       setTimeout(
         () => {
           setPlaceListRenderCount(
             Math.min(
-              16,
+              DISTRICT_SECOND_PLACE_LIST_COUNT,
               filteredPlaces.length
             )
           );
         },
-        1_200
+        DISTRICT_PLACE_LIST_SECOND_BATCH_DELAY_MS
       );
 
     const finalListTimer =
@@ -1513,7 +1548,7 @@ export default function DistrictMapScreen() {
             }
           );
         },
-        3_000
+        DISTRICT_PLACE_LIST_FINAL_BATCH_DELAY_MS
       );
 
     return () => {
@@ -1528,6 +1563,7 @@ export default function DistrictMapScreen() {
   }, [
     contentMode,
     filteredPlaces.length,
+    mapReady,
     normalizedDistrictId,
   ]);
 
@@ -1546,7 +1582,7 @@ export default function DistrictMapScreen() {
 
     setPlaceMarkerRenderCount(
       Math.min(
-        6,
+        DISTRICT_INITIAL_MARKER_COUNT,
         markerItems.length
       )
     );
@@ -1556,12 +1592,12 @@ export default function DistrictMapScreen() {
         () => {
           setPlaceMarkerRenderCount(
             Math.min(
-              14,
+              DISTRICT_SECOND_MARKER_COUNT,
               markerItems.length
             )
           );
         },
-        220
+        DISTRICT_MARKER_SECOND_BATCH_DELAY_MS
       );
 
     const finalMarkerTimer =
@@ -1581,7 +1617,7 @@ export default function DistrictMapScreen() {
             }
           );
         },
-        650
+        DISTRICT_MARKER_FINAL_BATCH_DELAY_MS
       );
 
     return () => {
@@ -1631,6 +1667,15 @@ export default function DistrictMapScreen() {
       return;
     }
 
+    if (
+      skipInitialMapFitRef.current
+    ) {
+      skipInitialMapFitRef.current =
+        false;
+
+      return;
+    }
+
     const timeoutId =
       setTimeout(() => {
         mapRef.current?.fitToCoordinates(
@@ -1645,7 +1690,7 @@ export default function DistrictMapScreen() {
             animated: true,
           }
         );
-      }, 260);
+      }, 120);
 
     return () => {
       clearTimeout(timeoutId);
@@ -2291,6 +2336,9 @@ export default function DistrictMapScreen() {
                 {
                   districtId:
                     normalizedDistrictId,
+                  elapsedMs:
+                    Date.now() -
+                    districtMapStartedAtRef.current,
                 }
               );
 
@@ -2617,7 +2665,7 @@ export default function DistrictMapScreen() {
                     theme.subText,
                 }}
               >
-                지도와 장소 표시를 준비하고 있어요.
+                지도를 빠르게 불러오고 있어요.
               </Text>
             </View>
           )}

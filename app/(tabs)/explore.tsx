@@ -59,6 +59,7 @@ type QuickMapLevel =
   | 'jeonbuk'
   | 'jeonnam'
   | 'gyeongbuk'
+  | 'gyeongnam'
   | 'busan'
   | 'incheon'
   | 'daegu'
@@ -1966,6 +1967,187 @@ const GYEONGBUK_DISTRICT_SHAPES: GyeongbukDistrictShape[] = [
 ];
 
 
+type GyeongnamDistrictShape = {
+  id: string;
+  name: string;
+  icon: string;
+  subtitle: string;
+  points: string;
+  labelX: number;
+  labelY: number;
+};
+
+/*
+ * 경상남도 18개 시·군의 단순화 지도입니다.
+ * 거제·통영·남해 등 섬·해안 지역은 터치가 편하도록
+ * 하나의 대표 영역으로 단순화해 표시합니다.
+ */
+const GYEONGNAM_DISTRICT_SHAPES: GyeongnamDistrictShape[] = [
+  {
+    id: 'gyeongnam-geochang',
+    name: '거창군',
+    icon: '⛰️',
+    subtitle: '수승대·창포원·덕유산·산촌 탐험',
+    points: '25,45 75,25 120,45 115,100 60,110 20,80',
+    labelX: 70,
+    labelY: 67,
+  },
+  {
+    id: 'gyeongnam-hamyang',
+    name: '함양군',
+    icon: '🌲',
+    subtitle: '상림·지리산·개평마을·산삼 탐험',
+    points: '20,80 60,110 105,135 85,190 35,180 10,135',
+    labelX: 57,
+    labelY: 142,
+  },
+  {
+    id: 'gyeongnam-hapcheon',
+    name: '합천군',
+    icon: '🏞️',
+    subtitle: '해인사·영상테마파크·황매산·호수 탐험',
+    points: '120,45 185,35 210,80 190,135 125,135 115,100',
+    labelX: 161,
+    labelY: 88,
+  },
+  {
+    id: 'gyeongnam-changnyeong',
+    name: '창녕군',
+    icon: '🪷',
+    subtitle: '우포늪·화왕산·부곡온천·생태 탐험',
+    points: '185,35 245,45 260,105 225,145 190,135 210,80',
+    labelX: 223,
+    labelY: 88,
+  },
+  {
+    id: 'gyeongnam-miryang',
+    name: '밀양시',
+    icon: '🏯',
+    subtitle: '영남루·위양지·얼음골·아리랑 탐험',
+    points: '245,45 310,55 325,115 285,150 260,105',
+    labelX: 288,
+    labelY: 96,
+  },
+  {
+    id: 'gyeongnam-yangsan',
+    name: '양산시',
+    icon: '🛕',
+    subtitle: '통도사·황산공원·천성산·배내골 탐험',
+    points: '310,55 350,75 365,135 335,175 285,150 325,115',
+    labelX: 329,
+    labelY: 119,
+  },
+  {
+    id: 'gyeongnam-sancheong',
+    name: '산청군',
+    icon: '🌿',
+    subtitle: '동의보감촌·지리산·남사예담촌·한방 탐험',
+    points: '35,180 85,190 135,170 150,230 105,260 45,240',
+    labelX: 91,
+    labelY: 213,
+  },
+  {
+    id: 'gyeongnam-uiryeong',
+    name: '의령군',
+    icon: '🌾',
+    subtitle: '솥바위·의병문화·벽계계곡·부자길 탐험',
+    points: '105,135 125,135 190,135 190,205 150,230 135,170',
+    labelX: 158,
+    labelY: 173,
+  },
+  {
+    id: 'gyeongnam-haman',
+    name: '함안군',
+    icon: '🌸',
+    subtitle: '말이산고분군·악양생태공원·연꽃 탐험',
+    points: '190,135 225,145 245,205 220,245 190,205',
+    labelX: 216,
+    labelY: 188,
+  },
+  {
+    id: 'gyeongnam-changwon',
+    name: '창원시',
+    icon: '🌉',
+    subtitle: '진해군항·마산해양·주남저수지·도시 탐험',
+    points: '225,145 285,150 300,215 270,260 220,245 245,205',
+    labelX: 264,
+    labelY: 203,
+  },
+  {
+    id: 'gyeongnam-gimhae',
+    name: '김해시',
+    icon: '👑',
+    subtitle: '가야테마파크·수로왕릉·봉리단길·낙동강 탐험',
+    points: '285,150 335,175 350,225 315,260 300,215',
+    labelX: 319,
+    labelY: 206,
+  },
+  {
+    id: 'gyeongnam-hadong',
+    name: '하동군',
+    icon: '🍵',
+    subtitle: '화개장터·십리벚꽃·차밭·섬진강 탐험',
+    points: '45,240 105,260 115,320 70,350 25,310',
+    labelX: 70,
+    labelY: 291,
+  },
+  {
+    id: 'gyeongnam-jinju',
+    name: '진주시',
+    icon: '🏯',
+    subtitle: '진주성·남강·유등·역사문화 탐험',
+    points: '105,260 150,230 220,245 205,305 150,330 115,320',
+    labelX: 163,
+    labelY: 283,
+  },
+  {
+    id: 'gyeongnam-goseong',
+    name: '고성군',
+    icon: '🦕',
+    subtitle: '공룡박물관·상족암·당항포·해안 탐험',
+    points: '150,330 205,305 245,330 230,385 180,395',
+    labelX: 199,
+    labelY: 351,
+  },
+  {
+    id: 'gyeongnam-sacheon',
+    name: '사천시',
+    icon: '🚠',
+    subtitle: '바다케이블카·삼천포·항공우주·해안 탐험',
+    points: '70,350 115,320 150,330 180,395 135,420 85,400',
+    labelX: 125,
+    labelY: 371,
+  },
+  {
+    id: 'gyeongnam-tongyeong',
+    name: '통영시',
+    icon: '⛵',
+    subtitle: '동피랑·미륵산·케이블카·한려수도 탐험',
+    points: '180,395 230,385 255,425 225,465 175,455 135,420',
+    labelX: 207,
+    labelY: 426,
+  },
+  {
+    id: 'gyeongnam-geoje',
+    name: '거제시',
+    icon: '🏝️',
+    subtitle: '바람의언덕·외도·매미성·해금강 탐험',
+    points: '255,425 310,405 340,445 325,495 275,510 225,465',
+    labelX: 287,
+    labelY: 461,
+  },
+  {
+    id: 'gyeongnam-namhae',
+    name: '남해군',
+    icon: '🌊',
+    subtitle: '독일마을·다랭이마을·금산·보리암 탐험',
+    points: '35,405 85,400 135,420 115,475 65,490 25,455',
+    labelX: 77,
+    labelY: 445,
+  },
+];
+
+
 type SejongDistrictShape = {
   id: 'sejong';
   name: string;
@@ -2308,6 +2490,12 @@ function getQuickMapTitle(
   }
 
   if (
+    mapLevel === 'gyeongnam'
+  ) {
+    return '경상남도 탐험';
+  }
+
+  if (
     mapLevel === 'busan'
   ) {
     return '부산광역시 탐험';
@@ -2401,6 +2589,12 @@ function getQuickMapSubtitle(
     mapLevel === 'gyeongbuk'
   ) {
     return '22개 시·군을 눌러 경북 탐험을 시작하세요.';
+  }
+
+  if (
+    mapLevel === 'gyeongnam'
+  ) {
+    return '18개 시·군을 눌러 경남 탐험을 시작하세요.';
   }
 
   if (
@@ -2637,6 +2831,8 @@ export default function ExploreShellScreen() {
           regionId ===
             'gyeongbuk' ||
           regionId ===
+            'gyeongnam' ||
+          regionId ===
             'busan' ||
           regionId ===
             'incheon' ||
@@ -2681,8 +2877,11 @@ export default function ExploreShellScreen() {
                               'gyeongbuk'
                             ? '경북 탐험 데이터를 준비하고 있어요.'
                             : regionId ===
-                                'busan'
-                              ? '부산 탐험 데이터를 준비하고 있어요.'
+                                'gyeongnam'
+                              ? '경남 탐험 데이터를 준비하고 있어요.'
+                              : regionId ===
+                                  'busan'
+                                ? '부산 탐험 데이터를 준비하고 있어요.'
                     : regionId ===
                         'incheon'
                       ? '인천 탐험 데이터를 준비하고 있어요.'
@@ -3461,6 +3660,65 @@ export default function ExploreShellScreen() {
                   shape.name.length >
                   3
                     ? 5.9
+                    : 6.8
+                }
+                getTouchSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 36
+                    : 40
+                }
+                onPress={(
+                  shape
+                ) =>
+                  openDistrict(
+                    shape.id,
+                    shape.name
+                  )
+                }
+                backgroundColor={
+                  theme.background
+                }
+                textColor={
+                  isCityBlack
+                    ? '#FFFFFF'
+                    : '#48503A'
+                }
+              />
+            ) :
+            shellMapLevel ===
+            'gyeongnam' ? (
+              <QuickShapeMap
+                shapes={
+                  GYEONGNAM_DISTRICT_SHAPES
+                }
+                viewWidth={
+                  375
+                }
+                viewHeight={
+                  525
+                }
+                displayHeight={
+                  450
+                }
+                getLabel={(
+                  shape
+                ) =>
+                  shape.name
+                }
+                getFill={() =>
+                  isCityBlack
+                    ? '#666666'
+                    : '#DDE8D4'
+                }
+                getLabelSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 5.8
                     : 6.8
                 }
                 getTouchSize={(

@@ -57,6 +57,7 @@ type QuickMapLevel =
   | 'chungbuk'
   | 'chungnam'
   | 'jeonbuk'
+  | 'jeonnam'
   | 'busan'
   | 'incheon'
   | 'daegu'
@@ -1530,6 +1531,223 @@ const JEONBUK_DISTRICT_SHAPES: JeonbukDistrictShape[] = [
 ];
 
 
+type JeonnamDistrictShape = {
+  id: string;
+  name: string;
+  icon: string;
+  subtitle: string;
+  points: string;
+  labelX: number;
+  labelY: number;
+};
+
+/*
+ * 전라남도 22개 시·군의 단순화 지도입니다.
+ * 다도해 섬 지역은 터치가 편하도록 하나의 단순화 영역으로 표시하고,
+ * 기존 장소·GPS·테마 데이터는 지역 상세 화면에서 그대로 사용합니다.
+ */
+const JEONNAM_DISTRICT_SHAPES: JeonnamDistrictShape[] = [
+  {
+    id: 'jeonnam-jangseong',
+    name: '장성군',
+    icon: '🌲',
+    subtitle: '백양사·축령산·호수·편백숲 탐험',
+    points: '65,55 90,20 150,16 170,60 145,100 85,90',
+    labelX: 116,
+    labelY: 57,
+  },
+  {
+    id: 'jeonnam-damyang',
+    name: '담양군',
+    icon: '🎋',
+    subtitle: '죽녹원·메타세쿼이아·소쇄원·가사문화 탐험',
+    points: '150,16 220,24 235,72 200,110 145,100 170,60',
+    labelX: 192,
+    labelY: 64,
+  },
+  {
+    id: 'jeonnam-gokseong',
+    name: '곡성군',
+    icon: '🚂',
+    subtitle: '섬진강·기차마을·장미·산책 탐험',
+    points: '220,24 285,34 300,80 270,125 200,110 235,72',
+    labelX: 255,
+    labelY: 76,
+  },
+  {
+    id: 'jeonnam-gurye',
+    name: '구례군',
+    icon: '⛰️',
+    subtitle: '지리산·화엄사·산수유·섬진강 탐험',
+    points: '285,34 350,50 365,105 335,150 270,125 300,80',
+    labelX: 326,
+    labelY: 91,
+  },
+  {
+    id: 'jeonnam-yeonggwang',
+    name: '영광군',
+    icon: '🌅',
+    subtitle: '백수해안·불갑사·법성포·노을 탐험',
+    points: '5,120 15,75 65,55 85,90 78,150 30,165',
+    labelX: 45,
+    labelY: 112,
+  },
+  {
+    id: 'jeonnam-hampyeong',
+    name: '함평군',
+    icon: '🦋',
+    subtitle: '나비·생태공원·국화·농촌문화 탐험',
+    points: '85,90 145,100 150,160 110,190 78,150',
+    labelX: 113,
+    labelY: 137,
+  },
+  {
+    id: 'jeonnam-naju',
+    name: '나주시',
+    icon: '🏛️',
+    subtitle: '읍성·영산강·곰탕·혁신도시 탐험',
+    points: '145,100 200,110 215,170 180,215 150,160',
+    labelX: 179,
+    labelY: 151,
+  },
+  {
+    id: 'jeonnam-hwasun',
+    name: '화순군',
+    icon: '🪨',
+    subtitle: '고인돌·운주사·적벽·온천 탐험',
+    points: '200,110 270,125 285,185 240,220 215,170',
+    labelX: 244,
+    labelY: 164,
+  },
+  {
+    id: 'jeonnam-suncheon',
+    name: '순천시',
+    icon: '🌿',
+    subtitle: '순천만·국가정원·낙안읍성·생태 탐험',
+    points: '270,125 335,150 345,215 300,245 285,185',
+    labelX: 310,
+    labelY: 184,
+  },
+  {
+    id: 'jeonnam-gwangyang',
+    name: '광양시',
+    icon: '🌉',
+    subtitle: '매화·섬진강·구봉산·산업문화 탐험',
+    points: '335,150 365,105 368,195 345,245 345,215',
+    labelX: 354,
+    labelY: 183,
+  },
+  {
+    id: 'jeonnam-muan',
+    name: '무안군',
+    icon: '🌷',
+    subtitle: '황토갯벌·회산백련지·낙지·해안 탐험',
+    points: '30,165 78,150 110,190 100,245 45,250 15,215',
+    labelX: 65,
+    labelY: 203,
+  },
+  {
+    id: 'jeonnam-mokpo',
+    name: '목포시',
+    icon: '⚓',
+    subtitle: '유달산·근대역사·해상케이블카·항구 탐험',
+    points: '15,215 45,250 58,282 30,300 4,270',
+    labelX: 31,
+    labelY: 258,
+  },
+  {
+    id: 'jeonnam-yeongam',
+    name: '영암군',
+    icon: '🌕',
+    subtitle: '월출산·도갑사·왕인문화·평야 탐험',
+    points: '110,190 150,160 180,215 175,275 115,285 100,245',
+    labelX: 141,
+    labelY: 232,
+  },
+  {
+    id: 'jeonnam-jangheung',
+    name: '장흥군',
+    icon: '🌳',
+    subtitle: '편백숲·탐진강·정남진·문학 탐험',
+    points: '180,215 240,220 250,285 205,320 175,275',
+    labelX: 211,
+    labelY: 261,
+  },
+  {
+    id: 'jeonnam-boseong',
+    name: '보성군',
+    icon: '🍵',
+    subtitle: '녹차밭·벌교·득량만·태백산맥 탐험',
+    points: '240,220 300,245 305,305 250,330 250,285',
+    labelX: 274,
+    labelY: 271,
+  },
+  {
+    id: 'jeonnam-yeosu',
+    name: '여수시',
+    icon: '🌊',
+    subtitle: '밤바다·오동도·향일암·섬 여행 탐험',
+    points: '300,245 345,215 365,245 360,335 320,360 305,305',
+    labelX: 337,
+    labelY: 286,
+  },
+  {
+    id: 'jeonnam-haenam',
+    name: '해남군',
+    icon: '🌅',
+    subtitle: '땅끝·대흥사·달마고도·공룡 탐험',
+    points: '45,250 100,245 115,285 130,350 85,385 35,345 30,300 58,282',
+    labelX: 79,
+    labelY: 313,
+  },
+  {
+    id: 'jeonnam-gangjin',
+    name: '강진군',
+    icon: '🏺',
+    subtitle: '청자·다산초당·가우도·문화유산 탐험',
+    points: '115,285 175,275 205,320 185,370 130,350',
+    labelX: 158,
+    labelY: 325,
+  },
+  {
+    id: 'jeonnam-goheung',
+    name: '고흥군',
+    icon: '🚀',
+    subtitle: '나로우주센터·팔영산·섬·해안 탐험',
+    points: '250,330 305,305 320,360 300,430 255,405 230,360',
+    labelX: 278,
+    labelY: 365,
+  },
+  {
+    id: 'jeonnam-sinan',
+    name: '신안군',
+    icon: '🏝️',
+    subtitle: '천사대교·퍼플섬·염전·다도해 탐험',
+    points: '0,250 24,240 45,270 38,310 55,340 25,365 2,335 10,295',
+    labelX: 25,
+    labelY: 307,
+  },
+  {
+    id: 'jeonnam-jindo',
+    name: '진도군',
+    icon: '🎶',
+    subtitle: '진도대교·운림산방·국악·섬 탐험',
+    points: '30,300 35,345 85,385 70,430 20,420 0,365 25,365',
+    labelX: 47,
+    labelY: 382,
+  },
+  {
+    id: 'jeonnam-wando',
+    name: '완도군',
+    icon: '🌴',
+    subtitle: '청산도·보길도·해양치유·다도해 탐험',
+    points: '85,385 130,350 185,370 190,430 135,458 70,430',
+    labelX: 132,
+    labelY: 412,
+  },
+];
+
+
 type SejongDistrictShape = {
   id: 'sejong';
   name: string;
@@ -1860,6 +2078,12 @@ function getQuickMapTitle(
   }
 
   if (
+    mapLevel === 'jeonnam'
+  ) {
+    return '전라남도 탐험';
+  }
+
+  if (
     mapLevel === 'busan'
   ) {
     return '부산광역시 탐험';
@@ -1941,6 +2165,12 @@ function getQuickMapSubtitle(
     mapLevel === 'jeonbuk'
   ) {
     return '14개 시·군을 눌러 전북 탐험을 시작하세요.';
+  }
+
+  if (
+    mapLevel === 'jeonnam'
+  ) {
+    return '22개 시·군을 눌러 전남 탐험을 시작하세요.';
   }
 
   if (
@@ -2173,6 +2403,8 @@ export default function ExploreShellScreen() {
           regionId ===
             'jeonbuk' ||
           regionId ===
+            'jeonnam' ||
+          regionId ===
             'busan' ||
           regionId ===
             'incheon' ||
@@ -2211,7 +2443,10 @@ export default function ExploreShellScreen() {
                           'jeonbuk'
                         ? '전북 탐험 데이터를 준비하고 있어요.'
                         : regionId ===
-                            'busan'
+                            'jeonnam'
+                          ? '전남 탐험 데이터를 준비하고 있어요.'
+                          : regionId ===
+                              'busan'
                         ? '부산 탐험 데이터를 준비하고 있어요.'
                     : regionId ===
                         'incheon'
@@ -2902,6 +3137,65 @@ export default function ExploreShellScreen() {
               />
             ) :
             shellMapLevel ===
+            'jeonnam' ? (
+              <QuickShapeMap
+                shapes={
+                  JEONNAM_DISTRICT_SHAPES
+                }
+                viewWidth={
+                  370
+                }
+                viewHeight={
+                  470
+                }
+                displayHeight={
+                  430
+                }
+                getLabel={(
+                  shape
+                ) =>
+                  shape.name
+                }
+                getFill={() =>
+                  isCityBlack
+                    ? '#666666'
+                    : '#D8E8E1'
+                }
+                getLabelSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 6.2
+                    : 7.1
+                }
+                getTouchSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 38
+                    : 42
+                }
+                onPress={(
+                  shape
+                ) =>
+                  openDistrict(
+                    shape.id,
+                    shape.name
+                  )
+                }
+                backgroundColor={
+                  theme.background
+                }
+                textColor={
+                  isCityBlack
+                    ? '#FFFFFF'
+                    : '#365149'
+                }
+              />
+            ) :
+            shellMapLevel ===
             'busan' ? (
               <QuickShapeMap
                 shapes={
@@ -3370,7 +3664,10 @@ export default function ExploreShellScreen() {
                         'chungnam'
                       ? '충남 지도부터 먼저 표시했어요.'
                       : shellMapLevel ===
-                          'busan'
+                          'jeonnam'
+                        ? '전남 지도부터 먼저 표시했어요.'
+                        : shellMapLevel ===
+                            'busan'
                       ? '부산 지도부터 먼저 표시했어요.'
                       : shellMapLevel ===
                           'incheon'

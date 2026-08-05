@@ -56,7 +56,8 @@ type QuickMapLevel =
   | 'busan'
   | 'incheon'
   | 'daegu'
-  | 'daejeon';
+  | 'daejeon'
+  | 'gwangju';
 
 type ExploreContentMode =
   | 'places'
@@ -862,6 +863,70 @@ const DAEJEON_DISTRICT_SHAPES: DaejeonDistrictShape[] = [
 ];
 
 
+type GwangjuDistrictShape = {
+  id: string;
+  name: string;
+  icon: string;
+  subtitle: string;
+  points: string;
+  labelX: number;
+  labelY: number;
+};
+
+/*
+ * 광주광역시 5개 자치구의 단순화 지도입니다.
+ * 광산구·북구·서구·동구·남구의 기존 장소·GPS·테마 데이터를
+ * 기존 지역 상세 화면에 그대로 연결합니다.
+ */
+const GWANGJU_DISTRICT_SHAPES: GwangjuDistrictShape[] = [
+  {
+    id: 'gwangju-gwangsan',
+    name: '광산구',
+    icon: '🌾',
+    subtitle: '송정·황룡강·선비문학·공동체 탐험',
+    points: '10,78 92,38 150,72 150,135 132,212 72,260 18,224',
+    labelX: 79,
+    labelY: 143,
+  },
+  {
+    id: 'gwangju-buk',
+    name: '북구',
+    icon: '🌿',
+    subtitle: '비엔날레·박물관·5·18·호수생태 탐험',
+    points: '92,38 235,18 340,72 315,150 232,155 150,135 150,72',
+    labelX: 229,
+    labelY: 91,
+  },
+  {
+    id: 'gwangju-seo',
+    name: '서구',
+    icon: '🌳',
+    subtitle: '상무·5·18·호수공원·도심문화 탐험',
+    points: '132,135 232,155 220,225 132,212',
+    labelX: 181,
+    labelY: 183,
+  },
+  {
+    id: 'gwangju-dong',
+    name: '동구',
+    icon: '🎨',
+    subtitle: '민주·예술·무등산 문화생태 탐험',
+    points: '232,155 315,150 305,245 220,225',
+    labelX: 269,
+    labelY: 199,
+  },
+  {
+    id: 'gwangju-nam',
+    name: '남구',
+    icon: '🏺',
+    subtitle: '양림·사직·근대역사·전통민속 탐험',
+    points: '72,260 132,212 220,225 305,245 270,314 150,310',
+    labelX: 190,
+    labelY: 270,
+  },
+];
+
+
 function QuickShapeMap<
   T extends QuickShapeBase
 >({
@@ -1099,6 +1164,12 @@ function getQuickMapTitle(
     return '대전광역시 탐험';
   }
 
+  if (
+    mapLevel === 'gwangju'
+  ) {
+    return '광주광역시 탐험';
+  }
+
   return '대한민국 탐험';
 }
 
@@ -1139,6 +1210,12 @@ function getQuickMapSubtitle(
     mapLevel === 'daejeon'
   ) {
     return '5개 구를 눌러 대전 탐험을 시작하세요.';
+  }
+
+  if (
+    mapLevel === 'gwangju'
+  ) {
+    return '5개 구를 눌러 광주 탐험을 시작하세요.';
   }
 
   return '지역을 눌러 ROOT 탐험을 시작하세요.';
@@ -1327,7 +1404,9 @@ export default function ExploreShellScreen() {
           regionId ===
             'daegu' ||
           regionId ===
-            'daejeon'
+            'daejeon' ||
+          regionId ===
+            'gwangju'
         ) {
           setShellMapLevel(
             regionId
@@ -1349,7 +1428,10 @@ export default function ExploreShellScreen() {
                     : regionId ===
                         'daegu'
                       ? '대구 탐험 데이터를 준비하고 있어요.'
-                      : '대전 탐험 데이터를 준비하고 있어요.'
+                      : regionId ===
+                          'daejeon'
+                        ? '대전 탐험 데이터를 준비하고 있어요.'
+                        : '광주 탐험 데이터를 준비하고 있어요.'
           );
 
           return;
@@ -1962,7 +2044,9 @@ export default function ExploreShellScreen() {
                     : '#4B4031'
                 }
               />
-            ) : (
+            ) :
+            shellMapLevel ===
+            'daejeon' ? (
               <QuickShapeMap
                 shapes={
                   DAEJEON_DISTRICT_SHAPES
@@ -2017,6 +2101,63 @@ export default function ExploreShellScreen() {
                   isCityBlack
                     ? '#FFFFFF'
                     : '#3D4A36'
+                }
+              />
+            ) : (
+              <QuickShapeMap
+                shapes={
+                  GWANGJU_DISTRICT_SHAPES
+                }
+                viewWidth={
+                  360
+                }
+                viewHeight={
+                  330
+                }
+                displayHeight={
+                  330
+                }
+                getLabel={(
+                  shape
+                ) =>
+                  shape.name
+                }
+                getFill={() =>
+                  isCityBlack
+                    ? '#666666'
+                    : '#E3D6EA'
+                }
+                getLabelSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 7.2
+                    : 8.6
+                }
+                getTouchSize={(
+                  shape
+                ) =>
+                  shape.name.length >
+                  3
+                    ? 52
+                    : 56
+                }
+                onPress={(
+                  shape
+                ) =>
+                  openDistrict(
+                    shape.id,
+                    shape.name
+                  )
+                }
+                backgroundColor={
+                  theme.background
+                }
+                textColor={
+                  isCityBlack
+                    ? '#FFFFFF'
+                    : '#4A3F50'
                 }
               />
             )
@@ -2096,7 +2237,10 @@ export default function ExploreShellScreen() {
                           : shellMapLevel ===
                               'daejeon'
                             ? '대전 지도부터 먼저 표시했어요.'
-                            : '지도부터 먼저 표시했어요.'
+                            : shellMapLevel ===
+                                'gwangju'
+                              ? '광주 지도부터 먼저 표시했어요.'
+                              : '지도부터 먼저 표시했어요.'
               }
             </Text>
 

@@ -1,4 +1,4 @@
-import {
+﻿import {
   getApp,
 } from '@react-native-firebase/app';
 
@@ -18,6 +18,10 @@ import {
 import {
   loadRootOnboardingData,
 } from '../store/rootMemory';
+
+import {
+  syncSavedCafeEntries,
+} from '../store/savedCafeLocal';
 
 import {
   useRootTheme,
@@ -121,6 +125,31 @@ const unsubscribe =
                 ?.forceLogout !==
               true
             ) {
+              if (currentAuthUid) {
+                void syncSavedCafeEntries({
+                  reason:
+                    'root-auth-state',
+                }).catch(
+                  (
+                    error: any,
+                  ) => {
+                    console.log(
+                      'ROOT SAVED CAFE SYNC ERROR',
+                      {
+                        uid:
+                          currentAuthUid,
+                        code:
+                          error?.code ??
+                          null,
+                        message:
+                          error?.message ??
+                          String(error),
+                      },
+                    );
+                  },
+                );
+              }
+
               return;
             }
 

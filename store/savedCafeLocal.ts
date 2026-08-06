@@ -1,4 +1,4 @@
-﻿import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   getApp,
@@ -70,6 +70,28 @@ export type SavedCafeSyncOptions = {
   reason?: string;
 };
 
+export type SavedCafeSyncPhase =
+  | 'idle'
+  | 'syncing'
+  | 'synced'
+  | 'offline'
+  | 'error'
+  | 'guest';
+
+export type SavedCafeSyncStatus = {
+  phase: SavedCafeSyncPhase;
+  uid: string | null;
+  isGuest: boolean;
+  lastAttemptAt: string | null;
+  lastSyncedAt: string | null;
+  errorMessage: string | null;
+};
+
+type SavedCafeSyncStatusListener =
+  (
+    status: SavedCafeSyncStatus,
+  ) => void;
+
 type SavedCafeScope = {
   uid: string | null;
   storageKey: string;
@@ -88,6 +110,203 @@ let runningSync:
 let syncRequested = false;
 let syncRequestVersion = 0;
 let latestSyncReason = 'unspecified';
+
+let savedCafeSyncStatus:
+  SavedCafeSyncStatus = {
+  phase: 'idle',
+  uid: null,
+  isGuest: true,
+  lastAttemptAt: null,
+  lastSyncedAt: null,
+  errorMessage: null,
+};
+
+const savedCafeSyncStatusListeners =
+  new Set<
+    SavedCafeSyncStatusListener
+  >();
+
+function copySavedCafeSyncStatus(): SavedCafeSyncStatus {
+  return {
+    ...savedCafeSyncStatus,
+  };
+}
+
+function publishSavedCafeSyncStatus() {
+  const snapshot =
+    copySavedCafeSyncStatus();
+
+  savedCafeSyncStatusListeners.forEach(
+    (listener) => {
+      try {
+        listener(snapshot);
+      } catch (error) {
+        console.log(
+          'SAVED CAFE SYNC STATUS LISTENER ERROR',
+          error,
+        );
+      }
+    },
+  );
+}
+
+function updateSavedCafeSyncStatus(
+  patch:
+    Partial<SavedCafeSyncStatus>,
+) {
+  const uidChanged =
+    patch.uid !== undefined &&
+    patch.uid !==
+      savedCafeSyncStatus.uid;
+
+  savedCafeSyncStatus = {
+    ...savedCafeSyncStatus,
+    ...(uidChanged
+      ? {
+          lastSyncedAt: null,
+        }
+      : {}),
+    ...patch,
+  };
+
+  publishSavedCafeSyncStatus();
+}
+
+function getSavedCafeSyncErrorMessage(
+  error: unknown,
+) {
+  if (
+    error &&
+    typeof error === 'object'
+  ) {
+    const source =
+      error as {
+        code?: unknown;
+        message?: unknown;
+      };
+
+    if (
+      typeof source.message ===
+        'string' &&
+      source.message.trim()
+    ) {
+      return source.message.trim();
+    }
+
+    if (
+      typeof source.code ===
+        'string' &&
+      source.code.trim()
+    ) {
+      return source.code.trim();
+    }
+  }
+
+  return String(
+    error || 'UNKNOWN_SYNC_ERROR',
+  );
+}
+
+function isLikelyOfflineSyncError(
+  error: unknown,
+) {
+  const text =
+    getSavedCafeSyncErrorMessage(
+      error,
+    ).toLowerCase();
+
+  return [
+    'network',
+    'offline',
+    'unavailable',
+    'timeout',
+    'deadline-exceeded',
+    'network-request-failed',
+    'internet',
+  ].some(
+    (keyword) =>
+      text.includes(keyword),
+  );
+}
+
+function markSavedCafeSyncFailure(
+  error: unknown,
+) {
+  const scope =
+    getCurrentScope();
+
+  updateSavedCafeSyncStatus({
+    phase:
+      isLikelyOfflineSyncError(
+        error,
+      )
+        ? 'offline'
+        : 'error',
+    uid: scope.uid,
+    isGuest: scope.isGuest,
+    errorMessage:
+      getSavedCafeSyncErrorMessage(
+        error,
+      ),
+  });
+}
+
+export function getSavedCafeSyncStatus(): SavedCafeSyncStatus {
+  const scope =
+    getCurrentScope();
+
+  const scopeChanged =
+    scope.uid !==
+      savedCafeSyncStatus.uid ||
+    scope.isGuest !==
+      savedCafeSyncStatus.isGuest;
+
+  if (scopeChanged) {
+    savedCafeSyncStatus = {
+      ...savedCafeSyncStatus,
+      phase: scope.uid
+        ? 'idle'
+        : 'guest',
+      uid: scope.uid,
+      isGuest:
+        scope.isGuest,
+      lastAttemptAt: null,
+      lastSyncedAt: null,
+      errorMessage: null,
+    };
+  } else if (
+    !scope.uid &&
+    savedCafeSyncStatus.phase !==
+      'guest'
+  ) {
+    savedCafeSyncStatus = {
+      ...savedCafeSyncStatus,
+      phase: 'guest',
+      errorMessage: null,
+    };
+  }
+
+  return copySavedCafeSyncStatus();
+}
+
+export function subscribeSavedCafeSyncStatus(
+  listener:
+    SavedCafeSyncStatusListener,
+) {
+  savedCafeSyncStatusListeners.add(
+    listener,
+  );
+
+  listener(
+    getSavedCafeSyncStatus(),
+  );
+
+  return () => {
+    savedCafeSyncStatusListeners.delete(
+      listener,
+    );
+  };
+}
 
 function createNowIso() {
   return new Date().toISOString();
@@ -939,9 +1158,55 @@ export async function syncSavedCafeEntries(
     options.reason ??
     'manual';
 
+  const requestScope =
+    getCurrentScope();
+
+  updateSavedCafeSyncStatus({
+    phase: requestScope.uid
+      ? 'syncing'
+      : 'guest',
+    uid: requestScope.uid,
+    isGuest:
+      requestScope.isGuest,
+    lastAttemptAt:
+      createNowIso(),
+    errorMessage: null,
+  });
+
   if (!runningSync) {
     runningSync =
       runSavedCafeSyncLoop()
+        .then((entries) => {
+          const activeScope =
+            getCurrentScope();
+
+          updateSavedCafeSyncStatus({
+            phase:
+              activeScope.uid
+                ? 'synced'
+                : 'guest',
+            uid:
+              activeScope.uid,
+            isGuest:
+              activeScope.isGuest,
+            lastSyncedAt:
+              activeScope.uid
+                ? createNowIso()
+                : null,
+            errorMessage: null,
+          });
+
+          return entries;
+        })
+        .catch(
+          (error: unknown) => {
+            markSavedCafeSyncFailure(
+              error,
+            );
+
+            throw error;
+          },
+        )
         .finally(() => {
           runningSync = null;
         });
@@ -949,7 +1214,6 @@ export async function syncSavedCafeEntries(
 
   return runningSync;
 }
-
 function startBackgroundSync(
   reason: string,
 ) {

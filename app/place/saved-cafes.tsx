@@ -5,6 +5,7 @@ import {
 } from 'expo-router';
 import {
   useCallback,
+  useEffect,
   useState,
 } from 'react';
 import {
@@ -29,9 +30,14 @@ import {
   PLACE_SEASON_MAP,
 } from '../../store/placeThemeCatalog';
 import {
+  getSavedCafeSyncStatus,
   loadSavedCafeEntries,
+  loadSavedCafeEntriesLocalOnly,
   removeSavedCafeEntry,
+  subscribeSavedCafeSyncStatus,
+  syncSavedCafeEntries,
   type SavedCafeLocalEntry,
+  type SavedCafeSyncStatus,
 } from '../../store/savedCafeLocal';
 import {
   useRootTheme,
@@ -42,6 +48,116 @@ const STATUS_LABELS = {
   favorite: '좋아하는 장소',
   visited: '방문했어요',
 } as const;
+
+type SyncIconName =
+  | 'phone-portrait-outline'
+  | 'cloud-outline'
+  | 'cloud-done-outline'
+  | 'cloud-offline-outline'
+  | 'alert-circle-outline';
+
+type SyncPresentation = {
+  icon: SyncIconName;
+  title: string;
+  description: string;
+  canRetry: boolean;
+};
+
+function getSyncPresentation(
+  status: SavedCafeSyncStatus,
+): SyncPresentation {
+  switch (status.phase) {
+    case 'guest':
+      return {
+        icon:
+          'phone-portrait-outline',
+        title:
+          '이 기기에 저장됨',
+        description:
+          '로그인하면 저장한 카페를 클라우드에 보관할 수 있어요.',
+        canRetry: false,
+      };
+
+    case 'syncing':
+      return {
+        icon: 'cloud-outline',
+        title:
+          '카페 동기화 중',
+        description:
+          '다른 기기의 저장 내역을 확인하고 있어요.',
+        canRetry: false,
+      };
+
+    case 'synced':
+      return {
+        icon:
+          'cloud-done-outline',
+        title: '동기화 완료',
+        description:
+          '저장한 카페가 클라우드에 안전하게 반영됐어요.',
+        canRetry: false,
+      };
+
+    case 'offline':
+      return {
+        icon:
+          'cloud-offline-outline',
+        title:
+          '오프라인 저장됨',
+        description:
+          '이 기기에는 저장됐어요. 인터넷 연결 후 다시 시도해 주세요.',
+        canRetry: true,
+      };
+
+    case 'error':
+      return {
+        icon:
+          'alert-circle-outline',
+        title:
+          '동기화 확인 필요',
+        description:
+          '카페는 이 기기에 남아 있어요. 다시 시도해 주세요.',
+        canRetry: true,
+      };
+
+    default:
+      return {
+        icon: 'cloud-outline',
+        title:
+          '동기화 준비 중',
+        description:
+          '저장 목록의 클라우드 상태를 확인하고 있어요.',
+        canRetry: false,
+      };
+  }
+}
+
+function formatSyncTime(
+  value: string | null,
+) {
+  if (!value) {
+    return null;
+  }
+
+  const date =
+    new Date(value);
+
+  if (
+    Number.isNaN(
+      date.getTime(),
+    )
+  ) {
+    return null;
+  }
+
+  return date.toLocaleTimeString(
+    'ko-KR',
+    {
+      hour: '2-digit',
+      minute: '2-digit',
+    },
+  );
+}
 
 export default function SavedCafesScreen() {
   const {
@@ -64,6 +180,67 @@ export default function SavedCafesScreen() {
     loading,
     setLoading,
   ] = useState(true);
+
+  const [
+    syncStatus,
+    setSyncStatus,
+  ] =
+    useState<
+      SavedCafeSyncStatus
+    >(
+      getSavedCafeSyncStatus,
+    );
+
+  const [
+    manualSyncing,
+    setManualSyncing,
+  ] = useState(false);
+
+  useEffect(() => {
+    return subscribeSavedCafeSyncStatus(
+      setSyncStatus,
+    );
+  }, []);
+
+  const syncPresentation =
+    getSyncPresentation(
+      syncStatus,
+    );
+
+  const lastSyncTime =
+    formatSyncTime(
+      syncStatus.lastSyncedAt,
+    );
+
+  const retrySync =
+    async () => {
+      if (
+        manualSyncing ||
+        syncStatus.phase ===
+          'syncing'
+      ) {
+        return;
+      }
+
+      setManualSyncing(true);
+
+      try {
+        const next =
+          await syncSavedCafeEntries({
+            reason:
+              'saved-cafe-manual-retry',
+          });
+
+        setEntries(next);
+      } catch {
+        const localEntries =
+          await loadSavedCafeEntriesLocalOnly();
+
+        setEntries(localEntries);
+      } finally {
+        setManualSyncing(false);
+      }
+    };
 
   const [
     pendingRemoveEntry,
@@ -299,6 +476,171 @@ export default function SavedCafesScreen() {
           },
         ]}
       >
+        <View
+          style={[
+            styles.syncCard,
+            {
+              backgroundColor:
+                theme.card,
+              borderColor:
+                theme.line,
+              borderRadius:
+                isCityBlack
+                  ? 3
+                  : 14,
+            },
+          ]}
+        >
+          <View
+            style={[
+              styles.syncIconBox,
+              {
+                backgroundColor:
+                  theme.background,
+                borderColor:
+                  theme.line,
+                borderRadius:
+                  isCityBlack
+                    ? 2
+                    : 11,
+              },
+            ]}
+          >
+            {syncStatus.phase ===
+            'syncing' ? (
+              <ActivityIndicator
+                size="small"
+                color={
+                  theme.text
+                }
+              />
+            ) : (
+              <Ionicons
+                name={
+                  syncPresentation.icon
+                }
+                size={19}
+                color={
+                  theme.text
+                }
+              />
+            )}
+          </View>
+
+          <View
+            style={
+              styles.syncTextArea
+            }
+          >
+            <Text
+              style={[
+                styles.syncTitle,
+                {
+                  color:
+                    theme.text,
+                },
+              ]}
+            >
+              {
+                syncPresentation.title
+              }
+            </Text>
+
+            <Text
+              style={[
+                styles.syncDescription,
+                {
+                  color:
+                    theme.subText,
+                },
+              ]}
+            >
+              {
+                syncPresentation.description
+              }
+            </Text>
+
+            {syncStatus.phase ===
+              'synced' &&
+            lastSyncTime ? (
+              <Text
+                style={[
+                  styles.syncTime,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                마지막 동기화 {lastSyncTime}
+              </Text>
+            ) : null}
+          </View>
+
+          {syncPresentation.canRetry ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="카페 클라우드 동기화 다시 시도"
+              disabled={
+                manualSyncing
+              }
+              onPress={() => {
+                void retrySync();
+              }}
+              style={({
+                pressed,
+              }) => [
+                styles.syncRetryButton,
+                {
+                  backgroundColor:
+                    theme.background,
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 8,
+                  opacity:
+                    manualSyncing
+                      ? 0.45
+                      : pressed
+                        ? 0.58
+                        : 1,
+                },
+              ]}
+            >
+              {manualSyncing ? (
+                <ActivityIndicator
+                  size="small"
+                  color={
+                    theme.text
+                  }
+                />
+              ) : (
+                <Ionicons
+                  name="refresh"
+                  size={14}
+                  color={
+                    theme.text
+                  }
+                />
+              )}
+
+              <Text
+                style={[
+                  styles.syncRetryText,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              >
+                다시 시도
+              </Text>
+            </Pressable>
+          ) : null}
+        </View>
+
         {!loading &&
         entries.length === 0 ? (
           <View
@@ -958,6 +1300,64 @@ const styles =
       paddingHorizontal: 14,
       paddingTop: 12,
       gap: 10,
+    },
+
+    syncCard: {
+      minHeight: 76,
+      padding: 11,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+    },
+
+    syncIconBox: {
+      width: 42,
+      height: 42,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    syncTextArea: {
+      flex: 1,
+      minWidth: 0,
+    },
+
+    syncTitle: {
+      fontSize: 11.5,
+      fontWeight: '900',
+    },
+
+    syncDescription: {
+      marginTop: 3,
+      fontSize: 9.5,
+      fontWeight: '700',
+      lineHeight: 14,
+    },
+
+    syncTime: {
+      marginTop: 3,
+      fontSize: 8.5,
+      fontWeight: '700',
+    },
+
+    syncRetryButton: {
+      minHeight: 32,
+      paddingHorizontal: 8,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 4,
+    },
+
+    syncRetryText: {
+      fontSize: 9,
+      fontWeight: '900',
     },
 
     emptyCard: {

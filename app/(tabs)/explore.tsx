@@ -829,6 +829,21 @@ export default function ExploreShellScreen() {
       []
     );
 
+  // CAFE SAVE ENTRY V28
+  const openCafeSave =
+    useCallback(() => {
+      router.push(
+        '/place/cafe-save' as any,
+      );
+    }, []);
+
+  const openSavedCafes =
+    useCallback(() => {
+      router.push(
+        '/place/saved-cafes' as any,
+      );
+    }, []);
+
   const goBackToKorea =
     useCallback(() => {
       requestedRegionRef.current =
@@ -2086,6 +2101,137 @@ export default function ExploreShellScreen() {
           }
         </View>
 
+        {/* CAFE SAVE ENTRY V28 */}
+        <View
+          style={[
+            styles.cafeSaveCard,
+            {
+              backgroundColor:
+                theme.card,
+              borderColor:
+                theme.line,
+              borderRadius:
+                isCityBlack
+                  ? 3
+                  : 13,
+            },
+          ]}
+        >
+          <View
+            style={[
+              styles.cafeSaveIcon,
+              {
+                backgroundColor:
+                  theme.background,
+                borderRadius:
+                  isCityBlack
+                    ? 2
+                    : 10,
+              },
+            ]}
+          >
+            <Ionicons
+              name="cafe-outline"
+              size={18}
+              color={theme.text}
+            />
+          </View>
+
+          <View
+            style={styles.cafeSaveText}
+          >
+            <Text
+              style={[
+                styles.cafeSaveTitle,
+                {
+                  color:
+                    theme.text,
+                },
+              ]}
+            >
+              나만의 카페 저장
+            </Text>
+            <Text
+              style={[
+                styles.cafeSaveDescription,
+                {
+                  color:
+                    theme.subText,
+                },
+              ]}
+            >
+              공부·심야·베이커리 같은 특징을 골라 저장해요.
+            </Text>
+          </View>
+
+          <View
+            style={styles.cafeSaveActions}
+          >
+            <Pressable
+              onPress={openSavedCafes}
+              style={({ pressed }) => [
+                styles.cafeSaveActionButton,
+                {
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 8,
+                  opacity:
+                    pressed
+                      ? 0.55
+                      : 1,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.cafeSaveActionText,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              >
+                저장 목록
+              </Text>
+            </Pressable>
+
+            <Pressable
+              onPress={openCafeSave}
+              style={({ pressed }) => [
+                styles.cafeSaveActionButton,
+                {
+                  borderColor:
+                    theme.strongLine,
+                  backgroundColor:
+                    theme.button,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 8,
+                  opacity:
+                    pressed
+                      ? 0.72
+                      : 1,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.cafeSaveActionText,
+                  {
+                    color:
+                      theme.buttonText,
+                  },
+                ]}
+              >
+                카페 저장
+              </Text>
+            </Pressable>
+          </View>
+        </View>
         <View
           style={[
             styles.noticeCard,
@@ -2334,6 +2480,60 @@ const styles =
         StyleSheet.hairlineWidth,
       paddingHorizontal: 4,
       paddingVertical: 6,
+    },
+
+    // CAFE SAVE ENTRY V28
+    cafeSaveCard: {
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      paddingHorizontal: 11,
+      paddingVertical: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 9,
+    },
+
+    cafeSaveIcon: {
+      width: 36,
+      height: 36,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    cafeSaveText: {
+      flex: 1,
+      minWidth: 0,
+    },
+
+    cafeSaveTitle: {
+      fontSize: 11.5,
+      fontWeight: '900',
+    },
+
+    cafeSaveDescription: {
+      marginTop: 3,
+      fontSize: 9.2,
+      fontWeight: '700',
+      lineHeight: 13,
+    },
+
+    cafeSaveActions: {
+      gap: 5,
+    },
+
+    cafeSaveActionButton: {
+      minWidth: 64,
+      height: 29,
+      paddingHorizontal: 8,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    cafeSaveActionText: {
+      fontSize: 9,
+      fontWeight: '900',
     },
 
     noticeCard: {

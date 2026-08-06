@@ -605,6 +605,49 @@ export default function SavedCafesScreen() {
           </Text>
         </View>
 
+        {/* SAVED_CAFE_V40_FOLDER_BUTTON */}
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="나만의 카페 폴더 보기"
+          onPress={() =>
+            router.push(
+              '/place/saved-cafe-folders' as never,
+            )
+          }
+          style={({ pressed }) => [
+            styles.addButton,
+            {
+              borderColor:
+                theme.line,
+              borderRadius:
+                isCityBlack
+                  ? 2
+                  : 9,
+              opacity:
+                pressed
+                  ? 0.55
+                  : 1,
+            },
+          ]}
+        >
+          <Ionicons
+            name="folder-outline"
+            size={16}
+            color={theme.text}
+          />
+          <Text
+            style={[
+              styles.addButtonText,
+              {
+                color:
+                  theme.text,
+              },
+            ]}
+          >
+            폴더
+          </Text>
+        </Pressable>
+
         {/* SAVED_CAFE_V37_MAP_BUTTON */}
         <Pressable
           accessibilityRole="button"

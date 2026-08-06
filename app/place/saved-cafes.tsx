@@ -569,6 +569,70 @@ export default function SavedCafesScreen() {
                     {cafe.memo}
                   </Text>
                 ) : null}
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={`${cafe.name} 상세 보기 및 수정`}
+                  onPress={() =>
+                    router.push({
+                      pathname: '/place/cafe-detail',
+                      params: {
+                        placeId:
+                          cafe.placeId,
+                      },
+                    } as never)
+                  }
+                  style={({
+                    pressed,
+                  }) => [
+                    styles.detailButton,
+                    {
+                      backgroundColor:
+                        theme.background,
+                      borderColor:
+                        theme.line,
+                      borderRadius:
+                        isCityBlack
+                          ? 2
+                          : 9,
+                      opacity:
+                        pressed
+                          ? 0.58
+                          : 1,
+                    },
+                  ]}
+                >
+                  <View
+                    style={
+                      styles.detailButtonTextArea
+                    }
+                  >
+                    <Ionicons
+                      name="document-text-outline"
+                      size={15}
+                      color={
+                        theme.text
+                      }
+                    />
+                    <Text
+                      style={[
+                        styles.detailButtonText,
+                        {
+                          color:
+                            theme.text,
+                        },
+                      ]}
+                    >
+                      상세 보기·수정
+                    </Text>
+                  </View>
+                  <Ionicons
+                    name="chevron-forward"
+                    size={15}
+                    color={
+                      theme.subText
+                    }
+                  />
+                </Pressable>
               </View>
             );
           },
@@ -1006,6 +1070,30 @@ const styles =
       fontSize: 10.5,
       fontWeight: '700',
       lineHeight: 16,
+    },
+
+    detailButton: {
+      minHeight: 36,
+      marginTop: 11,
+      paddingHorizontal: 10,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent:
+        'space-between',
+      gap: 8,
+    },
+
+    detailButtonTextArea: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 5,
+    },
+
+    detailButtonText: {
+      fontSize: 10,
+      fontWeight: '900',
     },
 
     removeOverlay: {

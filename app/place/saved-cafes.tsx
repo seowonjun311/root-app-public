@@ -4,8 +4,10 @@ import {
   useFocusEffect,
 } from 'expo-router';
 import {
+  type ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import {
@@ -15,6 +17,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 import {
@@ -22,11 +25,14 @@ import {
 } from 'react-native-safe-area-context';
 
 import {
+  CAFE_CORE_THEMES,
   CAFE_KEYWORD_MAP,
   CAFE_THEME_MAP,
 } from '../../store/cafeKeywordCatalog';
 import {
+  PLACE_PRIMARY_THEMES,
   PLACE_PRIMARY_THEME_MAP,
+  PLACE_SEASONS,
   PLACE_SEASON_MAP,
 } from '../../store/placeThemeCatalog';
 import {
@@ -48,6 +54,57 @@ const STATUS_LABELS = {
   favorite: '좋아하는 장소',
   visited: '방문했어요',
 } as const;
+
+// SAVED_CAFE_V36_SEARCH_FILTER_SORT
+
+const FILTER_ALL = '__all__' as const;
+
+type SavedCafeStatusFilter =
+  | typeof FILTER_ALL
+  | keyof typeof STATUS_LABELS;
+
+type SavedCafeSortOption =
+  | 'updatedDesc'
+  | 'updatedAsc'
+  | 'nameAsc';
+
+const STATUS_FILTER_OPTIONS: {
+  id: SavedCafeStatusFilter;
+  label: string;
+}[] = [
+  { id: FILTER_ALL, label: '전체' },
+  { id: 'wantToGo', label: '가보고 싶어요' },
+  { id: 'favorite', label: '좋아하는 장소' },
+  { id: 'visited', label: '방문했어요' },
+];
+
+const SORT_OPTIONS: {
+  id: SavedCafeSortOption;
+  label: string;
+}[] = [
+  { id: 'updatedDesc', label: '최근 수정' },
+  { id: 'updatedAsc', label: '오래된 순' },
+  { id: 'nameAsc', label: '이름순' },
+];
+
+function normalizeCafeSearchText(value: string) {
+  return value.trim().toLocaleLowerCase('ko-KR');
+}
+
+function getSavedCafeSortTime(entry: SavedCafeLocalEntry) {
+  const values = [
+    entry.cafe.updatedAt,
+    entry.savedAt,
+    entry.cafe.createdAt,
+  ];
+
+  return Math.max(
+    ...values.map((value) => {
+      const parsed = new Date(value).getTime();
+      return Number.isFinite(parsed) ? parsed : 0;
+    }),
+  );
+}
 
 type SyncIconName =
   | 'phone-portrait-outline'
@@ -196,6 +253,20 @@ export default function SavedCafesScreen() {
     setManualSyncing,
   ] = useState(false);
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] =
+    useState<SavedCafeStatusFilter>(FILTER_ALL);
+  const [primaryThemeFilter, setPrimaryThemeFilter] =
+    useState<string>(FILTER_ALL);
+  const [cafeThemeFilter, setCafeThemeFilter] =
+    useState<string>(FILTER_ALL);
+  const [seasonFilter, setSeasonFilter] =
+    useState<string>(FILTER_ALL);
+  const [sortOption, setSortOption] =
+    useState<SavedCafeSortOption>('updatedDesc');
+  const [filtersExpanded, setFiltersExpanded] =
+    useState(false);
+
   useEffect(() => {
     return subscribeSavedCafeSyncStatus(
       setSyncStatus,
@@ -211,6 +282,119 @@ export default function SavedCafesScreen() {
     formatSyncTime(
       syncStatus.lastSyncedAt,
     );
+
+  const normalizedSearchQuery =
+    normalizeCafeSearchText(searchQuery);
+
+  const activeFilterCount = [
+    statusFilter !== FILTER_ALL,
+    primaryThemeFilter !== FILTER_ALL,
+    cafeThemeFilter !== FILTER_ALL,
+    seasonFilter !== FILTER_ALL,
+  ].filter(Boolean).length;
+
+  const hasActiveSearchOrFilter =
+    normalizedSearchQuery.length > 0 ||
+    activeFilterCount > 0;
+
+  const filteredEntries = useMemo(() => {
+    const next = entries.filter((entry) => {
+      const cafe = entry.cafe;
+
+      if (
+        statusFilter !== FILTER_ALL &&
+        cafe.status !== statusFilter
+      ) {
+        return false;
+      }
+
+      if (
+        primaryThemeFilter !== FILTER_ALL &&
+        cafe.primaryTheme !== primaryThemeFilter
+      ) {
+        return false;
+      }
+
+      if (
+        cafeThemeFilter !== FILTER_ALL &&
+        !cafe.themes.some(
+          (themeId) => themeId === cafeThemeFilter,
+        )
+      ) {
+        return false;
+      }
+
+      if (
+        seasonFilter !== FILTER_ALL &&
+        !cafe.seasons.some(
+          (seasonId) => seasonId === seasonFilter,
+        )
+      ) {
+        return false;
+      }
+
+      if (!normalizedSearchQuery) {
+        return true;
+      }
+
+      const searchValues = [
+        cafe.name,
+        entry.address ?? '',
+        entry.roadAddress ?? '',
+        cafe.memo,
+        STATUS_LABELS[cafe.status],
+        PLACE_PRIMARY_THEME_MAP[cafe.primaryTheme]?.label ?? '',
+        ...cafe.themes.map(
+          (themeId) => CAFE_THEME_MAP[themeId]?.label ?? '',
+        ),
+        ...cafe.seasons.map(
+          (seasonId) => PLACE_SEASON_MAP[seasonId]?.label ?? '',
+        ),
+        ...cafe.tags.map(
+          (keywordId) => CAFE_KEYWORD_MAP[keywordId]?.label ?? '',
+        ),
+      ];
+
+      return searchValues.some((value) =>
+        normalizeCafeSearchText(value).includes(
+          normalizedSearchQuery,
+        ),
+      );
+    });
+
+    return [...next].sort((first, second) => {
+      if (sortOption === 'nameAsc') {
+        return first.cafe.name.localeCompare(
+          second.cafe.name,
+          'ko-KR',
+        );
+      }
+
+      const firstTime = getSavedCafeSortTime(first);
+      const secondTime = getSavedCafeSortTime(second);
+
+      return sortOption === 'updatedAsc'
+        ? firstTime - secondTime
+        : secondTime - firstTime;
+    });
+  }, [
+    cafeThemeFilter,
+    entries,
+    normalizedSearchQuery,
+    primaryThemeFilter,
+    seasonFilter,
+    sortOption,
+    statusFilter,
+  ]);
+
+  const clearSearchAndFilters = () => {
+    setSearchQuery('');
+    setStatusFilter(FILTER_ALL);
+    setPrimaryThemeFilter(FILTER_ALL);
+    setCafeThemeFilter(FILTER_ALL);
+    setSeasonFilter(FILTER_ALL);
+    setSortOption('updatedDesc');
+  };
 
   const retrySync =
     async () => {
@@ -415,7 +599,9 @@ export default function SavedCafesScreen() {
           >
             {loading
               ? '불러오는 중...'
-              : `${entries.length}곳을 저장했어요.`}
+              : hasActiveSearchOrFilter
+                ? `${filteredEntries.length}곳 / 전체 ${entries.length}곳`
+                : `${entries.length}곳을 저장했어요.`}
           </Text>
         </View>
 
@@ -641,6 +827,273 @@ export default function SavedCafesScreen() {
           ) : null}
         </View>
 
+        <View
+          style={[
+            styles.searchFilterCard,
+            {
+              backgroundColor: theme.card,
+              borderColor: theme.line,
+              borderRadius: isCityBlack ? 3 : 14,
+            },
+          ]}
+        >
+          <View
+            style={[
+              styles.searchBox,
+              {
+                backgroundColor: theme.background,
+                borderColor: theme.line,
+                borderRadius: isCityBlack ? 2 : 10,
+              },
+            ]}
+          >
+            <Ionicons
+              name="search-outline"
+              size={17}
+              color={theme.subText}
+            />
+            <TextInput
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              placeholder="카페명·주소·테마·태그 검색"
+              placeholderTextColor={theme.subText}
+              style={[styles.searchInput, { color: theme.text }]}
+              autoCorrect={false}
+              autoCapitalize="none"
+              returnKeyType="search"
+              selectionColor={theme.text}
+            />
+            {searchQuery ? (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="카페 검색어 지우기"
+                onPress={() => setSearchQuery('')}
+                hitSlop={8}
+              >
+                <Ionicons
+                  name="close-circle"
+                  size={17}
+                  color={theme.subText}
+                />
+              </Pressable>
+            ) : null}
+          </View>
+
+          <View style={styles.filterToolbar}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="카페 필터 열기"
+              accessibilityState={{ expanded: filtersExpanded }}
+              onPress={() =>
+                setFiltersExpanded((value) => !value)
+              }
+              style={({ pressed }) => [
+                styles.filterToggleButton,
+                {
+                  backgroundColor:
+                    activeFilterCount > 0
+                      ? theme.button
+                      : theme.background,
+                  borderColor:
+                    activeFilterCount > 0
+                      ? theme.strongLine
+                      : theme.line,
+                  borderRadius: isCityBlack ? 2 : 9,
+                  opacity: pressed ? 0.58 : 1,
+                },
+              ]}
+            >
+              <Ionicons
+                name="options-outline"
+                size={15}
+                color={
+                  activeFilterCount > 0
+                    ? theme.buttonText
+                    : theme.text
+                }
+              />
+              <Text
+                style={[
+                  styles.filterToggleText,
+                  {
+                    color:
+                      activeFilterCount > 0
+                        ? theme.buttonText
+                        : theme.text,
+                  },
+                ]}
+              >
+                필터
+                {activeFilterCount > 0
+                  ? ` ${activeFilterCount}`
+                  : ''}
+              </Text>
+              <Ionicons
+                name={
+                  filtersExpanded
+                    ? 'chevron-up'
+                    : 'chevron-down'
+                }
+                size={13}
+                color={
+                  activeFilterCount > 0
+                    ? theme.buttonText
+                    : theme.subText
+                }
+              />
+            </Pressable>
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={styles.sortScroll}
+              contentContainerStyle={styles.sortRow}
+            >
+              {SORT_OPTIONS.map((option) => (
+                <FilterChip
+                  key={option.id}
+                  label={option.label}
+                  selected={sortOption === option.id}
+                  onPress={() => setSortOption(option.id)}
+                  theme={theme}
+                  isCityBlack={isCityBlack}
+                />
+              ))}
+            </ScrollView>
+          </View>
+
+          {filtersExpanded ? (
+            <View style={styles.expandedFilters}>
+              <FilterSection title="관계" theme={theme}>
+                {STATUS_FILTER_OPTIONS.map((option) => (
+                  <FilterChip
+                    key={option.id}
+                    label={option.label}
+                    selected={statusFilter === option.id}
+                    onPress={() => setStatusFilter(option.id)}
+                    theme={theme}
+                    isCityBlack={isCityBlack}
+                  />
+                ))}
+              </FilterSection>
+
+              <HorizontalFilterSection
+                title="대표 테마"
+                theme={theme}
+              >
+                <FilterChip
+                  label="전체"
+                  selected={primaryThemeFilter === FILTER_ALL}
+                  onPress={() =>
+                    setPrimaryThemeFilter(FILTER_ALL)
+                  }
+                  theme={theme}
+                  isCityBlack={isCityBlack}
+                />
+                {PLACE_PRIMARY_THEMES.map((item) => (
+                  <FilterChip
+                    key={item.id}
+                    label={item.label}
+                    selected={primaryThemeFilter === item.id}
+                    onPress={() =>
+                      setPrimaryThemeFilter(item.id)
+                    }
+                    theme={theme}
+                    isCityBlack={isCityBlack}
+                  />
+                ))}
+              </HorizontalFilterSection>
+
+              <HorizontalFilterSection
+                title="카페 테마"
+                theme={theme}
+              >
+                <FilterChip
+                  label="전체"
+                  selected={cafeThemeFilter === FILTER_ALL}
+                  onPress={() =>
+                    setCafeThemeFilter(FILTER_ALL)
+                  }
+                  theme={theme}
+                  isCityBlack={isCityBlack}
+                />
+                {CAFE_CORE_THEMES.map((item) => (
+                  <FilterChip
+                    key={item.id}
+                    label={item.label}
+                    selected={cafeThemeFilter === item.id}
+                    onPress={() => setCafeThemeFilter(item.id)}
+                    theme={theme}
+                    isCityBlack={isCityBlack}
+                  />
+                ))}
+              </HorizontalFilterSection>
+
+              <FilterSection title="계절" theme={theme}>
+                <FilterChip
+                  label="전체"
+                  selected={seasonFilter === FILTER_ALL}
+                  onPress={() => setSeasonFilter(FILTER_ALL)}
+                  theme={theme}
+                  isCityBlack={isCityBlack}
+                />
+                {PLACE_SEASONS.map((item) => (
+                  <FilterChip
+                    key={item.id}
+                    label={item.label}
+                    selected={seasonFilter === item.id}
+                    onPress={() => setSeasonFilter(item.id)}
+                    theme={theme}
+                    isCityBlack={isCityBlack}
+                  />
+                ))}
+              </FilterSection>
+            </View>
+          ) : null}
+
+          <View style={styles.resultSummaryRow}>
+            <Text
+              style={[
+                styles.resultSummaryText,
+                { color: theme.subText },
+              ]}
+            >
+              {hasActiveSearchOrFilter
+                ? `조건에 맞는 카페 ${filteredEntries.length}곳`
+                : `전체 카페 ${entries.length}곳`}
+            </Text>
+
+            {hasActiveSearchOrFilter ? (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="카페 검색과 필터 초기화"
+                onPress={clearSearchAndFilters}
+                style={({ pressed }) => [
+                  styles.resetButton,
+                  {
+                    borderColor: theme.line,
+                    borderRadius: isCityBlack ? 2 : 8,
+                    opacity: pressed ? 0.55 : 1,
+                  },
+                ]}
+              >
+                <Ionicons
+                  name="refresh-outline"
+                  size={13}
+                  color={theme.text}
+                />
+                <Text
+                  style={[
+                    styles.resetButtonText,
+                    { color: theme.text },
+                  ]}
+                >
+                  초기화
+                </Text>
+              </Pressable>
+            ) : null}
+          </View>
+        </View>
         {!loading &&
         entries.length === 0 ? (
           <View
@@ -692,7 +1145,67 @@ export default function SavedCafesScreen() {
           </View>
         ) : null}
 
-        {entries.map(
+        {!loading &&
+        entries.length > 0 &&
+        filteredEntries.length === 0 ? (
+          <View
+            style={[
+              styles.noResultCard,
+              {
+                backgroundColor: theme.card,
+                borderColor: theme.line,
+                borderRadius: isCityBlack ? 3 : 15,
+              },
+            ]}
+          >
+            <Ionicons
+              name="search-outline"
+              size={25}
+              color={theme.subText}
+            />
+            <Text
+              style={[
+                styles.noResultTitle,
+                { color: theme.text },
+              ]}
+            >
+              조건에 맞는 카페가 없어요.
+            </Text>
+            <Text
+              style={[
+                styles.noResultDescription,
+                { color: theme.subText },
+              ]}
+            >
+              검색어를 바꾸거나 필터를 초기화해 보세요.
+            </Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="카페 검색과 필터 초기화"
+              onPress={clearSearchAndFilters}
+              style={({ pressed }) => [
+                styles.noResultResetButton,
+                {
+                  backgroundColor: theme.background,
+                  borderColor: theme.line,
+                  borderRadius: isCityBlack ? 2 : 9,
+                  opacity: pressed ? 0.55 : 1,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.noResultResetText,
+                  { color: theme.text },
+                ]}
+              >
+                검색·필터 초기화
+              </Text>
+            </Pressable>
+          </View>
+        ) : null}
+
+        {filteredEntries.map(
           (entry) => {
             const cafe =
               entry.cafe;
@@ -1194,6 +1707,109 @@ export default function SavedCafesScreen() {
   );
 }
 
+type FilterChipProps = {
+  label: string;
+  selected: boolean;
+  onPress: () => void;
+  theme: ReturnType<typeof useRootTheme>['theme'];
+  isCityBlack: boolean;
+};
+
+function FilterChip({
+  label,
+  selected,
+  onPress,
+  theme,
+  isCityBlack,
+}: FilterChipProps) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{ selected }}
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.filterChip,
+        {
+          backgroundColor: selected
+            ? theme.button
+            : theme.background,
+          borderColor: selected
+            ? theme.strongLine
+            : theme.line,
+          borderRadius: isCityBlack ? 2 : 999,
+          opacity: pressed ? 0.58 : 1,
+        },
+      ]}
+    >
+      <Text
+        numberOfLines={1}
+        style={[
+          styles.filterChipText,
+          {
+            color: selected
+              ? theme.buttonText
+              : theme.text,
+          },
+        ]}
+      >
+        {label}
+      </Text>
+    </Pressable>
+  );
+}
+
+type FilterSectionProps = {
+  title: string;
+  children: ReactNode;
+  theme: ReturnType<typeof useRootTheme>['theme'];
+};
+
+function FilterSection({
+  title,
+  children,
+  theme,
+}: FilterSectionProps) {
+  return (
+    <View style={styles.filterSection}>
+      <Text
+        style={[
+          styles.filterSectionTitle,
+          { color: theme.subText },
+        ]}
+      >
+        {title}
+      </Text>
+      <View style={styles.filterChipWrap}>{children}</View>
+    </View>
+  );
+}
+
+function HorizontalFilterSection({
+  title,
+  children,
+  theme,
+}: FilterSectionProps) {
+  return (
+    <View style={styles.filterSection}>
+      <Text
+        style={[
+          styles.filterSectionTitle,
+          { color: theme.subText },
+        ]}
+      >
+        {title}
+      </Text>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.horizontalFilterRow}
+      >
+        {children}
+      </ScrollView>
+    </View>
+  );
+}
+
 type SummaryBadgeProps = {
   label: string;
   theme: ReturnType<
@@ -1357,6 +1973,164 @@ const styles =
 
     syncRetryText: {
       fontSize: 9,
+      fontWeight: '900',
+    },
+
+    searchFilterCard: {
+      padding: 11,
+      borderWidth: StyleSheet.hairlineWidth,
+      gap: 10,
+    },
+
+    searchBox: {
+      minHeight: 42,
+      paddingHorizontal: 11,
+      borderWidth: StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
+
+    searchInput: {
+      flex: 1,
+      minWidth: 0,
+      paddingVertical: 8,
+      fontSize: 11,
+      fontWeight: '700',
+    },
+
+    filterToolbar: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
+
+    filterToggleButton: {
+      minHeight: 32,
+      paddingHorizontal: 9,
+      borderWidth: StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 4,
+    },
+
+    filterToggleText: {
+      fontSize: 9.5,
+      fontWeight: '900',
+    },
+
+    sortScroll: {
+      flex: 1,
+    },
+
+    sortRow: {
+      alignItems: 'center',
+      gap: 6,
+      paddingRight: 2,
+    },
+
+    expandedFilters: {
+      gap: 11,
+    },
+
+    filterSection: {
+      gap: 6,
+    },
+
+    filterSectionTitle: {
+      fontSize: 9,
+      fontWeight: '900',
+    },
+
+    filterChipWrap: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 6,
+    },
+
+    horizontalFilterRow: {
+      gap: 6,
+      paddingRight: 6,
+    },
+
+    filterChip: {
+      minHeight: 29,
+      paddingHorizontal: 9,
+      borderWidth: StyleSheet.hairlineWidth,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    filterChipText: {
+      fontSize: 9,
+      fontWeight: '800',
+    },
+
+    resultSummaryRow: {
+      minHeight: 28,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 8,
+    },
+
+    resultSummaryText: {
+      flex: 1,
+      minWidth: 0,
+      fontSize: 9,
+      fontWeight: '800',
+    },
+
+    resetButton: {
+      minHeight: 28,
+      paddingHorizontal: 8,
+      borderWidth: StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 4,
+    },
+
+    resetButtonText: {
+      fontSize: 8.5,
+      fontWeight: '900',
+    },
+
+    noResultCard: {
+      minHeight: 190,
+      padding: 22,
+      borderWidth: StyleSheet.hairlineWidth,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    noResultTitle: {
+      marginTop: 11,
+      fontSize: 14,
+      fontWeight: '900',
+      textAlign: 'center',
+    },
+
+    noResultDescription: {
+      marginTop: 6,
+      fontSize: 10,
+      fontWeight: '700',
+      lineHeight: 15,
+      textAlign: 'center',
+    },
+
+    noResultResetButton: {
+      minHeight: 34,
+      marginTop: 13,
+      paddingHorizontal: 11,
+      borderWidth: StyleSheet.hairlineWidth,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    noResultResetText: {
+      fontSize: 9.5,
       fontWeight: '900',
     },
 

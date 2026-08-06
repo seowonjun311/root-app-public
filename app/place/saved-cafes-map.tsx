@@ -13,8 +13,10 @@ import {
 import {
   ActivityIndicator,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 import MapView, {
@@ -25,6 +27,10 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 
+import {
+  CAFE_KEYWORD_MAP,
+  CAFE_THEME_MAP,
+} from '../../store/cafeKeywordCatalog';
 import {
   PLACE_PRIMARY_THEME_MAP,
 } from '../../store/placeThemeCatalog';
@@ -37,6 +43,7 @@ import {
 } from '../../store/rootTheme';
 
 // SAVED_CAFE_V37_MAP_SCREEN
+// SAVED_CAFE_V38_MAP_SEARCH_FILTER
 
 const DEFAULT_REGION: Region = {
   latitude: 37.5665,
@@ -50,6 +57,34 @@ const STATUS_LABELS = {
   favorite: '좋아하는 장소',
   visited: '방문했어요',
 } as const;
+
+const MAP_FILTER_ALL = '__all__' as const;
+
+type SavedCafeMapStatusFilter =
+  | typeof MAP_FILTER_ALL
+  | keyof typeof STATUS_LABELS;
+
+const STATUS_FILTER_OPTIONS: {
+  id: SavedCafeMapStatusFilter;
+  label: string;
+}[] = [
+  {
+    id: MAP_FILTER_ALL,
+    label: '전체',
+  },
+  {
+    id: 'wantToGo',
+    label: '가보고 싶어요',
+  },
+  {
+    id: 'favorite',
+    label: '좋아하는 장소',
+  },
+  {
+    id: 'visited',
+    label: '방문했어요',
+  },
+];
 
 type MappableSavedCafeEntry =
   SavedCafeLocalEntry & {
@@ -86,6 +121,14 @@ function getMarkerColor(
     default:
       return '#D98B45';
   }
+}
+
+function normalizeMapSearchText(
+  value: string,
+) {
+  return value
+    .trim()
+    .toLocaleLowerCase('ko-KR');
 }
 
 export default function SavedCafesMapScreen() {
@@ -133,21 +176,179 @@ export default function SavedCafesMapScreen() {
     setReloadVersion,
   ] = useState(0);
 
-  const coordinateEntries = useMemo(
-    () => entries.filter(isMappableSavedCafeEntry),
-    [entries],
+  const [
+    searchQuery,
+    setSearchQuery,
+  ] = useState('');
+
+  const [
+    statusFilter,
+    setStatusFilter,
+  ] =
+    useState<SavedCafeMapStatusFilter>(
+      MAP_FILTER_ALL,
+    );
+
+  const [
+    primaryThemeFilter,
+    setPrimaryThemeFilter,
+  ] = useState<string>(
+    MAP_FILTER_ALL,
   );
 
+  const [
+    filtersExpanded,
+    setFiltersExpanded,
+  ] = useState(false);
+
+  const normalizedSearchQuery =
+    normalizeMapSearchText(
+      searchQuery,
+    );
+
+  const allCoordinateEntries =
+    useMemo(
+      () =>
+        entries.filter(
+          isMappableSavedCafeEntry,
+        ),
+      [entries],
+    );
+
+  const primaryThemeOptions =
+    useMemo(() => {
+      const ids = Array.from(
+        new Set(
+          entries.map(
+            (entry) =>
+              entry.cafe.primaryTheme,
+          ),
+        ),
+      );
+
+      return ids.sort(
+        (first, second) => {
+          const firstLabel =
+            PLACE_PRIMARY_THEME_MAP[
+              first
+            ]?.label ?? first;
+
+          const secondLabel =
+            PLACE_PRIMARY_THEME_MAP[
+              second
+            ]?.label ?? second;
+
+          return firstLabel.localeCompare(
+            secondLabel,
+            'ko-KR',
+          );
+        },
+      );
+    }, [entries]);
+
+  const filteredEntries =
+    useMemo(() => {
+      return entries.filter(
+        (entry) => {
+          const cafe = entry.cafe;
+
+          if (
+            statusFilter !==
+              MAP_FILTER_ALL &&
+            cafe.status !== statusFilter
+          ) {
+            return false;
+          }
+
+          if (
+            primaryThemeFilter !==
+              MAP_FILTER_ALL &&
+            cafe.primaryTheme !==
+              primaryThemeFilter
+          ) {
+            return false;
+          }
+
+          if (!normalizedSearchQuery) {
+            return true;
+          }
+
+          const searchValues = [
+            cafe.name,
+            entry.address ?? '',
+            entry.roadAddress ?? '',
+            cafe.memo,
+            STATUS_LABELS[
+              cafe.status
+            ],
+            PLACE_PRIMARY_THEME_MAP[
+              cafe.primaryTheme
+            ]?.label ?? '',
+            ...cafe.themes.map(
+              (themeId) =>
+                CAFE_THEME_MAP[
+                  themeId
+                ]?.label ?? '',
+            ),
+            ...cafe.tags.map(
+              (keywordId) =>
+                CAFE_KEYWORD_MAP[
+                  keywordId
+                ]?.label ?? '',
+            ),
+          ];
+
+          return searchValues.some(
+            (value) =>
+              normalizeMapSearchText(
+                value,
+              ).includes(
+                normalizedSearchQuery,
+              ),
+          );
+        },
+      );
+    }, [
+      entries,
+      normalizedSearchQuery,
+      primaryThemeFilter,
+      statusFilter,
+    ]);
+
+  const coordinateEntries =
+    useMemo(
+      () =>
+        filteredEntries.filter(
+          isMappableSavedCafeEntry,
+        ),
+      [filteredEntries],
+    );
+
   const missingCoordinateCount =
-    entries.length - coordinateEntries.length;
+    filteredEntries.length -
+    coordinateEntries.length;
+
+  const activeFilterCount = [
+    statusFilter !== MAP_FILTER_ALL,
+    primaryThemeFilter !==
+      MAP_FILTER_ALL,
+  ].filter(Boolean).length;
+
+  const hasActiveSearchOrFilter =
+    normalizedSearchQuery.length > 0 ||
+    activeFilterCount > 0;
 
   const selectedEntry = useMemo(
     () =>
       coordinateEntries.find(
         (entry) =>
-          entry.cafe.placeId === selectedPlaceId,
+          entry.cafe.placeId ===
+          selectedPlaceId,
       ) ?? null,
-    [coordinateEntries, selectedPlaceId],
+    [
+      coordinateEntries,
+      selectedPlaceId,
+    ],
   );
 
   const coordinateKey = useMemo(
@@ -181,22 +382,26 @@ export default function SavedCafesMapScreen() {
               isMappableSavedCafeEntry,
             );
 
-          setSelectedPlaceId((current) => {
-            if (
-              current &&
-              mappableEntries.some(
-                (entry) =>
-                  entry.cafe.placeId === current,
-              )
-            ) {
-              return current;
-            }
+          setSelectedPlaceId(
+            (current) => {
+              if (
+                current &&
+                mappableEntries.some(
+                  (entry) =>
+                    entry.cafe.placeId ===
+                    current,
+                )
+              ) {
+                return current;
+              }
 
-            return (
-              mappableEntries[0]?.cafe.placeId ??
-              null
-            );
-          });
+              return (
+                mappableEntries[0]
+                  ?.cafe.placeId ??
+                null
+              );
+            },
+          );
         })
         .catch((error) => {
           console.log(
@@ -222,21 +427,58 @@ export default function SavedCafesMapScreen() {
     }, [reloadVersion]),
   );
 
+  useEffect(() => {
+    setSelectedPlaceId(
+      (current) => {
+        if (
+          current &&
+          coordinateEntries.some(
+            (entry) =>
+              entry.cafe.placeId ===
+              current,
+          )
+        ) {
+          return current;
+        }
+
+        return (
+          coordinateEntries[0]
+            ?.cafe.placeId ??
+          null
+        );
+      },
+    );
+
+    fittedCoordinateKeyRef.current =
+      '';
+  }, [
+    coordinateEntries,
+    coordinateKey,
+  ]);
+
   const fitMapToEntries = useCallback(
     (animated: boolean) => {
       const map = mapRef.current;
 
-      if (!map || coordinateEntries.length === 0) {
+      if (
+        !map ||
+        coordinateEntries.length === 0
+      ) {
         return;
       }
 
-      if (coordinateEntries.length === 1) {
-        const onlyEntry = coordinateEntries[0];
+      if (
+        coordinateEntries.length === 1
+      ) {
+        const onlyEntry =
+          coordinateEntries[0];
 
         map.animateToRegion(
           {
-            latitude: onlyEntry.latitude,
-            longitude: onlyEntry.longitude,
+            latitude:
+              onlyEntry.latitude,
+            longitude:
+              onlyEntry.longitude,
             latitudeDelta: 0.015,
             longitudeDelta: 0.015,
           },
@@ -246,13 +488,20 @@ export default function SavedCafesMapScreen() {
       }
 
       map.fitToCoordinates(
-        coordinateEntries.map((entry) => ({
-          latitude: entry.latitude,
-          longitude: entry.longitude,
-        })),
+        coordinateEntries.map(
+          (entry) => ({
+            latitude:
+              entry.latitude,
+            longitude:
+              entry.longitude,
+          }),
+        ),
         {
           edgePadding: {
-            top: 90,
+            top:
+              filtersExpanded
+                ? 235
+                : 145,
             right: 48,
             bottom: 250,
             left: 48,
@@ -261,7 +510,10 @@ export default function SavedCafesMapScreen() {
         },
       );
     },
-    [coordinateEntries],
+    [
+      coordinateEntries,
+      filtersExpanded,
+    ],
   );
 
   useEffect(() => {
@@ -269,12 +521,14 @@ export default function SavedCafesMapScreen() {
       !mapReady ||
       !mapLaidOut ||
       !coordinateKey ||
-      fittedCoordinateKeyRef.current === coordinateKey
+      fittedCoordinateKeyRef
+        .current === coordinateKey
     ) {
       return;
     }
 
-    fittedCoordinateKeyRef.current = coordinateKey;
+    fittedCoordinateKeyRef.current =
+      coordinateKey;
 
     const timer = setTimeout(() => {
       fitMapToEntries(false);
@@ -291,8 +545,12 @@ export default function SavedCafesMapScreen() {
   ]);
 
   const selectEntry = useCallback(
-    (entry: MappableSavedCafeEntry) => {
-      setSelectedPlaceId(entry.cafe.placeId);
+    (
+      entry: MappableSavedCafeEntry,
+    ) => {
+      setSelectedPlaceId(
+        entry.cafe.placeId,
+      );
 
       mapRef.current?.animateToRegion(
         {
@@ -310,9 +568,11 @@ export default function SavedCafesMapScreen() {
   const openDetail = useCallback(
     (entry: SavedCafeLocalEntry) => {
       router.push({
-        pathname: '/place/cafe-detail',
+        pathname:
+          '/place/cafe-detail',
         params: {
-          placeId: entry.cafe.placeId,
+          placeId:
+            entry.cafe.placeId,
         },
       } as never);
     },
@@ -326,16 +586,34 @@ export default function SavedCafesMapScreen() {
   }, []);
 
   const retryLoad = useCallback(() => {
-    fittedCoordinateKeyRef.current = '';
-    setReloadVersion((value) => value + 1);
+    fittedCoordinateKeyRef.current =
+      '';
+
+    setReloadVersion(
+      (value) => value + 1,
+    );
   }, []);
+
+  const clearMapSearchAndFilters =
+    useCallback(() => {
+      setSearchQuery('');
+      setStatusFilter(
+        MAP_FILTER_ALL,
+      );
+      setPrimaryThemeFilter(
+        MAP_FILTER_ALL,
+      );
+      fittedCoordinateKeyRef.current =
+        '';
+    }, []);
 
   return (
     <View
       style={[
         styles.screen,
         {
-          backgroundColor: theme.background,
+          backgroundColor:
+            theme.background,
         },
       ]}
     >
@@ -343,22 +621,34 @@ export default function SavedCafesMapScreen() {
         style={[
           styles.header,
           {
-            paddingTop: insets.top + 8,
-            borderBottomColor: theme.line,
-            backgroundColor: theme.background,
+            paddingTop:
+              insets.top + 8,
+            borderBottomColor:
+              theme.line,
+            backgroundColor:
+              theme.background,
           },
         ]}
       >
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="저장 카페 목록으로 돌아가기"
-          onPress={() => router.back()}
+          onPress={() =>
+            router.back()
+          }
           style={({ pressed }) => [
             styles.headerButton,
             {
-              borderColor: theme.line,
-              borderRadius: isCityBlack ? 2 : 9,
-              opacity: pressed ? 0.55 : 1,
+              borderColor:
+                theme.line,
+              borderRadius:
+                isCityBlack
+                  ? 2
+                  : 9,
+              opacity:
+                pressed
+                  ? 0.55
+                  : 1,
             },
           ]}
         >
@@ -369,11 +659,17 @@ export default function SavedCafesMapScreen() {
           />
         </Pressable>
 
-        <View style={styles.headerTextArea}>
+        <View
+          style={
+            styles.headerTextArea
+          }
+        >
           <Text
             style={[
               styles.title,
-              { color: theme.text },
+              {
+                color: theme.text,
+              },
             ]}
           >
             저장 카페 지도
@@ -381,12 +677,17 @@ export default function SavedCafesMapScreen() {
           <Text
             style={[
               styles.subtitle,
-              { color: theme.subText },
+              {
+                color:
+                  theme.subText,
+              },
             ]}
           >
             {loading
               ? '카페 위치를 불러오는 중...'
-              : `지도 ${coordinateEntries.length}곳 · 전체 ${entries.length}곳`}
+              : hasActiveSearchOrFilter
+                ? `지도 ${coordinateEntries.length}곳 / 저장 ${entries.length}곳`
+                : `지도 ${allCoordinateEntries.length}곳 · 전체 ${entries.length}곳`}
           </Text>
         </View>
 
@@ -397,9 +698,16 @@ export default function SavedCafesMapScreen() {
           style={({ pressed }) => [
             styles.listButton,
             {
-              borderColor: theme.line,
-              borderRadius: isCityBlack ? 2 : 9,
-              opacity: pressed ? 0.55 : 1,
+              borderColor:
+                theme.line,
+              borderRadius:
+                isCityBlack
+                  ? 2
+                  : 9,
+              opacity:
+                pressed
+                  ? 0.55
+                  : 1,
             },
           ]}
         >
@@ -411,7 +719,9 @@ export default function SavedCafesMapScreen() {
           <Text
             style={[
               styles.listButtonText,
-              { color: theme.text },
+              {
+                color: theme.text,
+              },
             ]}
           >
             목록
@@ -419,8 +729,11 @@ export default function SavedCafesMapScreen() {
         </Pressable>
       </View>
 
-      {loading && entries.length === 0 ? (
-        <View style={styles.centerArea}>
+      {loading &&
+      entries.length === 0 ? (
+        <View
+          style={styles.centerArea}
+        >
           <ActivityIndicator
             size="small"
             color={theme.text}
@@ -428,21 +741,32 @@ export default function SavedCafesMapScreen() {
           <Text
             style={[
               styles.centerDescription,
-              { color: theme.subText },
+              {
+                color:
+                  theme.subText,
+              },
             ]}
           >
             저장한 카페 위치를 확인하고 있어요.
           </Text>
         </View>
-      ) : loadError && entries.length === 0 ? (
-        <View style={styles.centerArea}>
+      ) : loadError &&
+        entries.length === 0 ? (
+        <View
+          style={styles.centerArea}
+        >
           <View
             style={[
               styles.emptyCard,
               {
-                backgroundColor: theme.card,
-                borderColor: theme.line,
-                borderRadius: isCityBlack ? 3 : 16,
+                backgroundColor:
+                  theme.card,
+                borderColor:
+                  theme.line,
+                borderRadius:
+                  isCityBlack
+                    ? 3
+                    : 16,
               },
             ]}
           >
@@ -454,7 +778,10 @@ export default function SavedCafesMapScreen() {
             <Text
               style={[
                 styles.emptyTitle,
-                { color: theme.text },
+                {
+                  color:
+                    theme.text,
+                },
               ]}
             >
               지도를 불러오지 못했어요.
@@ -462,7 +789,10 @@ export default function SavedCafesMapScreen() {
             <Text
               style={[
                 styles.emptyDescription,
-                { color: theme.subText },
+                {
+                  color:
+                    theme.subText,
+                },
               ]}
             >
               {loadError}
@@ -474,10 +804,18 @@ export default function SavedCafesMapScreen() {
               style={({ pressed }) => [
                 styles.emptyActionButton,
                 {
-                  backgroundColor: theme.background,
-                  borderColor: theme.line,
-                  borderRadius: isCityBlack ? 2 : 9,
-                  opacity: pressed ? 0.55 : 1,
+                  backgroundColor:
+                    theme.background,
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 9,
+                  opacity:
+                    pressed
+                      ? 0.55
+                      : 1,
                 },
               ]}
             >
@@ -489,7 +827,10 @@ export default function SavedCafesMapScreen() {
               <Text
                 style={[
                   styles.emptyActionText,
-                  { color: theme.text },
+                  {
+                    color:
+                      theme.text,
+                  },
                 ]}
               >
                 다시 불러오기
@@ -497,15 +838,23 @@ export default function SavedCafesMapScreen() {
             </Pressable>
           </View>
         </View>
-      ) : coordinateEntries.length === 0 ? (
-        <View style={styles.centerArea}>
+      ) : allCoordinateEntries
+          .length === 0 ? (
+        <View
+          style={styles.centerArea}
+        >
           <View
             style={[
               styles.emptyCard,
               {
-                backgroundColor: theme.card,
-                borderColor: theme.line,
-                borderRadius: isCityBlack ? 3 : 16,
+                backgroundColor:
+                  theme.card,
+                borderColor:
+                  theme.line,
+                borderRadius:
+                  isCityBlack
+                    ? 3
+                    : 16,
               },
             ]}
           >
@@ -517,7 +866,10 @@ export default function SavedCafesMapScreen() {
             <Text
               style={[
                 styles.emptyTitle,
-                { color: theme.text },
+                {
+                  color:
+                    theme.text,
+                },
               ]}
             >
               지도에 표시할 카페가 없어요.
@@ -525,7 +877,10 @@ export default function SavedCafesMapScreen() {
             <Text
               style={[
                 styles.emptyDescription,
-                { color: theme.subText },
+                {
+                  color:
+                    theme.subText,
+                },
               ]}
             >
               카카오 검색 결과에서 저장한 카페는 위치가 함께 기록돼요.
@@ -541,10 +896,18 @@ export default function SavedCafesMapScreen() {
               style={({ pressed }) => [
                 styles.emptyActionButton,
                 {
-                  backgroundColor: theme.background,
-                  borderColor: theme.line,
-                  borderRadius: isCityBlack ? 2 : 9,
-                  opacity: pressed ? 0.55 : 1,
+                  backgroundColor:
+                    theme.background,
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 9,
+                  opacity:
+                    pressed
+                      ? 0.55
+                      : 1,
                 },
               ]}
             >
@@ -556,7 +919,10 @@ export default function SavedCafesMapScreen() {
               <Text
                 style={[
                   styles.emptyActionText,
-                  { color: theme.text },
+                  {
+                    color:
+                      theme.text,
+                  },
                 ]}
               >
                 카페 추가
@@ -567,12 +933,18 @@ export default function SavedCafesMapScreen() {
       ) : (
         <View
           style={styles.mapArea}
-          onLayout={() => setMapLaidOut(true)}
+          onLayout={() =>
+            setMapLaidOut(true)
+          }
         >
           <MapView
             ref={mapRef}
-            style={StyleSheet.absoluteFillObject}
-            initialRegion={DEFAULT_REGION}
+            style={
+              StyleSheet.absoluteFillObject
+            }
+            initialRegion={
+              DEFAULT_REGION
+            }
             mapType="standard"
             loadingEnabled
             toolbarEnabled={false}
@@ -582,82 +954,428 @@ export default function SavedCafesMapScreen() {
             showsBuildings
             showsTraffic={false}
             showsUserLocation={false}
-            onMapReady={() => setMapReady(true)}
+            onMapReady={() =>
+              setMapReady(true)
+            }
             mapPadding={{
-              top: 70,
+              top:
+                filtersExpanded
+                  ? 235
+                  : 145,
               right: 18,
               bottom: 205,
               left: 18,
             }}
           >
-            {coordinateEntries.map((entry) => (
-              <Marker
-                key={entry.cafe.placeId}
-                coordinate={{
-                  latitude: entry.latitude,
-                  longitude: entry.longitude,
-                }}
-                title={entry.cafe.name}
-                description={
-                  entry.roadAddress ||
-                  entry.address ||
-                  STATUS_LABELS[entry.cafe.status]
-                }
-                pinColor={getMarkerColor(entry.cafe.status)}
-                onPress={() => selectEntry(entry)}
-              />
-            ))}
+            {coordinateEntries.map(
+              (entry) => (
+                <Marker
+                  key={
+                    entry.cafe.placeId
+                  }
+                  coordinate={{
+                    latitude:
+                      entry.latitude,
+                    longitude:
+                      entry.longitude,
+                  }}
+                  title={
+                    entry.cafe.name
+                  }
+                  description={
+                    entry.roadAddress ||
+                    entry.address ||
+                    STATUS_LABELS[
+                      entry.cafe.status
+                    ]
+                  }
+                  pinColor={getMarkerColor(
+                    entry.cafe.status,
+                  )}
+                  onPress={() =>
+                    selectEntry(entry)
+                  }
+                />
+              ),
+            )}
           </MapView>
 
           <View
             pointerEvents="box-none"
-            style={StyleSheet.absoluteFillObject}
+            style={
+              StyleSheet.absoluteFillObject
+            }
           >
             <View
               style={[
-                styles.countCard,
+                styles.searchFilterCard,
                 {
                   top: 12,
                   left: 12,
-                  backgroundColor: theme.card,
-                  borderColor: theme.line,
-                  borderRadius: isCityBlack ? 3 : 11,
+                  right: 62,
+                  backgroundColor:
+                    theme.card,
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 3
+                      : 13,
                 },
               ]}
             >
-              <Text
+              <View
                 style={[
-                  styles.countTitle,
-                  { color: theme.text },
+                  styles.searchBox,
+                  {
+                    backgroundColor:
+                      theme.background,
+                    borderColor:
+                      theme.line,
+                    borderRadius:
+                      isCityBlack
+                        ? 2
+                        : 9,
+                  },
                 ]}
               >
-                지도에 {coordinateEntries.length}곳
-              </Text>
-              {missingCoordinateCount > 0 ? (
-                <Text
+                <Ionicons
+                  name="search-outline"
+                  size={16}
+                  color={
+                    theme.subText
+                  }
+                />
+                <TextInput
+                  value={searchQuery}
+                  onChangeText={
+                    setSearchQuery
+                  }
+                  placeholder="지도에서 카페 검색"
+                  placeholderTextColor={
+                    theme.subText
+                  }
                   style={[
-                    styles.countDescription,
-                    { color: theme.subText },
+                    styles.searchInput,
+                    {
+                      color:
+                        theme.text,
+                    },
+                  ]}
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  returnKeyType="search"
+                  selectionColor={
+                    theme.text
+                  }
+                />
+                {searchQuery ? (
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel="지도 카페 검색어 지우기"
+                    onPress={() =>
+                      setSearchQuery('')
+                    }
+                    hitSlop={8}
+                  >
+                    <Ionicons
+                      name="close-circle"
+                      size={16}
+                      color={
+                        theme.subText
+                      }
+                    />
+                  </Pressable>
+                ) : null}
+              </View>
+
+              <View
+                style={
+                  styles.filterSummaryRow
+                }
+              >
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="지도 카페 필터 열기"
+                  accessibilityState={{
+                    expanded:
+                      filtersExpanded,
+                  }}
+                  onPress={() =>
+                    setFiltersExpanded(
+                      (value) =>
+                        !value,
+                    )
+                  }
+                  style={({
+                    pressed,
+                  }) => [
+                    styles.filterToggle,
+                    {
+                      backgroundColor:
+                        activeFilterCount >
+                        0
+                          ? theme.button
+                          : theme.background,
+                      borderColor:
+                        activeFilterCount >
+                        0
+                          ? theme.strongLine
+                          : theme.line,
+                      borderRadius:
+                        isCityBlack
+                          ? 2
+                          : 8,
+                      opacity:
+                        pressed
+                          ? 0.58
+                          : 1,
+                    },
                   ]}
                 >
-                  좌표 없음 {missingCoordinateCount}곳
+                  <Ionicons
+                    name="options-outline"
+                    size={14}
+                    color={
+                      activeFilterCount >
+                      0
+                        ? theme.buttonText
+                        : theme.text
+                    }
+                  />
+                  <Text
+                    style={[
+                      styles.filterToggleText,
+                      {
+                        color:
+                          activeFilterCount >
+                          0
+                            ? theme.buttonText
+                            : theme.text,
+                      },
+                    ]}
+                  >
+                    필터
+                    {activeFilterCount >
+                    0
+                      ? ` ${activeFilterCount}`
+                      : ''}
+                  </Text>
+                  <Ionicons
+                    name={
+                      filtersExpanded
+                        ? 'chevron-up'
+                        : 'chevron-down'
+                    }
+                    size={12}
+                    color={
+                      activeFilterCount >
+                      0
+                        ? theme.buttonText
+                        : theme.subText
+                    }
+                  />
+                </Pressable>
+
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    styles.resultCountText,
+                    {
+                      color:
+                        theme.subText,
+                    },
+                  ]}
+                >
+                  지도 {coordinateEntries.length}곳
+                  {missingCoordinateCount >
+                  0
+                    ? ` · 좌표 없음 ${missingCoordinateCount}곳`
+                    : ''}
                 </Text>
+
+                {hasActiveSearchOrFilter ? (
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel="지도 검색과 필터 초기화"
+                    onPress={
+                      clearMapSearchAndFilters
+                    }
+                    hitSlop={5}
+                    style={({
+                      pressed,
+                    }) => ({
+                      opacity:
+                        pressed
+                          ? 0.5
+                          : 1,
+                    })}
+                  >
+                    <Text
+                      style={[
+                        styles.resetText,
+                        {
+                          color:
+                            theme.text,
+                        },
+                      ]}
+                    >
+                      초기화
+                    </Text>
+                  </Pressable>
+                ) : null}
+              </View>
+
+              {filtersExpanded ? (
+                <View
+                  style={
+                    styles.expandedFilters
+                  }
+                >
+                  <Text
+                    style={[
+                      styles.filterTitle,
+                      {
+                        color:
+                          theme.subText,
+                      },
+                    ]}
+                  >
+                    관계
+                  </Text>
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={
+                      false
+                    }
+                    contentContainerStyle={
+                      styles.filterChipRow
+                    }
+                  >
+                    {STATUS_FILTER_OPTIONS.map(
+                      (option) => (
+                        <MapFilterChip
+                          key={
+                            option.id
+                          }
+                          label={
+                            option.label
+                          }
+                          selected={
+                            statusFilter ===
+                            option.id
+                          }
+                          onPress={() =>
+                            setStatusFilter(
+                              option.id,
+                            )
+                          }
+                          theme={theme}
+                          isCityBlack={
+                            isCityBlack
+                          }
+                        />
+                      ),
+                    )}
+                  </ScrollView>
+
+                  <Text
+                    style={[
+                      styles.filterTitle,
+                      {
+                        color:
+                          theme.subText,
+                      },
+                    ]}
+                  >
+                    대표 테마
+                  </Text>
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={
+                      false
+                    }
+                    contentContainerStyle={
+                      styles.filterChipRow
+                    }
+                  >
+                    <MapFilterChip
+                      label="전체"
+                      selected={
+                        primaryThemeFilter ===
+                        MAP_FILTER_ALL
+                      }
+                      onPress={() =>
+                        setPrimaryThemeFilter(
+                          MAP_FILTER_ALL,
+                        )
+                      }
+                      theme={theme}
+                      isCityBlack={
+                        isCityBlack
+                      }
+                    />
+                    {primaryThemeOptions.map(
+                      (themeId) => (
+                        <MapFilterChip
+                          key={themeId}
+                          label={
+                            PLACE_PRIMARY_THEME_MAP[
+                              themeId
+                            ]?.label ??
+                            themeId
+                          }
+                          selected={
+                            primaryThemeFilter ===
+                            themeId
+                          }
+                          onPress={() =>
+                            setPrimaryThemeFilter(
+                              themeId,
+                            )
+                          }
+                          theme={theme}
+                          isCityBlack={
+                            isCityBlack
+                          }
+                        />
+                      ),
+                    )}
+                  </ScrollView>
+                </View>
               ) : null}
             </View>
 
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="모든 저장 카페가 보이도록 지도 맞추기"
-              onPress={() => fitMapToEntries(true)}
+              accessibilityLabel="현재 조건의 모든 저장 카페가 보이도록 지도 맞추기"
+              disabled={
+                coordinateEntries.length ===
+                0
+              }
+              onPress={() =>
+                fitMapToEntries(true)
+              }
               style={({ pressed }) => [
                 styles.fitButton,
                 {
                   top: 12,
                   right: 12,
-                  backgroundColor: theme.card,
-                  borderColor: theme.line,
-                  borderRadius: isCityBlack ? 2 : 11,
-                  opacity: pressed ? 0.62 : 1,
+                  backgroundColor:
+                    theme.card,
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 11,
+                  opacity:
+                    coordinateEntries
+                      .length === 0
+                      ? 0.38
+                      : pressed
+                        ? 0.62
+                        : 1,
                 },
               ]}
             >
@@ -668,6 +1386,99 @@ export default function SavedCafesMapScreen() {
               />
             </Pressable>
 
+            {coordinateEntries.length ===
+            0 ? (
+              <View
+                style={[
+                  styles.noResultCard,
+                  {
+                    top:
+                      filtersExpanded
+                        ? 225
+                        : 135,
+                    left: 22,
+                    right: 22,
+                    backgroundColor:
+                      theme.card,
+                    borderColor:
+                      theme.line,
+                    borderRadius:
+                      isCityBlack
+                        ? 3
+                        : 14,
+                  },
+                ]}
+              >
+                <Ionicons
+                  name="search-outline"
+                  size={23}
+                  color={
+                    theme.subText
+                  }
+                />
+                <Text
+                  style={[
+                    styles.noResultTitle,
+                    {
+                      color:
+                        theme.text,
+                    },
+                  ]}
+                >
+                  조건에 맞는 지도 카페가 없어요.
+                </Text>
+                <Text
+                  style={[
+                    styles.noResultDescription,
+                    {
+                      color:
+                        theme.subText,
+                    },
+                  ]}
+                >
+                  검색어를 바꾸거나 필터를 초기화해 보세요.
+                </Text>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="지도 검색과 필터 초기화"
+                  onPress={
+                    clearMapSearchAndFilters
+                  }
+                  style={({
+                    pressed,
+                  }) => [
+                    styles.noResultResetButton,
+                    {
+                      backgroundColor:
+                        theme.background,
+                      borderColor:
+                        theme.line,
+                      borderRadius:
+                        isCityBlack
+                          ? 2
+                          : 8,
+                      opacity:
+                        pressed
+                          ? 0.55
+                          : 1,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.noResultResetText,
+                      {
+                        color:
+                          theme.text,
+                      },
+                    ]}
+                  >
+                    검색·필터 초기화
+                  </Text>
+                </Pressable>
+              </View>
+            ) : null}
+
             {selectedEntry ? (
               <View
                 style={[
@@ -675,29 +1486,53 @@ export default function SavedCafesMapScreen() {
                   {
                     left: 12,
                     right: 12,
-                    bottom: insets.bottom + 12,
-                    backgroundColor: theme.card,
-                    borderColor: theme.line,
-                    borderRadius: isCityBlack ? 3 : 16,
+                    bottom:
+                      insets.bottom +
+                      12,
+                    backgroundColor:
+                      theme.card,
+                    borderColor:
+                      theme.line,
+                    borderRadius:
+                      isCityBlack
+                        ? 3
+                        : 16,
                   },
                 ]}
               >
-                <View style={styles.selectedHeaderRow}>
-                  <View style={styles.selectedTextArea}>
+                <View
+                  style={
+                    styles.selectedHeaderRow
+                  }
+                >
+                  <View
+                    style={
+                      styles.selectedTextArea
+                    }
+                  >
                     <Text
                       numberOfLines={1}
                       style={[
                         styles.selectedName,
-                        { color: theme.text },
+                        {
+                          color:
+                            theme.text,
+                        },
                       ]}
                     >
-                      {selectedEntry.cafe.name}
+                      {
+                        selectedEntry
+                          .cafe.name
+                      }
                     </Text>
                     <Text
                       numberOfLines={2}
                       style={[
                         styles.selectedAddress,
-                        { color: theme.subText },
+                        {
+                          color:
+                            theme.subText,
+                        },
                       ]}
                     >
                       {selectedEntry.roadAddress ||
@@ -709,21 +1544,38 @@ export default function SavedCafesMapScreen() {
                   <Pressable
                     accessibilityRole="button"
                     accessibilityLabel={`${selectedEntry.cafe.name} 상세 보기 및 수정`}
-                    onPress={() => openDetail(selectedEntry)}
-                    style={({ pressed }) => [
+                    onPress={() =>
+                      openDetail(
+                        selectedEntry,
+                      )
+                    }
+                    style={({
+                      pressed,
+                    }) => [
                       styles.detailButton,
                       {
-                        backgroundColor: theme.background,
-                        borderColor: theme.line,
-                        borderRadius: isCityBlack ? 2 : 9,
-                        opacity: pressed ? 0.58 : 1,
+                        backgroundColor:
+                          theme.background,
+                        borderColor:
+                          theme.line,
+                        borderRadius:
+                          isCityBlack
+                            ? 2
+                            : 9,
+                        opacity:
+                          pressed
+                            ? 0.58
+                            : 1,
                       },
                     ]}
                   >
                     <Text
                       style={[
                         styles.detailButtonText,
-                        { color: theme.text },
+                        {
+                          color:
+                            theme.text,
+                        },
                       ]}
                     >
                       상세 보기·수정
@@ -731,19 +1583,30 @@ export default function SavedCafesMapScreen() {
                     <Ionicons
                       name="chevron-forward"
                       size={14}
-                      color={theme.subText}
+                      color={
+                        theme.subText
+                      }
                     />
                   </Pressable>
                 </View>
 
-                <View style={styles.badgeRow}>
+                <View
+                  style={
+                    styles.badgeRow
+                  }
+                >
                   <View
                     style={[
                       styles.badge,
                       {
-                        backgroundColor: theme.background,
-                        borderColor: theme.line,
-                        borderRadius: isCityBlack ? 2 : 999,
+                        backgroundColor:
+                          theme.background,
+                        borderColor:
+                          theme.line,
+                        borderRadius:
+                          isCityBlack
+                            ? 2
+                            : 999,
                       },
                     ]}
                   >
@@ -751,19 +1614,31 @@ export default function SavedCafesMapScreen() {
                       style={[
                         styles.markerDot,
                         {
-                          backgroundColor: getMarkerColor(
-                            selectedEntry.cafe.status,
-                          ),
+                          backgroundColor:
+                            getMarkerColor(
+                              selectedEntry
+                                .cafe
+                                .status,
+                            ),
                         },
                       ]}
                     />
                     <Text
                       style={[
                         styles.badgeText,
-                        { color: theme.text },
+                        {
+                          color:
+                            theme.text,
+                        },
                       ]}
                     >
-                      {STATUS_LABELS[selectedEntry.cafe.status]}
+                      {
+                        STATUS_LABELS[
+                          selectedEntry
+                            .cafe
+                            .status
+                        ]
+                      }
                     </Text>
                   </View>
 
@@ -771,21 +1646,32 @@ export default function SavedCafesMapScreen() {
                     style={[
                       styles.badge,
                       {
-                        backgroundColor: theme.background,
-                        borderColor: theme.line,
-                        borderRadius: isCityBlack ? 2 : 999,
+                        backgroundColor:
+                          theme.background,
+                        borderColor:
+                          theme.line,
+                        borderRadius:
+                          isCityBlack
+                            ? 2
+                            : 999,
                       },
                     ]}
                   >
                     <Text
                       style={[
                         styles.badgeText,
-                        { color: theme.text },
+                        {
+                          color:
+                            theme.text,
+                        },
                       ]}
                     >
                       {PLACE_PRIMARY_THEME_MAP[
-                        selectedEntry.cafe.primaryTheme
-                      ]?.label ?? '카페'}
+                        selectedEntry
+                          .cafe
+                          .primaryTheme
+                      ]?.label ??
+                        '카페'}
                     </Text>
                   </View>
                 </View>
@@ -798,6 +1684,70 @@ export default function SavedCafesMapScreen() {
   );
 }
 
+type MapFilterChipProps = {
+  label: string;
+  selected: boolean;
+  onPress: () => void;
+  theme: ReturnType<
+    typeof useRootTheme
+  >['theme'];
+  isCityBlack: boolean;
+};
+
+function MapFilterChip({
+  label,
+  selected,
+  onPress,
+  theme,
+  isCityBlack,
+}: MapFilterChipProps) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{
+        selected,
+      }}
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.filterChip,
+        {
+          backgroundColor:
+            selected
+              ? theme.button
+              : theme.background,
+          borderColor:
+            selected
+              ? theme.strongLine
+              : theme.line,
+          borderRadius:
+            isCityBlack
+              ? 2
+              : 999,
+          opacity:
+            pressed
+              ? 0.58
+              : 1,
+        },
+      ]}
+    >
+      <Text
+        numberOfLines={1}
+        style={[
+          styles.filterChipText,
+          {
+            color:
+              selected
+                ? theme.buttonText
+                : theme.text,
+          },
+        ]}
+      >
+        {label}
+      </Text>
+    </Pressable>
+  );
+}
+
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -807,7 +1757,8 @@ const styles = StyleSheet.create({
     minHeight: 76,
     paddingHorizontal: 14,
     paddingBottom: 10,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth:
+      StyleSheet.hairlineWidth,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
@@ -817,7 +1768,8 @@ const styles = StyleSheet.create({
   headerButton: {
     width: 36,
     height: 36,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth:
+      StyleSheet.hairlineWidth,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -842,7 +1794,8 @@ const styles = StyleSheet.create({
   listButton: {
     height: 34,
     paddingHorizontal: 9,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth:
+      StyleSheet.hairlineWidth,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
@@ -875,7 +1828,8 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 430,
     padding: 24,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth:
+      StyleSheet.hairlineWidth,
     alignItems: 'center',
   },
 
@@ -898,7 +1852,8 @@ const styles = StyleSheet.create({
     minHeight: 36,
     marginTop: 14,
     paddingHorizontal: 12,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth:
+      StyleSheet.hairlineWidth,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -910,40 +1865,153 @@ const styles = StyleSheet.create({
     fontWeight: '900',
   },
 
-  countCard: {
+  searchFilterCard: {
     position: 'absolute',
-    minHeight: 48,
-    paddingHorizontal: 11,
-    paddingVertical: 8,
-    borderWidth: StyleSheet.hairlineWidth,
-    justifyContent: 'center',
+    padding: 9,
+    borderWidth:
+      StyleSheet.hairlineWidth,
+    gap: 8,
   },
 
-  countTitle: {
+  searchBox: {
+    minHeight: 38,
+    paddingHorizontal: 9,
+    borderWidth:
+      StyleSheet.hairlineWidth,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7,
+  },
+
+  searchInput: {
+    flex: 1,
+    minWidth: 0,
+    paddingVertical: 7,
     fontSize: 10,
+    fontWeight: '700',
+  },
+
+  filterSummaryRow: {
+    minHeight: 28,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7,
+  },
+
+  filterToggle: {
+    minHeight: 28,
+    paddingHorizontal: 8,
+    borderWidth:
+      StyleSheet.hairlineWidth,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+  },
+
+  filterToggleText: {
+    fontSize: 8.8,
     fontWeight: '900',
   },
 
-  countDescription: {
-    marginTop: 2,
+  resultCountText: {
+    flex: 1,
+    minWidth: 0,
     fontSize: 8.5,
-    fontWeight: '700',
+    fontWeight: '800',
+  },
+
+  resetText: {
+    fontSize: 8.5,
+    fontWeight: '900',
+    textDecorationLine:
+      'underline',
+  },
+
+  expandedFilters: {
+    gap: 6,
+  },
+
+  filterTitle: {
+    fontSize: 8.5,
+    fontWeight: '900',
+  },
+
+  filterChipRow: {
+    gap: 6,
+    paddingRight: 5,
+  },
+
+  filterChip: {
+    minHeight: 28,
+    paddingHorizontal: 9,
+    borderWidth:
+      StyleSheet.hairlineWidth,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  filterChipText: {
+    fontSize: 8.5,
+    fontWeight: '800',
   },
 
   fitButton: {
     position: 'absolute',
     width: 42,
     height: 42,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth:
+      StyleSheet.hairlineWidth,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  noResultCard: {
+    position: 'absolute',
+    minHeight: 155,
+    padding: 18,
+    borderWidth:
+      StyleSheet.hairlineWidth,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  noResultTitle: {
+    marginTop: 9,
+    fontSize: 13,
+    fontWeight: '900',
+    textAlign: 'center',
+  },
+
+  noResultDescription: {
+    marginTop: 5,
+    fontSize: 9.5,
+    fontWeight: '700',
+    lineHeight: 14,
+    textAlign: 'center',
+  },
+
+  noResultResetButton: {
+    minHeight: 32,
+    marginTop: 11,
+    paddingHorizontal: 10,
+    borderWidth:
+      StyleSheet.hairlineWidth,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  noResultResetText: {
+    fontSize: 9,
+    fontWeight: '900',
   },
 
   selectedCard: {
     position: 'absolute',
     minHeight: 132,
     padding: 13,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth:
+      StyleSheet.hairlineWidth,
   },
 
   selectedHeaderRow: {
@@ -973,7 +2041,8 @@ const styles = StyleSheet.create({
   detailButton: {
     minHeight: 34,
     paddingHorizontal: 9,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth:
+      StyleSheet.hairlineWidth,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -995,7 +2064,8 @@ const styles = StyleSheet.create({
   badge: {
     minHeight: 28,
     paddingHorizontal: 9,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth:
+      StyleSheet.hairlineWidth,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,

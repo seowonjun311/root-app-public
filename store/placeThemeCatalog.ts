@@ -286,3 +286,29 @@ export const ANNUAL_THEME_COUNT =
     (sum, group) => sum + group.themes.length,
     0,
   );
+
+export const PLACE_PRIMARY_THEME_MAP =
+  Object.fromEntries(
+    PLACE_PRIMARY_THEMES.map(
+      (item) => [
+        item.id,
+        item,
+      ]
+    )
+  ) as Record<
+    string,
+    (typeof PLACE_PRIMARY_THEMES)[number]
+  >;
+
+export const PLACE_SEASON_MAP =
+  Object.fromEntries(
+    PLACE_SEASONS.map(
+      (item) => [
+        item.id,
+        item,
+      ]
+    )
+  ) as Record<
+    string,
+    (typeof PLACE_SEASONS)[number]
+  >;

@@ -166,3 +166,29 @@ export const CAFE_MUTABLE_FACT_KEYWORD_IDS =
       'mutable' in keyword &&
       keyword.mutable === true,
   ).map((keyword) => keyword.id) as CafeKeywordId[];
+
+export const CAFE_KEYWORD_MAP =
+  Object.fromEntries(
+    CAFE_KEYWORDS.map(
+      (item) => [
+        item.id,
+        item,
+      ]
+    )
+  ) as Record<
+    string,
+    (typeof CAFE_KEYWORDS)[number]
+  >;
+
+export const CAFE_THEME_MAP =
+  Object.fromEntries(
+    CAFE_CORE_THEMES.map(
+      (item) => [
+        item.id,
+        item,
+      ]
+    )
+  ) as Record<
+    string,
+    (typeof CAFE_CORE_THEMES)[number]
+  >;

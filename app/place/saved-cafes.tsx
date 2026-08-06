@@ -8,7 +8,8 @@ import {
   useState,
 } from 'react';
 import {
-  Alert,
+  ActivityIndicator,
+  Modal,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -64,6 +65,20 @@ export default function SavedCafesScreen() {
     setLoading,
   ] = useState(true);
 
+  const [
+    pendingRemoveEntry,
+    setPendingRemoveEntry,
+  ] =
+    useState<
+      SavedCafeLocalEntry |
+      null
+    >(null);
+
+  const [
+    removing,
+    setRemoving,
+  ] = useState(false);
+
   const reload =
     useCallback(() => {
       let mounted = true;
@@ -94,31 +109,53 @@ export default function SavedCafesScreen() {
       entry:
         SavedCafeLocalEntry,
     ) => {
-      Alert.alert(
-        '저장한 카페 삭제',
-        `${entry.cafe.name}을(를) 저장 목록에서 삭제할까요?`,
-        [
-          {
-            text: '취소',
-            style: 'cancel',
-          },
-          {
-            text: '삭제',
-            style:
-              'destructive',
-            onPress:
-              async () => {
-                const next =
-                  await removeSavedCafeEntry(
-                    entry.cafe
-                      .placeId,
-                  );
+      if (removing) {
+        return;
+      }
 
-                setEntries(next);
-              },
-          },
-        ],
+      setPendingRemoveEntry(
+        entry,
       );
+    };
+
+  const closeRemoveModal =
+    () => {
+      if (removing) {
+        return;
+      }
+
+      setPendingRemoveEntry(
+        null,
+      );
+    };
+
+  const removePendingCafe =
+    async () => {
+      if (
+        !pendingRemoveEntry ||
+        removing
+      ) {
+        return;
+      }
+
+      setRemoving(true);
+
+      try {
+        const next =
+          await removeSavedCafeEntry(
+            pendingRemoveEntry
+              .cafe
+              .placeId,
+          );
+
+        setEntries(next);
+        setPendingRemoveEntry(
+          null,
+        );
+      }
+      finally {
+        setRemoving(false);
+      }
     };
 
   return (
@@ -537,6 +574,216 @@ export default function SavedCafesScreen() {
           },
         )}
       </ScrollView>
+
+      <Modal
+        visible={
+          pendingRemoveEntry !==
+          null
+        }
+        transparent
+        animationType="fade"
+        statusBarTranslucent
+        onRequestClose={
+          closeRemoveModal
+        }
+      >
+        <View
+          style={
+            styles.removeOverlay
+          }
+        >
+          <View
+            style={[
+              styles.removeCard,
+              {
+                backgroundColor:
+                  theme.card,
+                borderColor:
+                  theme.line,
+                borderRadius:
+                  isCityBlack
+                    ? 3
+                    : 18,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.removeIconBox,
+                {
+                  backgroundColor:
+                    theme.background,
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 14,
+                },
+              ]}
+            >
+              <Ionicons
+                name="trash-outline"
+                size={23}
+                color={
+                  theme.text
+                }
+              />
+            </View>
+
+            <Text
+              style={[
+                styles.removeTitle,
+                {
+                  color:
+                    theme.text,
+                },
+              ]}
+            >
+              저장한 카페 삭제
+            </Text>
+
+            <Text
+              style={[
+                styles.removeMessage,
+                {
+                  color:
+                    theme.text,
+                },
+              ]}
+            >
+              {pendingRemoveEntry
+                ? `"${pendingRemoveEntry.cafe.name}"을(를) 저장 목록에서 삭제할까요?`
+                : ''}
+            </Text>
+
+            <Text
+              style={[
+                styles.removeDescription,
+                {
+                  color:
+                    theme.subText,
+                },
+              ]}
+            >
+              삭제하면 이 기기의 저장 목록에서 사라져요.
+            </Text>
+
+            <View
+              style={
+                styles.removeActions
+              }
+            >
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="카페 삭제 취소"
+                disabled={
+                  removing
+                }
+                onPress={
+                  closeRemoveModal
+                }
+                style={({
+                  pressed,
+                }) => [
+                  styles.removeCancelButton,
+                  {
+                    backgroundColor:
+                      theme.background,
+                    borderColor:
+                      theme.line,
+                    borderRadius:
+                      isCityBlack
+                        ? 2
+                        : theme.radius.button,
+                    opacity:
+                      removing
+                        ? 0.45
+                        : pressed
+                          ? 0.58
+                          : 1,
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.removeCancelText,
+                    {
+                      color:
+                        theme.text,
+                    },
+                  ]}
+                >
+                  취소
+                </Text>
+              </Pressable>
+
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="저장한 카페 삭제"
+                disabled={
+                  removing
+                }
+                onPress={() => {
+                  void removePendingCafe();
+                }}
+                style={({
+                  pressed,
+                }) => [
+                  styles.removeConfirmButton,
+                  {
+                    backgroundColor:
+                      theme.button,
+                    borderColor:
+                      theme.strongLine,
+                    borderRadius:
+                      isCityBlack
+                        ? 2
+                        : theme.radius.button,
+                    opacity:
+                      removing
+                        ? 0.68
+                        : pressed
+                          ? 0.72
+                          : 1,
+                  },
+                ]}
+              >
+                {removing ? (
+                  <ActivityIndicator
+                    size="small"
+                    color={
+                      theme.buttonText
+                    }
+                  />
+                ) : (
+                  <Ionicons
+                    name="trash-outline"
+                    size={15}
+                    color={
+                      theme.buttonText
+                    }
+                  />
+                )}
+
+                <Text
+                  style={[
+                    styles.removeConfirmText,
+                    {
+                      color:
+                        theme.buttonText,
+                    },
+                  ]}
+                >
+                  {removing
+                    ? '삭제 중'
+                    : '삭제'}
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -759,5 +1006,97 @@ const styles =
       fontSize: 10.5,
       fontWeight: '700',
       lineHeight: 16,
+    },
+
+    removeOverlay: {
+      flex: 1,
+      paddingHorizontal: 22,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor:
+        'rgba(22, 17, 12, 0.46)',
+    },
+
+    removeCard: {
+      width: '100%',
+      maxWidth: 350,
+      paddingHorizontal: 18,
+      paddingTop: 20,
+      paddingBottom: 16,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      alignItems: 'center',
+    },
+
+    removeIconBox: {
+      width: 50,
+      height: 50,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    removeTitle: {
+      marginTop: 13,
+      fontSize: 18,
+      fontWeight: '900',
+      letterSpacing: -0.35,
+      textAlign: 'center',
+    },
+
+    removeMessage: {
+      marginTop: 8,
+      fontSize: 12,
+      fontWeight: '800',
+      lineHeight: 18,
+      textAlign: 'center',
+    },
+
+    removeDescription: {
+      marginTop: 4,
+      fontSize: 10,
+      fontWeight: '700',
+      lineHeight: 15,
+      textAlign: 'center',
+    },
+
+    removeActions: {
+      width: '100%',
+      marginTop: 18,
+      flexDirection: 'row',
+      gap: 8,
+    },
+
+    removeCancelButton: {
+      flex: 0.8,
+      minHeight: 42,
+      paddingHorizontal: 10,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    removeConfirmButton: {
+      flex: 1.2,
+      minHeight: 42,
+      paddingHorizontal: 10,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 5,
+    },
+
+    removeCancelText: {
+      fontSize: 10.5,
+      fontWeight: '900',
+    },
+
+    removeConfirmText: {
+      fontSize: 10.5,
+      fontWeight: '900',
     },
   });

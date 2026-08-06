@@ -19,6 +19,9 @@ export type SavedCafeLocalEntry = {
     | 'google'
     | 'publicData'
     | 'manual';
+  externalPlaceId?: string;
+  phone?: string;
+  placeUrl?: string;
   savedAt: string;
 };
 

@@ -5,11 +5,14 @@ import {
 } from 'expo-router';
 import {
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
+  Modal,
   Platform,
   Pressable,
   ScrollView,
@@ -18,6 +21,10 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import MapView, {
+  Marker,
+  PROVIDER_GOOGLE,
+} from 'react-native-maps';
 import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
@@ -42,6 +49,10 @@ import {
   saveCafeEntry,
 } from '../../store/savedCafeLocal';
 import {
+  searchKakaoCafes,
+  type KakaoCafeSearchResult,
+} from '../../store/kakaoCafeSearch';
+import {
   type PlacePrimaryThemeId,
   type PlaceSeasonId,
   type SavedPlaceStatusId,
@@ -49,6 +60,13 @@ import {
 import {
   useRootTheme,
 } from '../../store/rootTheme';
+
+const DEFAULT_CAFE_SEARCH_REGION = {
+  latitude: 37.5665,
+  longitude: 126.978,
+  latitudeDelta: 0.16,
+  longitudeDelta: 0.16,
+};
 
 const STATUS_OPTIONS: readonly {
   id: SavedPlaceStatusId;
@@ -213,6 +231,69 @@ export default function CafeSaveScreen() {
     saving,
     setSaving,
   ] = useState(false);
+
+  const [
+    saveCompleteVisible,
+    setSaveCompleteVisible,
+  ] = useState(false);
+
+  const [
+    savedCafeName,
+    setSavedCafeName,
+  ] = useState('');
+
+  const [
+    savedCafeSummary,
+    setSavedCafeSummary,
+  ] = useState('');
+
+  const [
+    selectedPlace,
+    setSelectedPlace,
+  ] =
+    useState<KakaoCafeSearchResult | null>(
+      null,
+    );
+
+  const [
+    searchVisible,
+    setSearchVisible,
+  ] = useState(false);
+
+  const [
+    searchQuery,
+    setSearchQuery,
+  ] = useState(initialName);
+
+  const [
+    searchResults,
+    setSearchResults,
+  ] =
+    useState<KakaoCafeSearchResult[]>(
+      [],
+    );
+
+  const [
+    selectedSearchResultId,
+    setSelectedSearchResultId,
+  ] = useState<string | null>(
+    null,
+  );
+
+  const [
+    searching,
+    setSearching,
+  ] = useState(false);
+
+  const [
+    searchError,
+    setSearchError,
+  ] = useState('');
+
+  const searchMapRef =
+    useRef<MapView | null>(
+      null,
+    );
 
   const selectedKeywordLabels =
     useMemo(
@@ -389,6 +470,224 @@ export default function CafeSaveScreen() {
       );
     };
 
+  const focusSearchResult = (
+    result: KakaoCafeSearchResult,
+  ) => {
+    setSelectedSearchResultId(
+      result.id,
+    );
+
+    searchMapRef.current
+      ?.animateToRegion(
+        {
+          latitude:
+            result.latitude,
+          longitude:
+            result.longitude,
+          latitudeDelta:
+            0.008,
+          longitudeDelta:
+            0.008,
+        },
+        280,
+      );
+  };
+
+  const fitSearchResults = (
+    results:
+      KakaoCafeSearchResult[],
+  ) => {
+    if (
+      results.length === 0
+    ) {
+      return;
+    }
+
+    setTimeout(
+      () => {
+        searchMapRef.current
+          ?.fitToCoordinates(
+            results.map(
+              (result) => ({
+                latitude:
+                  result.latitude,
+                longitude:
+                  result.longitude,
+              }),
+            ),
+            {
+              edgePadding: {
+                top: 56,
+                right: 46,
+                bottom: 56,
+                left: 46,
+              },
+              animated: true,
+            },
+          );
+      },
+      120,
+    );
+  };
+
+  const handleCafeSearch =
+    async (
+      requestedQuery?: string,
+    ) => {
+      const query =
+        (
+          requestedQuery ??
+          searchQuery
+        ).trim();
+
+      if (!query) {
+        Alert.alert(
+          '카페 검색',
+          '검색할 카페 이름을 입력해 주세요.',
+        );
+
+        return;
+      }
+
+      setSearchQuery(query);
+      setSearching(true);
+      setSearchError('');
+
+      try {
+        const results =
+          await searchKakaoCafes(
+            query,
+          );
+
+        setSearchResults(
+          results,
+        );
+
+        const firstResult =
+          results[0] ?? null;
+
+        setSelectedSearchResultId(
+          firstResult?.id ??
+            null,
+        );
+
+        if (results.length === 0) {
+          setSearchError(
+            '검색된 카페가 없어요. 지역명이나 지점명을 함께 입력해 보세요.',
+          );
+
+          return;
+        }
+
+        fitSearchResults(
+          results,
+        );
+      } catch (error) {
+        console.log(
+          'CAFE PLACE SEARCH ERROR',
+          error,
+        );
+
+        setSearchResults([]);
+        setSelectedSearchResultId(
+          null,
+        );
+        setSearchError(
+          error instanceof Error
+            ? error.message
+            : '카페를 검색하지 못했어요.',
+        );
+      } finally {
+        setSearching(false);
+      }
+    };
+
+  const openCafeSearch =
+    () => {
+      const query =
+        placeName.trim();
+
+      if (!query) {
+        Alert.alert(
+          '카페 검색',
+          '카페 이름을 먼저 입력해 주세요.',
+        );
+
+        return;
+      }
+
+      setSearchVisible(true);
+      setSearchQuery(query);
+
+      void handleCafeSearch(
+        query,
+      );
+    };
+
+  const confirmSearchResult =
+    () => {
+      const result =
+        searchResults.find(
+          (item) =>
+            item.id ===
+            selectedSearchResultId,
+        );
+
+      if (!result) {
+        Alert.alert(
+          '카페 선택',
+          '지도나 목록에서 카페를 하나 선택해 주세요.',
+        );
+
+        return;
+      }
+
+      setSelectedPlace(
+        result,
+      );
+      setPlaceName(
+        result.name,
+      );
+      setAddress(
+        result.displayAddress,
+      );
+      setSearchVisible(false);
+    };
+
+  const handlePlaceNameChange =
+    (
+      value: string,
+    ) => {
+      setPlaceName(value);
+
+      if (
+        selectedPlace &&
+        value.trim() !==
+          selectedPlace.name
+      ) {
+        setSelectedPlace(
+          null,
+        );
+      }
+    };
+
+  const handleAddressChange =
+    (
+      value: string,
+    ) => {
+      setAddress(value);
+
+      if (
+        selectedPlace &&
+        value.trim() !==
+          selectedPlace.displayAddress
+      ) {
+        setSelectedPlace(
+          null,
+        );
+      }
+    };
+
   const handleSave =
     async () => {
       const trimmedName =
@@ -424,11 +723,13 @@ export default function CafeSaveScreen() {
           );
 
         const placeId =
-          providedPlaceId ||
-          createManualPlaceId(
-            trimmedName,
-            address,
-          );
+          selectedPlace
+            ? `kakao-${selectedPlace.id}`
+            : providedPlaceId ||
+              createManualPlaceId(
+                trimmedName,
+                address,
+              );
 
         const now =
           new Date().toISOString();
@@ -457,6 +758,8 @@ export default function CafeSaveScreen() {
           );
 
         const latitudeValue =
+          selectedPlace
+            ?.latitude ??
           Number(
             getFirstParam(
               params.latitude,
@@ -464,6 +767,8 @@ export default function CafeSaveScreen() {
           );
 
         const longitudeValue =
+          selectedPlace
+            ?.longitude ??
           Number(
             getFirstParam(
               params.longitude,
@@ -476,26 +781,32 @@ export default function CafeSaveScreen() {
           );
 
         const externalProvider =
-          providerParam ===
-            'kakao' ||
-          providerParam ===
-            'naver' ||
-          providerParam ===
-            'google' ||
-          providerParam ===
-            'publicData'
-            ? providerParam
-            : 'manual';
+          selectedPlace
+            ? 'kakao'
+            : providerParam ===
+                'kakao' ||
+              providerParam ===
+                'naver' ||
+              providerParam ===
+                'google' ||
+              providerParam ===
+                'publicData'
+              ? providerParam
+              : 'manual';
 
         await saveCafeEntry({
           cafe,
           address:
+            selectedPlace
+              ?.address ||
             getFirstParam(
               params.address,
             ) ||
             address.trim() ||
             undefined,
           roadAddress:
+            selectedPlace
+              ?.roadAddress ||
             getFirstParam(
               params.roadAddress,
             ) ||
@@ -514,30 +825,33 @@ export default function CafeSaveScreen() {
               ? longitudeValue
               : undefined,
           externalProvider,
+          externalPlaceId:
+            selectedPlace
+              ?.id,
+          phone:
+            selectedPlace
+              ?.phone ||
+            undefined,
+          placeUrl:
+            selectedPlace
+              ?.placeUrl ||
+            undefined,
           savedAt: now,
         });
 
-        Alert.alert(
-          '카페 저장 완료',
+        setSavedCafeName(
+          trimmedName,
+        );
+
+        setSavedCafeSummary(
           representativeKeywords.length >
           0
-            ? `${trimmedName}\n대표 특징: ${selectedKeywordLabels.join(' · ')}`
-            : `${trimmedName}을(를) 저장했어요.`,
-          [
-            {
-              text:
-                '저장 목록 보기',
-              onPress: () =>
-                router.replace(
-                  '/place/saved-cafes' as never,
-                ),
-            },
-            {
-              text: '탐험으로',
-              onPress: () =>
-                router.back(),
-            },
-          ],
+            ? `대표 특징 · ${selectedKeywordLabels.join(' · ')}`
+            : '나만의 카페 목록에 저장했어요.',
+        );
+
+        setSaveCompleteVisible(
+          true,
         );
       } catch (error) {
         console.log(
@@ -701,39 +1015,96 @@ export default function CafeSaveScreen() {
             isCityBlack
           }
         >
-          <TextInput
-            value={placeName}
-            onChangeText={
-              setPlaceName
+          <View
+            style={
+              styles.placeSearchRow
             }
-            placeholder="카페 이름"
-            placeholderTextColor={
-              theme.mutedText
-            }
-            maxLength={80}
-            style={[
-              styles.input,
-              {
-                color:
-                  theme.text,
-                borderColor:
-                  theme.line,
-                backgroundColor:
-                  theme.background,
-                borderRadius:
-                  isCityBlack
-                    ? 2
-                    : 10,
-              },
-            ]}
-          />
+          >
+            <TextInput
+              value={placeName}
+              onChangeText={
+                handlePlaceNameChange
+              }
+              onSubmitEditing={
+                openCafeSearch
+              }
+              returnKeyType="search"
+              placeholder="카페 이름"
+              placeholderTextColor={
+                theme.mutedText
+              }
+              maxLength={80}
+              style={[
+                styles.input,
+                styles.placeNameInput,
+                {
+                  color:
+                    theme.text,
+                  borderColor:
+                    theme.line,
+                  backgroundColor:
+                    theme.background,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 10,
+                },
+              ]}
+            />
+
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="카페 검색"
+              onPress={
+                openCafeSearch
+              }
+              style={({
+                pressed,
+              }) => [
+                styles.placeSearchButton,
+                {
+                  backgroundColor:
+                    theme.card2,
+                  borderColor:
+                    theme.strongLine,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 10,
+                  opacity:
+                    pressed
+                      ? 0.62
+                      : 1,
+                },
+              ]}
+            >
+              <Ionicons
+                name="search"
+                size={15}
+                color={
+                  theme.text
+                }
+              />
+              <Text
+                style={[
+                  styles.placeSearchButtonText,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              >
+                검색
+              </Text>
+            </Pressable>
+          </View>
 
           <TextInput
             value={address}
             onChangeText={
-              setAddress
+              handleAddressChange
             }
-            placeholder="주소 또는 지역을 입력해 주세요."
+            placeholder="검색한 카페의 주소가 자동으로 입력돼요."
             placeholderTextColor={
               theme.mutedText
             }
@@ -754,6 +1125,75 @@ export default function CafeSaveScreen() {
               },
             ]}
           />
+
+          {selectedPlace ? (
+            <View
+              style={[
+                styles.confirmedPlaceBox,
+                {
+                  backgroundColor:
+                    theme.card2,
+                  borderColor:
+                    theme.strongLine,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 9,
+                },
+              ]}
+            >
+              <Ionicons
+                name="location"
+                size={15}
+                color={
+                  theme.text
+                }
+              />
+
+              <View
+                style={
+                  styles.confirmedPlaceText
+                }
+              >
+                <Text
+                  style={[
+                    styles.confirmedPlaceTitle,
+                    {
+                      color:
+                        theme.text,
+                    },
+                  ]}
+                >
+                  카카오맵에서 장소를 확정했어요
+                </Text>
+
+                <Text
+                  numberOfLines={2}
+                  style={[
+                    styles.confirmedPlaceAddress,
+                    {
+                      color:
+                        theme.subText,
+                    },
+                  ]}
+                >
+                  {selectedPlace.displayAddress}
+                </Text>
+              </View>
+            </View>
+          ) : (
+            <Text
+              style={[
+                styles.placeSearchHelp,
+                {
+                  color:
+                    theme.subText,
+                },
+              ]}
+            >
+              같은 이름의 지점이 있다면 검색 후 지도에서 정확한 장소를 골라 주세요.
+            </Text>
+          )}
         </SectionCard>
 
         <SectionCard
@@ -1140,6 +1580,771 @@ export default function CafeSaveScreen() {
           </Text>
         </Pressable>
       </ScrollView>
+
+      <Modal
+        visible={searchVisible}
+        animationType="slide"
+        presentationStyle="fullScreen"
+        statusBarTranslucent
+        onRequestClose={() =>
+          setSearchVisible(false)
+        }
+      >
+        <View
+          style={[
+            styles.searchModalScreen,
+            {
+              backgroundColor:
+                theme.background,
+              paddingTop:
+                insets.top + 8,
+              paddingBottom:
+                insets.bottom + 8,
+            },
+          ]}
+        >
+          <View
+            style={[
+              styles.searchModalHeader,
+              {
+                borderBottomColor:
+                  theme.line,
+              },
+            ]}
+          >
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="카페 검색 닫기"
+              onPress={() =>
+                setSearchVisible(false)
+              }
+              style={({
+                pressed,
+              }) => [
+                styles.searchModalClose,
+                {
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 9,
+                  opacity:
+                    pressed
+                      ? 0.55
+                      : 1,
+                },
+              ]}
+            >
+              <Ionicons
+                name="close"
+                size={20}
+                color={theme.text}
+              />
+            </Pressable>
+
+            <View
+              style={
+                styles.searchModalHeaderText
+              }
+            >
+              <Text
+                style={[
+                  styles.searchModalTitle,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              >
+                카페 찾기
+              </Text>
+              <Text
+                style={[
+                  styles.searchModalSubtitle,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                지도와 주소를 확인하고 정확한 지점을 선택하세요.
+              </Text>
+            </View>
+          </View>
+
+          <View
+            style={
+              styles.searchModalContent
+            }
+          >
+            <View
+              style={
+                styles.searchModalInputRow
+              }
+            >
+              <TextInput
+                value={searchQuery}
+                onChangeText={
+                  setSearchQuery
+                }
+                onSubmitEditing={() =>
+                  void handleCafeSearch()
+                }
+                returnKeyType="search"
+                placeholder="예: 핀커피 성수"
+                placeholderTextColor={
+                  theme.mutedText
+                }
+                maxLength={80}
+                style={[
+                  styles.searchModalInput,
+                  {
+                    color:
+                      theme.text,
+                    backgroundColor:
+                      theme.card,
+                    borderColor:
+                      theme.line,
+                    borderRadius:
+                      isCityBlack
+                        ? 2
+                        : 10,
+                  },
+                ]}
+              />
+
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="카페 다시 검색"
+                disabled={searching}
+                onPress={() =>
+                  void handleCafeSearch()
+                }
+                style={({
+                  pressed,
+                }) => [
+                  styles.searchModalButton,
+                  {
+                    backgroundColor:
+                      theme.button,
+                    borderColor:
+                      theme.strongLine,
+                    borderRadius:
+                      isCityBlack
+                        ? 2
+                        : 10,
+                    opacity:
+                      searching
+                        ? 0.5
+                        : pressed
+                          ? 0.7
+                          : 1,
+                  },
+                ]}
+              >
+                {searching ? (
+                  <ActivityIndicator
+                    size="small"
+                    color={
+                      theme.buttonText
+                    }
+                  />
+                ) : (
+                  <Ionicons
+                    name="search"
+                    size={16}
+                    color={
+                      theme.buttonText
+                    }
+                  />
+                )}
+                <Text
+                  style={[
+                    styles.searchModalButtonText,
+                    {
+                      color:
+                        theme.buttonText,
+                    },
+                  ]}
+                >
+                  검색
+                </Text>
+              </Pressable>
+            </View>
+
+            {searchError ? (
+              <View
+                style={[
+                  styles.searchErrorBox,
+                  {
+                    backgroundColor:
+                      theme.card,
+                    borderColor:
+                      theme.line,
+                    borderRadius:
+                      isCityBlack
+                        ? 2
+                        : 9,
+                  },
+                ]}
+              >
+                <Ionicons
+                  name="information-circle-outline"
+                  size={17}
+                  color={
+                    theme.subText
+                  }
+                />
+                <Text
+                  style={[
+                    styles.searchErrorText,
+                    {
+                      color:
+                        theme.subText,
+                    },
+                  ]}
+                >
+                  {searchError}
+                </Text>
+              </View>
+            ) : null}
+
+            <View
+              style={[
+                styles.searchMapFrame,
+                {
+                  backgroundColor:
+                    theme.card,
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 12,
+                },
+              ]}
+            >
+              <MapView
+                ref={searchMapRef}
+                style={styles.searchMap}
+                provider={
+                  Platform.OS ===
+                  'android'
+                    ? PROVIDER_GOOGLE
+                    : undefined
+                }
+                initialRegion={
+                  DEFAULT_CAFE_SEARCH_REGION
+                }
+                toolbarEnabled={false}
+                onMapReady={() =>
+                  fitSearchResults(
+                    searchResults,
+                  )
+                }
+                showsCompass
+                showsPointsOfInterest={
+                  false
+                }
+              >
+                {searchResults.map(
+                  (
+                    result,
+                    index,
+                  ) => (
+                    <Marker
+                      key={result.id}
+                      coordinate={{
+                        latitude:
+                          result.latitude,
+                        longitude:
+                          result.longitude,
+                      }}
+                      title={`${index + 1}. ${result.name}`}
+                      description={
+                        result.displayAddress
+                      }
+                      onPress={() =>
+                        focusSearchResult(
+                          result,
+                        )
+                      }
+                    />
+                  ),
+                )}
+              </MapView>
+
+              {searchResults.length ===
+              0 ? (
+                <View
+                  pointerEvents="none"
+                  style={
+                    styles.searchMapEmpty
+                  }
+                >
+                  {searching ? (
+                    <ActivityIndicator
+                      size="large"
+                      color={
+                        theme.text
+                      }
+                    />
+                  ) : (
+                    <>
+                      <Ionicons
+                        name="map-outline"
+                        size={30}
+                        color={
+                          theme.mutedText
+                        }
+                      />
+                      <Text
+                        style={[
+                          styles.searchMapEmptyText,
+                          {
+                            color:
+                              theme.subText,
+                          },
+                        ]}
+                      >
+                        검색 결과가 지도에 표시돼요.
+                      </Text>
+                    </>
+                  )}
+                </View>
+              ) : null}
+            </View>
+
+            <View
+              style={
+                styles.searchResultHeader
+              }
+            >
+              <Text
+                style={[
+                  styles.searchResultTitle,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              >
+                검색 결과
+              </Text>
+              <Text
+                style={[
+                  styles.searchResultCount,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                {searchResults.length}곳
+              </Text>
+            </View>
+
+            <ScrollView
+              style={
+                styles.searchResultScroll
+              }
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={
+                false
+              }
+              contentContainerStyle={
+                styles.searchResultList
+              }
+            >
+              {searchResults.map(
+                (
+                  result,
+                  index,
+                ) => {
+                  const selected =
+                    result.id ===
+                    selectedSearchResultId;
+
+                  return (
+                    <Pressable
+                      key={result.id}
+                      onPress={() =>
+                        focusSearchResult(
+                          result,
+                        )
+                      }
+                      style={({
+                        pressed,
+                      }) => [
+                        styles.searchResultCard,
+                        {
+                          backgroundColor:
+                            selected
+                              ? theme.card2
+                              : theme.card,
+                          borderColor:
+                            selected
+                              ? theme.strongLine
+                              : theme.line,
+                          borderRadius:
+                            isCityBlack
+                              ? 2
+                              : 10,
+                          opacity:
+                            pressed
+                              ? 0.62
+                              : 1,
+                        },
+                      ]}
+                    >
+                      <View
+                        style={[
+                          styles.searchResultNumber,
+                          {
+                            backgroundColor:
+                              selected
+                                ? theme.button
+                                : theme.background,
+                            borderColor:
+                              theme.line,
+                            borderRadius:
+                              isCityBlack
+                                ? 2
+                                : 999,
+                          },
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles.searchResultNumberText,
+                            {
+                              color:
+                                selected
+                                  ? theme.buttonText
+                                  : theme.text,
+                            },
+                          ]}
+                        >
+                          {index + 1}
+                        </Text>
+                      </View>
+
+                      <View
+                        style={
+                          styles.searchResultText
+                        }
+                      >
+                        <Text
+                          numberOfLines={1}
+                          style={[
+                            styles.searchResultName,
+                            {
+                              color:
+                                theme.text,
+                            },
+                          ]}
+                        >
+                          {result.name}
+                        </Text>
+                        <Text
+                          numberOfLines={2}
+                          style={[
+                            styles.searchResultAddress,
+                            {
+                              color:
+                                theme.subText,
+                            },
+                          ]}
+                        >
+                          {result.displayAddress}
+                        </Text>
+                        {result.categoryName ? (
+                          <Text
+                            numberOfLines={1}
+                            style={[
+                              styles.searchResultCategory,
+                              {
+                                color:
+                                  theme.mutedText,
+                              },
+                            ]}
+                          >
+                            {result.categoryName}
+                          </Text>
+                        ) : null}
+                      </View>
+
+                      <Ionicons
+                        name={
+                          selected
+                            ? 'checkmark-circle'
+                            : 'ellipse-outline'
+                        }
+                        size={19}
+                        color={
+                          selected
+                            ? theme.text
+                            : theme.mutedText
+                        }
+                      />
+                    </Pressable>
+                  );
+                },
+              )}
+            </ScrollView>
+
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="선택한 카페 확정"
+              disabled={
+                !selectedSearchResultId
+              }
+              onPress={
+                confirmSearchResult
+              }
+              style={({
+                pressed,
+              }) => [
+                styles.confirmPlaceButton,
+                {
+                  backgroundColor:
+                    theme.button,
+                  borderColor:
+                    theme.strongLine,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : theme.radius.button,
+                  opacity:
+                    !selectedSearchResultId
+                      ? 0.45
+                      : pressed
+                        ? 0.72
+                        : 1,
+                },
+              ]}
+            >
+              <Ionicons
+                name="location"
+                size={17}
+                color={
+                  theme.buttonText
+                }
+              />
+              <Text
+                style={[
+                  styles.confirmPlaceButtonText,
+                  {
+                    color:
+                      theme.buttonText,
+                  },
+                ]}
+              >
+                이 카페로 확정
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        visible={
+          saveCompleteVisible
+        }
+        transparent
+        animationType="fade"
+        statusBarTranslucent
+        onRequestClose={() =>
+          setSaveCompleteVisible(
+            false,
+          )
+        }
+      >
+        <View
+          style={
+            styles.saveCompleteOverlay
+          }
+        >
+          <View
+            style={[
+              styles.saveCompleteCard,
+              {
+                backgroundColor:
+                  theme.card,
+                borderColor:
+                  theme.line,
+                borderRadius:
+                  isCityBlack
+                    ? 3
+                    : 18,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.saveCompleteIconBox,
+                {
+                  backgroundColor:
+                    theme.card2,
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 14,
+                },
+              ]}
+            >
+              <Ionicons
+                name="bookmark"
+                size={24}
+                color={
+                  theme.text
+                }
+              />
+            </View>
+
+            <Text
+              style={[
+                styles.saveCompleteTitle,
+                {
+                  color:
+                    theme.text,
+                },
+              ]}
+            >
+              카페 저장 완료
+            </Text>
+
+            <Text
+              style={[
+                styles.saveCompleteMessage,
+                {
+                  color:
+                    theme.text,
+                },
+              ]}
+            >
+              {`"${savedCafeName}" 저장이 완료됐어요.`}
+            </Text>
+
+            <Text
+              style={[
+                styles.saveCompleteSummary,
+                {
+                  color:
+                    theme.subText,
+                },
+              ]}
+            >
+              {savedCafeSummary}
+            </Text>
+
+            <View
+              style={
+                styles.saveCompleteActions
+              }
+            >
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="저장한 카페 목록 보기"
+                onPress={() => {
+                  setSaveCompleteVisible(
+                    false,
+                  );
+
+                  router.replace(
+                    '/place/saved-cafes' as never,
+                  );
+                }}
+                style={({
+                  pressed,
+                }) => [
+                  styles.saveCompletePrimaryButton,
+                  {
+                    backgroundColor:
+                      theme.button,
+                    borderColor:
+                      theme.strongLine,
+                    borderRadius:
+                      isCityBlack
+                        ? 2
+                        : theme.radius.button,
+                    opacity:
+                      pressed
+                        ? 0.72
+                        : 1,
+                  },
+                ]}
+              >
+                <Ionicons
+                  name="list-outline"
+                  size={16}
+                  color={
+                    theme.buttonText
+                  }
+                />
+
+                <Text
+                  style={[
+                    styles.saveCompletePrimaryText,
+                    {
+                      color:
+                        theme.buttonText,
+                    },
+                  ]}
+                >
+                  저장 목록 보기
+                </Text>
+              </Pressable>
+
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="탐험으로 돌아가기"
+                onPress={() => {
+                  setSaveCompleteVisible(
+                    false,
+                  );
+
+                  router.back();
+                }}
+                style={({
+                  pressed,
+                }) => [
+                  styles.saveCompleteSecondaryButton,
+                  {
+                    backgroundColor:
+                      theme.background,
+                    borderColor:
+                      theme.line,
+                    borderRadius:
+                      isCityBlack
+                        ? 2
+                        : theme.radius.button,
+                    opacity:
+                      pressed
+                        ? 0.58
+                        : 1,
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.saveCompleteSecondaryText,
+                    {
+                      color:
+                        theme.text,
+                    },
+                  ]}
+                >
+                  탐험으로
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 }
@@ -1472,6 +2677,68 @@ const styles =
       fontWeight: '700',
     },
 
+    placeSearchRow: {
+      flexDirection: 'row',
+      alignItems: 'stretch',
+      gap: 7,
+    },
+
+    placeNameInput: {
+      flex: 1,
+      minWidth: 0,
+    },
+
+    placeSearchButton: {
+      width: 76,
+      minHeight: 42,
+      paddingHorizontal: 8,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 5,
+    },
+
+    placeSearchButtonText: {
+      fontSize: 11,
+      fontWeight: '900',
+    },
+
+    placeSearchHelp: {
+      fontSize: 9.5,
+      fontWeight: '700',
+      lineHeight: 14,
+    },
+
+    confirmedPlaceBox: {
+      minHeight: 48,
+      paddingHorizontal: 10,
+      paddingVertical: 8,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: 8,
+    },
+
+    confirmedPlaceText: {
+      flex: 1,
+      minWidth: 0,
+    },
+
+    confirmedPlaceTitle: {
+      fontSize: 10.5,
+      fontWeight: '900',
+    },
+
+    confirmedPlaceAddress: {
+      marginTop: 2,
+      fontSize: 9.5,
+      fontWeight: '700',
+      lineHeight: 14,
+    },
+
     memoInput: {
       minHeight: 104,
       paddingHorizontal: 12,
@@ -1550,6 +2817,311 @@ const styles =
     emptyText: {
       fontSize: 10.5,
       fontWeight: '700',
+    },
+
+    searchModalScreen: {
+      flex: 1,
+    },
+
+    searchModalHeader: {
+      minHeight: 66,
+      paddingHorizontal: 14,
+      paddingBottom: 10,
+      borderBottomWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+    },
+
+    searchModalClose: {
+      width: 36,
+      height: 36,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    searchModalHeaderText: {
+      flex: 1,
+      minWidth: 0,
+    },
+
+    searchModalTitle: {
+      fontSize: 17,
+      fontWeight: '900',
+    },
+
+    searchModalSubtitle: {
+      marginTop: 2,
+      fontSize: 9.5,
+      fontWeight: '700',
+      lineHeight: 13,
+    },
+
+    searchModalContent: {
+      flex: 1,
+      paddingHorizontal: 14,
+      paddingTop: 11,
+      gap: 9,
+    },
+
+    searchModalInputRow: {
+      flexDirection: 'row',
+      alignItems: 'stretch',
+      gap: 7,
+    },
+
+    searchModalInput: {
+      flex: 1,
+      minWidth: 0,
+      minHeight: 42,
+      paddingHorizontal: 12,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      fontSize: 12,
+      fontWeight: '700',
+    },
+
+    searchModalButton: {
+      width: 78,
+      minHeight: 42,
+      paddingHorizontal: 8,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 5,
+    },
+
+    searchModalButtonText: {
+      fontSize: 11,
+      fontWeight: '900',
+    },
+
+    searchErrorBox: {
+      paddingHorizontal: 10,
+      paddingVertical: 8,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 7,
+    },
+
+    searchErrorText: {
+      flex: 1,
+      minWidth: 0,
+      fontSize: 9.5,
+      fontWeight: '700',
+      lineHeight: 14,
+    },
+
+    searchMapFrame: {
+      height: 250,
+      overflow: 'hidden',
+      borderWidth:
+        StyleSheet.hairlineWidth,
+    },
+
+    searchMap: {
+      ...StyleSheet.absoluteFillObject,
+    },
+
+    searchMapEmpty: {
+      ...StyleSheet.absoluteFillObject,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 7,
+    },
+
+    searchMapEmptyText: {
+      fontSize: 10.5,
+      fontWeight: '700',
+    },
+
+    searchResultHeader: {
+      minHeight: 24,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+
+    searchResultTitle: {
+      fontSize: 12.5,
+      fontWeight: '900',
+    },
+
+    searchResultCount: {
+      fontSize: 10,
+      fontWeight: '800',
+    },
+
+    searchResultScroll: {
+      flex: 1,
+      minHeight: 0,
+    },
+
+    searchResultList: {
+      gap: 7,
+      paddingBottom: 4,
+    },
+
+    searchResultCard: {
+      minHeight: 72,
+      paddingHorizontal: 10,
+      paddingVertical: 9,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 9,
+    },
+
+    searchResultNumber: {
+      width: 28,
+      height: 28,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    searchResultNumberText: {
+      fontSize: 10.5,
+      fontWeight: '900',
+    },
+
+    searchResultText: {
+      flex: 1,
+      minWidth: 0,
+    },
+
+    searchResultName: {
+      fontSize: 11.5,
+      fontWeight: '900',
+    },
+
+    searchResultAddress: {
+      marginTop: 3,
+      fontSize: 9.5,
+      fontWeight: '700',
+      lineHeight: 13,
+    },
+
+    searchResultCategory: {
+      marginTop: 3,
+      fontSize: 8.5,
+      fontWeight: '700',
+    },
+
+    confirmPlaceButton: {
+      minHeight: 46,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 7,
+    },
+
+    confirmPlaceButtonText: {
+      fontSize: 12.5,
+      fontWeight: '900',
+    },
+
+    saveCompleteOverlay: {
+      flex: 1,
+      paddingHorizontal: 22,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor:
+        'rgba(22, 17, 12, 0.46)',
+    },
+
+    saveCompleteCard: {
+      width: '100%',
+      maxWidth: 360,
+      paddingHorizontal: 18,
+      paddingTop: 20,
+      paddingBottom: 16,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      alignItems: 'center',
+    },
+
+    saveCompleteIconBox: {
+      width: 52,
+      height: 52,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    saveCompleteTitle: {
+      marginTop: 13,
+      fontSize: 18,
+      fontWeight: '900',
+      letterSpacing: -0.35,
+      textAlign: 'center',
+    },
+
+    saveCompleteMessage: {
+      marginTop: 8,
+      fontSize: 12,
+      fontWeight: '800',
+      lineHeight: 18,
+      textAlign: 'center',
+    },
+
+    saveCompleteSummary: {
+      marginTop: 4,
+      fontSize: 10,
+      fontWeight: '700',
+      lineHeight: 15,
+      textAlign: 'center',
+    },
+
+    saveCompleteActions: {
+      width: '100%',
+      marginTop: 18,
+      flexDirection: 'row',
+      gap: 8,
+    },
+
+    saveCompletePrimaryButton: {
+      flex: 1.25,
+      minHeight: 42,
+      paddingHorizontal: 10,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 5,
+    },
+
+    saveCompleteSecondaryButton: {
+      flex: 0.75,
+      minHeight: 42,
+      paddingHorizontal: 10,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    saveCompletePrimaryText: {
+      fontSize: 10.5,
+      fontWeight: '900',
+    },
+
+    saveCompleteSecondaryText: {
+      fontSize: 10.5,
+      fontWeight: '900',
     },
 
     saveButton: {

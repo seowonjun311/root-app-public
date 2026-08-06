@@ -80,7 +80,7 @@ import { useRootTheme } from '../../store/rootTheme';
 import {
   EXPLORATION_REWARD_NAMES,
   EXPLORATION_THEME_BADGE_NAMES,
-} from '../../store/explorationCatalog';
+} from '../../store/explorationHomeNames';
 
 import {
   loadLocalExplorationData,
@@ -29439,38 +29439,9 @@ const DEFAULT_EXPLORATION_REWARD_IMAGE =
   require('../../assets/village/buildings/building3.png');
 
 /*
- * 최근 전국 탐험 보강 통합 검수
- * - explorationCatalog에 등록된 보상은 EXPLORATION_REWARD_NAMES를 통해 자동 동기화됩니다.
- * - 수동 이미지가 없는 향후 보상도 DEFAULT_EXPLORATION_REWARD_IMAGE를 사용하므로 가방에서 누락되지 않습니다.
+ * 전체 탐험 보상 매핑 검수는 앱 시작 시 실행하지 않습니다.
+ * 필요할 때 npm run verify:exploration-home-names로 확인합니다.
  */
-if (__DEV__) {
-  const recentExplorationRewardIds = Object.keys(
-    EXPLORATION_REWARD_NAMES
-  ).filter((rewardId) => rewardId.startsWith('explore-'));
-
-  const missingHomeItemIds = recentExplorationRewardIds.filter(
-    (rewardId) => !EXPLORATION_HOME_ITEMS[rewardId]
-  );
-
-  const missingRewardImageIds = recentExplorationRewardIds.filter(
-    (rewardId) =>
-      !buildingImages[rewardId as keyof typeof buildingImages]
-  );
-
-  console.log('HOME EXPLORATION REWARD MAP INSPECTION', {
-    catalogRewardCount: recentExplorationRewardIds.length,
-    explicitHomeItemCount: Object.keys(EXPLORATION_HOME_ITEMS).length,
-    explicitRewardImageCount: Object.keys(buildingImages).filter((id) =>
-      id.startsWith('explore-')
-    ).length,
-    missingHomeItemCount: missingHomeItemIds.length,
-    missingRewardImageCount: missingRewardImageIds.length,
-    fallbackImageEnabled: true,
-  });
-}
-
-
-
 function getTodayIndex() {
   const day = new Date().getDay();
   return day === 0 ? 6 : day - 1;

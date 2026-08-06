@@ -3,6 +3,7 @@ import {
   router,
   useFocusEffect,
 } from 'expo-router';
+import * as Location from 'expo-location';
 import {
   useCallback,
   useEffect,
@@ -12,6 +13,7 @@ import {
 } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -44,6 +46,7 @@ import {
 
 // SAVED_CAFE_V37_MAP_SCREEN
 // SAVED_CAFE_V38_MAP_SEARCH_FILTER
+// SAVED_CAFE_V39_CURRENT_LOCATION_DISTANCE
 
 const DEFAULT_REGION: Region = {
   latitude: 37.5665,
@@ -85,6 +88,46 @@ const STATUS_FILTER_OPTIONS: {
     label: '방문했어요',
   },
 ];
+
+const DISTANCE_FILTER_OPTIONS: {
+  radiusKm: number | null;
+  label: string;
+}[] = [
+  {
+    radiusKm: null,
+    label: '전체',
+  },
+  {
+    radiusKm: 1,
+    label: '1km',
+  },
+  {
+    radiusKm: 3,
+    label: '3km',
+  },
+  {
+    radiusKm: 5,
+    label: '5km',
+  },
+  {
+    radiusKm: 10,
+    label: '10km',
+  },
+  {
+    radiusKm: 30,
+    label: '30km',
+  },
+];
+
+type MapCoordinate = {
+  latitude: number;
+  longitude: number;
+};
+
+type LocationPermissionState =
+  | 'unknown'
+  | 'granted'
+  | 'denied';
 
 type MappableSavedCafeEntry =
   SavedCafeLocalEntry & {
@@ -129,6 +172,76 @@ function normalizeMapSearchText(
   return value
     .trim()
     .toLocaleLowerCase('ko-KR');
+}
+
+function getDistanceKm(
+  first: MapCoordinate,
+  second: MapCoordinate,
+) {
+  const earthRadiusKm = 6371;
+  const toRadians = (
+    value: number,
+  ) => (value * Math.PI) / 180;
+
+  const latitudeDifference =
+    toRadians(
+      second.latitude -
+        first.latitude,
+    );
+
+  const longitudeDifference =
+    toRadians(
+      second.longitude -
+        first.longitude,
+    );
+
+  const firstLatitude =
+    toRadians(first.latitude);
+
+  const secondLatitude =
+    toRadians(second.latitude);
+
+  const haversine =
+    Math.sin(
+      latitudeDifference / 2,
+    ) ** 2 +
+    Math.cos(firstLatitude) *
+      Math.cos(secondLatitude) *
+      Math.sin(
+        longitudeDifference / 2,
+      ) ** 2;
+
+  return (
+    earthRadiusKm *
+    2 *
+    Math.atan2(
+      Math.sqrt(haversine),
+      Math.sqrt(1 - haversine),
+    )
+  );
+}
+
+function formatDistance(
+  distanceKm: number,
+) {
+  if (distanceKm < 1) {
+    return `${Math.max(
+      1,
+      Math.round(
+        distanceKm * 1000,
+      ),
+    )}m`;
+  }
+
+  if (distanceKm < 10) {
+    return `${distanceKm.toFixed(
+      1,
+    )}km`;
+  }
+
+  return `${Math.round(
+    distanceKm,
+  )}km`;
 }
 
 export default function SavedCafesMapScreen() {
@@ -201,6 +314,35 @@ export default function SavedCafesMapScreen() {
     setFiltersExpanded,
   ] = useState(false);
 
+  const [
+    userCoordinate,
+    setUserCoordinate,
+  ] =
+    useState<MapCoordinate | null>(
+      null,
+    );
+
+  const [
+    locationPermission,
+    setLocationPermission,
+  ] =
+    useState<LocationPermissionState>(
+      'unknown',
+    );
+
+  const [
+    locating,
+    setLocating,
+  ] = useState(false);
+
+  const [
+    distanceRadiusKm,
+    setDistanceRadiusKm,
+  ] =
+    useState<number | null>(
+      null,
+    );
+
   const normalizedSearchQuery =
     normalizeMapSearchText(
       searchQuery,
@@ -269,6 +411,37 @@ export default function SavedCafesMapScreen() {
             return false;
           }
 
+          if (
+            distanceRadiusKm !== null
+          ) {
+            if (
+              !userCoordinate ||
+              !isMappableSavedCafeEntry(
+                entry,
+              )
+            ) {
+              return false;
+            }
+
+            const distanceKm =
+              getDistanceKm(
+                userCoordinate,
+                {
+                  latitude:
+                    entry.latitude,
+                  longitude:
+                    entry.longitude,
+                },
+              );
+
+            if (
+              distanceKm >
+              distanceRadiusKm
+            ) {
+              return false;
+            }
+          }
+
           if (!normalizedSearchQuery) {
             return true;
           }
@@ -309,20 +482,52 @@ export default function SavedCafesMapScreen() {
         },
       );
     }, [
+      distanceRadiusKm,
       entries,
       normalizedSearchQuery,
       primaryThemeFilter,
       statusFilter,
+      userCoordinate,
     ]);
 
   const coordinateEntries =
-    useMemo(
-      () =>
+    useMemo(() => {
+      const nextEntries =
         filteredEntries.filter(
           isMappableSavedCafeEntry,
-        ),
-      [filteredEntries],
-    );
+        );
+
+      if (!userCoordinate) {
+        return nextEntries;
+      }
+
+      return [
+        ...nextEntries,
+      ].sort(
+        (first, second) =>
+          getDistanceKm(
+            userCoordinate,
+            {
+              latitude:
+                first.latitude,
+              longitude:
+                first.longitude,
+            },
+          ) -
+          getDistanceKm(
+            userCoordinate,
+            {
+              latitude:
+                second.latitude,
+              longitude:
+                second.longitude,
+            },
+          ),
+      );
+    }, [
+      filteredEntries,
+      userCoordinate,
+    ]);
 
   const missingCoordinateCount =
     filteredEntries.length -
@@ -332,6 +537,7 @@ export default function SavedCafesMapScreen() {
     statusFilter !== MAP_FILTER_ALL,
     primaryThemeFilter !==
       MAP_FILTER_ALL,
+    distanceRadiusKm !== null,
   ].filter(Boolean).length;
 
   const hasActiveSearchOrFilter =
@@ -351,15 +557,46 @@ export default function SavedCafesMapScreen() {
     ],
   );
 
+  const selectedDistanceKm =
+    useMemo(() => {
+      if (
+        !selectedEntry ||
+        !userCoordinate
+      ) {
+        return null;
+      }
+
+      return getDistanceKm(
+        userCoordinate,
+        {
+          latitude:
+            selectedEntry.latitude,
+          longitude:
+            selectedEntry.longitude,
+        },
+      );
+    }, [
+      selectedEntry,
+      userCoordinate,
+    ]);
+
   const coordinateKey = useMemo(
     () =>
-      coordinateEntries
-        .map(
+      [
+        userCoordinate
+          ? `user:${userCoordinate.latitude}:${userCoordinate.longitude}`
+          : 'user:none',
+        `radius:${distanceRadiusKm ?? 'all'}`,
+        ...coordinateEntries.map(
           (entry) =>
             `${entry.cafe.placeId}:${entry.latitude}:${entry.longitude}`,
-        )
-        .join('|'),
-    [coordinateEntries],
+        ),
+      ].join('|'),
+    [
+      coordinateEntries,
+      distanceRadiusKm,
+      userCoordinate,
+    ],
   );
 
   useFocusEffect(
@@ -500,7 +737,7 @@ export default function SavedCafesMapScreen() {
           edgePadding: {
             top:
               filtersExpanded
-                ? 235
+                ? 310
                 : 145,
             right: 48,
             bottom: 250,
@@ -594,6 +831,113 @@ export default function SavedCafesMapScreen() {
     );
   }, []);
 
+  const focusCurrentLocation =
+    useCallback(async () => {
+      if (locating) {
+        return;
+      }
+
+      if (userCoordinate) {
+        mapRef.current?.animateToRegion(
+          {
+            latitude:
+              userCoordinate.latitude,
+            longitude:
+              userCoordinate.longitude,
+            latitudeDelta: 0.012,
+            longitudeDelta: 0.012,
+          },
+          300,
+        );
+        return;
+      }
+
+      setLocating(true);
+
+      try {
+        let permission =
+          await Location.getForegroundPermissionsAsync();
+
+        if (
+          permission.status !==
+          'granted'
+        ) {
+          permission =
+            await Location.requestForegroundPermissionsAsync();
+        }
+
+        if (
+          permission.status !==
+          'granted'
+        ) {
+          setLocationPermission(
+            'denied',
+          );
+
+          Alert.alert(
+            '위치 권한이 필요해요',
+            '내 위치와 카페까지의 거리를 확인하려면 위치 권한을 허용해 주세요.',
+          );
+          return;
+        }
+
+        setLocationPermission(
+          'granted',
+        );
+
+        const currentPosition =
+          await Location.getCurrentPositionAsync(
+            {
+              accuracy:
+                Location.Accuracy
+                  .Balanced,
+            },
+          );
+
+        const nextCoordinate = {
+          latitude:
+            currentPosition.coords
+              .latitude,
+          longitude:
+            currentPosition.coords
+              .longitude,
+        };
+
+        setUserCoordinate(
+          nextCoordinate,
+        );
+
+        fittedCoordinateKeyRef.current =
+          '';
+
+        mapRef.current?.animateToRegion(
+          {
+            ...nextCoordinate,
+            latitudeDelta: 0.012,
+            longitudeDelta: 0.012,
+          },
+          320,
+        );
+      }
+      catch (error) {
+        console.log(
+          'SAVED CAFE MAP LOCATION ERROR',
+          error,
+        );
+
+        Alert.alert(
+          '현재 위치를 확인하지 못했어요',
+          '잠시 후 다시 시도해 주세요.',
+        );
+      }
+      finally {
+        setLocating(false);
+      }
+    }, [
+      locating,
+      userCoordinate,
+    ]);
+
   const clearMapSearchAndFilters =
     useCallback(() => {
       setSearchQuery('');
@@ -603,6 +947,7 @@ export default function SavedCafesMapScreen() {
       setPrimaryThemeFilter(
         MAP_FILTER_ALL,
       );
+      setDistanceRadiusKm(null);
       fittedCoordinateKeyRef.current =
         '';
     }, []);
@@ -953,14 +1298,18 @@ export default function SavedCafesMapScreen() {
             showsScale={false}
             showsBuildings
             showsTraffic={false}
-            showsUserLocation={false}
+            showsUserLocation={
+              locationPermission ===
+              'granted'
+            }
+            showsMyLocationButton={false}
             onMapReady={() =>
               setMapReady(true)
             }
             mapPadding={{
               top:
                 filtersExpanded
-                  ? 235
+                  ? 310
                   : 145,
               right: 18,
               bottom: 205,
@@ -1342,6 +1691,112 @@ export default function SavedCafesMapScreen() {
                       ),
                     )}
                   </ScrollView>
+
+                  <Text
+                    style={[
+                      styles.filterTitle,
+                      {
+                        color:
+                          theme.subText,
+                      },
+                    ]}
+                  >
+                    내 주변 거리
+                  </Text>
+
+                  {userCoordinate ? (
+                    <ScrollView
+                      horizontal
+                      showsHorizontalScrollIndicator={
+                        false
+                      }
+                      contentContainerStyle={
+                        styles.filterChipRow
+                      }
+                    >
+                      {DISTANCE_FILTER_OPTIONS.map(
+                        (option) => (
+                          <MapFilterChip
+                            key={
+                              option.radiusKm ??
+                              'all'
+                            }
+                            label={
+                              option.label
+                            }
+                            selected={
+                              distanceRadiusKm ===
+                              option.radiusKm
+                            }
+                            onPress={() =>
+                              setDistanceRadiusKm(
+                                option.radiusKm,
+                              )
+                            }
+                            theme={theme}
+                            isCityBlack={
+                              isCityBlack
+                            }
+                          />
+                        ),
+                      )}
+                    </ScrollView>
+                  ) : (
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel="내 위치를 불러와 거리 필터 사용하기"
+                      onPress={
+                        focusCurrentLocation
+                      }
+                      style={({
+                        pressed,
+                      }) => [
+                        styles.locationFilterHint,
+                        {
+                          backgroundColor:
+                            theme.background,
+                          borderColor:
+                            theme.line,
+                          borderRadius:
+                            isCityBlack
+                              ? 2
+                              : 8,
+                          opacity:
+                            pressed
+                              ? 0.58
+                              : 1,
+                        },
+                      ]}
+                    >
+                      {locating ? (
+                        <ActivityIndicator
+                          size="small"
+                          color={
+                            theme.text
+                          }
+                        />
+                      ) : (
+                        <Ionicons
+                          name="locate-outline"
+                          size={14}
+                          color={
+                            theme.text
+                          }
+                        />
+                      )}
+                      <Text
+                        style={[
+                          styles.locationFilterHintText,
+                          {
+                            color:
+                              theme.text,
+                          },
+                        ]}
+                      >
+                        내 위치를 불러오면 거리 필터를 사용할 수 있어요.
+                      </Text>
+                    </Pressable>
+                  )}
                 </View>
               ) : null}
             </View>
@@ -1386,6 +1841,69 @@ export default function SavedCafesMapScreen() {
               />
             </Pressable>
 
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={
+                userCoordinate
+                  ? '내 위치로 지도 이동'
+                  : '현재 위치 확인'
+              }
+              onPress={
+                focusCurrentLocation
+              }
+              disabled={locating}
+              style={({ pressed }) => [
+                styles.locationButton,
+                {
+                  top: 62,
+                  right: 12,
+                  backgroundColor:
+                    userCoordinate
+                      ? theme.button
+                      : theme.card,
+                  borderColor:
+                    userCoordinate
+                      ? theme.strongLine
+                      : theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 11,
+                  opacity:
+                    locating
+                      ? 0.55
+                      : pressed
+                        ? 0.62
+                        : 1,
+                },
+              ]}
+            >
+              {locating ? (
+                <ActivityIndicator
+                  size="small"
+                  color={
+                    userCoordinate
+                      ? theme.buttonText
+                      : theme.text
+                  }
+                />
+              ) : (
+                <Ionicons
+                  name={
+                    userCoordinate
+                      ? 'navigate'
+                      : 'locate-outline'
+                  }
+                  size={18}
+                  color={
+                    userCoordinate
+                      ? theme.buttonText
+                      : theme.text
+                  }
+                />
+              )}
+            </Pressable>
+
             {coordinateEntries.length ===
             0 ? (
               <View
@@ -1394,7 +1912,7 @@ export default function SavedCafesMapScreen() {
                   {
                     top:
                       filtersExpanded
-                        ? 225
+                        ? 300
                         : 135,
                     left: 22,
                     right: 22,
@@ -1641,6 +2159,47 @@ export default function SavedCafesMapScreen() {
                       }
                     </Text>
                   </View>
+
+                  {selectedDistanceKm !==
+                  null ? (
+                    <View
+                      style={[
+                        styles.badge,
+                        {
+                          backgroundColor:
+                            theme.background,
+                          borderColor:
+                            theme.line,
+                          borderRadius:
+                            isCityBlack
+                              ? 2
+                              : 999,
+                        },
+                      ]}
+                    >
+                      <Ionicons
+                        name="navigate-outline"
+                        size={12}
+                        color={
+                          theme.subText
+                        }
+                      />
+                      <Text
+                        style={[
+                          styles.badgeText,
+                          {
+                            color:
+                              theme.text,
+                          },
+                        ]}
+                      >
+                        내 위치에서{' '}
+                        {formatDistance(
+                          selectedDistanceKm,
+                        )}
+                      </Text>
+                    </View>
+                  ) : null}
 
                   <View
                     style={[
@@ -1956,7 +2515,34 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
 
+  locationFilterHint: {
+    minHeight: 34,
+    paddingHorizontal: 9,
+    borderWidth:
+      StyleSheet.hairlineWidth,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+
+  locationFilterHintText: {
+    flex: 1,
+    minWidth: 0,
+    fontSize: 8.5,
+    fontWeight: '800',
+  },
+
   fitButton: {
+    position: 'absolute',
+    width: 42,
+    height: 42,
+    borderWidth:
+      StyleSheet.hairlineWidth,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  locationButton: {
     position: 'absolute',
     width: 42,
     height: 42,

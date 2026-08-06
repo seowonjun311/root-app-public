@@ -23,6 +23,14 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { useRootTheme } from "../store/rootTheme";
+import {
+  buildingImages as homeBuildingImages,
+} from "../components/home/homeExplorationAssets";
+import {
+  buildingOffsets as homeBuildingOffsets,
+  buildingImageSizes as homeBuildingImageSizes,
+  buildingSizes as homeBuildingSizes,
+} from "../components/home/homeVillageLayout";
 
 const grassTile = require("../assets/village/tiles/grass_tile.png");
 
@@ -41,6 +49,28 @@ const INITIAL_MAP_TOP = -120;
 
 const VILLAGE_LIKE_STORAGE_KEY = "root_friend_village_likes_v1";
 
+const buildingImages: Record<string, any> =
+  homeBuildingImages;
+
+const buildingOffsets: Record<
+  string,
+  {
+    x: number;
+    y: number;
+  }
+> = homeBuildingOffsets;
+
+const buildingImageSizes: Record<string, number> =
+  homeBuildingImageSizes;
+
+const buildingSizes: Record<
+  string,
+  {
+    cols: number;
+    rows: number;
+  }
+> = homeBuildingSizes;
+
 type PlacedBuilding = {
   id?: string;
 
@@ -52,240 +82,13 @@ type PlacedBuilding = {
   flipped?: boolean;
 };
 
-const buildingImages: Record<string, any> = {
-  tree1: require("../assets/village/buildings/tree1.png"),
 
-  tree2: require("../assets/village/buildings/tree2.png"),
 
-  tree3: require("../assets/village/buildings/tree3.png"),
 
-  tree4: require("../assets/village/buildings/tree4.png"),
 
-  tree5: require("../assets/village/buildings/tree5.png"),
 
-  tree6: require("../assets/village/buildings/tree6.png"),
 
-  tree7: require("../assets/village/buildings/tree7.png"),
 
-  building1: require("../assets/village/buildings/building1.png"),
-
-  building2: require("../assets/village/buildings/building2.png"),
-
-  building3: require("../assets/village/buildings/building3.png"),
-
-  building4: require("../assets/village/buildings/building4.png"),
-
-  building5: require("../assets/village/buildings/building5.png"),
-
-  building6: require("../assets/village/buildings/building6.png"),
-
-  building7: require("../assets/village/buildings/building7.png"),
-
-  object1: require("../assets/village/buildings/object1.png"),
-
-  object2: require("../assets/village/buildings/object2.png"),
-
-  object3: require("../assets/village/buildings/object3.png"),
-};
-
-const buildingOffsets: Record<
-  string,
-  {
-    x: number;
-    y: number;
-  }
-> = {
-  tree1: {
-    x: -70,
-    y: -218,
-  },
-
-  tree2: {
-    x: -70,
-    y: -235,
-  },
-
-  tree3: {
-    x: -75,
-    y: -210,
-  },
-
-  tree4: {
-    x: -75,
-    y: -190,
-  },
-
-  tree5: {
-    x: -75,
-    y: -190,
-  },
-
-  tree6: {
-    x: -75,
-    y: -170,
-  },
-
-  tree7: {
-    x: -5,
-    y: -110,
-  },
-
-  building1: {
-    x: -80,
-    y: -150,
-  },
-
-  building2: {
-    x: 0,
-    y: -80,
-  },
-
-  building3: {
-    x: -80,
-    y: -100,
-  },
-
-  building4: {
-    x: -80,
-    y: -150,
-  },
-
-  building5: {
-    x: 10,
-    y: -80,
-  },
-
-  building6: {
-    x: 10,
-    y: -80,
-  },
-
-  building7: {
-    x: 10,
-    y: -80,
-  },
-
-  object1: {
-    x: 60,
-    y: -20,
-  },
-
-  object2: {
-    x: 65,
-    y: -25,
-  },
-
-  object3: {
-    x: 59,
-    y: -20,
-  },
-};
-
-const buildingImageSizes: Record<string, number> = {
-  object1: 90,
-  object2: 90,
-  object3: 90,
-
-  tree7: 210,
-
-  building2: 200,
-  building5: 180,
-  building6: 180,
-  building7: 180,
-};
-
-const buildingSizes: Record<
-  string,
-  {
-    cols: number;
-    rows: number;
-  }
-> = {
-  tree1: {
-    cols: 1,
-    rows: 1,
-  },
-
-  tree2: {
-    cols: 1,
-    rows: 1,
-  },
-
-  tree3: {
-    cols: 1,
-    rows: 1,
-  },
-
-  tree4: {
-    cols: 1,
-    rows: 1,
-  },
-
-  tree5: {
-    cols: 1,
-    rows: 1,
-  },
-
-  tree6: {
-    cols: 1,
-    rows: 1,
-  },
-
-  tree7: {
-    cols: 1,
-    rows: 1,
-  },
-
-  building1: {
-    cols: 2,
-    rows: 2,
-  },
-
-  building2: {
-    cols: 1,
-    rows: 1,
-  },
-
-  building3: {
-    cols: 2,
-    rows: 2,
-  },
-
-  building4: {
-    cols: 2,
-    rows: 2,
-  },
-
-  building5: {
-    cols: 1,
-    rows: 1,
-  },
-
-  building6: {
-    cols: 1,
-    rows: 1,
-  },
-
-  building7: {
-    cols: 1,
-    rows: 1,
-  },
-
-  object1: {
-    cols: 1,
-    rows: 1,
-  },
-
-  object2: {
-    cols: 1,
-    rows: 1,
-  },
-
-  object3: {
-    cols: 1,
-    rows: 1,
-  },
-};
 
 function getParam(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
@@ -411,6 +214,8 @@ export default function FriendVillageScreen() {
     profileEmoji?: string | string[];
 
     placedBuildings?: string | string[];
+
+    isOwnVillage?: string | string[];
   }>();
 
   const userId = String(getParam(params.userId) ?? "").trim();
@@ -422,6 +227,9 @@ export default function FriendVillageScreen() {
 
   const placedBuildings = parsePlacedBuildings(params.placedBuildings);
 
+  const isOwnVillage =
+    getParam(params.isOwnVillage) === "1";
+
   /*
    * 사용자 ID가 전달되지 않은 예전 이동 코드도
    * 닉네임을 기준으로 이뻐요 상태를 구분합니다.
@@ -431,6 +239,12 @@ export default function FriendVillageScreen() {
   const [isVillageLiked, setIsVillageLiked] = useState(false);
 
   useEffect(() => {
+    if (isOwnVillage) {
+      setIsVillageLiked(false);
+
+      return;
+    }
+
     let active = true;
 
     const loadLike = async () => {
@@ -454,9 +268,13 @@ export default function FriendVillageScreen() {
     return () => {
       active = false;
     };
-  }, [villageOwnerKey]);
+  }, [isOwnVillage, villageOwnerKey]);
 
   const toggleVillageLike = async () => {
+    if (isOwnVillage) {
+      return;
+    }
+
     const nextLiked = !isVillageLiked;
 
     setIsVillageLiked(nextLiked);
@@ -805,7 +623,7 @@ export default function FriendVillageScreen() {
             </Pressable>
           ) : null}
 
-          {!isLandscape ? (
+          {!isLandscape && !isOwnVillage ? (
             <View style={styles.likeRow}>
               <Pressable
                 onPress={toggleVillageLike}

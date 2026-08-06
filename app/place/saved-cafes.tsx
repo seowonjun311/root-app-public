@@ -605,6 +605,47 @@ export default function SavedCafesScreen() {
           </Text>
         </View>
 
+        {/* SAVED_CAFE_V37_MAP_BUTTON */}
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="저장 카페 지도 보기"
+          onPress={() =>
+            router.push(
+              '/place/saved-cafes-map' as never,
+            )
+          }
+          style={({
+            pressed,
+          }) => [
+            styles.addButton,
+            {
+              borderColor:
+                theme.line,
+              borderRadius:
+                isCityBlack
+                  ? 2
+                  : 9,
+              opacity:
+                pressed
+                  ? 0.55
+                  : 1,
+            },
+          ]}
+        >
+          <Ionicons
+            name="map-outline"
+            size={16}
+            color={theme.text}
+          />
+          <Text
+            style={[
+              styles.addButtonText,
+              { color: theme.text },
+            ]}
+          >
+            지도
+          </Text>
+        </Pressable>
         <Pressable
           onPress={() =>
             router.push(

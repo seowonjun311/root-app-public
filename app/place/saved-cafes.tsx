@@ -1508,6 +1508,73 @@ export default function SavedCafesScreen() {
                     {cafe.memo}
                   </Text>
                 ) : null}
+                {/* SAVED_CAFE_V41_LIST_FOLDER_BUTTON */}
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={`${cafe.name} 폴더에 담기`}
+                  onPress={() =>
+                    router.push({
+                      pathname:
+                        '/place/saved-cafe-folder-picker',
+                      params: {
+                        placeId:
+                          cafe.placeId,
+                      },
+                    } as never)
+                  }
+                  style={({
+                    pressed,
+                  }) => [
+                    styles.detailButton,
+                    {
+                      backgroundColor:
+                        theme.background,
+                      borderColor:
+                        theme.line,
+                      borderRadius:
+                        isCityBlack
+                          ? 2
+                          : 9,
+                      opacity:
+                        pressed
+                          ? 0.58
+                          : 1,
+                    },
+                  ]}
+                >
+                  <View
+                    style={
+                      styles.detailButtonTextArea
+                    }
+                  >
+                    <Ionicons
+                      name="folder-open-outline"
+                      size={15}
+                      color={
+                        theme.text
+                      }
+                    />
+                    <Text
+                      style={[
+                        styles.detailButtonText,
+                        {
+                          color:
+                            theme.text,
+                        },
+                      ]}
+                    >
+                      폴더에 담기
+                    </Text>
+                  </View>
+                  <Ionicons
+                    name="chevron-forward"
+                    size={15}
+                    color={
+                      theme.subText
+                    }
+                  />
+                </Pressable>
+
                 <Pressable
                   accessibilityRole="button"
                   accessibilityLabel={`${cafe.name} 상세 보기 및 수정`}

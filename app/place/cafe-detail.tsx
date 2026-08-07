@@ -1,4 +1,4 @@
-﻿import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import {
   router,
   useFocusEffect,
@@ -915,6 +915,96 @@ export default function CafeDetailScreen() {
               </Text>
             </View>
           </View>
+
+          {/* SAVED_CAFE_V41_DETAIL_FOLDER_BUTTON */}
+          {!editing ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`${entry.cafe.name} 나만의 폴더 관리`}
+              onPress={() =>
+                router.push({
+                  pathname:
+                    '/place/saved-cafe-folder-picker',
+                  params: {
+                    placeId:
+                      entry.cafe.placeId,
+                  },
+                } as never)
+              }
+              style={({ pressed }) => [
+                styles.folderManageButton,
+                {
+                  backgroundColor:
+                    theme.card,
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 3
+                      : 13,
+                  opacity:
+                    pressed
+                      ? 0.58
+                      : 1,
+                },
+              ]}
+            >
+              <View
+                style={[
+                  styles.folderManageIcon,
+                  {
+                    backgroundColor:
+                      theme.background,
+                    borderColor:
+                      theme.line,
+                    borderRadius:
+                      isCityBlack
+                        ? 2
+                        : 10,
+                  },
+                ]}
+              >
+                <Ionicons
+                  name="folder-open-outline"
+                  size={18}
+                  color={theme.text}
+                />
+              </View>
+              <View
+                style={
+                  styles.folderManageTextArea
+                }
+              >
+                <Text
+                  style={[
+                    styles.folderManageTitle,
+                    {
+                      color:
+                        theme.text,
+                    },
+                  ]}
+                >
+                  나만의 폴더
+                </Text>
+                <Text
+                  style={[
+                    styles.folderManageDescription,
+                    {
+                      color:
+                        theme.subText,
+                    },
+                  ]}
+                >
+                  공부·데이트·주말 목록처럼 여러 폴더에 분류해요.
+                </Text>
+              </View>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={theme.subText}
+              />
+            </Pressable>
+          ) : null}
 
           {editing ? (
             <>
@@ -2166,6 +2256,38 @@ const styles =
       fontSize: 9,
       fontWeight: '700',
     },
+    folderManageButton: {
+      minHeight: 66,
+      padding: 11,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 9,
+    },
+    folderManageIcon: {
+      width: 39,
+      height: 39,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    folderManageTextArea: {
+      flex: 1,
+      minWidth: 0,
+    },
+    folderManageTitle: {
+      fontSize: 11.5,
+      fontWeight: '900',
+    },
+    folderManageDescription: {
+      marginTop: 4,
+      fontSize: 8.8,
+      fontWeight: '700',
+      lineHeight: 13,
+    },
+
     sectionCard: {
       padding: 13,
       borderWidth:
@@ -2388,4 +2510,3 @@ const styles =
       fontWeight: '900',
     },
   });
-

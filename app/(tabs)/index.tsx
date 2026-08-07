@@ -2,6 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import {
   getApp,
 } from '@react-native-firebase/app';
+import RootySprite from '../../components/rooty/RootySprite';
+import type { RootyAction } from '../../constants/rootyAssets';
 
 import {
   getAuth,
@@ -83,13 +85,13 @@ import {
 } from '../../store/explorationHomeNames';
 
 import {
-  EXPLORATION_HOME_ITEMS,
   buildingImages,
+  EXPLORATION_HOME_ITEMS,
 } from '../../components/home/homeExplorationAssets';
 
 import {
-  buildingOffsets,
   buildingImageSizes,
+  buildingOffsets,
   buildingSizes,
 } from '../../components/home/homeVillageLayout';
 
@@ -1273,6 +1275,15 @@ const timerNotificationIdRef = useRef<string | null>(null);
 const [foxDirection, setFoxDirection] =
   useState<'downRight' | 'downLeft' | 'upRight' | 'upLeft'>('downRight');
 
+const [rootyAction, setRootyAction] =
+  useState<RootyAction>('walk');
+
+const [rootyCycleKey, setRootyCycleKey] =
+  useState(0);
+
+const rootyReactingRef =
+  useRef(false);
+
 const foxX = useSharedValue(430);
 const foxY = useSharedValue(250);
 
@@ -1378,65 +1389,332 @@ const isFoxBlockedByBuilding = (x: number, y: number) => {
 };
 
 useEffect(() => {
-  const directions = [
-    'downRight',
-    'downLeft',
-    'upRight',
-    'upLeft',
-  ] as const;
+  let cancelled = false;
 
-  const interval = setInterval(() => {
-    const randomDirection =
-      directions[Math.floor(Math.random() * directions.length)];
+  const timers:
+    Array<ReturnType<typeof setTimeout>> =
+      [];
 
-    setFoxDirection(randomDirection);
+  const later = (
+    callback: () => void,
+    delayMs: number
+  ) => {
+    const timer =
+      setTimeout(() => {
+        if (!cancelled) {
+          callback();
+        }
+      }, delayMs);
 
-    let nextX = foxX.value;
-    let nextY = foxY.value;
+    timers.push(timer);
+  };
 
-    if (randomDirection === 'downRight') {
-      nextX += 40;
-      nextY += 20;
+  const randomInt = (
+    min: number,
+    max: number
+  ) =>
+    Math.floor(
+      min +
+        Math.random() *
+          (max - min + 1)
+    );
+
+  const moveRootyOneStep =
+    () => {
+      const directions = [
+        'downRight',
+        'downLeft',
+        'upRight',
+        'upLeft',
+      ] as const;
+
+      const randomDirection =
+        directions[
+          Math.floor(
+            Math.random() *
+              directions.length
+          )
+        ];
+
+      setFoxDirection(
+        randomDirection
+      );
+
+      let nextX =
+        foxX.value;
+
+      let nextY =
+        foxY.value;
+
+      if (
+        randomDirection ===
+        'downRight'
+      ) {
+        nextX += 40;
+        nextY += 20;
+      }
+
+      if (
+        randomDirection ===
+        'downLeft'
+      ) {
+        nextX -= 40;
+        nextY += 20;
+      }
+
+      if (
+        randomDirection ===
+        'upRight'
+      ) {
+        nextX += 40;
+        nextY -= 20;
+      }
+
+      if (
+        randomDirection ===
+        'upLeft'
+      ) {
+        nextX -= 40;
+        nextY -= 20;
+      }
+
+      const minX = 120;
+      const maxX = 1200;
+
+      const minY = 80;
+      const maxY = 900;
+
+      nextX =
+        Math.max(
+          minX,
+          Math.min(
+            nextX,
+            maxX
+          )
+        );
+
+      nextY =
+        Math.max(
+          minY,
+          Math.min(
+            nextY,
+            maxY
+          )
+        );
+
+      if (
+        isFoxOutsideVillage(
+          nextX,
+          nextY
+        )
+      ) {
+        return;
+      }
+
+      if (
+        isFoxBlockedByBuilding(
+          nextX,
+          nextY
+        )
+      ) {
+        return;
+      }
+
+      foxX.value =
+        withTiming(
+          nextX,
+          {
+            duration: 900,
+          }
+        );
+
+      foxY.value =
+        withTiming(
+          nextY,
+          {
+            duration: 900,
+          }
+        );
+    };
+
+  const startRootyWalkSession =
+    () => {
+      if (
+        cancelled ||
+        rootyReactingRef.current
+      ) {
+        return;
+      }
+
+      setRootyAction(
+        'walk'
+      );
+
+      let remainingSteps =
+        randomInt(
+          4,
+          7
+        );
+
+      const walkStep =
+        () => {
+          if (
+            cancelled ||
+            rootyReactingRef.current
+          ) {
+            return;
+          }
+
+          moveRootyOneStep();
+
+          remainingSteps -= 1;
+
+          if (
+            remainingSteps >
+            0
+          ) {
+            later(
+              walkStep,
+              1050
+            );
+
+            return;
+          }
+
+          later(
+            startRootyRest,
+            500
+          );
+        };
+
+      walkStep();
+    };
+
+  const startRootyRest =
+    () => {
+      if (
+        cancelled ||
+        rootyReactingRef.current
+      ) {
+        return;
+      }
+
+      const roll =
+        Math.random();
+
+      if (roll < 0.55) {
+        setRootyAction(
+          'idle'
+        );
+
+        later(
+          startRootyWalkSession,
+          randomInt(
+            2000,
+            4000
+          )
+        );
+
+        return;
+      }
+
+      if (roll < 0.85) {
+        setRootyAction(
+          'sit'
+        );
+
+        later(
+          startRootyWalkSession,
+          randomInt(
+            3000,
+            5000
+          )
+        );
+
+        return;
+      }
+
+      setRootyAction(
+        'sleep'
+      );
+
+      later(
+        startRootyWalkSession,
+        randomInt(
+          6000,
+          9000
+        )
+      );
+    };
+
+  if (
+    !rootyReactingRef.current
+  ) {
+    later(
+      startRootyWalkSession,
+      rootyCycleKey === 0
+        ? 300
+        : 1500
+    );
+  }
+
+  return () => {
+    cancelled = true;
+
+    timers.forEach(
+      (timer) =>
+        clearTimeout(
+          timer
+        )
+    );
+  };
+}, [rootyCycleKey]);
+
+const handleRootyPress =
+  () => {
+    if (
+      rootyReactingRef.current
+    ) {
+      return;
     }
 
-    if (randomDirection === 'downLeft') {
-      nextX -= 40;
-      nextY += 20;
+    rootyReactingRef.current =
+      true;
+
+    setRootyAction(
+      'happy'
+    );
+
+    setRootyCycleKey(
+      (current) =>
+        current + 1
+    );
+  };
+
+const handleRootyAnimationEnd =
+  (
+    finishedAction:
+      RootyAction
+  ) => {
+    if (
+      finishedAction !==
+      'happy'
+    ) {
+      return;
     }
 
-    if (randomDirection === 'upRight') {
-      nextX += 40;
-      nextY -= 20;
-    }
+    rootyReactingRef.current =
+      false;
 
-    if (randomDirection === 'upLeft') {
-      nextX -= 40;
-      nextY -= 20;
-    }
+    setRootyAction(
+      'idle'
+    );
 
-    const minX = 120;
-const maxX = 1200;
-
-const minY = 80;
-const maxY = 900;
-
-nextX = Math.max(minX, Math.min(nextX, maxX));
-nextY = Math.max(minY, Math.min(nextY, maxY));
-
-if (isFoxOutsideVillage(nextX, nextY)) {
-  return;
-}
-
-if (isFoxBlockedByBuilding(nextX, nextY)) {
-  return;
-}
-
-foxX.value = withTiming(nextX, { duration: 900 });
-foxY.value = withTiming(nextY, { duration: 900 });
-  }, 1300);
-
-  return () => clearInterval(interval);
-}, []);
+    setRootyCycleKey(
+      (current) =>
+        current + 1
+    );
+  };
 
 useEffect(() => {
   const requestNotificationPermission = async () => {
@@ -6412,20 +6690,20 @@ const previewSize = isTwoByTwoBuilding
     },
   ]}
 >
-  {/* 프로필 캐릭터 */}
-  <View
+ {/* 프로필 캐릭터 */}
+<View
+  style={
+    styles.profileCharacterBox
+  }
+>
+  <Text
     style={
-      styles.profileCharacterBox
+      styles.profileCharacter
     }
   >
-    <Text
-      style={
-        styles.profileCharacter
-      }
-    >
-      🦊
-    </Text>
-  </View>
+    🦊
+  </Text>
+</View>
 
   {/* 닉네임·대표 뱃지·레벨 */}
   <View
@@ -6811,19 +7089,27 @@ top:
         />
       )}
 
-      <Animated.Image
-  source={foxImages[foxDirection]}
+      <Animated.View
   style={[
     styles.foxCharacter,
-
-    foxDirection === 'downLeft' && {
-      width: 105,
-      height: 105,
-    },
-
     foxAnimatedStyle,
   ]}
-/>
+>
+  <RootySprite
+    action={rootyAction}
+    size={80}
+    flipX={
+      foxDirection === 'downLeft' ||
+      foxDirection === 'upLeft'
+    }
+    onPress={
+      handleRootyPress
+    }
+    onAnimationEnd={
+      handleRootyAnimationEnd
+    }
+  />
+</Animated.View>
     </Animated.View>
   </View>
 </GestureDetector>

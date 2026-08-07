@@ -33,6 +33,9 @@ import {
   loadSavedCafeVisitState,
   SAVED_CAFE_FREQUENT_VISIT_COUNT,
   type SavedCafeVisit,
+  type SavedCafeVisitCompanion,
+  type SavedCafeVisitPurpose,
+  type SavedCafeVisitRevisitIntent,
   type SavedCafeVisitState,
 } from '../../store/savedCafeVisits';
 import {
@@ -40,6 +43,7 @@ import {
 } from '../../store/rootTheme';
 
 // SAVED_CAFE_V43_VISIT_INSIGHTS_SCREEN
+// SAVED_CAFE_V47_VISIT_PREFERENCE_INSIGHTS
 
 const RECENT_DAYS = 30;
 const WEEKDAY_LABELS = [
@@ -145,6 +149,210 @@ type RecentVisitRow = {
   visit: SavedCafeVisit;
   entry: SavedCafeLocalEntry;
 };
+
+type VisitCategoryRow = {
+  id: string;
+  label: string;
+  count: number;
+  percentage: number;
+};
+
+type CafePreferenceRow = {
+  entry: SavedCafeLocalEntry;
+  visitCount: number;
+  lastVisitedAt: string;
+};
+
+const PURPOSE_OPTIONS: ReadonlyArray<{
+  id: SavedCafeVisitPurpose;
+  label: string;
+}> = [
+  { id: 'study', label: '공부' },
+  { id: 'work', label: '업무·노트북' },
+  { id: 'date', label: '데이트' },
+  { id: 'conversation', label: '대화·모임' },
+  { id: 'dessert', label: '커피·디저트' },
+  { id: 'rest', label: '휴식' },
+  { id: 'other', label: '기타' },
+];
+
+const COMPANION_OPTIONS: ReadonlyArray<{
+  id: SavedCafeVisitCompanion;
+  label: string;
+}> = [
+  { id: 'alone', label: '혼자' },
+  { id: 'friend', label: '친구' },
+  { id: 'partner', label: '연인' },
+  { id: 'family', label: '가족' },
+  { id: 'coworker', label: '동료' },
+  { id: 'other', label: '기타' },
+];
+
+const REVISIT_OPTIONS: ReadonlyArray<{
+  id: SavedCafeVisitRevisitIntent;
+  label: string;
+}> = [
+  { id: 'yes', label: '또 가고 싶어요' },
+  { id: 'maybe', label: '생각해 볼래요' },
+  { id: 'no', label: '다시 가진 않을래요' },
+];
+
+function buildVisitCategoryRows<T extends string>(
+  visits: SavedCafeVisit[],
+  options: ReadonlyArray<{
+    id: T;
+    label: string;
+  }>,
+  getValue: (
+    visit: SavedCafeVisit,
+  ) => T | null,
+): VisitCategoryRow[] {
+  const trackedCount =
+    visits.reduce(
+      (count, visit) =>
+        getValue(visit)
+          ? count + 1
+          : count,
+      0,
+    );
+
+  if (trackedCount === 0) {
+    return [];
+  }
+
+  return options
+    .map((option) => {
+      const count =
+        visits.reduce(
+          (total, visit) =>
+            getValue(visit) ===
+            option.id
+              ? total + 1
+              : total,
+          0,
+        );
+
+      return {
+        id: option.id,
+        label: option.label,
+        count,
+        percentage:
+          Math.round(
+            (count /
+              trackedCount) *
+              100,
+          ),
+      };
+    })
+    .filter(
+      (row) =>
+        row.count > 0,
+    )
+    .sort(
+      (first, second) =>
+        second.count -
+        first.count,
+    );
+}
+
+function buildCafePreferenceRows(
+  visits: SavedCafeVisit[],
+  entryMap: Map<
+    string,
+    SavedCafeLocalEntry
+  >,
+): CafePreferenceRow[] {
+  const map =
+    new Map<
+      string,
+      {
+        visitCount: number;
+        lastVisitedAt: string;
+      }
+    >();
+
+  visits.forEach((visit) => {
+    const current =
+      map.get(
+        visit.placeId,
+      );
+
+    if (!current) {
+      map.set(
+        visit.placeId,
+        {
+          visitCount: 1,
+          lastVisitedAt:
+            visit.visitedAt,
+        },
+      );
+      return;
+    }
+
+    current.visitCount += 1;
+
+    if (
+      parseTime(
+        visit.visitedAt,
+      ) >
+      parseTime(
+        current.lastVisitedAt,
+      )
+    ) {
+      current.lastVisitedAt =
+        visit.visitedAt;
+    }
+  });
+
+  return Array.from(
+    map.entries(),
+  )
+    .map(([
+      placeId,
+      value,
+    ]) => {
+      const entry =
+        entryMap.get(
+          placeId,
+        );
+
+      return entry
+        ? {
+            entry,
+            visitCount:
+              value.visitCount,
+            lastVisitedAt:
+              value.lastVisitedAt,
+          }
+        : null;
+    })
+    .filter(
+      (
+        row,
+      ): row is CafePreferenceRow =>
+        Boolean(row),
+    )
+    .sort((first, second) => {
+      if (
+        second.visitCount !==
+        first.visitCount
+      ) {
+        return (
+          second.visitCount -
+          first.visitCount
+        );
+      }
+
+      return (
+        parseTime(
+          second.lastVisitedAt,
+        ) -
+        parseTime(
+          first.lastVisitedAt,
+        )
+      );
+    });
+}
 
 export default function SavedCafeVisitInsightsScreen() {
   const {
@@ -636,6 +844,299 @@ export default function SavedCafeVisitInsightsScreen() {
 
       return counts;
     }, [ratedVisits]);
+
+  // SAVED_CAFE_V47_VISIT_PREFERENCE_CALCULATION
+  const recentVisits =
+    useMemo(
+      () =>
+        validVisits.filter(
+          (visit) =>
+            parseTime(
+              visit.visitedAt,
+            ) >= recentThreshold,
+        ),
+      [
+        recentThreshold,
+        validVisits,
+      ],
+    );
+
+  const purposeRows =
+    useMemo(
+      () =>
+        buildVisitCategoryRows(
+          validVisits,
+          PURPOSE_OPTIONS,
+          (visit) =>
+            visit.purpose,
+        ),
+      [validVisits],
+    );
+
+  const companionRows =
+    useMemo(
+      () =>
+        buildVisitCategoryRows(
+          validVisits,
+          COMPANION_OPTIONS,
+          (visit) =>
+            visit.companion,
+        ),
+      [validVisits],
+    );
+
+  const revisitRows =
+    useMemo(
+      () =>
+        buildVisitCategoryRows(
+          validVisits,
+          REVISIT_OPTIONS,
+          (visit) =>
+            visit.revisitIntent,
+        ),
+      [validVisits],
+    );
+
+  const purposeTrackedCount =
+    purposeRows.reduce(
+      (sum, row) =>
+        sum + row.count,
+      0,
+    );
+
+  const companionTrackedCount =
+    companionRows.reduce(
+      (sum, row) =>
+        sum + row.count,
+      0,
+    );
+
+  const revisitTrackedCount =
+    revisitRows.reduce(
+      (sum, row) =>
+        sum + row.count,
+      0,
+    );
+
+  const metadataVisitCount =
+    useMemo(
+      () =>
+        validVisits.filter(
+          (visit) =>
+            Boolean(
+              visit.purpose ||
+                visit.companion ||
+                visit.revisitIntent,
+            ),
+        ).length,
+      [validVisits],
+    );
+
+  const completeDetailCount =
+    useMemo(
+      () =>
+        validVisits.filter(
+          (visit) =>
+            Boolean(
+              visit.purpose &&
+                visit.companion &&
+                visit.revisitIntent,
+            ),
+        ).length,
+      [validVisits],
+    );
+
+  const completeDetailRate =
+    validVisits.length > 0
+      ? Math.round(
+          (completeDetailCount /
+            validVisits.length) *
+            100,
+        )
+      : 0;
+
+  const revisitYesCount =
+    revisitRows.find(
+      (row) =>
+        row.id === 'yes',
+    )?.count ?? 0;
+
+  const revisitYesRate =
+    revisitTrackedCount > 0
+      ? Math.round(
+          (revisitYesCount /
+            revisitTrackedCount) *
+            100,
+        )
+      : 0;
+
+  const recentMetadataVisitCount =
+    useMemo(
+      () =>
+        recentVisits.filter(
+          (visit) =>
+            Boolean(
+              visit.purpose ||
+                visit.companion ||
+                visit.revisitIntent,
+            ),
+        ).length,
+      [recentVisits],
+    );
+
+  const recentMetadataRate =
+    recentVisits.length > 0
+      ? Math.round(
+          (recentMetadataVisitCount /
+            recentVisits.length) *
+            100,
+        )
+      : 0;
+
+  const recentPurposeRows =
+    useMemo(
+      () =>
+        buildVisitCategoryRows(
+          recentVisits,
+          PURPOSE_OPTIONS,
+          (visit) =>
+            visit.purpose,
+        ),
+      [recentVisits],
+    );
+
+  const recentCompanionRows =
+    useMemo(
+      () =>
+        buildVisitCategoryRows(
+          recentVisits,
+          COMPANION_OPTIONS,
+          (visit) =>
+            visit.companion,
+        ),
+      [recentVisits],
+    );
+
+  const recentRevisitRows =
+    useMemo(
+      () =>
+        buildVisitCategoryRows(
+          recentVisits,
+          REVISIT_OPTIONS,
+          (visit) =>
+            visit.revisitIntent,
+        ),
+      [recentVisits],
+    );
+
+  const recentRevisitTrackedCount =
+    recentRevisitRows.reduce(
+      (sum, row) =>
+        sum + row.count,
+      0,
+    );
+
+  const recentRevisitYesCount =
+    recentRevisitRows.find(
+      (row) =>
+        row.id === 'yes',
+    )?.count ?? 0;
+
+  const recentRevisitYesRate =
+    recentRevisitTrackedCount > 0
+      ? Math.round(
+          (recentRevisitYesCount /
+            recentRevisitTrackedCount) *
+            100,
+        )
+      : 0;
+
+  const dominantPurpose =
+    purposeRows[0] ??
+    null;
+
+  const dominantCompanion =
+    companionRows[0] ??
+    null;
+
+  const recentDominantPurpose =
+    recentPurposeRows[0] ??
+    null;
+
+  const recentDominantCompanion =
+    recentCompanionRows[0] ??
+    null;
+
+  const studyTopCafe =
+    useMemo(
+      () =>
+        buildCafePreferenceRows(
+          validVisits.filter(
+            (visit) =>
+              visit.purpose ===
+              'study',
+          ),
+          entryMap,
+        )[0] ?? null,
+      [
+        entryMap,
+        validVisits,
+      ],
+    );
+
+  const dateTopCafe =
+    useMemo(
+      () =>
+        buildCafePreferenceRows(
+          validVisits.filter(
+            (visit) =>
+              visit.purpose ===
+              'date',
+          ),
+          entryMap,
+        )[0] ?? null,
+      [
+        entryMap,
+        validVisits,
+      ],
+    );
+
+  const aloneTopCafe =
+    useMemo(
+      () =>
+        buildCafePreferenceRows(
+          validVisits.filter(
+            (visit) =>
+              visit.companion ===
+              'alone',
+          ),
+          entryMap,
+        )[0] ?? null,
+      [
+        entryMap,
+        validVisits,
+      ],
+    );
+
+  const revisitCafeRows =
+    useMemo(
+      () =>
+        buildCafePreferenceRows(
+          validVisits.filter(
+            (visit) =>
+              visit.revisitIntent ===
+              'yes',
+          ),
+          entryMap,
+        ).slice(
+          0,
+          5,
+        ),
+      [
+        entryMap,
+        validVisits,
+      ],
+    );
 
   const recentRows =
     useMemo<RecentVisitRow[]>(
@@ -1591,6 +2092,344 @@ export default function SavedCafeVisitInsightsScreen() {
             </>
           ) : null}
 
+          {/* SAVED_CAFE_V47_VISIT_PREFERENCE_UI */}
+          <SectionTitle
+            title="나의 카페 취향"
+            subtitle="방문 목적·동행·재방문 의향으로 자동 분석"
+            theme={theme}
+          />
+          <View
+            style={styles.metricGrid}
+          >
+            <MetricCard
+              label="취향 기록"
+              value={`${metadataVisitCount}/${validVisits.length}`}
+              icon="pencil-outline"
+              theme={theme}
+              isCityBlack={isCityBlack}
+            />
+            <MetricCard
+              label="상세 완성률"
+              value={`${completeDetailRate}%`}
+              icon="checkmark-circle-outline"
+              theme={theme}
+              isCityBlack={isCityBlack}
+            />
+            <MetricCard
+              label="또 가고 싶어요"
+              value={
+                revisitTrackedCount > 0
+                  ? `${revisitYesRate}%`
+                  : '미입력'
+              }
+              icon="heart-outline"
+              theme={theme}
+              isCityBlack={isCityBlack}
+            />
+            <MetricCard
+              label="최근 30일 기록"
+              value={`${recentMetadataRate}%`}
+              icon="time-outline"
+              theme={theme}
+              isCityBlack={isCityBlack}
+            />
+          </View>
+
+          <View
+            style={[
+              styles.insightHero,
+              {
+                backgroundColor:
+                  theme.card,
+                borderColor:
+                  theme.line,
+                borderRadius:
+                  isCityBlack
+                    ? 3
+                    : 16,
+              },
+            ]}
+          >
+            <View
+              style={styles.insightHeroIcon}
+            >
+              <Ionicons
+                name="heart-outline"
+                size={21}
+                color={theme.text}
+              />
+            </View>
+            <View
+              style={styles.insightHeroTextArea}
+            >
+              <Text
+                style={[
+                  styles.insightHeroLabel,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                취향 요약
+              </Text>
+              <Text
+                style={[
+                  styles.insightHeroTitle,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              >
+                {dominantPurpose
+                  ? `${dominantPurpose.label} 방문이 가장 많아요`
+                  : '상세 방문 기록을 조금 더 쌓아 보세요'}
+              </Text>
+              <Text
+                style={[
+                  styles.insightHeroDescription,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                {dominantPurpose
+                  ? `목적 기록 ${purposeTrackedCount}회 중 ${dominantPurpose.label} ${dominantPurpose.count}회(${dominantPurpose.percentage}%)`
+                  : 'V46 방문 상세에서 목적을 선택하면 나의 카페 사용 패턴이 보여요.'}
+                {dominantCompanion
+                  ? ` · 동행은 ${dominantCompanion.label} ${dominantCompanion.percentage}%`
+                  : ''}
+              </Text>
+            </View>
+          </View>
+
+          {purposeRows.length > 0 ? (
+            <>
+              <SectionTitle
+                title="방문 목적 비율"
+                subtitle={`${purposeTrackedCount}회의 목적 기록`}
+                theme={theme}
+              />
+              <CategoryDistributionPanel
+                rows={purposeRows}
+                theme={theme}
+                isCityBlack={isCityBlack}
+              />
+            </>
+          ) : null}
+
+          {companionRows.length > 0 ? (
+            <>
+              <SectionTitle
+                title="누구와 함께 갔나요"
+                subtitle={`${companionTrackedCount}회의 동행 기록`}
+                theme={theme}
+              />
+              <CategoryDistributionPanel
+                rows={companionRows}
+                theme={theme}
+                isCityBlack={isCityBlack}
+              />
+            </>
+          ) : null}
+
+          {revisitRows.length > 0 ? (
+            <>
+              <SectionTitle
+                title="재방문 의향"
+                subtitle={`${revisitTrackedCount}회의 재방문 의향 기록`}
+                theme={theme}
+              />
+              <CategoryDistributionPanel
+                rows={revisitRows}
+                theme={theme}
+                isCityBlack={isCityBlack}
+              />
+            </>
+          ) : null}
+
+          {recentVisitCount > 0 ? (
+            <>
+              <SectionTitle
+                title="최근 30일 취향 패턴"
+                subtitle={`${recentVisitCount}회 방문 기준`}
+                theme={theme}
+              />
+              <View
+                style={[
+                  styles.insightHero,
+                  {
+                    marginTop: 0,
+                    backgroundColor:
+                      theme.card,
+                    borderColor:
+                      theme.line,
+                    borderRadius:
+                      isCityBlack
+                        ? 3
+                        : 16,
+                  },
+                ]}
+              >
+                <View
+                  style={styles.insightHeroIcon}
+                >
+                  <Ionicons
+                    name="pulse-outline"
+                    size={21}
+                    color={theme.text}
+                  />
+                </View>
+                <View
+                  style={styles.insightHeroTextArea}
+                >
+                  <Text
+                    style={[
+                      styles.insightHeroLabel,
+                      {
+                        color:
+                          theme.subText,
+                      },
+                    ]}
+                  >
+                    최근 흐름
+                  </Text>
+                  <Text
+                    style={[
+                      styles.insightHeroTitle,
+                      {
+                        color:
+                          theme.text,
+                      },
+                    ]}
+                  >
+                    {recentDominantPurpose
+                      ? `${recentDominantPurpose.label} 중심의 카페 생활`
+                      : '최근 방문의 목적을 기록해 보세요'}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.insightHeroDescription,
+                      {
+                        color:
+                          theme.subText,
+                      },
+                    ]}
+                  >
+                    {`상세 기록 ${recentMetadataVisitCount}/${recentVisitCount}회(${recentMetadataRate}%)`}
+                    {recentDominantCompanion
+                      ? ` · ${recentDominantCompanion.label} 방문 ${recentDominantCompanion.percentage}%`
+                      : ''}
+                    {recentRevisitTrackedCount > 0
+                      ? ` · 또 가고 싶어요 ${recentRevisitYesRate}%`
+                      : ''}
+                  </Text>
+                </View>
+              </View>
+            </>
+          ) : null}
+
+          {studyTopCafe ||
+          dateTopCafe ||
+          aloneTopCafe ? (
+            <>
+              <SectionTitle
+                title="상황별 자주 간 카페"
+                subtitle="공부·데이트·혼자 방문 기준"
+                theme={theme}
+              />
+              <View
+                style={styles.stack}
+              >
+                {studyTopCafe ? (
+                  <CafeRankCard
+                    rank={1}
+                    entry={studyTopCafe.entry}
+                    primaryValue={`${studyTopCafe.visitCount}회`}
+                    secondaryValue={`최근 ${formatDate(studyTopCafe.lastVisitedAt)}`}
+                    badge="공부"
+                    onPress={() =>
+                      openVisitTimeline(
+                        studyTopCafe.entry.cafe.placeId,
+                      )
+                    }
+                    theme={theme}
+                    isCityBlack={isCityBlack}
+                  />
+                ) : null}
+                {dateTopCafe ? (
+                  <CafeRankCard
+                    rank={1}
+                    entry={dateTopCafe.entry}
+                    primaryValue={`${dateTopCafe.visitCount}회`}
+                    secondaryValue={`최근 ${formatDate(dateTopCafe.lastVisitedAt)}`}
+                    badge="데이트"
+                    onPress={() =>
+                      openVisitTimeline(
+                        dateTopCafe.entry.cafe.placeId,
+                      )
+                    }
+                    theme={theme}
+                    isCityBlack={isCityBlack}
+                  />
+                ) : null}
+                {aloneTopCafe ? (
+                  <CafeRankCard
+                    rank={1}
+                    entry={aloneTopCafe.entry}
+                    primaryValue={`${aloneTopCafe.visitCount}회`}
+                    secondaryValue={`최근 ${formatDate(aloneTopCafe.lastVisitedAt)}`}
+                    badge="혼자"
+                    onPress={() =>
+                      openVisitTimeline(
+                        aloneTopCafe.entry.cafe.placeId,
+                      )
+                    }
+                    theme={theme}
+                    isCityBlack={isCityBlack}
+                  />
+                ) : null}
+              </View>
+            </>
+          ) : null}
+
+          {revisitCafeRows.length > 0 ? (
+            <>
+              <SectionTitle
+                title="다시 가고 싶은 카페"
+                subtitle="‘또 가고 싶어요’로 남긴 방문 기준"
+                theme={theme}
+              />
+              <View
+                style={styles.stack}
+              >
+                {revisitCafeRows.map(
+                  (row, index) => (
+                    <CafeRankCard
+                      key={
+                        row.entry.cafe.placeId
+                      }
+                      rank={index + 1}
+                      entry={row.entry}
+                      primaryValue={`${row.visitCount}회`}
+                      secondaryValue={`최근 ${formatDate(row.lastVisitedAt)}`}
+                      badge="재방문"
+                      onPress={() =>
+                        openVisitTimeline(
+                          row.entry.cafe.placeId,
+                        )
+                      }
+                      theme={theme}
+                      isCityBlack={isCityBlack}
+                    />
+                  ),
+                )}
+              </View>
+            </>
+          ) : null}
+
           <SectionTitle
             title="최근 방문"
             subtitle="최근 8개의 방문 기록"
@@ -1840,6 +2679,93 @@ function SectionTitle({
       >
         {subtitle}
       </Text>
+    </View>
+  );
+}
+
+type CategoryDistributionPanelProps = {
+  rows: VisitCategoryRow[];
+  theme: Theme;
+  isCityBlack: boolean;
+};
+
+function CategoryDistributionPanel({
+  rows,
+  theme,
+  isCityBlack,
+}: CategoryDistributionPanelProps) {
+  return (
+    <View
+      style={[
+        styles.panel,
+        {
+          backgroundColor:
+            theme.card,
+          borderColor:
+            theme.line,
+          borderRadius:
+            isCityBlack
+              ? 3
+              : 15,
+        },
+      ]}
+    >
+      {rows.map(
+        (row, index) => (
+          <View
+            key={row.id}
+            style={[
+              styles.ratingRow,
+              index > 0
+                ? {
+                    borderTopWidth:
+                      StyleSheet.hairlineWidth,
+                    borderTopColor:
+                      theme.line,
+                  }
+                : null,
+            ]}
+          >
+            <View
+              style={styles.simpleTextArea}
+            >
+              <Text
+                style={[
+                  styles.ratingLabel,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              >
+                {row.label}
+              </Text>
+              <Text
+                style={[
+                  styles.simpleSubtitle,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                {row.count}회 기록
+              </Text>
+            </View>
+            <Text
+              style={[
+                styles.ratingCount,
+                {
+                  color:
+                    theme.subText,
+                },
+              ]}
+            >
+              {row.percentage}%
+            </Text>
+          </View>
+        ),
+      )}
     </View>
   );
 }

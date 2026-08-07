@@ -45,6 +45,7 @@ import {
 } from '../../store/rootTheme';
 
 // SAVED_CAFE_V42_VISIT_SCREEN
+// SAVED_CAFE_V43_VISIT_INSIGHTS_ENTRY
 
 const RELATION_LABELS = {
   wantToGo: '가보고 싶어요',
@@ -808,6 +809,53 @@ export default function SavedCafeVisitsScreen() {
             {pageSubtitle}
           </Text>
         </View>
+
+        {/* SAVED_CAFE_V43_VISIT_INSIGHTS_BUTTON */}
+        {!targetEntry ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="카페 방문 인사이트 보기"
+            onPress={() =>
+              router.push(
+                '/place/saved-cafe-visit-insights' as never,
+              )
+            }
+            style={({ pressed }) => [
+              styles.addHeaderButton,
+              {
+                backgroundColor:
+                  theme.background,
+                borderColor:
+                  theme.line,
+                borderRadius:
+                  isCityBlack
+                    ? 2
+                    : 9,
+                opacity:
+                  pressed
+                    ? 0.55
+                    : 1,
+              },
+            ]}
+          >
+            <Ionicons
+              name="analytics-outline"
+              size={15}
+              color={theme.text}
+            />
+            <Text
+              style={[
+                styles.addHeaderText,
+                {
+                  color:
+                    theme.text,
+                },
+              ]}
+            >
+              통계
+            </Text>
+          </Pressable>
+        ) : null}
 
         {targetEntry ? (
           <Pressable

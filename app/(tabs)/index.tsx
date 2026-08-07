@@ -7449,10 +7449,7 @@ top:
     action={rootyAction}
     playing={rootyRuntimeReady}
     size={80}
-    flipX={
-      foxDirection === 'downLeft' ||
-      foxDirection === 'upLeft'
-    }
+    direction={foxDirection}
     onPress={
       handleRootyPress
     }

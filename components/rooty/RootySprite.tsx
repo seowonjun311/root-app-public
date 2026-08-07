@@ -16,14 +16,24 @@ import {
 } from 'react-native';
 
 import {
-  getRootyFrames,
   ROOTY_ANIMATION,
   ROOTY_SIZE,
   type RootyAction,
 } from '../../constants/rootyAssets';
+import {
+  resolveRootyDirectionalFrames,
+  type RootyDirection,
+} from '../../constants/rootyDirectionalAssets';
 
 type RootySpriteProps = {
   action?: RootyAction;
+  /**
+   * ROOTY_BEHAVIOR_V5_DIRECTION_PROP
+   *
+   * Exact directional frames are preferred when registered.
+   * Missing directional frames fall back safely.
+   */
+  direction?: RootyDirection;
   size?: number;
   playing?: boolean;
 
@@ -67,11 +77,12 @@ type RootySpriteProps = {
 
 function RootySpriteComponent({
   action = 'idle',
+  direction = 'downRight',
   size = ROOTY_SIZE.overlay,
   playing = true,
   loop,
   frameMs,
-  flipX = false,
+  flipX,
   enableMotion = true,
   onPress,
   onAnimationEnd,
@@ -79,8 +90,32 @@ function RootySpriteComponent({
   imageStyle,
   testID = 'rooty-sprite',
 }: RootySpriteProps) {
-  const frames = useMemo(() => getRootyFrames(action), [action]);
-  const [frameIndex, setFrameIndex] = useState(0);
+  // ROOTY_BEHAVIOR_V5_DIRECTIONAL_RESOLVER
+  const resolvedFrames =
+    useMemo(
+      () =>
+        resolveRootyDirectionalFrames(
+          action,
+          direction
+        ),
+      [
+        action,
+        direction,
+      ]
+    );
+
+  const frames =
+    resolvedFrames.frames;
+
+  const effectiveFlipX =
+    flipX ??
+    resolvedFrames.flipX;
+
+  const frameSetKey =
+    `${action}:${direction}:${resolvedFrames.source}:${resolvedFrames.resolvedDirection}`;
+
+  const [frameIndex, setFrameIndex] =
+    useState(0);
 
   const translateY = useRef(new Animated.Value(0)).current;
   const scale = useRef(new Animated.Value(1)).current;
@@ -96,7 +131,7 @@ function RootySpriteComponent({
    */
   useEffect(() => {
     setFrameIndex(0);
-  }, [action]);
+  }, [frameSetKey]);
 
   /**
    * PNG 프레임 애니메이션.
@@ -266,7 +301,7 @@ function RootySpriteComponent({
           transform: [
             { translateY },
             { scale },
-            { scaleX: flipX ? -1 : 1 },
+            { scaleX: effectiveFlipX ? -1 : 1 },
           ],
         },
       ]}

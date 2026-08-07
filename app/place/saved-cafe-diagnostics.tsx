@@ -97,6 +97,15 @@ const MANUAL_ROUTES:
       pathname:
         '/place/saved-cafe-recommendation-preferences',
     },
+    {
+      // SAVED_CAFE_V52_INTEGRITY_REPAIR_ENTRY
+      label: '데이터 안전 복구',
+      description:
+        'V52 무결성 분석·백업·안전 정리',
+      icon: 'construct-outline',
+      pathname:
+        '/place/saved-cafe-integrity-repair',
+    },
   ];
 
 function getErrorMessage(

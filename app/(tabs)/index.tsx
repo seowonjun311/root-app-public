@@ -1388,6 +1388,7 @@ const isFoxBlockedByBuilding = (x: number, y: number) => {
   });
 };
 
+// ROOTY_BEHAVIOR_V3_NATURAL_ROUTINE
 useEffect(() => {
   let cancelled = false;
 
@@ -1419,122 +1420,150 @@ useEffect(() => {
           (max - min + 1)
     );
 
-  const moveRootyOneStep =
-    () => {
-      const directions = [
-        'downRight',
-        'downLeft',
-        'upRight',
-        'upLeft',
-      ] as const;
+  const directions = [
+    'downRight',
+    'downLeft',
+    'upRight',
+    'upLeft',
+  ] as const;
 
-      const randomDirection =
-        directions[
-          Math.floor(
-            Math.random() *
-              directions.length
-          )
-        ];
+  const pickRandomDirection =
+    () =>
+      directions[
+        randomInt(
+          0,
+          directions.length - 1
+        )
+      ];
+
+  const faceAnotherDirection =
+    () => {
+      if (
+        cancelled ||
+        rootyReactingRef.current
+      ) {
+        return;
+      }
 
       setFoxDirection(
-        randomDirection
+        pickRandomDirection()
       );
+    };
 
-      let nextX =
-        foxX.value;
-
-      let nextY =
-        foxY.value;
-
-      if (
-        randomDirection ===
-        'downRight'
+  const tryMoveRootyOneStep =
+    () => {
+      for (
+        let attempt = 0;
+        attempt < 4;
+        attempt += 1
       ) {
-        nextX += 40;
-        nextY += 20;
-      }
+        const randomDirection =
+          pickRandomDirection();
 
-      if (
-        randomDirection ===
-        'downLeft'
-      ) {
-        nextX -= 40;
-        nextY += 20;
-      }
+        let nextX =
+          foxX.value;
 
-      if (
-        randomDirection ===
-        'upRight'
-      ) {
-        nextX += 40;
-        nextY -= 20;
-      }
+        let nextY =
+          foxY.value;
 
-      if (
-        randomDirection ===
-        'upLeft'
-      ) {
-        nextX -= 40;
-        nextY -= 20;
-      }
+        if (
+          randomDirection ===
+          'downRight'
+        ) {
+          nextX += 40;
+          nextY += 20;
+        }
 
-      const minX = 120;
-      const maxX = 1200;
+        if (
+          randomDirection ===
+          'downLeft'
+        ) {
+          nextX -= 40;
+          nextY += 20;
+        }
 
-      const minY = 80;
-      const maxY = 900;
+        if (
+          randomDirection ===
+          'upRight'
+        ) {
+          nextX += 40;
+          nextY -= 20;
+        }
 
-      nextX =
-        Math.max(
-          minX,
-          Math.min(
+        if (
+          randomDirection ===
+          'upLeft'
+        ) {
+          nextX -= 40;
+          nextY -= 20;
+        }
+
+        const minX = 120;
+        const maxX = 1200;
+
+        const minY = 80;
+        const maxY = 900;
+
+        nextX =
+          Math.max(
+            minX,
+            Math.min(
+              nextX,
+              maxX
+            )
+          );
+
+        nextY =
+          Math.max(
+            minY,
+            Math.min(
+              nextY,
+              maxY
+            )
+          );
+
+        if (
+          isFoxOutsideVillage(
             nextX,
-            maxX
+            nextY
           )
+        ) {
+          continue;
+        }
+
+        if (
+          isFoxBlockedByBuilding(
+            nextX,
+            nextY
+          )
+        ) {
+          continue;
+        }
+
+        setFoxDirection(
+          randomDirection
         );
 
-      nextY =
-        Math.max(
-          minY,
-          Math.min(
+        foxX.value =
+          withTiming(
+            nextX,
+            {
+              duration: 900,
+            }
+          );
+
+        foxY.value =
+          withTiming(
             nextY,
-            maxY
-          )
-        );
+            {
+              duration: 900,
+            }
+          );
 
-      if (
-        isFoxOutsideVillage(
-          nextX,
-          nextY
-        )
-      ) {
-        return;
+        return true;
       }
 
-      if (
-        isFoxBlockedByBuilding(
-          nextX,
-          nextY
-        )
-      ) {
-        return;
-      }
-
-      foxX.value =
-        withTiming(
-          nextX,
-          {
-            duration: 900,
-          }
-        );
-
-      foxY.value =
-        withTiming(
-          nextY,
-          {
-            duration: 900,
-          }
-        );
+      return false;
     };
 
   const startRootyWalkSession =
@@ -1552,9 +1581,11 @@ useEffect(() => {
 
       let remainingSteps =
         randomInt(
-          4,
-          7
+          3,
+          6
         );
+
+      let blockedRetries = 0;
 
       const walkStep =
         () => {
@@ -1565,29 +1596,202 @@ useEffect(() => {
             return;
           }
 
-          moveRootyOneStep();
+          const moved =
+            tryMoveRootyOneStep();
 
-          remainingSteps -= 1;
+          if (moved) {
+            remainingSteps -= 1;
+            blockedRetries = 0;
+          } else {
+            blockedRetries += 1;
+          }
 
           if (
-            remainingSteps >
-            0
+            remainingSteps <= 0 ||
+            blockedRetries >= 3
           ) {
+            setRootyAction(
+              'idle'
+            );
+
             later(
-              walkStep,
-              1050
+              startRootyRest,
+              randomInt(
+                650,
+                1200
+              )
             );
 
             return;
           }
 
           later(
-            startRootyRest,
-            500
+            walkStep,
+            moved
+              ? randomInt(
+                  1000,
+                  1300
+                )
+              : randomInt(
+                  250,
+                  500
+                )
           );
         };
 
       walkStep();
+    };
+
+  const finishRestAndWalk =
+    () => {
+      if (
+        cancelled ||
+        rootyReactingRef.current
+      ) {
+        return;
+      }
+
+      setRootyAction(
+        'idle'
+      );
+
+      later(
+        startRootyWalkSession,
+        randomInt(
+          800,
+          1500
+        )
+      );
+    };
+
+  const startRootyLookAround =
+    () => {
+      if (
+        cancelled ||
+        rootyReactingRef.current
+      ) {
+        return;
+      }
+
+      setRootyAction(
+        'idle'
+      );
+
+      faceAnotherDirection();
+
+      later(
+        () => {
+          faceAnotherDirection();
+
+          later(
+            () => {
+              faceAnotherDirection();
+
+              later(
+                startRootyWalkSession,
+                randomInt(
+                  700,
+                  1400
+                )
+              );
+            },
+            randomInt(
+              650,
+              1100
+            )
+          );
+        },
+        randomInt(
+          650,
+          1100
+        )
+      );
+    };
+
+  const startRootyNapSequence =
+    () => {
+      if (
+        cancelled ||
+        rootyReactingRef.current
+      ) {
+        return;
+      }
+
+      // Sitting briefly doubles as the sleepy transition
+      // until dedicated doze frames are added.
+      setRootyAction(
+        'sit'
+      );
+
+      later(
+        () => {
+          if (
+            cancelled ||
+            rootyReactingRef.current
+          ) {
+            return;
+          }
+
+          setRootyAction(
+            'sleep'
+          );
+
+          later(
+            () => {
+              if (
+                cancelled ||
+                rootyReactingRef.current
+              ) {
+                return;
+              }
+
+              // Sit once after sleep so waking up
+              // does not jump directly into walking.
+              setRootyAction(
+                'sit'
+              );
+
+              later(
+                finishRestAndWalk,
+                randomInt(
+                  900,
+                  1400
+                )
+              );
+            },
+            randomInt(
+              6500,
+              10500
+            )
+          );
+        },
+        randomInt(
+          1200,
+          2200
+        )
+      );
+    };
+
+  const startRootySitRest =
+    () => {
+      if (
+        cancelled ||
+        rootyReactingRef.current
+      ) {
+        return;
+      }
+
+      setRootyAction(
+        'sit'
+      );
+
+      later(
+        finishRestAndWalk,
+        randomInt(
+          2800,
+          4800
+        )
+      );
     };
 
   const startRootyRest =
@@ -1602,49 +1806,17 @@ useEffect(() => {
       const roll =
         Math.random();
 
-      if (roll < 0.55) {
-        setRootyAction(
-          'idle'
-        );
-
-        later(
-          startRootyWalkSession,
-          randomInt(
-            2000,
-            4000
-          )
-        );
-
+      if (roll < 0.45) {
+        startRootyLookAround();
         return;
       }
 
-      if (roll < 0.85) {
-        setRootyAction(
-          'sit'
-        );
-
-        later(
-          startRootyWalkSession,
-          randomInt(
-            3000,
-            5000
-          )
-        );
-
+      if (roll < 0.78) {
+        startRootySitRest();
         return;
       }
 
-      setRootyAction(
-        'sleep'
-      );
-
-      later(
-        startRootyWalkSession,
-        randomInt(
-          6000,
-          9000
-        )
-      );
+      startRootyNapSequence();
     };
 
   if (
@@ -1654,7 +1826,10 @@ useEffect(() => {
       startRootyWalkSession,
       rootyCycleKey === 0
         ? 300
-        : 1500
+        : randomInt(
+            1000,
+            1700
+          )
     );
   }
 

@@ -10,6 +10,10 @@ import type {
   SavedCafeRecommendationReaction,
 } from './savedCafeRecommendationFeedback';
 import type {
+  SavedCafeRecommendationPreferenceAxisId,
+  SavedCafeRecommendationPreferenceState,
+} from './savedCafeRecommendationPreferences';
+import type {
   SavedCafeVisit,
   SavedCafeVisitCompanion,
   SavedCafeVisitPurpose,
@@ -21,6 +25,7 @@ import {
 
 // SAVED_CAFE_V48_PERSONALIZED_RECOMMENDATION_ENGINE
 // SAVED_CAFE_V49_RECOMMENDATION_LEARNING_ENGINE
+// SAVED_CAFE_V50_RECOMMENDATION_PREFERENCE_ENGINE
 
 export type SavedCafeRecommendationMode =
   | 'all'
@@ -47,6 +52,7 @@ export type SavedCafeRecommendation = {
     | SavedCafeRecommendationReaction
     | null;
   feedbackEffect: number;
+  manualPreferenceEffect: number;
 };
 
 export type SavedCafeRecommendationProfile = {
@@ -54,6 +60,8 @@ export type SavedCafeRecommendationProfile = {
   detailedVisitCount: number;
   positiveVisitCount: number;
   feedbackCount: number;
+  manualPreferenceCount: number;
+  autoLearningStrengthLabel: string;
   dominantPurpose: SavedCafeVisitPurpose | null;
   dominantCompanion: SavedCafeVisitCompanion | null;
   confidence: SavedCafeRecommendationConfidence;
@@ -342,6 +350,415 @@ const MODE_SIGNALS:
     date: PURPOSE_SIGNALS.date,
     solo: COMPANION_SIGNALS.alone,
   };
+
+
+const PREFERENCE_SIGNALS:
+  Record<
+    SavedCafeRecommendationPreferenceAxisId,
+    {
+      label: string;
+      signal: RecommendationSignal;
+    }
+  > = {
+    studyWork: {
+      label: '공부·작업',
+      signal: {
+        primaryThemes: [
+          'study',
+        ],
+        themes: [
+          'studyCafe',
+          'laptopFriendlyCafe',
+          'quietCafe',
+        ],
+        tags: [
+          'studyFriendly',
+          'laptopWorkFriendly',
+          'readingFriendly',
+          'manyPowerOutlets',
+          'goodWifi',
+          'longStayAllowed',
+          'laptopComfortable',
+          'wideTable',
+          'studyRoom',
+          'noPressureLongStay',
+        ],
+      },
+    },
+    quietRest: {
+      label: '조용·휴식',
+      signal: {
+        primaryThemes: [
+          'rest',
+        ],
+        themes: [
+          'quietCafe',
+        ],
+        tags: [
+          'restFriendly',
+          'quiet',
+          'quietMusic',
+          'readingFriendly',
+          'cozy',
+          'wideSeatSpacing',
+          'longStayAllowed',
+          'noPressureLongStay',
+        ],
+      },
+    },
+    dateMood: {
+      label: '데이트·감성',
+      signal: {
+        primaryThemes: [
+          'date',
+          'photo',
+        ],
+        themes: [
+          'dateCafe',
+          'moodCafe',
+          'viewCafe',
+        ],
+        tags: [
+          'dateFriendly',
+          'emotionalMood',
+          'goodDaylight',
+          'cozy',
+          'photoFriendly',
+          'photoSpot',
+          'nightView',
+          'sunsetView',
+        ],
+      },
+    },
+    dessert: {
+      label: '커피·디저트',
+      signal: {
+        primaryThemes: [
+          'foodCafe',
+        ],
+        themes: [
+          'bakeryCafe',
+          'brunchCafe',
+        ],
+        tags: [
+          'manyBreadOptions',
+          'bakeryCafe',
+          'variedDesserts',
+          'goodCake',
+          'goodCoffee',
+          'handDrip',
+          'variedDecaf',
+          'brunchMenu',
+          'signatureMenu',
+        ],
+      },
+    },
+    spacious: {
+      label: '넓은 공간',
+      signal: {
+        primaryThemes: [
+          'foodCafe',
+        ],
+        themes: [
+          'largeCafe',
+        ],
+        tags: [
+          'largeSpace',
+          'manySeats',
+          'wideTable',
+          'groupSeat',
+          'sofaSeat',
+          'wideSeatSpacing',
+          'groupUseAvailable',
+        ],
+      },
+    },
+    viewPhoto: {
+      label: '뷰·사진',
+      signal: {
+        primaryThemes: [
+          'photo',
+          'nature',
+        ],
+        themes: [
+          'viewCafe',
+          'moodCafe',
+        ],
+        tags: [
+          'photoFriendly',
+          'photoSpot',
+          'goodDaylight',
+          'hanRiverView',
+          'oceanView',
+          'mountainView',
+          'cityView',
+          'nightView',
+          'sunsetView',
+          'garden',
+          'rooftop',
+          'terrace',
+        ],
+      },
+    },
+    solo: {
+      label: '혼자 가기',
+      signal: {
+        primaryThemes: [
+          'study',
+          'rest',
+        ],
+        themes: [
+          'quietCafe',
+          'studyCafe',
+          'laptopFriendlyCafe',
+        ],
+        tags: [
+          'soloFriendly',
+          'singleSeat',
+          'readingFriendly',
+          'quiet',
+          'laptopComfortable',
+          'noPressureLongStay',
+        ],
+      },
+    },
+    lateNight: {
+      label: '심야·24시간',
+      signal: {
+        primaryThemes: [
+          'foodCafe',
+        ],
+        themes: [
+          'lateNightOr24HourCafe',
+        ],
+        tags: [
+          'lateNight',
+          'open24Hours',
+          'closesLate',
+          'goodNightMood',
+        ],
+      },
+    },
+  };
+
+function getAutoLearningMultiplier(
+  preferenceState:
+    | SavedCafeRecommendationPreferenceState
+    | null
+    | undefined,
+) {
+  switch (
+    preferenceState?.autoLearningStrength
+  ) {
+    case 'low':
+      return 0.65;
+    case 'high':
+      return 1.25;
+    default:
+      return 1;
+  }
+}
+
+function getAutoLearningStrengthLabel(
+  preferenceState:
+    | SavedCafeRecommendationPreferenceState
+    | null
+    | undefined,
+) {
+  switch (
+    preferenceState?.autoLearningStrength
+  ) {
+    case 'low':
+      return '낮게';
+    case 'high':
+      return '높게';
+    default:
+      return '균형';
+  }
+}
+
+function getManualPreferenceCount(
+  preferenceState:
+    | SavedCafeRecommendationPreferenceState
+    | null
+    | undefined,
+) {
+  if (!preferenceState) {
+    return 0;
+  }
+
+  return Object.values(
+    preferenceState.weights,
+  ).filter(
+    (weight) =>
+      weight !== 0,
+  ).length;
+}
+
+function getSignalMatchPoints(
+  entry: SavedCafeLocalEntry,
+  signal: RecommendationSignal,
+) {
+  let points = 0;
+
+  if (
+    signal.primaryThemes?.includes(
+      entry.cafe.primaryTheme,
+    )
+  ) {
+    points += 4;
+  }
+
+  entry.cafe.themes.forEach(
+    (theme) => {
+      if (
+        signal.themes?.includes(
+          theme,
+        )
+      ) {
+        points += 2;
+      }
+    },
+  );
+
+  entry.cafe.representativeTags.forEach(
+    (tag) => {
+      if (
+        signal.tags?.includes(
+          tag,
+        )
+      ) {
+        points += 1.5;
+      }
+    },
+  );
+
+  entry.cafe.tags.forEach(
+    (tag) => {
+      if (
+        signal.tags?.includes(
+          tag,
+        )
+      ) {
+        points += 0.6;
+      }
+    },
+  );
+
+  return Math.min(
+    8,
+    points,
+  );
+}
+
+function getManualPreferenceEffect(
+  entry: SavedCafeLocalEntry,
+  preferenceState:
+    | SavedCafeRecommendationPreferenceState
+    | null
+    | undefined,
+) {
+  if (!preferenceState) {
+    return {
+      effect: 0,
+      reason: null as string | null,
+    };
+  }
+
+  let total = 0;
+  let strongest:
+    | {
+        axis:
+          SavedCafeRecommendationPreferenceAxisId;
+        weight: number;
+        contribution: number;
+      }
+    | null = null;
+
+  for (
+    const axis of
+    Object.keys(
+      PREFERENCE_SIGNALS,
+    ) as SavedCafeRecommendationPreferenceAxisId[]
+  ) {
+    const weight =
+      preferenceState.weights[
+        axis
+      ];
+
+    if (weight === 0) {
+      continue;
+    }
+
+    const points =
+      getSignalMatchPoints(
+        entry,
+        PREFERENCE_SIGNALS[
+          axis
+        ].signal,
+      );
+
+    if (points <= 0) {
+      continue;
+    }
+
+    const contribution =
+      weight *
+      points *
+      1.6;
+
+    total += contribution;
+
+    if (
+      !strongest ||
+      Math.abs(
+        contribution,
+      ) >
+        Math.abs(
+          strongest.contribution,
+        )
+    ) {
+      strongest = {
+        axis,
+        weight,
+        contribution,
+      };
+    }
+  }
+
+  const effect =
+    clamp(
+      total,
+      -34,
+      34,
+    );
+
+  if (!strongest) {
+    return {
+      effect,
+      reason: null as string | null,
+    };
+  }
+
+  const label =
+    PREFERENCE_SIGNALS[
+      strongest.axis
+    ].label;
+
+  const reason =
+    strongest.weight >= 2
+      ? `직접 설정: ${label}을 매우 중요하게 반영했어요`
+      : strongest.weight === 1
+        ? `직접 설정: ${label}을 중요하게 반영했어요`
+        : strongest.weight <= -2
+          ? `직접 설정: ${label}을 피하고 싶다는 취향을 강하게 반영했어요`
+          : `직접 설정: ${label}을 덜 선호하도록 반영했어요`;
+
+  return {
+    effect,
+    reason,
+  };
+}
 
 function parseTime(
   value: string | null | undefined,
@@ -734,6 +1151,8 @@ function getModeReason(
 function buildProfile(
   visits: SavedCafeVisit[],
   feedbackCount: number,
+  manualPreferenceCount: number,
+  autoLearningStrengthLabel: string,
 ): SavedCafeRecommendationProfile {
   const detailedVisitCount =
     visits.filter(
@@ -775,7 +1194,8 @@ function buildProfile(
 
   const learningSignalCount =
     detailedVisitCount +
-    feedbackCount;
+    feedbackCount +
+    manualPreferenceCount;
 
   const confidence:
     SavedCafeRecommendationConfidence =
@@ -803,6 +1223,8 @@ function buildProfile(
     `방문 ${visits.length}회`,
     `상세 기록 ${detailedVisitCount}회`,
     `추천 피드백 ${feedbackCount}개`,
+    `직접 설정 ${manualPreferenceCount}개`,
+    `자동 학습 ${autoLearningStrengthLabel}`,
   ];
 
   if (dominantCompanion) {
@@ -817,6 +1239,8 @@ function buildProfile(
     detailedVisitCount,
     positiveVisitCount,
     feedbackCount,
+    manualPreferenceCount,
+    autoLearningStrengthLabel,
     dominantPurpose,
     dominantCompanion,
     confidence,
@@ -839,6 +1263,9 @@ export function buildSavedCafeRecommendations(
       'all',
   feedbackState:
     | SavedCafeRecommendationFeedbackState
+    | null = null,
+  preferenceState:
+    | SavedCafeRecommendationPreferenceState
     | null = null,
 ): SavedCafeRecommendationResult {
   const entryMap =
@@ -886,10 +1313,27 @@ export function buildSavedCafeRecommendations(
         ),
     );
 
+  const autoLearningMultiplier =
+    getAutoLearningMultiplier(
+      preferenceState,
+    );
+
+  const manualPreferenceCount =
+    getManualPreferenceCount(
+      preferenceState,
+    );
+
+  const autoLearningStrengthLabel =
+    getAutoLearningStrengthLabel(
+      preferenceState,
+    );
+
   const profile =
     buildProfile(
       visits,
       activeFeedbacks.length,
+      manualPreferenceCount,
+      autoLearningStrengthLabel,
     );
 
   const primaryWeights =
@@ -914,7 +1358,8 @@ export function buildSavedCafeRecommendations(
     const factor =
       getVisitPreferenceFactor(
         visit,
-      );
+      ) *
+      autoLearningMultiplier;
 
     addWeight(
       primaryWeights,
@@ -990,13 +1435,16 @@ export function buildSavedCafeRecommendations(
       }
 
       const factor =
-        feedback.reaction ===
-        'interested'
-          ? 1.25
-          : feedback.reaction ===
-              'wantToGo'
-            ? 0.8
-            : -1.15;
+        (
+          feedback.reaction ===
+          'interested'
+            ? 1.25
+            : feedback.reaction ===
+                'wantToGo'
+              ? 0.8
+              : -1.15
+        ) *
+        autoLearningMultiplier;
 
       addWeight(
         primaryWeights,
@@ -1212,6 +1660,19 @@ export function buildSavedCafeRecommendations(
         rawScore +=
           feedbackEffect;
 
+        // SAVED_CAFE_V50_MANUAL_PREFERENCE_WEIGHTING
+        const manualPreference =
+          getManualPreferenceEffect(
+            entry,
+            preferenceState,
+          );
+
+        const manualPreferenceEffect =
+          manualPreference.effect;
+
+        rawScore +=
+          manualPreferenceEffect;
+
         rawScore +=
           getSignalBoost(
             entry,
@@ -1256,6 +1717,14 @@ export function buildSavedCafeRecommendations(
         ) {
           reasons.push(
             '관심 없음 피드백으로 추천 점수를 낮췄어요',
+          );
+        }
+
+        if (
+          manualPreference.reason
+        ) {
+          reasons.push(
+            manualPreference.reason,
           );
         }
 
@@ -1385,6 +1854,7 @@ export function buildSavedCafeRecommendations(
             summary.revisitYesCount,
           feedbackReaction,
           feedbackEffect,
+          manualPreferenceEffect,
         };
       })
       .filter((item) => {

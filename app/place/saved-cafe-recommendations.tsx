@@ -40,6 +40,11 @@ import {
   type SavedCafeRecommendationReaction,
 } from '../../store/savedCafeRecommendationFeedback';
 import {
+  getSavedCafeRecommendationPreferenceSummary,
+  loadSavedCafeRecommendationPreferenceState,
+  type SavedCafeRecommendationPreferenceState,
+} from '../../store/savedCafeRecommendationPreferences';
+import {
   buildSavedCafeRecommendations,
   type SavedCafeRecommendation,
   type SavedCafeRecommendationMode,
@@ -54,6 +59,7 @@ import {
 
 // SAVED_CAFE_V48_PERSONALIZED_RECOMMENDATION_SCREEN
 // SAVED_CAFE_V49_RECOMMENDATION_FEEDBACK_SCREEN
+// SAVED_CAFE_V50_RECOMMENDATION_PREFERENCE_ENTRY
 
 const MODE_OPTIONS: ReadonlyArray<{
   id: SavedCafeRecommendationMode;
@@ -170,6 +176,13 @@ export default function SavedCafeRecommendationsScreen() {
   >(null);
 
   const [
+    preferenceState,
+    setPreferenceState,
+  ] = useState<
+    SavedCafeRecommendationPreferenceState | null
+  >(null);
+
+  const [
     savingFeedbackPlaceId,
     setSavingFeedbackPlaceId,
   ] = useState<string | null>(
@@ -209,11 +222,13 @@ export default function SavedCafeRecommendationsScreen() {
         loadSavedCafeEntries(),
         loadSavedCafeVisitState(),
         loadSavedCafeRecommendationFeedbackState(),
+        loadSavedCafeRecommendationPreferenceState(),
       ])
         .then(([
           nextEntries,
           nextVisitState,
           nextFeedbackState,
+          nextPreferenceState,
         ]) => {
           if (!active) {
             return;
@@ -227,6 +242,9 @@ export default function SavedCafeRecommendationsScreen() {
           );
           setFeedbackState(
             nextFeedbackState,
+          );
+          setPreferenceState(
+            nextPreferenceState,
           );
         })
         .catch((error) => {
@@ -263,11 +281,13 @@ export default function SavedCafeRecommendationsScreen() {
           visitState,
           mode,
           feedbackState,
+          preferenceState,
         ),
       [
         entries,
         feedbackState,
         mode,
+        preferenceState,
         visitState,
       ],
     );
@@ -279,6 +299,15 @@ export default function SavedCafeRecommendationsScreen() {
           feedbackState,
         ),
       [feedbackState],
+    );
+
+  const preferenceSummary =
+    useMemo(
+      () =>
+        getSavedCafeRecommendationPreferenceSummary(
+          preferenceState,
+        ),
+      [preferenceState],
     );
 
   const recommendations =
@@ -738,6 +767,105 @@ export default function SavedCafeRecommendationsScreen() {
               방문 상세 기록과 추천 카드의 피드백을 함께 학습해 다음 추천 순위를 바로 조정해요.
             </Text>
           </View>
+
+          {/* SAVED_CAFE_V50_RECOMMENDATION_PREFERENCE_SUMMARY */}
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="카페 추천 취향 설정 열기"
+            onPress={() =>
+              router.push(
+                '/place/saved-cafe-recommendation-preferences' as never,
+              )
+            }
+            style={({ pressed }: { pressed: boolean }) => [
+              styles.learningCard,
+              {
+                backgroundColor:
+                  theme.card,
+                borderColor:
+                  theme.line,
+                borderRadius:
+                  isCityBlack
+                    ? 3
+                    : 14,
+                opacity:
+                  pressed
+                    ? 0.58
+                    : 1,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.learningIcon,
+                {
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 10,
+                },
+              ]}
+            >
+              <Ionicons
+                name="options-outline"
+                size={18}
+                color={theme.text}
+              />
+            </View>
+
+            <View
+              style={styles.learningTextArea}
+            >
+              <View
+                style={styles.learningTopRow}
+              >
+                <Text
+                  style={[
+                    styles.learningTitle,
+                    {
+                      color:
+                        theme.text,
+                    },
+                  ]}
+                >
+                  취향 설정 {preferenceSummary.adjustedCount}개
+                </Text>
+                <Text
+                  style={[
+                    styles.learningStatus,
+                    {
+                      color:
+                        theme.subText,
+                    },
+                  ]}
+                >
+                  자동 학습 {preferenceSummary.autoLearningStrengthLabel}
+                </Text>
+              </View>
+
+              <Text
+                style={[
+                  styles.learningDescription,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                {preferenceSummary.adjustedCount > 0
+                  ? `중요 ${preferenceSummary.positiveCount} · 덜 선호 ${preferenceSummary.negativeCount} · 눌러서 가중치 조절`
+                  : '공부·조용함·데이트·디저트 같은 추천 우선순위를 직접 정할 수 있어요.'}
+              </Text>
+            </View>
+
+            <Ionicons
+              name="chevron-forward"
+              size={17}
+              color={theme.subText}
+            />
+          </Pressable>
 
           {/* SAVED_CAFE_V49_RECOMMENDATION_FEEDBACK_SUMMARY */}
           <View

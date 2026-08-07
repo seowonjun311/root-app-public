@@ -1503,6 +1503,96 @@ export default function SavedCafeVisitInsightsScreen() {
             },
           ]}
         >
+          {/* SAVED_CAFE_V48_PERSONALIZED_RECOMMENDATION_ENTRY */}
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="ROOT 맞춤 카페 추천 열기"
+            onPress={() =>
+              router.push(
+                '/place/saved-cafe-recommendations' as never,
+              )
+            }
+            style={({ pressed }) => [
+              styles.calendarEntryCard,
+              {
+                backgroundColor:
+                  theme.card,
+                borderColor:
+                  theme.line,
+                borderRadius:
+                  isCityBlack
+                    ? 3
+                    : 14,
+                opacity:
+                  pressed
+                    ? 0.55
+                    : 1,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.calendarEntryIcon,
+                {
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 10,
+                },
+              ]}
+            >
+              <Ionicons
+                name="sparkles-outline"
+                size={19}
+                color={theme.text}
+              />
+            </View>
+            <View
+              style={styles.calendarEntryTextArea}
+            >
+              <Text
+                style={[
+                  styles.calendarEntryLabel,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                ROOT 맞춤 추천
+              </Text>
+              <Text
+                style={[
+                  styles.calendarEntryTitle,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              >
+                내 취향에 맞는 저장 카페를 골라요
+              </Text>
+              <Text
+                numberOfLines={1}
+                style={[
+                  styles.calendarEntryDescription,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                방문 목적·동행·재방문 의향과 카페 키워드를 함께 분석해요.
+              </Text>
+            </View>
+            <Ionicons
+              name="chevron-forward"
+              size={17}
+              color={theme.subText}
+            />
+          </Pressable>
           {/* SAVED_CAFE_V45_VISIT_CALENDAR_ENTRY */}
           <Pressable
             accessibilityRole="button"

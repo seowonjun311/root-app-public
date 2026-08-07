@@ -63,7 +63,13 @@ export type RootyDirectionalFrameResolution = {
  */
 export const ROOTY_DIRECTIONAL_FRAMES:
   RootyDirectionalFrameRegistry = {
-};
+    walk: {
+      upRight: [
+        require('../assets/rooty/walk/up_right/rooty_walk_up_right_01.png'),
+        require('../assets/rooty/walk/up_right/rooty_walk_up_right_02.png'),
+      ],
+    },
+  };
 
 const MIRRORED_DIRECTION:
   Record<

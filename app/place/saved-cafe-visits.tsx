@@ -46,6 +46,7 @@ import {
 
 // SAVED_CAFE_V42_VISIT_SCREEN
 // SAVED_CAFE_V43_VISIT_INSIGHTS_ENTRY
+// SAVED_CAFE_V46_VISIT_DETAIL_ENTRY
 
 const RELATION_LABELS = {
   wantToGo: '가보고 싶어요',
@@ -1256,6 +1257,16 @@ export default function SavedCafeVisitsScreen() {
                         deletingVisitId ===
                         visit.id
                       }
+                      onDetail={() =>
+                        router.push({
+                          pathname:
+                            '/place/saved-cafe-visit-detail',
+                          params: {
+                            visitId:
+                              visit.id,
+                          },
+                        } as never)
+                      }
                       onEdit={() =>
                         openEditEditor(
                           visit,
@@ -2212,6 +2223,7 @@ function FilterChip({
 type VisitRecordCardProps = {
   visit: SavedCafeVisit;
   deleting: boolean;
+  onDetail: () => void;
   onEdit: () => void;
   onDelete: () => void;
   theme: ReturnType<
@@ -2223,6 +2235,7 @@ type VisitRecordCardProps = {
 function VisitRecordCard({
   visit,
   deleting,
+  onDetail,
   onEdit,
   onDelete,
   theme,
@@ -2285,6 +2298,35 @@ function VisitRecordCard({
             styles.visitActions
           }
         >
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="방문 기록 상세"
+            disabled={deleting}
+            onPress={onDetail}
+            style={({ pressed }) => [
+              styles.iconActionButton,
+              {
+                borderColor:
+                  theme.line,
+                borderRadius:
+                  isCityBlack
+                    ? 2
+                    : 8,
+                opacity:
+                  deleting
+                    ? 0.42
+                    : pressed
+                      ? 0.58
+                      : 1,
+              },
+            ]}
+          >
+            <Ionicons
+              name="document-text-outline"
+              size={15}
+              color={theme.text}
+            />
+          </Pressable>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="방문 기록 수정"

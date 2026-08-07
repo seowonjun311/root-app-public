@@ -35,6 +35,7 @@ import {
 } from '../../store/rootTheme';
 
 // SAVED_CAFE_V45_VISIT_CALENDAR_SCREEN
+// SAVED_CAFE_V46_VISIT_DETAIL_ENTRY
 
 type IconName =
   ComponentProps<
@@ -717,14 +718,14 @@ export default function SavedCafeVisitCalendarScreen() {
       );
     }, []);
 
-  const openVisitTimeline =
+  const openVisitDetail =
     useCallback(
-      (placeId: string) => {
+      (visitId: string) => {
         router.push({
           pathname:
-            '/place/saved-cafe-visits',
+            '/place/saved-cafe-visit-detail',
           params: {
-            placeId,
+            visitId,
           },
         } as never);
       },
@@ -1420,8 +1421,8 @@ export default function SavedCafeVisitCalendarScreen() {
                   accessibilityRole="button"
                   accessibilityLabel={`${entry.cafe.name} 방문 기록 열기`}
                   onPress={() =>
-                    openVisitTimeline(
-                      visit.placeId,
+                    openVisitDetail(
+                      visit.id,
                     )
                   }
                   style={({ pressed }) => [

@@ -14,6 +14,7 @@ import {
 } from '@react-native-firebase/firestore';
 
 // SAVED_CAFE_V42_VISIT_STORE
+// SAVED_CAFE_V46_VISIT_DETAIL_METADATA
 
 const SAVED_CAFE_VISIT_GUEST_KEY =
   'root_saved_cafe_visits_guest_v1';
@@ -33,12 +34,37 @@ const RECENT_VISIT_DAYS = 30;
 export const MAX_SAVED_CAFE_VISIT_NOTE_LENGTH = 120;
 export const SAVED_CAFE_FREQUENT_VISIT_COUNT = 3;
 
+export type SavedCafeVisitPurpose =
+  | 'study'
+  | 'work'
+  | 'date'
+  | 'conversation'
+  | 'dessert'
+  | 'rest'
+  | 'other';
+
+export type SavedCafeVisitCompanion =
+  | 'alone'
+  | 'friend'
+  | 'partner'
+  | 'family'
+  | 'coworker'
+  | 'other';
+
+export type SavedCafeVisitRevisitIntent =
+  | 'yes'
+  | 'maybe'
+  | 'no';
+
 export type SavedCafeVisit = {
   id: string;
   placeId: string;
   visitedAt: string;
   rating: number | null;
   note: string;
+  purpose: SavedCafeVisitPurpose | null;
+  companion: SavedCafeVisitCompanion | null;
+  revisitIntent: SavedCafeVisitRevisitIntent | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -60,11 +86,17 @@ export type AddSavedCafeVisitInput = {
   visitedAt?: string;
   rating?: number | null;
   note?: string;
+  purpose?: SavedCafeVisitPurpose | null;
+  companion?: SavedCafeVisitCompanion | null;
+  revisitIntent?: SavedCafeVisitRevisitIntent | null;
 };
 
 export type UpdateSavedCafeVisitInput = {
   rating?: number | null;
   note?: string;
+  purpose?: SavedCafeVisitPurpose | null;
+  companion?: SavedCafeVisitCompanion | null;
+  revisitIntent?: SavedCafeVisitRevisitIntent | null;
 };
 
 export type SavedCafeVisitSummary = {
@@ -189,6 +221,76 @@ function normalizeRating(
   return Math.round(parsed);
 }
 
+const SAVED_CAFE_VISIT_PURPOSE_VALUES:
+  SavedCafeVisitPurpose[] = [
+    'study',
+    'work',
+    'date',
+    'conversation',
+    'dessert',
+    'rest',
+    'other',
+  ];
+
+const SAVED_CAFE_VISIT_COMPANION_VALUES:
+  SavedCafeVisitCompanion[] = [
+    'alone',
+    'friend',
+    'partner',
+    'family',
+    'coworker',
+    'other',
+  ];
+
+const SAVED_CAFE_VISIT_REVISIT_VALUES:
+  SavedCafeVisitRevisitIntent[] = [
+    'yes',
+    'maybe',
+    'no',
+  ];
+
+function normalizeVisitPurpose(
+  value: unknown,
+): SavedCafeVisitPurpose | null {
+  if (typeof value !== 'string') {
+    return null;
+  }
+
+  return SAVED_CAFE_VISIT_PURPOSE_VALUES.includes(
+    value as SavedCafeVisitPurpose,
+  )
+    ? value as SavedCafeVisitPurpose
+    : null;
+}
+
+function normalizeVisitCompanion(
+  value: unknown,
+): SavedCafeVisitCompanion | null {
+  if (typeof value !== 'string') {
+    return null;
+  }
+
+  return SAVED_CAFE_VISIT_COMPANION_VALUES.includes(
+    value as SavedCafeVisitCompanion,
+  )
+    ? value as SavedCafeVisitCompanion
+    : null;
+}
+
+function normalizeVisitRevisitIntent(
+  value: unknown,
+): SavedCafeVisitRevisitIntent | null {
+  if (typeof value !== 'string') {
+    return null;
+  }
+
+  return SAVED_CAFE_VISIT_REVISIT_VALUES.includes(
+    value as SavedCafeVisitRevisitIntent,
+  )
+    ? value as SavedCafeVisitRevisitIntent
+    : null;
+}
+
 function normalizeIsoDate(
   value: unknown,
   fallback: string,
@@ -266,6 +368,18 @@ function normalizeVisit(
     note:
       normalizeNote(
         source.note,
+      ),
+    purpose:
+      normalizeVisitPurpose(
+        source.purpose,
+      ),
+    companion:
+      normalizeVisitCompanion(
+        source.companion,
+      ),
+    revisitIntent:
+      normalizeVisitRevisitIntent(
+        source.revisitIntent,
       ),
     createdAt,
     updatedAt,
@@ -1009,6 +1123,18 @@ export async function addSavedCafeVisit(
       normalizeNote(
         input.note,
       ),
+    purpose:
+      normalizeVisitPurpose(
+        input.purpose,
+      ),
+    companion:
+      normalizeVisitCompanion(
+        input.companion,
+      ),
+    revisitIntent:
+      normalizeVisitRevisitIntent(
+        input.revisitIntent,
+      ),
     createdAt: now,
     updatedAt: now,
   };
@@ -1072,6 +1198,24 @@ export async function updateSavedCafeVisit(
         ? current.note
         : normalizeNote(
             input.note,
+          ),
+    purpose:
+      input.purpose === undefined
+        ? current.purpose
+        : normalizeVisitPurpose(
+            input.purpose,
+          ),
+    companion:
+      input.companion === undefined
+        ? current.companion
+        : normalizeVisitCompanion(
+            input.companion,
+          ),
+    revisitIntent:
+      input.revisitIntent === undefined
+        ? current.revisitIntent
+        : normalizeVisitRevisitIntent(
+            input.revisitIntent,
           ),
     updatedAt: now,
   };

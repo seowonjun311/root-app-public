@@ -916,6 +916,96 @@ export default function CafeDetailScreen() {
             </View>
           </View>
 
+          {/* SAVED_CAFE_V42_DETAIL_VISIT_BUTTON */}
+          {!editing ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`${entry.cafe.name} 방문 기록 관리`}
+              onPress={() =>
+                router.push({
+                  pathname:
+                    '/place/saved-cafe-visits',
+                  params: {
+                    placeId:
+                      entry.cafe.placeId,
+                  },
+                } as never)
+              }
+              style={({ pressed }) => [
+                styles.folderManageButton,
+                {
+                  backgroundColor:
+                    theme.card,
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 3
+                      : 13,
+                  opacity:
+                    pressed
+                      ? 0.58
+                      : 1,
+                },
+              ]}
+            >
+              <View
+                style={[
+                  styles.folderManageIcon,
+                  {
+                    backgroundColor:
+                      theme.background,
+                    borderColor:
+                      theme.line,
+                    borderRadius:
+                      isCityBlack
+                        ? 2
+                        : 10,
+                  },
+                ]}
+              >
+                <Ionicons
+                  name="calendar-outline"
+                  size={18}
+                  color={theme.text}
+                />
+              </View>
+              <View
+                style={
+                  styles.folderManageTextArea
+                }
+              >
+                <Text
+                  style={[
+                    styles.folderManageTitle,
+                    {
+                      color:
+                        theme.text,
+                    },
+                  ]}
+                >
+                  방문 기록
+                </Text>
+                <Text
+                  style={[
+                    styles.folderManageDescription,
+                    {
+                      color:
+                        theme.subText,
+                    },
+                  ]}
+                >
+                  실제 방문 횟수·최근 방문일·별점과 한 줄 기록을 관리해요.
+                </Text>
+              </View>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={theme.subText}
+              />
+            </Pressable>
+          ) : null}
+
           {/* SAVED_CAFE_V41_DETAIL_FOLDER_BUTTON */}
           {!editing ? (
             <Pressable

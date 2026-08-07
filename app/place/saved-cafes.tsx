@@ -605,6 +605,49 @@ export default function SavedCafesScreen() {
           </Text>
         </View>
 
+        {/* SAVED_CAFE_V42_VISIT_HISTORY_BUTTON */}
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="전체 카페 방문 기록 보기"
+          onPress={() =>
+            router.push(
+              '/place/saved-cafe-visits' as never,
+            )
+          }
+          style={({ pressed }) => [
+            styles.addButton,
+            {
+              borderColor:
+                theme.line,
+              borderRadius:
+                isCityBlack
+                  ? 2
+                  : 9,
+              opacity:
+                pressed
+                  ? 0.55
+                  : 1,
+            },
+          ]}
+        >
+          <Ionicons
+            name="calendar-outline"
+            size={16}
+            color={theme.text}
+          />
+          <Text
+            style={[
+              styles.addButtonText,
+              {
+                color:
+                  theme.text,
+              },
+            ]}
+          >
+            방문
+          </Text>
+        </Pressable>
+
         {/* SAVED_CAFE_V40_FOLDER_BUTTON */}
         <Pressable
           accessibilityRole="button"
@@ -1508,6 +1551,69 @@ export default function SavedCafesScreen() {
                     {cafe.memo}
                   </Text>
                 ) : null}
+                {/* SAVED_CAFE_V42_LIST_VISIT_BUTTON */}
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={`${cafe.name} 방문 기록 보기`}
+                  onPress={() =>
+                    router.push({
+                      pathname:
+                        '/place/saved-cafe-visits',
+                      params: {
+                        placeId:
+                          cafe.placeId,
+                      },
+                    } as never)
+                  }
+                  style={({ pressed }) => [
+                    styles.detailButton,
+                    {
+                      backgroundColor:
+                        theme.background,
+                      borderColor:
+                        theme.line,
+                      borderRadius:
+                        isCityBlack
+                          ? 2
+                          : 9,
+                      opacity:
+                        pressed
+                          ? 0.58
+                          : 1,
+                    },
+                  ]}
+                >
+                  <View
+                    style={
+                      styles.detailButtonTextArea
+                    }
+                  >
+                    <Ionicons
+                      name="calendar-outline"
+                      size={15}
+                      color={theme.text}
+                    />
+                    <Text
+                      style={[
+                        styles.detailButtonText,
+                        {
+                          color:
+                            theme.text,
+                        },
+                      ]}
+                    >
+                      방문 기록
+                    </Text>
+                  </View>
+                  <Ionicons
+                    name="chevron-forward"
+                    size={15}
+                    color={
+                      theme.subText
+                    }
+                  />
+                </Pressable>
+
                 {/* SAVED_CAFE_V41_LIST_FOLDER_BUTTON */}
                 <Pressable
                   accessibilityRole="button"

@@ -1002,6 +1002,99 @@ export default function SavedCafeVisitInsightsScreen() {
             },
           ]}
         >
+          {/* SAVED_CAFE_V44_VISIT_CHALLENGES_ENTRY */}
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="카페 방문 도전과제 열기"
+            onPress={() =>
+              router.push(
+                '/place/saved-cafe-visit-challenges' as never,
+              )
+            }
+            style={({ pressed }) => [
+              styles.challengeEntryCard,
+              {
+                backgroundColor:
+                  theme.card,
+                borderColor:
+                  theme.line,
+                borderRadius:
+                  isCityBlack
+                    ? 3
+                    : 14,
+                opacity:
+                  pressed
+                    ? 0.55
+                    : 1,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.challengeEntryIcon,
+                {
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 10,
+                },
+              ]}
+            >
+              <Ionicons
+                name="trophy-outline"
+                size={19}
+                color={theme.text}
+              />
+            </View>
+
+            <View
+              style={styles.challengeEntryTextArea}
+            >
+              <Text
+                style={[
+                  styles.challengeEntryLabel,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                ROOT 카페 도전
+              </Text>
+              <Text
+                style={[
+                  styles.challengeEntryTitle,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              >
+                방문 기록으로 도전과제를 달성해요
+              </Text>
+              <Text
+                numberOfLines={1}
+                style={[
+                  styles.challengeEntryDescription,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                방문·재방문·별점·메모·취향 다양성의 진행도를 확인해요.
+              </Text>
+            </View>
+
+            <Ionicons
+              name="chevron-forward"
+              size={17}
+              color={theme.subText}
+            />
+          </Pressable>
+
           <View
             style={styles.metricGrid}
           >
@@ -1914,6 +2007,48 @@ const styles = StyleSheet.create({
 
   content: {
     padding: 14,
+  },
+
+  challengeEntryCard: {
+    minHeight: 78,
+    marginBottom: 12,
+    padding: 11,
+    borderWidth:
+      StyleSheet.hairlineWidth,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+
+  challengeEntryIcon: {
+    width: 40,
+    height: 40,
+    borderWidth:
+      StyleSheet.hairlineWidth,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  challengeEntryTextArea: {
+    flex: 1,
+    minWidth: 0,
+  },
+
+  challengeEntryLabel: {
+    fontSize: 8,
+    fontWeight: '900',
+  },
+
+  challengeEntryTitle: {
+    marginTop: 3,
+    fontSize: 11,
+    fontWeight: '900',
+  },
+
+  challengeEntryDescription: {
+    marginTop: 3,
+    fontSize: 8.3,
+    fontWeight: '700',
   },
 
   metricGrid: {

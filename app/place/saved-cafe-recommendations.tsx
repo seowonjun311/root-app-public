@@ -10,6 +10,7 @@ import {
 } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -31,6 +32,14 @@ import {
   type SavedCafeLocalEntry,
 } from '../../store/savedCafeLocal';
 import {
+  getSavedCafeRecommendationFeedback,
+  getSavedCafeRecommendationFeedbackSummary,
+  loadSavedCafeRecommendationFeedbackState,
+  setSavedCafeRecommendationFeedback,
+  type SavedCafeRecommendationFeedbackState,
+  type SavedCafeRecommendationReaction,
+} from '../../store/savedCafeRecommendationFeedback';
+import {
   buildSavedCafeRecommendations,
   type SavedCafeRecommendation,
   type SavedCafeRecommendationMode,
@@ -44,6 +53,7 @@ import {
 } from '../../store/rootTheme';
 
 // SAVED_CAFE_V48_PERSONALIZED_RECOMMENDATION_SCREEN
+// SAVED_CAFE_V49_RECOMMENDATION_FEEDBACK_SCREEN
 
 const MODE_OPTIONS: ReadonlyArray<{
   id: SavedCafeRecommendationMode;
@@ -153,6 +163,20 @@ export default function SavedCafeRecommendationsScreen() {
   >(null);
 
   const [
+    feedbackState,
+    setFeedbackState,
+  ] = useState<
+    SavedCafeRecommendationFeedbackState | null
+  >(null);
+
+  const [
+    savingFeedbackPlaceId,
+    setSavingFeedbackPlaceId,
+  ] = useState<string | null>(
+    null,
+  );
+
+  const [
     mode,
     setMode,
   ] = useState<
@@ -184,10 +208,12 @@ export default function SavedCafeRecommendationsScreen() {
       void Promise.all([
         loadSavedCafeEntries(),
         loadSavedCafeVisitState(),
+        loadSavedCafeRecommendationFeedbackState(),
       ])
         .then(([
           nextEntries,
           nextVisitState,
+          nextFeedbackState,
         ]) => {
           if (!active) {
             return;
@@ -198,6 +224,9 @@ export default function SavedCafeRecommendationsScreen() {
           );
           setVisitState(
             nextVisitState,
+          );
+          setFeedbackState(
+            nextFeedbackState,
           );
         })
         .catch((error) => {
@@ -233,12 +262,23 @@ export default function SavedCafeRecommendationsScreen() {
           entries,
           visitState,
           mode,
+          feedbackState,
         ),
       [
         entries,
+        feedbackState,
         mode,
         visitState,
       ],
+    );
+
+  const feedbackSummary =
+    useMemo(
+      () =>
+        getSavedCafeRecommendationFeedbackSummary(
+          feedbackState,
+        ),
+      [feedbackState],
     );
 
   const recommendations =
@@ -259,6 +299,70 @@ export default function SavedCafeRecommendationsScreen() {
         } as never);
       },
       [],
+    );
+
+  const saveRecommendationFeedback =
+    useCallback(
+      async (
+        placeId: string,
+        reaction:
+          SavedCafeRecommendationReaction,
+      ) => {
+        if (
+          savingFeedbackPlaceId
+        ) {
+          return;
+        }
+
+        const currentReaction =
+          getSavedCafeRecommendationFeedback(
+            feedbackState,
+            placeId,
+          )?.reaction ??
+          null;
+
+        const nextReaction =
+          currentReaction ===
+          reaction
+            ? null
+            : reaction;
+
+        setSavingFeedbackPlaceId(
+          placeId,
+        );
+
+        try {
+          const nextState =
+            await setSavedCafeRecommendationFeedback(
+              placeId,
+              nextReaction,
+            );
+
+          setFeedbackState(
+            nextState,
+          );
+        } catch (error) {
+          console.log(
+            'SAVED CAFE RECOMMENDATION FEEDBACK SAVE ERROR',
+            error,
+          );
+
+          Alert.alert(
+            '피드백 저장 실패',
+            getErrorMessage(
+              error,
+            ),
+          );
+        } finally {
+          setSavingFeedbackPlaceId(
+            null,
+          );
+        }
+      },
+      [
+        feedbackState,
+        savingFeedbackPlaceId,
+      ],
     );
 
   return (
@@ -631,8 +735,90 @@ export default function SavedCafeRecommendationsScreen() {
                 },
               ]}
             >
-              방문 상세에 목적·동행·재방문 의향을 많이 남길수록 추천 이유가 더 정확해져요.
+              방문 상세 기록과 추천 카드의 피드백을 함께 학습해 다음 추천 순위를 바로 조정해요.
             </Text>
+          </View>
+
+          {/* SAVED_CAFE_V49_RECOMMENDATION_FEEDBACK_SUMMARY */}
+          <View
+            style={[
+              styles.learningCard,
+              {
+                backgroundColor:
+                  theme.card,
+                borderColor:
+                  theme.line,
+                borderRadius:
+                  isCityBlack
+                    ? 3
+                    : 14,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.learningIcon,
+                {
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 10,
+                },
+              ]}
+            >
+              <Ionicons
+                name="school-outline"
+                size={18}
+                color={theme.text}
+              />
+            </View>
+
+            <View
+              style={styles.learningTextArea}
+            >
+              <View
+                style={styles.learningTopRow}
+              >
+                <Text
+                  style={[
+                    styles.learningTitle,
+                    {
+                      color:
+                        theme.text,
+                    },
+                  ]}
+                >
+                  추천 학습 {feedbackSummary.total}개
+                </Text>
+                <Text
+                  style={[
+                    styles.learningStatus,
+                    {
+                      color:
+                        theme.subText,
+                    },
+                  ]}
+                >
+                  실시간 반영
+                </Text>
+              </View>
+
+              <Text
+                style={[
+                  styles.learningDescription,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                {feedbackSummary.total > 0
+                  ? `관심 ${feedbackSummary.interested} · 나중에 ${feedbackSummary.wantToGo} · 관심 없음 ${feedbackSummary.notInterested}`
+                  : '아래 추천 카드에서 반응을 남기면 비슷한 카페의 점수도 함께 조정돼요.'}
+              </Text>
+            </View>
           </View>
 
           <Text
@@ -822,6 +1008,20 @@ export default function SavedCafeRecommendationsScreen() {
                           .placeId,
                       )
                     }
+                    savingFeedback={
+                      savingFeedbackPlaceId ===
+                      recommendation
+                        .entry.cafe.placeId
+                    }
+                    onFeedback={(
+                      reaction,
+                    ) => {
+                      void saveRecommendationFeedback(
+                        recommendation
+                          .entry.cafe.placeId,
+                        reaction,
+                      );
+                    }}
                     theme={theme}
                     isCityBlack={
                       isCityBlack
@@ -842,6 +1042,11 @@ type RecommendationCardProps = {
   recommendation:
     SavedCafeRecommendation;
   onPress: () => void;
+  savingFeedback: boolean;
+  onFeedback: (
+    reaction:
+      SavedCafeRecommendationReaction,
+  ) => void;
   theme: ReturnType<
     typeof useRootTheme
   >['theme'];
@@ -852,6 +1057,8 @@ function RecommendationCard({
   rank,
   recommendation,
   onPress,
+  savingFeedback,
+  onFeedback,
   theme,
   isCityBlack,
 }: RecommendationCardProps) {
@@ -1108,6 +1315,293 @@ function RecommendationCard({
         )}
       </View>
 
+      {/* SAVED_CAFE_V49_RECOMMENDATION_FEEDBACK_UI */}
+      <View
+        style={[
+          styles.feedbackArea,
+          {
+            borderTopColor:
+              theme.line,
+          },
+        ]}
+      >
+        <View
+          style={styles.feedbackHeaderRow}
+        >
+          <Text
+            style={[
+              styles.feedbackLabel,
+              {
+                color:
+                  theme.text,
+              },
+            ]}
+          >
+            이 추천 어때요?
+          </Text>
+          <Text
+            style={[
+              styles.feedbackHint,
+              {
+                color:
+                  theme.subText,
+              },
+            ]}
+          >
+            같은 버튼을 다시 누르면 해제
+          </Text>
+        </View>
+
+        <View
+          style={styles.feedbackButtonRow}
+        >
+          <Pressable
+            accessibilityRole="button"
+            accessibilityState={{
+              selected:
+                recommendation.feedbackReaction ===
+                'interested',
+              disabled:
+                savingFeedback,
+            }}
+            accessibilityLabel="이 카페 추천에 관심 있어요"
+            disabled={
+              savingFeedback
+            }
+            onPress={(event) => {
+              event.stopPropagation();
+              onFeedback(
+                'interested',
+              );
+            }}
+            style={({ pressed }) => {
+              const selected =
+                recommendation.feedbackReaction ===
+                'interested';
+
+              return [
+                styles.feedbackButton,
+                {
+                  backgroundColor:
+                    selected
+                      ? theme.button
+                      : theme.background,
+                  borderColor:
+                    selected
+                      ? theme.strongLine
+                      : theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 9,
+                  opacity:
+                    savingFeedback
+                      ? 0.45
+                      : pressed
+                        ? 0.6
+                        : 1,
+                },
+              ];
+            }}
+          >
+            <Ionicons
+              name="heart-outline"
+              size={14}
+              color={
+                recommendation.feedbackReaction ===
+                'interested'
+                  ? theme.buttonText
+                  : theme.text
+              }
+            />
+            <Text
+              style={[
+                styles.feedbackButtonText,
+                {
+                  color:
+                    recommendation.feedbackReaction ===
+                    'interested'
+                      ? theme.buttonText
+                      : theme.text,
+                },
+              ]}
+            >
+              관심 있어요
+            </Text>
+          </Pressable>
+
+          <Pressable
+            accessibilityRole="button"
+            accessibilityState={{
+              selected:
+                recommendation.feedbackReaction ===
+                'wantToGo',
+              disabled:
+                savingFeedback,
+            }}
+            accessibilityLabel="이 카페를 나중에 가볼래요"
+            disabled={
+              savingFeedback
+            }
+            onPress={(event) => {
+              event.stopPropagation();
+              onFeedback(
+                'wantToGo',
+              );
+            }}
+            style={({ pressed }) => {
+              const selected =
+                recommendation.feedbackReaction ===
+                'wantToGo';
+
+              return [
+                styles.feedbackButton,
+                {
+                  backgroundColor:
+                    selected
+                      ? theme.button
+                      : theme.background,
+                  borderColor:
+                    selected
+                      ? theme.strongLine
+                      : theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 9,
+                  opacity:
+                    savingFeedback
+                      ? 0.45
+                      : pressed
+                        ? 0.6
+                        : 1,
+                },
+              ];
+            }}
+          >
+            <Ionicons
+              name="bookmark-outline"
+              size={14}
+              color={
+                recommendation.feedbackReaction ===
+                'wantToGo'
+                  ? theme.buttonText
+                  : theme.text
+              }
+            />
+            <Text
+              style={[
+                styles.feedbackButtonText,
+                {
+                  color:
+                    recommendation.feedbackReaction ===
+                    'wantToGo'
+                      ? theme.buttonText
+                      : theme.text,
+                },
+              ]}
+            >
+              나중에 가볼래요
+            </Text>
+          </Pressable>
+
+          <Pressable
+            accessibilityRole="button"
+            accessibilityState={{
+              selected:
+                recommendation.feedbackReaction ===
+                'notInterested',
+              disabled:
+                savingFeedback,
+            }}
+            accessibilityLabel="이 카페 추천에 관심 없어요"
+            disabled={
+              savingFeedback
+            }
+            onPress={(event) => {
+              event.stopPropagation();
+              onFeedback(
+                'notInterested',
+              );
+            }}
+            style={({ pressed }) => {
+              const selected =
+                recommendation.feedbackReaction ===
+                'notInterested';
+
+              return [
+                styles.feedbackButton,
+                {
+                  backgroundColor:
+                    selected
+                      ? theme.button
+                      : theme.background,
+                  borderColor:
+                    selected
+                      ? theme.strongLine
+                      : theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 9,
+                  opacity:
+                    savingFeedback
+                      ? 0.45
+                      : pressed
+                        ? 0.6
+                        : 1,
+                },
+              ];
+            }}
+          >
+            <Ionicons
+              name="close-circle-outline"
+              size={14}
+              color={
+                recommendation.feedbackReaction ===
+                'notInterested'
+                  ? theme.buttonText
+                  : theme.text
+              }
+            />
+            <Text
+              style={[
+                styles.feedbackButtonText,
+                {
+                  color:
+                    recommendation.feedbackReaction ===
+                    'notInterested'
+                      ? theme.buttonText
+                      : theme.text,
+                },
+              ]}
+            >
+              관심 없어요
+            </Text>
+          </Pressable>
+        </View>
+
+        {recommendation.feedbackReaction ? (
+          <Text
+            style={[
+              styles.feedbackAppliedText,
+              {
+                color:
+                  theme.subText,
+              },
+            ]}
+          >
+            {recommendation.feedbackReaction ===
+            'interested'
+              ? '이 카페와 비슷한 특성을 더 추천하도록 학습했어요.'
+              : recommendation.feedbackReaction ===
+                  'wantToGo'
+                ? '이 카페를 다음 추천에서도 더 잘 보이도록 반영했어요.'
+                : '이 카페와 비슷한 특성의 추천 점수를 낮추도록 학습했어요.'}
+          </Text>
+        ) : null}
+      </View>
+
       <View
         style={styles.detailHint}
       >
@@ -1293,6 +1787,55 @@ const styles =
       lineHeight: 14,
     },
 
+    learningCard: {
+      minHeight: 62,
+      padding: 11,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 9,
+    },
+
+    learningIcon: {
+      width: 36,
+      height: 36,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    learningTextArea: {
+      flex: 1,
+      minWidth: 0,
+    },
+
+    learningTopRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent:
+        'space-between',
+      gap: 8,
+    },
+
+    learningTitle: {
+      fontSize: 11.5,
+      fontWeight: '900',
+    },
+
+    learningStatus: {
+      fontSize: 8.8,
+      fontWeight: '800',
+    },
+
+    learningDescription: {
+      marginTop: 4,
+      fontSize: 9.2,
+      fontWeight: '700',
+      lineHeight: 14,
+    },
+
     sectionTitle: {
       fontSize: 13,
       fontWeight: '900',
@@ -1455,6 +1998,60 @@ const styles =
       fontSize: 9.5,
       fontWeight: '700',
       lineHeight: 14,
+    },
+
+    feedbackArea: {
+      marginTop: 10,
+      paddingTop: 9,
+      borderTopWidth:
+        StyleSheet.hairlineWidth,
+      gap: 7,
+    },
+
+    feedbackHeaderRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent:
+        'space-between',
+      gap: 8,
+    },
+
+    feedbackLabel: {
+      fontSize: 10,
+      fontWeight: '900',
+    },
+
+    feedbackHint: {
+      fontSize: 8,
+      fontWeight: '700',
+    },
+
+    feedbackButtonRow: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 6,
+    },
+
+    feedbackButton: {
+      minHeight: 30,
+      paddingHorizontal: 8,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 4,
+    },
+
+    feedbackButtonText: {
+      fontSize: 9,
+      fontWeight: '900',
+    },
+
+    feedbackAppliedText: {
+      fontSize: 8.8,
+      fontWeight: '700',
+      lineHeight: 13,
     },
 
     detailHint: {

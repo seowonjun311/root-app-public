@@ -6,6 +6,10 @@ import type {
   SavedCafeLocalEntry,
 } from './savedCafeLocal';
 import type {
+  SavedCafeRecommendationFeedbackState,
+  SavedCafeRecommendationReaction,
+} from './savedCafeRecommendationFeedback';
+import type {
   SavedCafeVisit,
   SavedCafeVisitCompanion,
   SavedCafeVisitPurpose,
@@ -16,6 +20,7 @@ import {
 } from './placeThemeCatalog';
 
 // SAVED_CAFE_V48_PERSONALIZED_RECOMMENDATION_ENGINE
+// SAVED_CAFE_V49_RECOMMENDATION_LEARNING_ENGINE
 
 export type SavedCafeRecommendationMode =
   | 'all'
@@ -38,12 +43,17 @@ export type SavedCafeRecommendation = {
   averageRating: number | null;
   lastVisitedAt: string | null;
   revisitYesCount: number;
+  feedbackReaction:
+    | SavedCafeRecommendationReaction
+    | null;
+  feedbackEffect: number;
 };
 
 export type SavedCafeRecommendationProfile = {
   visitCount: number;
   detailedVisitCount: number;
   positiveVisitCount: number;
+  feedbackCount: number;
   dominantPurpose: SavedCafeVisitPurpose | null;
   dominantCompanion: SavedCafeVisitCompanion | null;
   confidence: SavedCafeRecommendationConfidence;
@@ -346,6 +356,20 @@ function parseTime(
   return Number.isFinite(time)
     ? time
     : 0;
+}
+
+function clamp(
+  value: number,
+  min: number,
+  max: number,
+) {
+  return Math.max(
+    min,
+    Math.min(
+      max,
+      value,
+    ),
+  );
 }
 
 function addWeight(
@@ -709,6 +733,7 @@ function getModeReason(
 
 function buildProfile(
   visits: SavedCafeVisit[],
+  feedbackCount: number,
 ): SavedCafeRecommendationProfile {
   const detailedVisitCount =
     visits.filter(
@@ -748,11 +773,15 @@ function buildProfile(
       ),
     );
 
+  const learningSignalCount =
+    detailedVisitCount +
+    feedbackCount;
+
   const confidence:
     SavedCafeRecommendationConfidence =
-      detailedVisitCount >= 12
+      learningSignalCount >= 15
         ? 'strong'
-        : detailedVisitCount >= 5
+        : learningSignalCount >= 6
           ? 'growing'
           : 'starter';
 
@@ -773,6 +802,7 @@ function buildProfile(
   const descriptionParts = [
     `방문 ${visits.length}회`,
     `상세 기록 ${detailedVisitCount}회`,
+    `추천 피드백 ${feedbackCount}개`,
   ];
 
   if (dominantCompanion) {
@@ -786,6 +816,7 @@ function buildProfile(
       visits.length,
     detailedVisitCount,
     positiveVisitCount,
+    feedbackCount,
     dominantPurpose,
     dominantCompanion,
     confidence,
@@ -806,6 +837,9 @@ export function buildSavedCafeRecommendations(
   mode:
     SavedCafeRecommendationMode =
       'all',
+  feedbackState:
+    | SavedCafeRecommendationFeedbackState
+    | null = null,
 ): SavedCafeRecommendationResult {
   const entryMap =
     new Map(
@@ -825,8 +859,38 @@ export function buildSavedCafeRecommendations(
         ),
       );
 
+  const feedbackMap =
+    new Map(
+      (
+        feedbackState?.feedbacks ??
+        []
+      ).map(
+        (feedback) => [
+          feedback.placeId,
+          feedback,
+        ],
+      ),
+    );
+
+  const activeFeedbacks =
+    (
+      feedbackState?.feedbacks ??
+      []
+    ).filter(
+      (feedback) =>
+        Boolean(
+          feedback.reaction &&
+            entryMap.has(
+              feedback.placeId,
+            ),
+        ),
+    );
+
   const profile =
-    buildProfile(visits);
+    buildProfile(
+      visits,
+      activeFeedbacks.length,
+    );
 
   const primaryWeights =
     new Map<string, number>();
@@ -910,6 +974,65 @@ export function buildSavedCafeRecommendations(
     }
   });
 
+  // SAVED_CAFE_V49_RECOMMENDATION_FEEDBACK_LEARNING
+  activeFeedbacks.forEach(
+    (feedback) => {
+      const entry =
+        entryMap.get(
+          feedback.placeId,
+        );
+
+      if (
+        !entry ||
+        !feedback.reaction
+      ) {
+        return;
+      }
+
+      const factor =
+        feedback.reaction ===
+        'interested'
+          ? 1.25
+          : feedback.reaction ===
+              'wantToGo'
+            ? 0.8
+            : -1.15;
+
+      addWeight(
+        primaryWeights,
+        entry.cafe.primaryTheme,
+        factor * 2.5,
+      );
+
+      entry.cafe.themes.forEach(
+        (theme) =>
+          addWeight(
+            themeWeights,
+            theme,
+            factor * 1.6,
+          ),
+      );
+
+      entry.cafe.tags.forEach(
+        (tag) =>
+          addWeight(
+            tagWeights,
+            tag,
+            factor * 0.7,
+          ),
+      );
+
+      entry.cafe.representativeTags.forEach(
+        (tag) =>
+          addWeight(
+            tagWeights,
+            tag,
+            factor * 1.4,
+          ),
+      );
+    },
+  );
+
   const visitSummaryMap =
     buildVisitSummaryMap(
       visits,
@@ -932,6 +1055,12 @@ export function buildSavedCafeRecommendations(
             revisitYesCount: 0,
             revisitNoCount: 0,
           };
+
+        const feedbackReaction =
+          feedbackMap.get(
+            entry.cafe.placeId,
+          )?.reaction ??
+          null;
 
         const averageRating =
           summary.ratingCount > 0
@@ -958,13 +1087,14 @@ export function buildSavedCafeRecommendations(
           rawScore += 7;
         }
 
-        rawScore += Math.min(
-          18,
+        rawScore += clamp(
           (
             primaryWeights.get(
               entry.cafe.primaryTheme,
             ) ?? 0
           ) * 1.4,
+          -18,
+          18,
         );
 
         const matchedThemes =
@@ -977,17 +1107,18 @@ export function buildSavedCafeRecommendations(
             }))
             .filter(
               (item) =>
-                item.weight > 0,
+                item.weight !== 0,
             );
 
-        rawScore += Math.min(
-          22,
+        rawScore += clamp(
           matchedThemes.reduce(
             (sum, item) =>
               sum +
               item.weight * 0.9,
             0,
           ),
+          -22,
+          22,
         );
 
         const matchedTags =
@@ -1000,27 +1131,29 @@ export function buildSavedCafeRecommendations(
             }))
             .filter(
               (item) =>
-                item.weight > 0,
+                item.weight !== 0,
             );
 
-        rawScore += Math.min(
-          24,
+        rawScore += clamp(
           matchedTags.reduce(
             (sum, item) =>
               sum +
               item.weight * 0.55,
             0,
           ),
+          -24,
+          24,
         );
 
         entry.cafe.representativeTags.forEach(
           (tag) => {
-            rawScore += Math.min(
-              4,
+            rawScore += clamp(
               (
                 tagWeights.get(tag) ??
                 0
               ) * 0.55,
+              -4,
+              4,
             );
           },
         );
@@ -1057,6 +1190,28 @@ export function buildSavedCafeRecommendations(
             6,
         );
 
+        let feedbackEffect = 0;
+
+        if (
+          feedbackReaction ===
+          'interested'
+        ) {
+          feedbackEffect = 18;
+        } else if (
+          feedbackReaction ===
+          'wantToGo'
+        ) {
+          feedbackEffect = 12;
+        } else if (
+          feedbackReaction ===
+          'notInterested'
+        ) {
+          feedbackEffect = -38;
+        }
+
+        rawScore +=
+          feedbackEffect;
+
         rawScore +=
           getSignalBoost(
             entry,
@@ -1080,6 +1235,29 @@ export function buildSavedCafeRecommendations(
 
         const reasons:
           string[] = [];
+
+        if (
+          feedbackReaction ===
+          'interested'
+        ) {
+          reasons.push(
+            '관심 있어요 피드백을 추천에 반영했어요',
+          );
+        } else if (
+          feedbackReaction ===
+          'wantToGo'
+        ) {
+          reasons.push(
+            '나중에 가볼래요로 남겨둔 카페예요',
+          );
+        } else if (
+          feedbackReaction ===
+          'notInterested'
+        ) {
+          reasons.push(
+            '관심 없음 피드백으로 추천 점수를 낮췄어요',
+          );
+        }
 
         const modeReason =
           getModeReason(mode);
@@ -1205,6 +1383,8 @@ export function buildSavedCafeRecommendations(
             summary.lastVisitedAt,
           revisitYesCount:
             summary.revisitYesCount,
+          feedbackReaction,
+          feedbackEffect,
         };
       })
       .filter((item) => {

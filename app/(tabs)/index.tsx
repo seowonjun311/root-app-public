@@ -4,6 +4,15 @@ import {
 } from '@react-native-firebase/app';
 import RootySprite from '../../components/rooty/RootySprite';
 import type { RootyAction } from '../../constants/rootyAssets';
+import {
+  getRootyResumeDelayMs,
+  loadRootyRuntimeSnapshot,
+  resolveRootyResumeAction,
+  saveRootyRuntimeSnapshot,
+} from '../../store/rootyRuntime';
+import type {
+  RootyDirection,
+} from '../../store/rootyRuntime';
 
 import {
   getAuth,
@@ -41,6 +50,7 @@ import MapView, {
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  AppState,
   Image,
   KeyboardAvoidingView,
   Modal,
@@ -1277,15 +1287,40 @@ const [foxDirection, setFoxDirection] =
 
 const [rootyAction, setRootyAction] =
   useState<RootyAction>('walk');
-
 const [rootyCycleKey, setRootyCycleKey] =
   useState(0);
 
 const rootyReactingRef =
   useRef(false);
 
+const [
+  rootyRuntimeReady,
+  setRootyRuntimeReady,
+] = useState(false);
+
+const rootyActionRef =
+  useRef<RootyAction>('walk');
+
+const rootyDirectionRef =
+  useRef<RootyDirection>(
+    'downRight'
+  );
+
+const rootyResumeDelayRef =
+  useRef(300);
+
 const foxX = useSharedValue(430);
 const foxY = useSharedValue(250);
+
+useEffect(() => {
+  rootyActionRef.current =
+    rootyAction;
+}, [rootyAction]);
+
+useEffect(() => {
+  rootyDirectionRef.current =
+    foxDirection;
+}, [foxDirection]);
 
 const scale = useSharedValue(0.28);
 
@@ -1388,8 +1423,142 @@ const isFoxBlockedByBuilding = (x: number, y: number) => {
   });
 };
 
+// ROOTY_BEHAVIOR_V4_RUNTIME_CONTINUITY
+useEffect(() => {
+  let cancelled = false;
+
+  const restoreRootyRuntime =
+    async () => {
+      try {
+        const snapshot =
+          await loadRootyRuntimeSnapshot();
+
+        if (
+          cancelled ||
+          !snapshot
+        ) {
+          return;
+        }
+
+        const safePosition =
+          !isFoxOutsideVillage(
+            snapshot.x,
+            snapshot.y
+          ) &&
+          !isFoxBlockedByBuilding(
+            snapshot.x,
+            snapshot.y
+          );
+
+        if (safePosition) {
+          foxX.value =
+            snapshot.x;
+
+          foxY.value =
+            snapshot.y;
+        }
+
+        rootyDirectionRef.current =
+          snapshot.direction;
+
+        setFoxDirection(
+          snapshot.direction
+        );
+
+        const resumeAction =
+          resolveRootyResumeAction(
+            snapshot
+          );
+
+        rootyActionRef.current =
+          resumeAction;
+
+        setRootyAction(
+          resumeAction
+        );
+
+        rootyResumeDelayRef.current =
+          getRootyResumeDelayMs(
+            resumeAction
+          );
+      } catch (error) {
+        console.log(
+          'ROOTY RUNTIME RESTORE ERROR',
+          error
+        );
+      } finally {
+        if (!cancelled) {
+          setRootyRuntimeReady(
+            true
+          );
+        }
+      }
+    };
+
+  void restoreRootyRuntime();
+
+  return () => {
+    cancelled = true;
+  };
+}, []);
+
+useEffect(() => {
+  if (!rootyRuntimeReady) {
+    return;
+  }
+
+  const persistRootyRuntime =
+    () =>
+      saveRootyRuntimeSnapshot({
+        x:
+          foxX.value,
+        y:
+          foxY.value,
+        direction:
+          rootyDirectionRef.current,
+        action:
+          rootyActionRef.current,
+      });
+
+  void persistRootyRuntime();
+
+  const interval =
+    setInterval(
+      () => {
+        void persistRootyRuntime();
+      },
+      5_000
+    );
+
+  const subscription =
+    AppState.addEventListener(
+      'change',
+      (nextState) => {
+        if (
+          nextState !==
+          'active'
+        ) {
+          void persistRootyRuntime();
+        }
+      }
+    );
+
+  return () => {
+    clearInterval(
+      interval
+    );
+
+    subscription.remove();
+
+    void persistRootyRuntime();
+  };
+}, [rootyRuntimeReady]);
 // ROOTY_BEHAVIOR_V3_NATURAL_ROUTINE
 useEffect(() => {
+  if (!rootyRuntimeReady) {
+    return;
+  }
+
   let cancelled = false;
 
   const timers:
@@ -1825,7 +1994,7 @@ useEffect(() => {
     later(
       startRootyWalkSession,
       rootyCycleKey === 0
-        ? 300
+        ? rootyResumeDelayRef.current
         : randomInt(
             1000,
             1700
@@ -1843,7 +2012,7 @@ useEffect(() => {
         )
     );
   };
-}, [rootyCycleKey]);
+}, [rootyCycleKey, rootyRuntimeReady]);
 
 const handleRootyPress =
   () => {
@@ -7268,10 +7437,17 @@ top:
   style={[
     styles.foxCharacter,
     foxAnimatedStyle,
+    {
+      opacity:
+        rootyRuntimeReady
+          ? 1
+          : 0,
+    },
   ]}
 >
   <RootySprite
     action={rootyAction}
+    playing={rootyRuntimeReady}
     size={80}
     flipX={
       foxDirection === 'downLeft' ||

@@ -1002,6 +1002,99 @@ export default function SavedCafeVisitInsightsScreen() {
             },
           ]}
         >
+          {/* SAVED_CAFE_V45_VISIT_CALENDAR_ENTRY */}
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="카페 방문 캘린더 열기"
+            onPress={() =>
+              router.push(
+                '/place/saved-cafe-visit-calendar' as never,
+              )
+            }
+            style={({ pressed }) => [
+              styles.calendarEntryCard,
+              {
+                backgroundColor:
+                  theme.card,
+                borderColor:
+                  theme.line,
+                borderRadius:
+                  isCityBlack
+                    ? 3
+                    : 14,
+                opacity:
+                  pressed
+                    ? 0.55
+                    : 1,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.calendarEntryIcon,
+                {
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 10,
+                },
+              ]}
+            >
+              <Ionicons
+                name="calendar-outline"
+                size={19}
+                color={theme.text}
+              />
+            </View>
+
+            <View
+              style={styles.calendarEntryTextArea}
+            >
+              <Text
+                style={[
+                  styles.calendarEntryLabel,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                방문 캘린더
+              </Text>
+              <Text
+                style={[
+                  styles.calendarEntryTitle,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              >
+                월별 카페 발자국을 한눈에 봐요
+              </Text>
+              <Text
+                numberOfLines={1}
+                style={[
+                  styles.calendarEntryDescription,
+                  {
+                    color:
+                      theme.subText,
+                  },
+                ]}
+              >
+                방문일·횟수·날짜별 메모와 연속 방문 기록을 확인해요.
+              </Text>
+            </View>
+
+            <Ionicons
+              name="chevron-forward"
+              size={17}
+              color={theme.subText}
+            />
+          </Pressable>
+
           {/* SAVED_CAFE_V44_VISIT_CHALLENGES_ENTRY */}
           <Pressable
             accessibilityRole="button"
@@ -2007,6 +2100,48 @@ const styles = StyleSheet.create({
 
   content: {
     padding: 14,
+  },
+
+  calendarEntryCard: {
+    minHeight: 78,
+    marginBottom: 8,
+    padding: 11,
+    borderWidth:
+      StyleSheet.hairlineWidth,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+
+  calendarEntryIcon: {
+    width: 40,
+    height: 40,
+    borderWidth:
+      StyleSheet.hairlineWidth,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  calendarEntryTextArea: {
+    flex: 1,
+    minWidth: 0,
+  },
+
+  calendarEntryLabel: {
+    fontSize: 8,
+    fontWeight: '900',
+  },
+
+  calendarEntryTitle: {
+    marginTop: 3,
+    fontSize: 11,
+    fontWeight: '900',
+  },
+
+  calendarEntryDescription: {
+    marginTop: 3,
+    fontSize: 8.3,
+    fontWeight: '700',
   },
 
   challengeEntryCard: {

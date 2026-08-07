@@ -954,6 +954,86 @@ export default function SavedCafesScreen() {
           ) : null}
         </View>
 
+        {/* SAVED_CAFE_V51_INTEGRATION_DIAGNOSTICS_ENTRY */}
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="카페 시스템 통합 점검 열기"
+          onPress={() =>
+            router.push(
+              '/place/saved-cafe-diagnostics' as never,
+            )
+          }
+          style={({ pressed }) => [
+            styles.syncCard,
+            {
+              backgroundColor:
+                theme.card,
+              borderColor:
+                theme.line,
+              borderRadius:
+                isCityBlack
+                  ? 3
+                  : 14,
+              opacity:
+                pressed
+                  ? 0.58
+                  : 1,
+            },
+          ]}
+        >
+          <View
+            style={[
+              styles.syncIconBox,
+              {
+                backgroundColor:
+                  theme.background,
+                borderColor:
+                  theme.line,
+                borderRadius:
+                  isCityBlack
+                    ? 2
+                    : 11,
+              },
+            ]}
+          >
+            <Ionicons
+              name="shield-checkmark-outline"
+              size={19}
+              color={theme.text}
+            />
+          </View>
+          <View
+            style={styles.syncTextArea}
+          >
+            <Text
+              style={[
+                styles.syncTitle,
+                {
+                  color:
+                    theme.text,
+                },
+              ]}
+            >
+              카페 시스템 통합 점검
+            </Text>
+            <Text
+              style={[
+                styles.syncDescription,
+                {
+                  color:
+                    theme.subText,
+                },
+              ]}
+            >
+              V42~V50 데이터 연결·추천 계산·동기화 상태를 한 번에 확인해요.
+            </Text>
+          </View>
+          <Ionicons
+            name="chevron-forward"
+            size={16}
+            color={theme.subText}
+          />
+        </Pressable>
         <View
           style={[
             styles.searchFilterCard,

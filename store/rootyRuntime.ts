@@ -211,37 +211,47 @@ export async function loadRootyRuntimeSnapshot():
   }
 }
 
-export async function saveRootyRuntimeSnapshot(
-  input: RootyRuntimeSaveInput
-) {
-  const snapshot:
-    RootyRuntimeSnapshot = {
-      version:
-        ROOTY_RUNTIME_VERSION,
-      x:
-        Math.max(
-          ROOTY_MIN_X,
-          Math.min(
-            input.x,
-            ROOTY_MAX_X
-          )
-        ),
-      y:
-        Math.max(
-          ROOTY_MIN_Y,
-          Math.min(
-            input.y,
-            ROOTY_MAX_Y
-          )
-        ),
-      direction:
-        input.direction,
-      action:
-        input.action,
-      savedAt:
-        Date.now(),
-    };
+// ROOTY_BEHAVIOR_V17_SERIALIZED_RUNTIME_PERSISTENCE
+let rootyRuntimeSaveQueue:
+  Promise<void> =
+    Promise.resolve();
 
+function createRootyRuntimeSnapshot(
+  input:
+    RootyRuntimeSaveInput
+): RootyRuntimeSnapshot {
+  return {
+    version:
+      ROOTY_RUNTIME_VERSION,
+    x:
+      Math.max(
+        ROOTY_MIN_X,
+        Math.min(
+          input.x,
+          ROOTY_MAX_X
+        )
+      ),
+    y:
+      Math.max(
+        ROOTY_MIN_Y,
+        Math.min(
+          input.y,
+          ROOTY_MAX_Y
+        )
+      ),
+    direction:
+      input.direction,
+    action:
+      input.action,
+    savedAt:
+      Date.now(),
+  };
+}
+
+async function writeRootyRuntimeSnapshot(
+  snapshot:
+    RootyRuntimeSnapshot
+) {
   try {
     await AsyncStorage.setItem(
       ROOTY_RUNTIME_STATE_KEY,
@@ -255,6 +265,31 @@ export async function saveRootyRuntimeSnapshot(
       error
     );
   }
+}
+
+export function saveRootyRuntimeSnapshot(
+  input:
+    RootyRuntimeSaveInput
+): Promise<void> {
+  const snapshot =
+    createRootyRuntimeSnapshot(
+      input
+    );
+
+  const queuedWrite =
+    rootyRuntimeSaveQueue.then(
+      () =>
+        writeRootyRuntimeSnapshot(
+          snapshot
+        )
+    );
+
+  rootyRuntimeSaveQueue =
+    queuedWrite.catch(
+      () => undefined
+    );
+
+  return queuedWrite;
 }
 
 export function resolveRootyResumeAction(

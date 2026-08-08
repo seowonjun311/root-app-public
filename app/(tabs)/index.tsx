@@ -1408,8 +1408,21 @@ const applyRootyDirection =
     []
   );
 
-const foxX = useSharedValue(430);
-const foxY = useSharedValue(250);
+const ROOTY_DEFAULT_POSITION = {
+  x: 430,
+  y: 250,
+} as const;
+
+// ROOTY_BEHAVIOR_V23_SAFE_RESTORE_POSITION
+const foxX =
+  useSharedValue<number>(
+    ROOTY_DEFAULT_POSITION.x
+  );
+
+const foxY =
+  useSharedValue<number>(
+    ROOTY_DEFAULT_POSITION.y
+  );
 // ROOTY_BEHAVIOR_V13_HOME_FOCUS_PAUSE
 const [
   rootyHomeFocused,
@@ -1678,6 +1691,88 @@ const isFoxBlockedByBuilding = (x: number, y: number) => {
   });
 };
 
+
+// ROOTY_BEHAVIOR_V23_SAFE_RESTORE_POSITION_FALLBACK
+const findSafeRootyPosition = (
+  preferredX: number,
+  preferredY: number
+) => {
+  const preferredGrid =
+    screenToGrid(
+      preferredX,
+      preferredY
+    );
+
+  let bestPosition:
+    {
+      x: number;
+      y: number;
+    } |
+    null =
+      null;
+
+  let bestDistance =
+    Number.POSITIVE_INFINITY;
+
+  for (
+    let col = 0;
+    col < GRID_SIZE;
+    col += 1
+  ) {
+    for (
+      let row = 0;
+      row < GRID_SIZE;
+      row += 1
+    ) {
+      const candidate =
+        gridToScreen(
+          col,
+          row
+        );
+
+      if (
+        isFoxOutsideVillage(
+          candidate.x,
+          candidate.y
+        ) ||
+        isFoxBlockedByBuilding(
+          candidate.x,
+          candidate.y
+        )
+      ) {
+        continue;
+      }
+
+      const distance =
+        Math.abs(
+          col -
+            preferredGrid.col
+        ) +
+        Math.abs(
+          row -
+            preferredGrid.row
+        );
+
+      if (
+        distance <
+        bestDistance
+      ) {
+        bestDistance =
+          distance;
+
+        bestPosition = {
+          x:
+            candidate.x,
+          y:
+            candidate.y,
+        };
+      }
+    }
+  }
+
+  return bestPosition;
+};
+
 // ROOTY_BEHAVIOR_V4_RUNTIME_CONTINUITY
 useEffect(() => {
   let cancelled = false;
@@ -1688,30 +1783,49 @@ useEffect(() => {
         const snapshot =
           await loadRootyRuntimeSnapshot();
 
-        if (
-          cancelled ||
-          !snapshot
-        ) {
-          return;
-        }
+        if (cancelled) {
+      return;
+    }
 
-        const safePosition =
-          !isFoxOutsideVillage(
-            snapshot.x,
-            snapshot.y
-          ) &&
-          !isFoxBlockedByBuilding(
-            snapshot.x,
-            snapshot.y
+    const preferredPosition =
+      snapshot
+        ? {
+            x:
+              snapshot.x,
+            y:
+              snapshot.y,
+          }
+        : ROOTY_DEFAULT_POSITION;
+
+    const safePosition =
+      !isFoxOutsideVillage(
+        preferredPosition.x,
+        preferredPosition.y
+      ) &&
+      !isFoxBlockedByBuilding(
+        preferredPosition.x,
+        preferredPosition.y
+      );
+
+    const restorePosition =
+      safePosition
+        ? preferredPosition
+        : findSafeRootyPosition(
+            preferredPosition.x,
+            preferredPosition.y
           );
 
-        if (safePosition) {
-          foxX.value =
-            snapshot.x;
+    if (restorePosition) {
+      foxX.value =
+        restorePosition.x;
 
-          foxY.value =
-            snapshot.y;
-        }
+      foxY.value =
+        restorePosition.y;
+    }
+
+    if (!snapshot) {
+      return;
+    }
 
         rootyDirectionRef.current =
           snapshot.direction;

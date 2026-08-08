@@ -1335,8 +1335,69 @@ const [
   setRootyHomeFocused,
 ] = useState(false);
 
+// ROOTY_BEHAVIOR_V14_HOME_RESUME_STABILIZATION
+const stabilizeRootyForHomeFocus =
+  useCallback(() => {
+    const currentAction =
+      rootyActionRef.current;
+
+    if (
+      currentAction !== 'walk' &&
+      currentAction !== 'happy'
+    ) {
+      return;
+    }
+
+    const currentDirection =
+      rootyDirectionRef.current;
+
+    let stableDirection =
+      currentDirection;
+
+    if (
+      !hasRootyDirectionalFrames(
+        'idle',
+        currentDirection
+      )
+    ) {
+      if (currentDirection === 'upRight') {
+        stableDirection =
+          'downRight';
+      }
+      else if (
+        currentDirection === 'upLeft'
+      ) {
+        stableDirection =
+          'downLeft';
+      }
+    }
+
+    if (
+      stableDirection !==
+      currentDirection
+    ) {
+      rootyDirectionRef.current =
+        stableDirection;
+
+      setFoxDirection(
+        stableDirection
+      );
+    }
+
+    rootyReactingRef.current =
+      false;
+
+    rootyActionRef.current =
+      'idle';
+
+    setRootyAction(
+      'idle'
+    );
+  }, []);
 useFocusEffect(
   useCallback(() => {
+    stabilizeRootyForHomeFocus();
+
     setRootyHomeFocused(
       true
     );
@@ -1368,6 +1429,7 @@ useFocusEffect(
   }, [
     foxX,
     foxY,
+    stabilizeRootyForHomeFocus,
   ])
 );
 

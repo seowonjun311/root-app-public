@@ -4,6 +4,7 @@ import {
 } from '@react-native-firebase/app';
 import RootySprite from '../../components/rooty/RootySprite';
 import type { RootyAction } from '../../constants/rootyAssets';
+import { ROOTY_WALK_MOTION } from '../../constants/rootyMotion';
 import {
   hasRootyDirectionalFrames,
 } from '../../constants/rootyDirectionalAssets';
@@ -1794,23 +1795,23 @@ useEffect(() => {
         let nextY = foxY.value;
 
         if (nextDirection === 'downRight') {
-          nextX += 40;
-          nextY += 20;
+          nextX += ROOTY_WALK_MOTION.stepX;
+          nextY += ROOTY_WALK_MOTION.stepY;
         }
 
         if (nextDirection === 'downLeft') {
-          nextX -= 40;
-          nextY += 20;
+          nextX -= ROOTY_WALK_MOTION.stepX;
+          nextY += ROOTY_WALK_MOTION.stepY;
         }
 
         if (nextDirection === 'upRight') {
-          nextX += 40;
-          nextY -= 20;
+          nextX += ROOTY_WALK_MOTION.stepX;
+          nextY -= ROOTY_WALK_MOTION.stepY;
         }
 
         if (nextDirection === 'upLeft') {
-          nextX -= 40;
-          nextY -= 20;
+          nextX -= ROOTY_WALK_MOTION.stepX;
+          nextY -= ROOTY_WALK_MOTION.stepY;
         }
 
         nextX =
@@ -1860,7 +1861,7 @@ useEffect(() => {
           withTiming(
             nextX,
             {
-              duration: 900,
+              duration: ROOTY_WALK_MOTION.stepDurationMs,
             }
           );
 
@@ -1868,7 +1869,7 @@ useEffect(() => {
           withTiming(
             nextY,
             {
-              duration: 900,
+              duration: ROOTY_WALK_MOTION.stepDurationMs,
             }
           );
 
@@ -1992,12 +1993,12 @@ useEffect(() => {
             walkStep,
             movedDirection
               ? randomInt(
-                  1000,
-                  1300
+                  ROOTY_WALK_MOTION.nextStepDelayMinMs,
+                  ROOTY_WALK_MOTION.nextStepDelayMaxMs
                 )
               : randomInt(
-                  250,
-                  500
+                  ROOTY_WALK_MOTION.blockedRetryDelayMinMs,
+                  ROOTY_WALK_MOTION.blockedRetryDelayMaxMs
                 )
           );
         };

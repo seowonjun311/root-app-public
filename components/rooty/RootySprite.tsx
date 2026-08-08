@@ -24,6 +24,7 @@ import {
   resolveRootyDirectionalFrames,
   type RootyDirection,
 } from '../../constants/rootyDirectionalAssets';
+import { ROOTY_WALK_MOTION } from '../../constants/rootyMotion';
 
 type RootySpriteProps = {
   action?: RootyAction;
@@ -197,24 +198,24 @@ function RootySpriteComponent({
           Animated.parallel([
             Animated.timing(translateY, {
               toValue: -2,
-              duration: 85,
+              duration: ROOTY_WALK_MOTION.bobHalfCycleMs,
               useNativeDriver: true,
             }),
             Animated.timing(scale, {
               toValue: 1.015,
-              duration: 85,
+              duration: ROOTY_WALK_MOTION.bobHalfCycleMs,
               useNativeDriver: true,
             }),
           ]),
           Animated.parallel([
             Animated.timing(translateY, {
               toValue: 0,
-              duration: 85,
+              duration: ROOTY_WALK_MOTION.bobHalfCycleMs,
               useNativeDriver: true,
             }),
             Animated.timing(scale, {
               toValue: 1,
-              duration: 85,
+              duration: ROOTY_WALK_MOTION.bobHalfCycleMs,
               useNativeDriver: true,
             }),
           ]),

@@ -1,5 +1,6 @@
 import type { ImageSourcePropType } from 'react-native';
 
+import { ROOTY_WALK_MOTION } from './rootyMotion';
 export type RootyAction =
   | 'idle'
   | 'walk'
@@ -86,7 +87,7 @@ export const ROOTY_ANIMATION: Record<RootyAction, RootyAnimationConfig> = {
     loop: true,
   },
   walk: {
-    frameMs: 170,
+    frameMs: ROOTY_WALK_MOTION.frameMs,
     loop: true,
   },
   sit: {

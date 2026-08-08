@@ -1329,6 +1329,47 @@ const rootyResumeDelayRef =
 
 const foxX = useSharedValue(430);
 const foxY = useSharedValue(250);
+// ROOTY_BEHAVIOR_V13_HOME_FOCUS_PAUSE
+const [
+  rootyHomeFocused,
+  setRootyHomeFocused,
+] = useState(false);
+
+useFocusEffect(
+  useCallback(() => {
+    setRootyHomeFocused(
+      true
+    );
+
+    return () => {
+      setRootyHomeFocused(
+        false
+      );
+
+      cancelAnimation(
+        foxX
+      );
+
+      cancelAnimation(
+        foxY
+      );
+
+      void saveRootyRuntimeSnapshot({
+        x:
+          foxX.value,
+        y:
+          foxY.value,
+        direction:
+          rootyDirectionRef.current,
+        action:
+          rootyActionRef.current,
+      });
+    };
+  }, [
+    foxX,
+    foxY,
+  ])
+);
 
 useEffect(() => {
   rootyActionRef.current =
@@ -1592,7 +1633,8 @@ useEffect(() => {
 useEffect(() => {
   if (
     !rootyRuntimeReady ||
-    !rootyAppActive
+    !rootyAppActive ||
+    !rootyHomeFocused
   ) {
     return;
   }
@@ -2248,7 +2290,7 @@ useEffect(() => {
         )
     );
   };
-}, [rootyCycleKey, rootyRuntimeReady, rootyAppActive]);
+}, [rootyCycleKey, rootyRuntimeReady, rootyAppActive, rootyHomeFocused]);
 
 const handleRootyPress =
   () => {
@@ -7725,7 +7767,7 @@ top:
 >
   <RootySprite
     action={rootyAction}
-    playing={rootyRuntimeReady && rootyAppActive}
+    playing={rootyRuntimeReady && rootyAppActive && rootyHomeFocused}
     size={80}
     direction={foxDirection}
     onPress={

@@ -1967,6 +1967,22 @@ useEffect(() => {
     return;
   }
 
+  logRootyDebugEvent(
+    'routine-restart',
+    {
+      cycleKey:
+        rootyCycleKey,
+      action:
+        rootyActionRef.current,
+      direction:
+        rootyDirectionRef.current,
+      x:
+        foxX.value,
+      y:
+        foxY.value,
+    }
+  );
+
   let cancelled = false;
 
   const timers:
@@ -3205,6 +3221,27 @@ const [placedBuildings, setPlacedBuildings] =
 const applyPlacedBuildings = (
   nextPlacedBuildings: any[]
 ) => {
+  // ROOTY_BEHAVIOR_V33_RUNTIME_STRESS_TRACING
+  logRootyDebugEvent(
+    'village-layout-edit',
+    {
+      previousCount:
+        placedBuildingsRef.current.length,
+      nextCount:
+        nextPlacedBuildings.length,
+      action:
+        rootyActionRef.current,
+      direction:
+        rootyDirectionRef.current,
+      x:
+        foxX.value,
+      y:
+        foxY.value,
+      cycleKey:
+        rootyCycleKey,
+    }
+  );
+
   placedBuildingsRef.current =
     nextPlacedBuildings;
 
@@ -3254,6 +3291,26 @@ useEffect(() => {
   if (!safePosition) {
     return;
   }
+
+  logRootyDebugEvent(
+    'rooty-relocated',
+    {
+      fromX:
+        currentX,
+      fromY:
+        currentY,
+      toX:
+        safePosition.x,
+      toY:
+        safePosition.y,
+      action:
+        rootyActionRef.current,
+      direction:
+        rootyDirectionRef.current,
+      cycleKey:
+        rootyCycleKey,
+    }
+  );
 
   cancelAnimation(
     foxX

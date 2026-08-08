@@ -4,7 +4,10 @@ export type RootyDebugEvent =
   | 'home-focus'
   | 'home-blur'
   | 'app-active'
-  | 'app-inactive';
+  | 'app-inactive'
+  | 'village-layout-edit'
+  | 'rooty-relocated'
+  | 'routine-restart';
 
 export type RootyDebugPayload =
   Record<

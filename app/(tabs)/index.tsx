@@ -5,6 +5,7 @@ import {
 import RootySprite from '../../components/rooty/RootySprite';
 import type { RootyAction } from '../../constants/rootyAssets';
 import { ROOTY_WALK_MOTION } from '../../constants/rootyMotion';
+import { logRootyDebugEvent } from '../../utils/rootyDebug';
 import {
   hasRootyDirectionalFrames,
 } from '../../constants/rootyDirectionalAssets';
@@ -1333,6 +1334,29 @@ const applyRootyAction =
       nextAction:
         RootyAction
     ) => {
+      const previousAction =
+        rootyActionRef.current;
+
+      if (
+        previousAction !==
+        nextAction
+      ) {
+        logRootyDebugEvent(
+          'action',
+          {
+            from:
+              previousAction,
+            to:
+              nextAction,
+            direction:
+              rootyDirectionRef.current,
+            x:
+              foxX.value,
+            y:
+              foxY.value,
+          }
+        );
+      }
       rootyActionRef.current =
         nextAction;
 
@@ -1349,6 +1373,29 @@ const applyRootyDirection =
       nextDirection:
         RootyDirection
     ) => {
+      const previousDirection =
+        rootyDirectionRef.current;
+
+      if (
+        previousDirection !==
+        nextDirection
+      ) {
+        logRootyDebugEvent(
+          'direction',
+          {
+            from:
+              previousDirection,
+            to:
+              nextDirection,
+            action:
+              rootyActionRef.current,
+            x:
+              foxX.value,
+            y:
+              foxY.value,
+          }
+        );
+      }
       rootyDirectionRef.current =
         nextDirection;
 
@@ -1366,6 +1413,59 @@ const [
   rootyHomeFocused,
   setRootyHomeFocused,
 ] = useState(false);
+useEffect(() => {
+  if (!rootyRuntimeReady) {
+    return;
+  }
+
+  logRootyDebugEvent(
+    rootyHomeFocused
+      ? 'home-focus'
+      : 'home-blur',
+    {
+      action:
+        rootyActionRef.current,
+      direction:
+        rootyDirectionRef.current,
+      x:
+        foxX.value,
+      y:
+        foxY.value,
+      appActive:
+        rootyAppActive,
+    }
+  );
+}, [
+  rootyHomeFocused,
+  rootyRuntimeReady,
+]);
+
+useEffect(() => {
+  if (!rootyRuntimeReady) {
+    return;
+  }
+
+  logRootyDebugEvent(
+    rootyAppActive
+      ? 'app-active'
+      : 'app-inactive',
+    {
+      action:
+        rootyActionRef.current,
+      direction:
+        rootyDirectionRef.current,
+      x:
+        foxX.value,
+      y:
+        foxY.value,
+      homeFocused:
+        rootyHomeFocused,
+    }
+  );
+}, [
+  rootyAppActive,
+  rootyRuntimeReady,
+]);
 
 // ROOTY_BEHAVIOR_V14_HOME_RESUME_STABILIZATION
 const stabilizeRootyForHomeFocus =

@@ -1667,10 +1667,15 @@ const isFoxOutsideVillage = (x: number, y: number) => {
   );
 };
 
+// ROOTY_BEHAVIOR_V25_LIVE_VILLAGE_LAYOUT_SAFETY
+const placedBuildingsRef =
+  useRef<any[]>(
+    onboardingData?.placedBuildings ?? []
+  );
 const isFoxBlockedByBuilding = (x: number, y: number) => {
   const foxGrid = screenToGrid(x, y);
 
-  return placedBuildings.some((building) => {
+  return placedBuildingsRef.current.some((building) => {
     const size =
       buildingSizes[
         building.id as keyof typeof buildingSizes
@@ -3194,8 +3199,91 @@ const [
   
 const [placedBuildings, setPlacedBuildings] =
   useState<any[]>(
-    onboardingData?.placedBuildings ?? []
+    placedBuildingsRef.current
   );
+
+const applyPlacedBuildings = (
+  nextPlacedBuildings: any[]
+) => {
+  placedBuildingsRef.current =
+    nextPlacedBuildings;
+
+  setPlacedBuildings(
+    nextPlacedBuildings
+  );
+};
+
+// ROOTY_BEHAVIOR_V25_LIVE_POSITION_RECONCILIATION
+useEffect(() => {
+  if (!rootyRuntimeReady) {
+    return;
+  }
+
+  const currentX =
+    foxX.value;
+
+  const currentY =
+    foxY.value;
+
+  const needsRelocation =
+    isFoxOutsideVillage(
+      currentX,
+      currentY
+    ) ||
+    isFoxBlockedByBuilding(
+      currentX,
+      currentY
+    );
+
+  if (!needsRelocation) {
+    return;
+  }
+
+  const safePosition =
+    findSafeRootyPosition(
+      currentX,
+      currentY
+    );
+
+  if (!safePosition) {
+    return;
+  }
+
+  cancelAnimation(
+    foxX
+  );
+
+  cancelAnimation(
+    foxY
+  );
+
+  foxX.value =
+    safePosition.x;
+
+  foxY.value =
+    safePosition.y;
+
+  rootyActionRef.current =
+    'idle';
+
+  applyRootyAction(
+    'idle'
+  );
+
+  void saveRootyRuntimeSnapshot({
+    x:
+      safePosition.x,
+    y:
+      safePosition.y,
+    direction:
+      rootyDirectionRef.current,
+    action:
+      'idle',
+  });
+}, [
+  placedBuildings,
+  rootyRuntimeReady,
+]);
     
  
 const [placingItem, setPlacingItem] = useState<any>(null);
@@ -3318,7 +3406,7 @@ useFocusEffect(
       data?.actionGoals ?? []
     );
     setBagItems(data?.bagItems ?? []);
-setPlacedBuildings(data?.placedBuildings ?? []);
+applyPlacedBuildings(data?.placedBuildings ?? []);
 if (data?.runningTimer?.goalId && data?.runningTimer?.startedAt) {
   setRunningGoalId(data.runningTimer.goalId);
   setTimerStartAt(data.runningTimer.startedAt);
@@ -7218,7 +7306,7 @@ useFocusEffect(
             nextBag
           );
 
-          setPlacedBuildings(
+          applyPlacedBuildings(
             deduplicatedPlacedBuildings
           );
 
@@ -7486,7 +7574,7 @@ const placeBuildingOnVillage = () => {
       placedBuildings: updatedPlacedBuildings,
     };
 
-    setPlacedBuildings(updatedPlacedBuildings);
+    applyPlacedBuildings(updatedPlacedBuildings);
     setOnboardingData(next);
     setRootOnboardingData(next);
 
@@ -7520,7 +7608,7 @@ const placeBuildingOnVillage = () => {
     bagItems: updatedBagItems,
   };
 
-  setPlacedBuildings(updatedPlacedBuildings);
+  applyPlacedBuildings(updatedPlacedBuildings);
   setBagItems(updatedBagItems);
 saveRootData(next);
 
@@ -7574,7 +7662,7 @@ const returnPlacedBuildingToBag = () => {
     bagItems: updatedBagItems,
   };
 
-  setPlacedBuildings(updatedPlacedBuildings);
+  applyPlacedBuildings(updatedPlacedBuildings);
   setBagItems(updatedBagItems);
   saveRootData(next);
 
@@ -7604,7 +7692,7 @@ const flipSelectedBuilding = () => {
     placedBuildings: updatedPlacedBuildings,
   };
 
-  setPlacedBuildings(updatedPlacedBuildings);
+  applyPlacedBuildings(updatedPlacedBuildings);
   saveRootData(next);
 
   setPlacingItem((prev: any) =>
@@ -7628,7 +7716,7 @@ const saveVillageEdit = () => {
     placedBuildings: latestPlacedBuildings,
   };
 
-  setPlacedBuildings(latestPlacedBuildings);
+  applyPlacedBuildings(latestPlacedBuildings);
   saveRootData(next);
 
   setOriginalPlacedBuildings(
@@ -8246,7 +8334,7 @@ top:
   cancelText: '취소',
   confirmText: '종료',
   onConfirm: () => {
-    setPlacedBuildings(originalPlacedBuildings);
+    applyPlacedBuildings(originalPlacedBuildings);
 
     const next = {
       ...onboardingData,

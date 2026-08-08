@@ -1688,76 +1688,145 @@ useEffect(() => {
         nextDirection
       );
     };
+  // ROOTY_BEHAVIOR_V8_COHERENT_WALKING
+  const OPPOSITE_DIRECTION:
+    Record<
+      (typeof directions)[number],
+      (typeof directions)[number]
+    > = {
+      downRight: 'upLeft',
+      downLeft: 'upRight',
+      upRight: 'downLeft',
+      upLeft: 'downRight',
+    };
+
+  const pickNextWalkDirection =
+    (
+      currentDirection?:
+        (typeof directions)[number]
+    ) => {
+      if (!currentDirection) {
+        return (
+          directions[
+            randomInt(
+              0,
+              directions.length - 1
+            )
+          ] ?? 'downRight'
+        );
+      }
+
+      if (Math.random() < 0.55) {
+        return currentDirection;
+      }
+
+      const candidates =
+        directions.filter(
+          (direction) =>
+            direction !==
+              currentDirection &&
+            direction !==
+              OPPOSITE_DIRECTION[
+                currentDirection
+              ]
+        );
+
+      return (
+        candidates[
+          randomInt(
+            0,
+            candidates.length - 1
+          )
+        ] ??
+        currentDirection
+      );
+    };
 
   const tryMoveRootyOneStep =
-    () => {
+    (
+      preferredDirection:
+        (typeof directions)[number]
+    ) => {
+      const lateralDirections =
+        directions.filter(
+          (direction) =>
+            direction !==
+              preferredDirection &&
+            direction !==
+              OPPOSITE_DIRECTION[
+                preferredDirection
+              ]
+        );
+
+      const firstLateral =
+        lateralDirections[
+          randomInt(
+            0,
+            lateralDirections.length - 1
+          )
+        ] ??
+        preferredDirection;
+
+      const secondLateral =
+        lateralDirections.find(
+          (direction) =>
+            direction !==
+            firstLateral
+        ) ??
+        preferredDirection;
+
+      const attemptDirections:
+        (typeof directions)[number][] = [
+          preferredDirection,
+          firstLateral,
+          secondLateral,
+          OPPOSITE_DIRECTION[
+            preferredDirection
+          ],
+        ];
+
       for (
-        let attempt = 0;
-        attempt < 4;
-        attempt += 1
+        const nextDirection of
+        attemptDirections
       ) {
-        const randomDirection =
-          pickRandomDirection();
+        let nextX = foxX.value;
+        let nextY = foxY.value;
 
-        let nextX =
-          foxX.value;
-
-        let nextY =
-          foxY.value;
-
-        if (
-          randomDirection ===
-          'downRight'
-        ) {
+        if (nextDirection === 'downRight') {
           nextX += 40;
           nextY += 20;
         }
 
-        if (
-          randomDirection ===
-          'downLeft'
-        ) {
+        if (nextDirection === 'downLeft') {
           nextX -= 40;
           nextY += 20;
         }
 
-        if (
-          randomDirection ===
-          'upRight'
-        ) {
+        if (nextDirection === 'upRight') {
           nextX += 40;
           nextY -= 20;
         }
 
-        if (
-          randomDirection ===
-          'upLeft'
-        ) {
+        if (nextDirection === 'upLeft') {
           nextX -= 40;
           nextY -= 20;
         }
-
-        const minX = 120;
-        const maxX = 1200;
-
-        const minY = 80;
-        const maxY = 900;
 
         nextX =
           Math.max(
-            minX,
+            120,
             Math.min(
               nextX,
-              maxX
+              1200
             )
           );
 
         nextY =
           Math.max(
-            minY,
+            80,
             Math.min(
               nextY,
-              maxY
+              900
             )
           );
 
@@ -1779,8 +1848,11 @@ useEffect(() => {
           continue;
         }
 
+        rootyDirectionRef.current =
+          nextDirection;
+
         setFoxDirection(
-          randomDirection
+          nextDirection
         );
 
         foxX.value =
@@ -1799,10 +1871,10 @@ useEffect(() => {
             }
           );
 
-        return true;
+        return nextDirection;
       }
 
-      return false;
+      return null;
     };
 
   const startRootyWalkSession =
@@ -1820,11 +1892,36 @@ useEffect(() => {
 
       let remainingSteps =
         randomInt(
-          3,
-          6
+          4,
+          7
+        );
+
+      let currentWalkDirection =
+        pickNextWalkDirection(
+          rootyDirectionRef.current
+        );
+
+      let segmentStepsRemaining =
+        randomInt(
+          2,
+          4
         );
 
       let blockedRetries = 0;
+
+      const chooseNextSegment =
+        () => {
+          currentWalkDirection =
+            pickNextWalkDirection(
+              currentWalkDirection
+            );
+
+          segmentStepsRemaining =
+            randomInt(
+              2,
+              4
+            );
+        };
 
       const walkStep =
         () => {
@@ -1835,14 +1932,40 @@ useEffect(() => {
             return;
           }
 
-          const moved =
-            tryMoveRootyOneStep();
+          const movedDirection =
+            tryMoveRootyOneStep(
+              currentWalkDirection
+            );
 
-          if (moved) {
+          if (movedDirection) {
             remainingSteps -= 1;
             blockedRetries = 0;
+
+            if (
+              movedDirection !==
+              currentWalkDirection
+            ) {
+              currentWalkDirection =
+                movedDirection;
+
+              segmentStepsRemaining =
+                randomInt(
+                  2,
+                  4
+                );
+            } else {
+              segmentStepsRemaining -= 1;
+
+              if (
+                segmentStepsRemaining <= 0 &&
+                remainingSteps > 0
+              ) {
+                chooseNextSegment();
+              }
+            }
           } else {
             blockedRetries += 1;
+            chooseNextSegment();
           }
 
           if (
@@ -1866,7 +1989,7 @@ useEffect(() => {
 
           later(
             walkStep,
-            moved
+            movedDirection
               ? randomInt(
                   1000,
                   1300

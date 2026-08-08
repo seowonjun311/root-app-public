@@ -72,6 +72,7 @@ import {
 } from 'react-native-gesture-handler';
 
 import Animated, {
+  cancelAnimation,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
@@ -2225,6 +2226,17 @@ const handleRootyPress =
 
     rootyReactingRef.current =
       true;
+// ROOTY_BEHAVIOR_V9_TAP_FREEZE_REACTION
+    cancelAnimation(
+      foxX
+    );
+
+    cancelAnimation(
+      foxY
+    );
+
+    rootyActionRef.current =
+      'happy';
 
     const currentDirection =
       rootyDirectionRef.current;
@@ -2278,6 +2290,9 @@ const handleRootyAnimationEnd =
 
     rootyReactingRef.current =
       false;
+
+    rootyActionRef.current =
+      'idle';
 
     setRootyAction(
       'idle'

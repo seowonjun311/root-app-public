@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { ROOTY_RUNTIME_CONTINUITY } from '../constants/rootyRuntimeConfig';
+import { ROOTY_VILLAGE_BOUNDS } from '../constants/rootyVillageBounds';
 
 import type {
   RootyAction,
@@ -32,11 +33,6 @@ export const ROOTY_RUNTIME_STATE_KEY =
   'rooty_runtime_state_v1';
 
 const ROOTY_RUNTIME_VERSION = 1 as const;
-
-const ROOTY_MIN_X = 120;
-const ROOTY_MAX_X = 1200;
-const ROOTY_MIN_Y = 80;
-const ROOTY_MAX_Y = 900;
 
 const ROOTY_DIRECTIONS:
   readonly RootyDirection[] = [
@@ -114,13 +110,13 @@ function normalizeRootyRuntimeSnapshot(
   if (
     !isFiniteCoordinate(
       candidate.x,
-      ROOTY_MIN_X,
-      ROOTY_MAX_X
+      ROOTY_VILLAGE_BOUNDS.minX,
+      ROOTY_VILLAGE_BOUNDS.maxX
     ) ||
     !isFiniteCoordinate(
       candidate.y,
-      ROOTY_MIN_Y,
-      ROOTY_MAX_Y
+      ROOTY_VILLAGE_BOUNDS.minY,
+      ROOTY_VILLAGE_BOUNDS.maxY
     )
   ) {
     return null;
@@ -227,18 +223,18 @@ function createRootyRuntimeSnapshot(
       ROOTY_RUNTIME_VERSION,
     x:
       Math.max(
-        ROOTY_MIN_X,
+        ROOTY_VILLAGE_BOUNDS.minX,
         Math.min(
           input.x,
-          ROOTY_MAX_X
+          ROOTY_VILLAGE_BOUNDS.maxX
         )
       ),
     y:
       Math.max(
-        ROOTY_MIN_Y,
+        ROOTY_VILLAGE_BOUNDS.minY,
         Math.min(
           input.y,
-          ROOTY_MAX_Y
+          ROOTY_VILLAGE_BOUNDS.maxY
         )
       ),
     direction:

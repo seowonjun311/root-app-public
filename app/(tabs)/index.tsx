@@ -6,6 +6,7 @@ import RootySprite from '../../components/rooty/RootySprite';
 import type { RootyAction } from '../../constants/rootyAssets';
 import { ROOTY_WALK_MOTION } from '../../constants/rootyMotion';
 import { ROOTY_NATURAL_BEHAVIOR } from '../../constants/rootyBehavior';
+import { ROOTY_VILLAGE_BOUNDS } from '../../constants/rootyVillageBounds';
 import { logRootyDebugEvent } from '../../utils/rootyDebug';
 import {
   hasRootyDirectionalFrames,
@@ -2099,19 +2100,19 @@ useEffect(() => {
 
         nextX =
           Math.max(
-            120,
+            ROOTY_VILLAGE_BOUNDS.minX,
             Math.min(
               nextX,
-              1200
+              ROOTY_VILLAGE_BOUNDS.maxX
             )
           );
 
         nextY =
           Math.max(
-            80,
+            ROOTY_VILLAGE_BOUNDS.minY,
             Math.min(
               nextY,
-              900
+              ROOTY_VILLAGE_BOUNDS.maxY
             )
           );
 

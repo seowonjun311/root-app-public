@@ -1,5 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { ROOTY_RUNTIME_CONTINUITY } from '../constants/rootyRuntimeConfig';
+
 import type {
   RootyAction,
 } from '../constants/rootyAssets';
@@ -303,7 +305,8 @@ export function resolveRootyResumeAction(
         snapshot.savedAt
     );
 
-  if (elapsedMs <= 15_000) {
+  if (elapsedMs <=
+    ROOTY_RUNTIME_CONTINUITY.shortResumeWindowMs) {
     if (
       snapshot.action ===
         'idle' ||
@@ -320,7 +323,7 @@ export function resolveRootyResumeAction(
 
   if (
     elapsedMs <
-    10 * 60_000
+    ROOTY_RUNTIME_CONTINUITY.mediumResumeWindowMs
   ) {
     const stableBucket =
       Math.floor(
@@ -340,16 +343,24 @@ export function getRootyResumeDelayMs(
   action: RootyAction
 ) {
   if (action === 'sleep') {
-    return 8_000;
+    return (
+      ROOTY_RUNTIME_CONTINUITY.sleepResumeDelayMs
+    );
   }
 
   if (action === 'sit') {
-    return 3_500;
+    return (
+      ROOTY_RUNTIME_CONTINUITY.sitResumeDelayMs
+    );
   }
 
   if (action === 'idle') {
-    return 1_600;
+    return (
+      ROOTY_RUNTIME_CONTINUITY.idleResumeDelayMs
+    );
   }
 
-  return 800;
+  return (
+    ROOTY_RUNTIME_CONTINUITY.fallbackResumeDelayMs
+  );
 }

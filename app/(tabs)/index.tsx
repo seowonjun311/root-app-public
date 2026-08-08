@@ -1302,6 +1302,19 @@ const [
   rootyRuntimeReady,
   setRootyRuntimeReady,
 ] = useState(false);
+const [
+  rootyAppActive,
+  setRootyAppActive,
+] = useState(
+  AppState.currentState === 'active' ||
+    AppState.currentState == null
+);
+
+const rootyAppActiveRef =
+  useRef(
+    AppState.currentState === 'active' ||
+      AppState.currentState == null
+  );
 
 const rootyActionRef =
   useRef<RootyAction>('walk');
@@ -1539,10 +1552,27 @@ useEffect(() => {
     AppState.addEventListener(
       'change',
       (nextState) => {
-        if (
-          nextState !==
-          'active'
-        ) {
+        // ROOTY_BEHAVIOR_V12_APP_LIFECYCLE_PAUSE
+        const isActive =
+          nextState ===
+          'active';
+
+        rootyAppActiveRef.current =
+          isActive;
+
+        setRootyAppActive(
+          isActive
+        );
+
+        if (!isActive) {
+          cancelAnimation(
+            foxX
+          );
+
+          cancelAnimation(
+            foxY
+          );
+
           void persistRootyRuntime();
         }
       }
@@ -1560,7 +1590,10 @@ useEffect(() => {
 }, [rootyRuntimeReady]);
 // ROOTY_BEHAVIOR_V3_NATURAL_ROUTINE
 useEffect(() => {
-  if (!rootyRuntimeReady) {
+  if (
+    !rootyRuntimeReady ||
+    !rootyAppActive
+  ) {
     return;
   }
 
@@ -2215,7 +2248,7 @@ useEffect(() => {
         )
     );
   };
-}, [rootyCycleKey, rootyRuntimeReady]);
+}, [rootyCycleKey, rootyRuntimeReady, rootyAppActive]);
 
 const handleRootyPress =
   () => {
@@ -7692,7 +7725,7 @@ top:
 >
   <RootySprite
     action={rootyAction}
-    playing={rootyRuntimeReady}
+    playing={rootyRuntimeReady && rootyAppActive}
     size={80}
     direction={foxDirection}
     onPress={

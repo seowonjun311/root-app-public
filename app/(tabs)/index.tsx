@@ -1326,6 +1326,38 @@ const rootyDirectionRef =
 
 const rootyResumeDelayRef =
   useRef(300);
+// ROOTY_BEHAVIOR_V15_ATOMIC_STATE_SYNC
+const applyRootyAction =
+  useCallback(
+    (
+      nextAction:
+        RootyAction
+    ) => {
+      rootyActionRef.current =
+        nextAction;
+
+      setRootyAction(
+        nextAction
+      );
+    },
+    []
+  );
+
+const applyRootyDirection =
+  useCallback(
+    (
+      nextDirection:
+        RootyDirection
+    ) => {
+      rootyDirectionRef.current =
+        nextDirection;
+
+      setFoxDirection(
+        nextDirection
+      );
+    },
+    []
+  );
 
 const foxX = useSharedValue(430);
 const foxY = useSharedValue(250);
@@ -1379,7 +1411,7 @@ const stabilizeRootyForHomeFocus =
       rootyDirectionRef.current =
         stableDirection;
 
-      setFoxDirection(
+      applyRootyDirection(
         stableDirection
       );
     }
@@ -1390,7 +1422,7 @@ const stabilizeRootyForHomeFocus =
     rootyActionRef.current =
       'idle';
 
-    setRootyAction(
+    applyRootyAction(
       'idle'
     );
   }, []);
@@ -1582,7 +1614,7 @@ useEffect(() => {
         rootyDirectionRef.current =
           snapshot.direction;
 
-        setFoxDirection(
+        applyRootyDirection(
           snapshot.direction
         );
 
@@ -1594,7 +1626,7 @@ useEffect(() => {
         rootyActionRef.current =
           resumeAction;
 
-        setRootyAction(
+        applyRootyAction(
           resumeAction
         );
 
@@ -1793,7 +1825,7 @@ useEffect(() => {
       rootyDirectionRef.current =
         fallbackDirection;
 
-      setFoxDirection(
+      applyRootyDirection(
         fallbackDirection
       );
     };
@@ -1823,7 +1855,7 @@ useEffect(() => {
       rootyDirectionRef.current =
         nextDirection;
 
-      setFoxDirection(
+      applyRootyDirection(
         nextDirection
       );
     };
@@ -1990,7 +2022,7 @@ useEffect(() => {
         rootyDirectionRef.current =
           nextDirection;
 
-        setFoxDirection(
+        applyRootyDirection(
           nextDirection
         );
 
@@ -2025,7 +2057,7 @@ useEffect(() => {
         return;
       }
 
-      setRootyAction(
+      applyRootyAction(
         'walk'
       );
 
@@ -2111,7 +2143,7 @@ useEffect(() => {
             remainingSteps <= 0 ||
             blockedRetries >= 3
           ) {
-            setRootyAction(
+            applyRootyAction(
               'idle'
             );
 
@@ -2154,7 +2186,7 @@ useEffect(() => {
 
       faceRootyForAction('idle');
 
-      setRootyAction(
+      applyRootyAction(
         'idle'
       );
 
@@ -2176,7 +2208,7 @@ useEffect(() => {
         return;
       }
 
-      setRootyAction(
+      applyRootyAction(
         'idle'
       );
 
@@ -2224,7 +2256,7 @@ useEffect(() => {
       // until dedicated doze frames are added.
       faceRootyForAction('sit');
 
-      setRootyAction(
+      applyRootyAction(
         'sit'
       );
 
@@ -2239,7 +2271,7 @@ useEffect(() => {
 
           faceRootyForAction('sleep');
 
-          setRootyAction(
+          applyRootyAction(
             'sleep'
           );
 
@@ -2254,7 +2286,7 @@ useEffect(() => {
 
               // Sit once after sleep so waking up
               // does not jump directly into walking.
-              setRootyAction(
+              applyRootyAction(
                 'sit'
               );
 
@@ -2290,7 +2322,7 @@ useEffect(() => {
 
       faceRootyForAction('sit');
 
-      setRootyAction(
+      applyRootyAction(
         'sit'
       );
 
@@ -2400,11 +2432,11 @@ const handleRootyPress =
       rootyDirectionRef.current =
         fallbackDirection;
 
-      setFoxDirection(
+      applyRootyDirection(
         fallbackDirection
       );
     }
-setRootyAction(
+applyRootyAction(
       'happy'
     );
 
@@ -2432,7 +2464,7 @@ const handleRootyAnimationEnd =
     rootyActionRef.current =
       'idle';
 
-    setRootyAction(
+    applyRootyAction(
       'idle'
     );
 

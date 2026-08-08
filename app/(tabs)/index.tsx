@@ -5,6 +5,7 @@ import {
 import RootySprite from '../../components/rooty/RootySprite';
 import type { RootyAction } from '../../constants/rootyAssets';
 import { ROOTY_WALK_MOTION } from '../../constants/rootyMotion';
+import { ROOTY_NATURAL_BEHAVIOR } from '../../constants/rootyBehavior';
 import { logRootyDebugEvent } from '../../utils/rootyDebug';
 import {
   hasRootyDirectionalFrames,
@@ -2000,7 +2001,7 @@ useEffect(() => {
         );
       }
 
-      if (Math.random() < 0.55) {
+      if (Math.random() < ROOTY_NATURAL_BEHAVIOR.keepHeadingChance) {
         return currentDirection;
       }
 
@@ -2176,8 +2177,8 @@ useEffect(() => {
 
       let remainingSteps =
         randomInt(
-          4,
-          7
+          ROOTY_NATURAL_BEHAVIOR.walkSessionMinSteps,
+          ROOTY_NATURAL_BEHAVIOR.walkSessionMaxSteps
         );
 
       let currentWalkDirection =
@@ -2187,8 +2188,8 @@ useEffect(() => {
 
       let segmentStepsRemaining =
         randomInt(
-          2,
-          4
+          ROOTY_NATURAL_BEHAVIOR.headingMinSteps,
+          ROOTY_NATURAL_BEHAVIOR.headingMaxSteps
         );
 
       let blockedRetries = 0;
@@ -2202,9 +2203,9 @@ useEffect(() => {
 
           segmentStepsRemaining =
             randomInt(
-              2,
-              4
-            );
+          ROOTY_NATURAL_BEHAVIOR.headingMinSteps,
+          ROOTY_NATURAL_BEHAVIOR.headingMaxSteps
+        );
         };
 
       const walkStep =
@@ -2234,9 +2235,9 @@ useEffect(() => {
 
               segmentStepsRemaining =
                 randomInt(
-                  2,
-                  4
-                );
+          ROOTY_NATURAL_BEHAVIOR.headingMinSteps,
+          ROOTY_NATURAL_BEHAVIOR.headingMaxSteps
+        );
             } else {
               segmentStepsRemaining -= 1;
 
@@ -2254,7 +2255,8 @@ useEffect(() => {
 
           if (
             remainingSteps <= 0 ||
-            blockedRetries >= 3
+            blockedRetries >=
+              ROOTY_NATURAL_BEHAVIOR.blockedRetryLimit
           ) {
             applyRootyAction(
               'idle'
@@ -2263,8 +2265,8 @@ useEffect(() => {
             later(
               startRootyRest,
               randomInt(
-                650,
-                1200
+                ROOTY_NATURAL_BEHAVIOR.postWalkRestDelayMinMs,
+                ROOTY_NATURAL_BEHAVIOR.postWalkRestDelayMaxMs
               )
             );
 
@@ -2306,8 +2308,8 @@ useEffect(() => {
       later(
         startRootyWalkSession,
         randomInt(
-          800,
-          1500
+          ROOTY_NATURAL_BEHAVIOR.restToWalkDelayMinMs,
+          ROOTY_NATURAL_BEHAVIOR.restToWalkDelayMaxMs
         )
       );
     };
@@ -2338,21 +2340,21 @@ useEffect(() => {
               later(
                 startRootyWalkSession,
                 randomInt(
-                  700,
-                  1400
+                  ROOTY_NATURAL_BEHAVIOR.lookReturnWalkDelayMinMs,
+                  ROOTY_NATURAL_BEHAVIOR.lookReturnWalkDelayMaxMs
                 )
               );
             },
             randomInt(
-              650,
-              1100
+              ROOTY_NATURAL_BEHAVIOR.lookTurnDelayMinMs,
+              ROOTY_NATURAL_BEHAVIOR.lookTurnDelayMaxMs
             )
           );
         },
         randomInt(
-          650,
-          1100
-        )
+              ROOTY_NATURAL_BEHAVIOR.lookTurnDelayMinMs,
+              ROOTY_NATURAL_BEHAVIOR.lookTurnDelayMaxMs
+            )
       );
     };
 
@@ -2406,20 +2408,20 @@ useEffect(() => {
               later(
                 finishRestAndWalk,
                 randomInt(
-                  900,
-                  1400
+                  ROOTY_NATURAL_BEHAVIOR.wakeSitDelayMinMs,
+                  ROOTY_NATURAL_BEHAVIOR.wakeSitDelayMaxMs
                 )
               );
             },
             randomInt(
-              6500,
-              10500
+              ROOTY_NATURAL_BEHAVIOR.napDurationMinMs,
+              ROOTY_NATURAL_BEHAVIOR.napDurationMaxMs
             )
           );
         },
         randomInt(
-          1200,
-          2200
+          ROOTY_NATURAL_BEHAVIOR.sleepySitDelayMinMs,
+          ROOTY_NATURAL_BEHAVIOR.sleepySitDelayMaxMs
         )
       );
     };
@@ -2442,8 +2444,8 @@ useEffect(() => {
       later(
         finishRestAndWalk,
         randomInt(
-          2800,
-          4800
+          ROOTY_NATURAL_BEHAVIOR.sitRestDurationMinMs,
+          ROOTY_NATURAL_BEHAVIOR.sitRestDurationMaxMs
         )
       );
     };
@@ -2460,12 +2462,14 @@ useEffect(() => {
       const roll =
         Math.random();
 
-      if (roll < 0.45) {
+      if (roll <
+        ROOTY_NATURAL_BEHAVIOR.lookAroundThreshold) {
         startRootyLookAround();
         return;
       }
 
-      if (roll < 0.78) {
+      if (roll <
+        ROOTY_NATURAL_BEHAVIOR.sitRestThreshold) {
         startRootySitRest();
         return;
       }
@@ -2481,8 +2485,8 @@ useEffect(() => {
       rootyCycleKey === 0
         ? rootyResumeDelayRef.current
         : randomInt(
-            1000,
-            1700
+            ROOTY_NATURAL_BEHAVIOR.nextCycleDelayMinMs,
+            ROOTY_NATURAL_BEHAVIOR.nextCycleDelayMaxMs
           )
     );
   }

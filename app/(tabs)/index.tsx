@@ -3211,6 +3211,12 @@ const applyPlacedBuildings = (
   setPlacedBuildings(
     nextPlacedBuildings
   );
+
+  // ROOTY_BEHAVIOR_V26_LIVE_EDIT_ROUTINE_RESTART
+  setRootyCycleKey(
+    (current) =>
+      current + 1
+  );
 };
 
 // ROOTY_BEHAVIOR_V25_LIVE_POSITION_RECONCILIATION

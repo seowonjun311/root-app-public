@@ -1773,15 +1773,24 @@ useEffect(() => {
           rootyActionRef.current,
       });
 
-  void persistRootyRuntime();
+  // ROOTY_BEHAVIOR_V18_ACTIVE_HOME_CHECKPOINTS
+  const shouldCheckpoint =
+    rootyAppActive &&
+    rootyHomeFocused;
+
+  if (shouldCheckpoint) {
+    void persistRootyRuntime();
+  }
 
   const interval =
-    setInterval(
-      () => {
-        void persistRootyRuntime();
-      },
-      5_000
-    );
+    shouldCheckpoint
+      ? setInterval(
+          () => {
+            void persistRootyRuntime();
+          },
+          5_000
+        )
+      : null;
 
   const subscription =
     AppState.addEventListener(
@@ -1814,15 +1823,19 @@ useEffect(() => {
     );
 
   return () => {
-    clearInterval(
-      interval
-    );
+    if (interval !== null) {
+      clearInterval(
+        interval
+      );
+    }
 
     subscription.remove();
-
-    void persistRootyRuntime();
   };
-}, [rootyRuntimeReady]);
+}, [
+  rootyRuntimeReady,
+  rootyAppActive,
+  rootyHomeFocused,
+]);
 // ROOTY_BEHAVIOR_V3_NATURAL_ROUTINE
 useEffect(() => {
   if (

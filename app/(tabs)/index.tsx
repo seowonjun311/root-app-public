@@ -5,6 +5,9 @@ import {
 import RootySprite from '../../components/rooty/RootySprite';
 import type { RootyAction } from '../../constants/rootyAssets';
 import {
+  hasRootyDirectionalFrames,
+} from '../../constants/rootyDirectionalAssets';
+import {
   getRootyResumeDelayMs,
   loadRootyRuntimeSnapshot,
   resolveRootyResumeAction,
@@ -1605,6 +1608,57 @@ useEffect(() => {
         )
       ];
 
+  // ROOTY_BEHAVIOR_V7_REST_FACING_CONTINUITY
+  const getActionFacingDirections =
+    (
+      action: RootyAction
+    ) =>
+      directions.filter(
+        (direction) =>
+          direction ===
+            'downRight' ||
+          direction ===
+            'downLeft' ||
+          hasRootyDirectionalFrames(
+            action,
+            direction
+          )
+      );
+
+  const faceRootyForAction =
+    (
+      action: RootyAction
+    ) => {
+      const currentDirection =
+        rootyDirectionRef.current;
+
+      if (
+        currentDirection ===
+          'downRight' ||
+        currentDirection ===
+          'downLeft' ||
+        hasRootyDirectionalFrames(
+          action,
+          currentDirection
+        )
+      ) {
+        return;
+      }
+
+      const fallbackDirection =
+        currentDirection ===
+        'upLeft'
+          ? 'downLeft'
+          : 'downRight';
+
+      rootyDirectionRef.current =
+        fallbackDirection;
+
+      setFoxDirection(
+        fallbackDirection
+      );
+    };
+
   const faceAnotherDirection =
     () => {
       if (
@@ -1614,8 +1668,24 @@ useEffect(() => {
         return;
       }
 
+      const candidates =
+        getActionFacingDirections(
+          'idle'
+        );
+
+      const nextDirection =
+        candidates[
+          randomInt(
+            0,
+            candidates.length - 1
+          )
+        ];
+
+      rootyDirectionRef.current =
+        nextDirection;
+
       setFoxDirection(
-        pickRandomDirection()
+        nextDirection
       );
     };
 
@@ -1820,6 +1890,8 @@ useEffect(() => {
         return;
       }
 
+      faceRootyForAction('idle');
+
       setRootyAction(
         'idle'
       );
@@ -1888,6 +1960,8 @@ useEffect(() => {
 
       // Sitting briefly doubles as the sleepy transition
       // until dedicated doze frames are added.
+      faceRootyForAction('sit');
+
       setRootyAction(
         'sit'
       );
@@ -1900,6 +1974,8 @@ useEffect(() => {
           ) {
             return;
           }
+
+          faceRootyForAction('sleep');
 
           setRootyAction(
             'sleep'
@@ -1949,6 +2025,8 @@ useEffect(() => {
       ) {
         return;
       }
+
+      faceRootyForAction('sit');
 
       setRootyAction(
         'sit'
@@ -2025,7 +2103,35 @@ const handleRootyPress =
     rootyReactingRef.current =
       true;
 
-    setRootyAction(
+    const currentDirection =
+      rootyDirectionRef.current;
+
+    if (
+      (
+        currentDirection ===
+          'upRight' ||
+        currentDirection ===
+          'upLeft'
+      ) &&
+      !hasRootyDirectionalFrames(
+        'happy',
+        currentDirection
+      )
+    ) {
+      const fallbackDirection =
+        currentDirection ===
+        'upLeft'
+          ? 'downLeft'
+          : 'downRight';
+
+      rootyDirectionRef.current =
+        fallbackDirection;
+
+      setFoxDirection(
+        fallbackDirection
+      );
+    }
+setRootyAction(
       'happy'
     );
 

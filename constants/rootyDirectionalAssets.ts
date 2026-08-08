@@ -113,6 +113,31 @@ function getRegisteredFrames(
   return null;
 }
 
+export function hasRootyDirectionalFrames(
+  action: RootyAction,
+  direction: RootyDirection
+) {
+  if (
+    getRegisteredFrames(
+      action,
+      direction
+    )
+  ) {
+    return true;
+  }
+
+  const mirroredDirection =
+    MIRRORED_DIRECTION[
+      direction
+    ];
+
+  return Boolean(
+    getRegisteredFrames(
+      action,
+      mirroredDirection
+    )
+  );
+}
 export function resolveRootyDirectionalFrames(
   action: RootyAction,
   direction: RootyDirection

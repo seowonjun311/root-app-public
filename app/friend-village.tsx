@@ -390,7 +390,7 @@ export default function FriendVillageScreen() {
         520,
       );
     })
-    .onEnd(() => {
+    .onFinalize(() => {
       savedTranslateX.value = translateX.value;
 
       savedTranslateY.value = translateY.value;
@@ -405,7 +405,7 @@ export default function FriendVillageScreen() {
         0.82,
       );
     })
-    .onEnd(() => {
+    .onFinalize(() => {
       savedScale.value = scale.value;
     });
 

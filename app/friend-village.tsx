@@ -22,6 +22,9 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 
+import RootySprite from "../components/rooty/RootySprite";
+import type { RootyAction } from "../constants/rootyAssets";
+import type { RootyDirection } from "../constants/rootyDirectionalAssets";
 import { useRootTheme } from "../store/rootTheme";
 import {
   buildingImages as homeBuildingImages,
@@ -216,6 +219,14 @@ export default function FriendVillageScreen() {
     placedBuildings?: string | string[];
 
     isOwnVillage?: string | string[];
+
+    rootyAction?: string | string[];
+
+    rootyDirection?: string | string[];
+
+    rootyX?: string | string[];
+
+    rootyY?: string | string[];
   }>();
 
   const userId = String(getParam(params.userId) ?? "").trim();
@@ -229,6 +240,53 @@ export default function FriendVillageScreen() {
 
   const isOwnVillage =
     getParam(params.isOwnVillage) === "1";
+  // ROOTY_BEHAVIOR_V35_OWN_VILLAGE_LARGE_VIEW_ROOTY
+  const rootyActionParam =
+    String(
+      getParam(params.rootyAction) ??
+        ""
+    ).trim();
+
+  const rootyAction: RootyAction =
+    rootyActionParam === "sit" ||
+    rootyActionParam === "sleep" ||
+    rootyActionParam === "idle"
+      ? rootyActionParam
+      : "idle";
+
+  const rootyDirectionParam =
+    String(
+      getParam(params.rootyDirection) ??
+        ""
+    ).trim();
+
+  const rootyDirection: RootyDirection =
+    rootyDirectionParam === "downRight" ||
+    rootyDirectionParam === "downLeft" ||
+    rootyDirectionParam === "upRight" ||
+    rootyDirectionParam === "upLeft"
+      ? rootyDirectionParam
+      : "downRight";
+
+  const parsedRootyX =
+    Number(
+      getParam(params.rootyX)
+    );
+
+  const parsedRootyY =
+    Number(
+      getParam(params.rootyY)
+    );
+
+  const rootyX =
+    Number.isFinite(parsedRootyX)
+      ? parsedRootyX
+      : 430;
+
+  const rootyY =
+    Number.isFinite(parsedRootyY)
+      ? parsedRootyY
+      : 250;
 
   /*
    * 사용자 ID가 전달되지 않은 예전 이동 코드도
@@ -591,11 +649,42 @@ export default function FriendVillageScreen() {
                   );
                 })}
 
-                <Image
-                  source={foxImage}
-                  resizeMode="contain"
-                  style={styles.character}
-                />
+                {isOwnVillage ? (
+                  <View
+                    pointerEvents="none"
+                    style={[
+                      styles.rootyCharacter,
+                      {
+                        left:
+                          rootyX,
+                        top:
+                          rootyY,
+                      },
+                    ]}
+                  >
+                    <RootySprite
+                      action={
+                        rootyAction
+                      }
+                      direction={
+                        rootyDirection
+                      }
+                      size={80}
+                      playing
+                      enableMotion={
+                        false
+                      }
+                    />
+                  </View>
+                ) : (
+                  <Image
+                    source={foxImage}
+                    resizeMode="contain"
+                    style={
+                      styles.character
+                    }
+                  />
+                )}
               </Animated.View>
 
               {placedBuildings.length === 0 ? (
@@ -808,6 +897,15 @@ const styles = StyleSheet.create({
 
     width: 110,
     height: 110,
+
+    zIndex: 99999,
+  },
+
+  rootyCharacter: {
+    position: "absolute",
+
+    width: 80,
+    height: 80,
 
     zIndex: 99999,
   },

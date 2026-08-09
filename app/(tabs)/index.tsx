@@ -8323,6 +8323,15 @@ top:
           placedBuildings:
             JSON.stringify(placedBuildings),
           isOwnVillage: '1',
+          // ROOTY_BEHAVIOR_V35_OWN_VILLAGE_LARGE_VIEW_ROOTY
+          rootyAction:
+            rootyActionRef.current,
+          rootyDirection:
+            rootyDirectionRef.current,
+          rootyX:
+            String(foxX.value),
+          rootyY:
+            String(foxY.value),
         },
       });
     }}

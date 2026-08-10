@@ -4,6 +4,9 @@ import {
 import {
   getCharacterPersonalityProfile,
 } from '../constants/characterPersonality';
+import {
+  getSelectedCharacterSnapshot,
+} from './selectedCharacter';
 
 export type CharacterRestWeights = {
   lookAround: number;
@@ -169,5 +172,28 @@ export function applyCharacterPersonalityToSocialChance(
   return clamp01(
     base *
     multiplier
+  );
+}
+
+// CHARACTER_V76_SELECTED_CHARACTER_RUNTIME_ADAPTERS
+export function applySelectedCharacterPersonalityToRestWeights(
+  weights:
+    CharacterRestWeights
+): CharacterRestWeights {
+  return applyCharacterPersonalityToRestWeights(
+    getSelectedCharacterSnapshot(),
+    weights
+  );
+}
+
+export function applySelectedCharacterPersonalityToSocialChance(
+  channel:
+    CharacterSocialChanceChannel,
+  baseChance: number
+): number {
+  return applyCharacterPersonalityToSocialChance(
+    getSelectedCharacterSnapshot(),
+    channel,
+    baseChance
   );
 }

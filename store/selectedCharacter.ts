@@ -261,3 +261,9 @@ export function useSelectedCharacter() {
     selectCharacter,
   };
 }
+
+// CHARACTER_V76_SELECTED_CHARACTER_SNAPSHOT
+export function getSelectedCharacterSnapshot():
+  CharacterId {
+  return cachedCharacter;
+}

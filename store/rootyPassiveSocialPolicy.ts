@@ -1,6 +1,9 @@
 import type {
   RootyConditionSnapshot,
 } from './rootyCondition';
+import {
+  applySelectedCharacterPersonalityToSocialChance,
+} from './characterPersonalityPolicy';
 
 // ROOTY_BEHAVIOR_V64_BONDED_PASSIVE_SOCIAL_ATTENTION_POLICY
 export const ROOTY_PASSIVE_SOCIAL_POLICY = {
@@ -31,8 +34,12 @@ export function getRootyBondedPassiveAttentionChance(
   }
 
   return (
-    ROOTY_PASSIVE_SOCIAL_POLICY
+    // CHARACTER_V76_PERSONALITY_SOCIAL_64
+    applySelectedCharacterPersonalityToSocialChance(
+      'passiveAttention',
+      ROOTY_PASSIVE_SOCIAL_POLICY
       .bondedAttentionChance
+    )
   );
 }
 

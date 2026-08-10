@@ -166,6 +166,9 @@ import {
 import {
   loadLocalExplorationData,
 } from '../../store/explorationCloud';
+import {
+  applySelectedCharacterPersonalityToRestWeights,
+} from '../../store/characterPersonalityPolicy';
 
 const firebaseApp =
   getApp();
@@ -3444,7 +3447,10 @@ useEffect(() => {
 
       const antiRepeatProbabilities =
         getRootyRestAntiRepeatProbabilities(
-          probabilities,
+        // CHARACTER_V76_PERSONALITY_REST_RUNTIME
+          applySelectedCharacterPersonalityToRestWeights(
+          probabilities
+        ),
           antiRepeatStateBefore
         );
 

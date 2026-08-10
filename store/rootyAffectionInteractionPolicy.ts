@@ -1,6 +1,9 @@
 import type {
   RootyConditionSnapshot,
 } from './rootyCondition';
+import {
+  applySelectedCharacterPersonalityToSocialChance,
+} from './characterPersonalityPolicy';
 
 // ROOTY_BEHAVIOR_V63_AFFECTION_SOCIAL_RESPONSE_POLICY
 export const ROOTY_AFFECTION_INTERACTION_POLICY = {
@@ -18,8 +21,12 @@ export function getRootyBondedTapFollowUpChance(
   }
 
   return (
-    ROOTY_AFFECTION_INTERACTION_POLICY
+    // CHARACTER_V76_PERSONALITY_SOCIAL_63
+    applySelectedCharacterPersonalityToSocialChance(
+      'bondedFollowUpTouch',
+      ROOTY_AFFECTION_INTERACTION_POLICY
       .bondedTapFollowUpTouchChance
+    )
   );
 }
 

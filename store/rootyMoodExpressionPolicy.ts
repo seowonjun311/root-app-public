@@ -1,6 +1,9 @@
 import type {
   RootyConditionSnapshot,
 } from './rootyCondition';
+import {
+  applySelectedCharacterPersonalityToSocialChance,
+} from './characterPersonalityPolicy';
 
 // ROOTY_BEHAVIOR_V61_MOOD_BASED_EXPRESSION_POLICY
 export const ROOTY_MOOD_EXPRESSION_POLICY = {
@@ -29,8 +32,12 @@ export function getRootySpontaneousHappyChance(
   }
 
   return (
-    ROOTY_MOOD_EXPRESSION_POLICY
+    // CHARACTER_V76_PERSONALITY_SOCIAL_61
+    applySelectedCharacterPersonalityToSocialChance(
+      'spontaneousHappy',
+      ROOTY_MOOD_EXPRESSION_POLICY
       .excitedSpontaneousHappyChance
+    )
   );
 }
 

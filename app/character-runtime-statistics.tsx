@@ -1,4 +1,5 @@
 import {
+  Link,
   Stack,
 } from 'expo-router';
 import React, {
@@ -309,6 +310,28 @@ export default function CharacterRuntimeStatisticsScreen() {
           >
             {'\uCE90\uB9AD\uD130\uBCC4 \uCD5C\uADFC rest \uC120\uD0DD\uACFC social chance \uD3C9\uAC00\uB97C \uCD5C\uB300 100\uAC1C\uC529 \uB204\uC801\uD569\uB2C8\uB2E4.'}
           </Text>
+
+          {/* CHARACTER_V79_VALIDATION_ENTRY */}
+          <Link
+            href={
+              '/character-personality-validation' as never
+            }
+            asChild
+          >
+            <Pressable
+              style={
+                styles.validationButton
+              }
+            >
+              <Text
+                style={
+                  styles.validationButtonText
+                }
+              >
+                {'\uC131\uACA9 \uC790\uB3D9 \uAC80\uC99D'}
+              </Text>
+            </Pressable>
+          </Link>
 
           <View
             style={
@@ -787,6 +810,18 @@ const styles =
       fontSize: 13,
       lineHeight: 19,
       color: '#6E665D',
+    },
+    validationButton: {
+      alignSelf: 'flex-start',
+      paddingVertical: 9,
+      paddingHorizontal: 13,
+      borderRadius: 11,
+      backgroundColor: '#2F2B26',
+    },
+    validationButtonText: {
+      fontSize: 13,
+      fontWeight: '800',
+      color: '#FFFFFF',
     },
     row: {
       flexDirection: 'row',

@@ -20,6 +20,12 @@ import {
 import type {
   RootyDirection,
 } from '../../store/rootyRuntime';
+import {
+  ROOTY_DEFAULT_STATE,
+  loadRootyState,
+  saveRootyState,
+  type RootyState,
+} from '../../store/rootyState';
 
 import {
   getAuth,
@@ -1202,7 +1208,7 @@ export default function HomeScreen() {
   const [onboardingData, setOnboardingData] =
     useState<any>(getRootOnboardingData());
 
- 
+
   const [selectedCategory, setSelectedCategory] =
     useState(
       onboardingData?.category ?? 'exercise'
@@ -1329,6 +1335,132 @@ const rootyDirectionRef =
 
 const rootyResumeDelayRef =
   useRef(300);
+
+// ROOTY_BEHAVIOR_V54_PERSISTENT_STATE_SYSTEM
+const rootyStateRef =
+  useRef<RootyState>({
+    ...ROOTY_DEFAULT_STATE,
+  });
+
+const rootyStateReadyRef =
+  useRef(false);
+
+const applyRootyStateDelta =
+  useCallback(
+    (
+      delta:
+        Partial<RootyState>,
+      reason:
+        'tap' |
+        'long-press'
+    ) => {
+      if (
+        !rootyStateReadyRef.current
+      ) {
+        return;
+      }
+
+      const current =
+        rootyStateRef.current;
+
+      const clamp =
+        (value: number) =>
+          Math.max(
+            0,
+            Math.min(
+              100,
+              Math.round(value)
+            )
+          );
+
+      const next: RootyState = {
+        mood:
+          clamp(
+            current.mood +
+              (delta.mood ?? 0)
+          ),
+        energy:
+          clamp(
+            current.energy +
+              (delta.energy ?? 0)
+          ),
+        affection:
+          clamp(
+            current.affection +
+              (delta.affection ?? 0)
+          ),
+      };
+
+      rootyStateRef.current =
+        next;
+
+      void saveRootyState(
+        next
+      );
+
+      if (__DEV__) {
+        console.log(
+          '[ROOTY STATE] updated',
+          {
+            reason,
+            ...next,
+          }
+        );
+      }
+    },
+    []
+  );
+
+useEffect(() => {
+  let cancelled = false;
+
+  const restoreRootyState =
+    async () => {
+      const saved =
+        await loadRootyState();
+
+      if (cancelled) {
+        return;
+      }
+
+      const next =
+        saved ?? {
+          ...ROOTY_DEFAULT_STATE,
+        };
+
+      rootyStateRef.current =
+        next;
+
+      rootyStateReadyRef.current =
+        true;
+
+      if (!saved) {
+        void saveRootyState(
+          next
+        );
+      }
+
+      if (__DEV__) {
+        console.log(
+          '[ROOTY STATE] loaded',
+          {
+            source:
+              saved
+                ? 'storage'
+                : 'default',
+            ...next,
+          }
+        );
+      }
+    };
+
+  void restoreRootyState();
+
+  return () => {
+    cancelled = true;
+  };
+}, []);
+
 // ROOTY_BEHAVIOR_V15_ATOMIC_STATE_SYNC
 const applyRootyAction =
   useCallback(
@@ -2649,6 +2781,14 @@ const handleRootyPress =
 
     rootyReactingRef.current =
       true;
+
+    applyRootyStateDelta(
+      {
+        mood: 2,
+        affection: 1,
+      },
+      'tap'
+    );
 // ROOTY_BEHAVIOR_V9_TAP_FREEZE_REACTION
     cancelAnimation(
       foxX
@@ -2711,7 +2851,15 @@ const handleRootyLongPress =
     rootyReactingRef.current =
       true;
 
-    cancelAnimation(
+
+    applyRootyStateDelta(
+      {
+        mood: 3,
+        affection: 2,
+      },
+      'long-press'
+    );
+cancelAnimation(
       foxX
     );
 
@@ -2781,7 +2929,7 @@ useEffect(() => {
 
 const [buyCompleteModal, setBuyCompleteModal] =
   useState<any>(null);
-  
+
 const [saveCompleteModal, setSaveCompleteModal] =
   useState(false);
 
@@ -3243,7 +3391,7 @@ const [
   setOriginalPlacedBuildings,
 ] =
   useState<any[]>([]);
-  
+
 const [placedBuildings, setPlacedBuildings] =
   useState<any[]>(
     placedBuildingsRef.current
@@ -3409,8 +3557,8 @@ useEffect(() => {
   placedBuildings,
   rootyRuntimeReady,
 ]);
-    
- 
+
+
 const [placingItem, setPlacingItem] = useState<any>(null);
 
 const [previewGrid, setPreviewGrid] = useState({
@@ -3493,7 +3641,7 @@ const composedGesture =
         pinchGesture,
         oneFingerPanGesture
       );
-  
+
 useFocusEffect(
   useCallback(() => {
     const loadCalorieWeight = async () => {
@@ -3655,7 +3803,7 @@ const explorationMainBadgeTitle =
         explorationMainBadgeId
       ] ?? null
     : null;
-   
+
    const categoryStats = useMemo(() => {
   const stats: any = {};
 
@@ -3781,7 +3929,7 @@ const formatTime = (seconds: number) => {
   distanceKm = 0,
   useGps = false
 ) => {
-  
+
   console.log('SHOW TIMER NOTIFICATION CALLED', title);
 
   const permission =
@@ -3826,7 +3974,7 @@ const id = await Notifications.scheduleNotificationAsync({
 
 timerNotificationIdRef.current = id;
 };
-  
+
 const cancelTimerNotification = async () => {
   if (!timerNotificationIdRef.current) return;
 
@@ -5528,7 +5676,7 @@ const next =
 if (
   isExerciseGoal &&
   logBurnedCalories >
-    0 
+    0
   ) {
   try {
     await addExerciseCaloriesToDay({
@@ -6291,7 +6439,7 @@ const saveEdit = async () => {
       '행동목표를 수정하지 못했어요. 다시 시도해 주세요.',
   });
 }
-  
+
 };
 
 const deleteGoal = async () => {
@@ -7550,7 +7698,7 @@ const filteredBagItems =
           item.theme === selectedBagTheme
       );
 
-      
+
 const sellBagItem = (groupItem: any) => {
   const sellTarget = groupItem.items?.[0];
 
@@ -7856,7 +8004,7 @@ const saveVillageEdit = () => {
 
   setSaveCompleteModal(true);
 };
-    
+
 const isTwoByTwoBuilding =
   placingItem?.id === 'building1' ||
     placingItem?.id === 'building3' ||
@@ -8042,7 +8190,7 @@ const previewSize = isTwoByTwoBuilding
 
 {/* 마을 */}
 <View style={styles.villageWrapper}>
-  
+
   {/* 마을 영역 */}
 <GestureDetector gesture={composedGesture}>
   <View
@@ -8519,14 +8667,14 @@ top:
         <View
           style={styles.categoryRow}
         >
-          
+
           {categories.map(
             (category) => {
               const selected =
                 selectedCategory ===
                 category.id;
 
-               
+
 
               return (
                 <Pressable
@@ -8808,7 +8956,7 @@ const controlTextColor =
   theme.text;
 
             return (
- 
+
  <View
   key={goal.id}
   style={[
@@ -9433,7 +9581,7 @@ const controlTextColor =
     </Text>
   </Pressable>
 </View>
-  
+
 
           </View>
         </View>
@@ -9468,10 +9616,10 @@ const controlTextColor =
   기록을 어떻게 남길까요?
 </Text>
 
-            
+
 {gpsEnabled && gpsCoordinates.length > 0 && (
   <View style={styles.gpsResultBox}>
-   
+
     <View
       ref={routeCaptureRef}
       collapsable={false}
@@ -9638,7 +9786,7 @@ const controlTextColor =
 
 </View>
 
-   
+
 
      <View style={styles.recordModalBottomRow}>
   <Pressable
@@ -12272,7 +12420,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5e9cf',
     paddingHorizontal: 16,
   },
-  
+
   villageWrapper: {
     marginTop: 20,
     backgroundColor: '#111b44',
@@ -12884,7 +13032,7 @@ saveText: {
   fontWeight: '800',
   fontSize: 18,
 },
- 
+
 placingNotice: {
   position: 'absolute',
   top: 12,

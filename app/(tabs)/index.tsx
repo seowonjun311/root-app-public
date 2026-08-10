@@ -33,6 +33,10 @@ import {
 import {
   ROOTY_STATE_SIMULATION,
 } from '../../constants/rootyStateSimulation';
+import {
+  consumeRootyOfflineCheckpoint,
+  saveRootyOfflineCheckpoint,
+} from '../../store/rootyOfflineState';
 
 import {
   getAuth,
@@ -1352,6 +1356,9 @@ const rootyStateRef =
 const rootyStateReadyRef =
   useRef(false);
 
+const rootyOfflineCatchUpRunningRef =
+  useRef(false);
+
 const applyRootyStateDelta =
   useCallback(
     (
@@ -1364,7 +1371,8 @@ const applyRootyStateDelta =
         'look-around' |
         'sit-rest' |
         'nap' |
-        'time-mood'
+        'time-mood' |
+        'offline-mood'
     ) => {
       if (
         !rootyStateReadyRef.current
@@ -1423,6 +1431,117 @@ const applyRootyStateDelta =
     []
   );
 
+// ROOTY_BEHAVIOR_V58_OFFLINE_STATE_DRIFT
+const applyRootyOfflineMoodCatchUp =
+  useCallback(
+    async (
+      source:
+        'launch' |
+        'resume'
+    ) => {
+      if (
+        !rootyStateReadyRef.current ||
+        rootyOfflineCatchUpRunningRef.current
+      ) {
+        return;
+      }
+
+      rootyOfflineCatchUpRunningRef.current =
+        true;
+
+      try {
+        const checkpointAt =
+          await consumeRootyOfflineCheckpoint();
+
+        if (checkpointAt == null) {
+          return;
+        }
+
+        const now =
+          Date.now();
+
+        const elapsedMs =
+          Math.max(
+            0,
+            now -
+              checkpointAt
+          );
+
+        const elapsedIntervals =
+          Math.floor(
+            elapsedMs /
+              ROOTY_STATE_SIMULATION
+                .moodDriftIntervalMs
+          );
+
+        const availableAdjustment =
+          Math.min(
+            elapsedIntervals *
+              ROOTY_STATE_SIMULATION
+                .moodDriftStep,
+            ROOTY_STATE_SIMULATION
+              .offlineMoodMaxAdjustment
+          );
+
+        const currentMood =
+          rootyStateRef.current.mood;
+
+        const distance =
+          ROOTY_STATE_SIMULATION
+            .moodBaseline -
+          currentMood;
+
+        const adjustment =
+          Math.min(
+            Math.abs(distance),
+            availableAdjustment
+          );
+
+        if (
+          adjustment > 0
+        ) {
+          applyRootyStateDelta(
+            {
+              mood:
+                distance > 0
+                  ? adjustment
+                  : -adjustment,
+            },
+            'offline-mood'
+          );
+        }
+
+        if (__DEV__) {
+          console.log(
+            '[ROOTY V58] offline catch-up',
+            {
+              source,
+              checkpointAt,
+              elapsedMs,
+              elapsedIntervals,
+              availableAdjustment,
+              appliedAdjustment:
+                adjustment,
+              moodBefore:
+                currentMood,
+              moodAfter:
+                distance > 0
+                  ? currentMood +
+                    adjustment
+                  : currentMood -
+                    adjustment,
+            }
+          );
+        }
+      } finally {
+        rootyOfflineCatchUpRunningRef.current =
+          false;
+      }
+    },
+    [
+      applyRootyStateDelta,
+    ]
+  );
 useEffect(() => {
   let cancelled = false;
 
@@ -1445,6 +1564,10 @@ useEffect(() => {
 
       rootyStateReadyRef.current =
         true;
+
+      void applyRootyOfflineMoodCatchUp(
+        'launch'
+      );
 
       if (!saved) {
         void saveRootyState(
@@ -2136,6 +2259,12 @@ useEffect(() => {
           isActive
         );
 
+        if (isActive) {
+          void applyRootyOfflineMoodCatchUp(
+            'resume'
+          );
+        }
+
         if (!isActive) {
           cancelAnimation(
             foxX
@@ -2146,6 +2275,16 @@ useEffect(() => {
           );
 
           void persistRootyRuntime();
+
+          if (
+            rootyStateReadyRef.current
+          ) {
+            void saveRootyState(
+              rootyStateRef.current
+            );
+          }
+
+          void saveRootyOfflineCheckpoint();
         }
       }
     );
@@ -2163,6 +2302,7 @@ useEffect(() => {
   rootyRuntimeReady,
   rootyAppActive,
   rootyHomeFocused,
+applyRootyOfflineMoodCatchUp,
 ]);
 // ROOTY_BEHAVIOR_V3_NATURAL_ROUTINE
 useEffect(() => {

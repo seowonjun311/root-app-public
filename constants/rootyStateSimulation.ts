@@ -28,4 +28,13 @@ export const ROOTY_STATE_SIMULATION = {
   moodBaseline: 70,
   moodDriftStep: 1,
   moodDriftIntervalMs: 10 * 60_000,
+
+  /**
+   * ROOTY_BEHAVIOR_V58_OFFLINE_STATE_DRIFT_CONFIG
+   *
+   * Offline/background mood catch-up reuses the V57 interval
+   * and step, but one return is capped so long absences do not
+   * cause an abrupt state jump.
+   */
+  offlineMoodMaxAdjustment: 6,
 } as const;

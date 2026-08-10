@@ -7,6 +7,10 @@ import {
 import {
   getSelectedCharacterSnapshot,
 } from './selectedCharacter';
+import {
+  recordCharacterPersonalityRestInput,
+  recordCharacterSocialChance,
+} from './characterRuntimeDiagnostics';
 
 export type CharacterRestWeights = {
   lookAround: number;
@@ -180,10 +184,22 @@ export function applySelectedCharacterPersonalityToRestWeights(
   weights:
     CharacterRestWeights
 ): CharacterRestWeights {
-  return applyCharacterPersonalityToRestWeights(
-    getSelectedCharacterSnapshot(),
-    weights
+  const characterId =
+    getSelectedCharacterSnapshot();
+
+  const next =
+    applyCharacterPersonalityToRestWeights(
+      characterId,
+      weights
+    );
+
+  // CHARACTER_V77_PERSONALITY_REST_OBSERVATION
+  recordCharacterPersonalityRestInput(
+    characterId,
+    next
   );
+
+  return next;
 }
 
 export function applySelectedCharacterPersonalityToSocialChance(
@@ -191,9 +207,22 @@ export function applySelectedCharacterPersonalityToSocialChance(
     CharacterSocialChanceChannel,
   baseChance: number
 ): number {
-  return applyCharacterPersonalityToSocialChance(
-    getSelectedCharacterSnapshot(),
+  const characterId =
+    getSelectedCharacterSnapshot();
+
+  const next =
+    applyCharacterPersonalityToSocialChance(
+      characterId,
+      channel,
+      baseChance
+    );
+
+  // CHARACTER_V77_PERSONALITY_SOCIAL_OBSERVATION
+  recordCharacterSocialChance(
+    characterId,
     channel,
-    baseChance
+    next
   );
+
+  return next;
 }

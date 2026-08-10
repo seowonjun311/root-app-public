@@ -169,6 +169,12 @@ import {
 import {
   applySelectedCharacterPersonalityToRestWeights,
 } from '../../store/characterPersonalityPolicy';
+import {
+  recordCharacterFinalRestDecision,
+} from '../../store/characterRuntimeDiagnostics';
+import {
+  getSelectedCharacterSnapshot,
+} from '../../store/selectedCharacter';
 
 const firebaseApp =
   getApp();
@@ -3458,6 +3464,13 @@ useEffect(() => {
         pickRootyRestBehavior(
           antiRepeatProbabilities
         );
+
+      // CHARACTER_V77_RUNTIME_REST_OBSERVATION
+      recordCharacterFinalRestDecision(
+        getSelectedCharacterSnapshot(),
+        antiRepeatProbabilities,
+        behavior
+      );
 
       const antiRepeatStateAfter =
         getRootyNextRestAntiRepeatState(

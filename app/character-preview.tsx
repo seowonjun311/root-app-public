@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import {
+  Link,
   Stack,
 } from 'expo-router';
 
@@ -322,6 +323,28 @@ export default function CharacterPreviewScreen() {
           >
             {'\uCE90\uB9AD\uD130\uB97C \uC120\uD0DD\uD558\uACE0 \uD06C\uAE30\uC640 \uBC14\uB2E5 \uC704\uCE58\uB97C \uC2E4\uAE30\uAE30\uC5D0\uC11C \uB9DE\uCD94\uC138\uC694.'}
           </Text>
+
+          {/* CHARACTER_V77_DIAGNOSTICS_ENTRY */}
+          <Link
+            href={
+              '/character-runtime-diagnostics' as never
+            }
+            asChild
+          >
+            <Pressable
+              style={
+                styles.diagnosticsButton
+              }
+            >
+              <Text
+                style={
+                  styles.diagnosticsButtonText
+                }
+              >
+                {'\uB7F0\uD0C0\uC784 \uC131\uACA9 \uC9C4\uB2E8'}
+              </Text>
+            </Pressable>
+          </Link>
 
           <View
             style={
@@ -953,6 +976,18 @@ const styles =
       fontSize: 24,
       fontWeight: '800',
       color: '#2F2B26',
+    },
+    diagnosticsButton: {
+      alignSelf: 'flex-start',
+      paddingVertical: 9,
+      paddingHorizontal: 13,
+      borderRadius: 11,
+      backgroundColor: '#2F2B26',
+    },
+    diagnosticsButtonText: {
+      fontSize: 13,
+      fontWeight: '800',
+      color: '#FFFFFF',
     },
     sub: {
       fontSize: 14,

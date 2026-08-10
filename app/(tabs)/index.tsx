@@ -27,6 +27,10 @@ import {
   type RootyState,
 } from '../../store/rootyState';
 import {
+  getRootyConditionSnapshot,
+  type RootyConditionSnapshot,
+} from '../../store/rootyCondition';
+import {
   getRootyStateRestProbabilities,
   pickRootyRestBehavior,
 } from '../../store/rootyBehaviorPolicy';
@@ -1353,6 +1357,15 @@ const rootyStateRef =
     ...ROOTY_DEFAULT_STATE,
   });
 
+
+// ROOTY_BEHAVIOR_V59_CONDITION_CLASSIFICATION
+const rootyConditionRef =
+  useRef<RootyConditionSnapshot>(
+    getRootyConditionSnapshot(
+      ROOTY_DEFAULT_STATE
+    )
+  );
+
 const rootyStateReadyRef =
   useRef(false);
 
@@ -1413,6 +1426,25 @@ const applyRootyStateDelta =
 
       rootyStateRef.current =
         next;
+
+
+      const nextCondition =
+        getRootyConditionSnapshot(
+          next
+        );
+
+      rootyConditionRef.current =
+        nextCondition;
+
+      if (__DEV__) {
+        console.log(
+          '[ROOTY V59] condition',
+          {
+            reason,
+            ...nextCondition,
+          }
+        );
+      }
 
       void saveRootyState(
         next
@@ -1561,6 +1593,25 @@ useEffect(() => {
 
       rootyStateRef.current =
         next;
+
+
+      const nextCondition =
+        getRootyConditionSnapshot(
+          next
+        );
+
+      rootyConditionRef.current =
+        nextCondition;
+
+      if (__DEV__) {
+        console.log(
+          '[ROOTY V59] condition',
+          {
+            reason: 'load',
+            ...nextCondition,
+          }
+        );
+      }
 
       rootyStateReadyRef.current =
         true;

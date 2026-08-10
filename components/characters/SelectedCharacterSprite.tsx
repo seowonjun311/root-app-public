@@ -8,6 +8,9 @@ import {
   getCharacterPresentationProfile,
 } from '../../constants/characterPresentation';
 import {
+  useCharacterPresentationOverride,
+} from '../../store/characterPresentationOverrides';
+import {
   useSelectedCharacter,
 } from '../../store/selectedCharacter';
 
@@ -18,6 +21,7 @@ type LegacyProps =
 
 // CHARACTER_V70_SAFE_HOME_RENDER_SWITCH
 // CHARACTER_V71_STANDARD_PRESENTATION_TUNING
+// CHARACTER_V72_DEVICE_PRESENTATION_CALIBRATION
 export function SelectedCharacterSprite(
   props: LegacyProps
 ) {
@@ -26,6 +30,13 @@ export function SelectedCharacterSprite(
     ready,
   } =
     useSelectedCharacter();
+
+  const {
+    override,
+  } =
+    useCharacterPresentationOverride(
+      selectedCharacter
+    );
 
   if (
     !ready ||
@@ -70,9 +81,14 @@ export function SelectedCharacterSprite(
       1,
       Math.round(
         baseSize *
-        presentation.homeScale
+        presentation.homeScale *
+        override.scale
       )
     );
+
+  const translateY =
+    presentation.homeTranslateY +
+    override.translateY;
 
   return (
     <CharacterSprite
@@ -100,12 +116,11 @@ export function SelectedCharacterSprite(
       style={{
         transform: [
           {
-            translateY:
-              presentation.homeTranslateY,
+            translateY,
           },
         ],
       }}
-      testID="character-v71-home-sprite"
+      testID="character-v72-home-sprite"
     />
   );
 }

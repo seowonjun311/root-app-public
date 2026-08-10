@@ -26,6 +26,15 @@ import {
   getCharacterPresentationProfile,
 } from '../constants/characterPresentation';
 import {
+  CHARACTER_SCALE_MAX,
+  CHARACTER_SCALE_MIN,
+  CHARACTER_SCALE_STEP,
+  CHARACTER_TRANSLATE_Y_MAX,
+  CHARACTER_TRANSLATE_Y_MIN,
+  CHARACTER_TRANSLATE_Y_STEP,
+  useCharacterPresentationOverride,
+} from '../store/characterPresentationOverrides';
+import {
   useSelectedCharacter,
 } from '../store/selectedCharacter';
 
@@ -60,6 +69,7 @@ const ACTION_LABEL:
 // CHARACTER_V69_COMPATIBILITY_PREVIEW_SCREEN
 // CHARACTER_V70_SELECT_AND_SAVE_SCREEN
 // CHARACTER_V71_PRESENTATION_PREVIEW
+// CHARACTER_V72_DEVICE_CALIBRATION_SCREEN
 export default function CharacterPreviewScreen() {
   const {
     selectedCharacter,
@@ -89,6 +99,21 @@ export default function CharacterPreviewScreen() {
     setSaving,
   ] =
     useState(false);
+
+  const [
+    calibrating,
+    setCalibrating,
+  ] =
+    useState(false);
+
+  const {
+    override,
+    adjustOverride,
+    resetOverride,
+  } =
+    useCharacterPresentationOverride(
+      characterId
+    );
 
   useEffect(
     () => {
@@ -123,19 +148,31 @@ export default function CharacterPreviewScreen() {
       action
     ).length;
 
+  const effectivePreviewScale =
+    presentation.previewScale *
+    override.scale;
+
   const previewSize =
     Math.max(
       1,
       Math.round(
         220 *
-        presentation.previewScale
+        effectivePreviewScale
       )
     );
+
+  const effectivePreviewTranslateY =
+    presentation.previewTranslateY +
+    override.translateY;
 
   const isCurrent =
     ready &&
     characterId ===
       selectedCharacter;
+
+  const canCalibrate =
+    characterId !==
+    'rooty';
 
   const save =
     async () => {
@@ -157,6 +194,58 @@ export default function CharacterPreviewScreen() {
       }
       finally {
         setSaving(
+          false
+        );
+      }
+    };
+
+  const adjust =
+    async (
+      scaleDelta: number,
+      translateYDelta: number
+    ) => {
+      if (
+        !canCalibrate ||
+        calibrating
+      ) {
+        return;
+      }
+
+      setCalibrating(
+        true
+      );
+
+      try {
+        await adjustOverride(
+          scaleDelta,
+          translateYDelta
+        );
+      }
+      finally {
+        setCalibrating(
+          false
+        );
+      }
+    };
+
+  const reset =
+    async () => {
+      if (
+        !canCalibrate ||
+        calibrating
+      ) {
+        return;
+      }
+
+      setCalibrating(
+        true
+      );
+
+      try {
+        await resetOverride();
+      }
+      finally {
+        setCalibrating(
           false
         );
       }
@@ -186,7 +275,7 @@ export default function CharacterPreviewScreen() {
               styles.title
             }
           >
-            Character V71
+            Character V72
           </Text>
 
           <Text
@@ -194,7 +283,7 @@ export default function CharacterPreviewScreen() {
               styles.sub
             }
           >
-            {'\uCE90\uB9AD\uD130\uB97C \uBBF8\uB9AC \uBCF4\uACE0 Home\uC5D0 \uC0AC\uC6A9\uD560 \uCE90\uB9AD\uD130\uB97C \uC800\uC7A5\uD558\uC138\uC694.'}
+            {'\uCE90\uB9AD\uD130\uB97C \uC120\uD0DD\uD558\uACE0 \uD06C\uAE30\uC640 \uBC14\uB2E5 \uC704\uCE58\uB97C \uC2E4\uAE30\uAE30\uC5D0\uC11C \uB9DE\uCD94\uC138\uC694.'}
           </Text>
 
           <View
@@ -221,7 +310,7 @@ export default function CharacterPreviewScreen() {
                 transform: [
                   {
                     translateY:
-                      presentation.previewTranslateY,
+                      effectivePreviewTranslateY,
                   },
                 ],
               }}
@@ -270,9 +359,7 @@ export default function CharacterPreviewScreen() {
                 presentation.frameDurationMs[
                   action
                 ]
-              }ms / scale: {
-                presentation.previewScale
-              }
+              }ms
             </Text>
 
             <Text
@@ -318,7 +405,7 @@ export default function CharacterPreviewScreen() {
                   saving
                     ? '\uC800\uC7A5 \uC911...'
                     : isCurrent
-                      ? '\uD604\uC7AC \uC0AC\uC6A9 \uC911'
+                      ? '\uD604\uC7A5 \uC0AC\uC6A9 \uC911'
                       : 'Home\uC5D0 \uC0AC\uC6A9'
                 }
               </Text>
@@ -423,6 +510,246 @@ export default function CharacterPreviewScreen() {
             )}
           </View>
 
+          <Text
+            style={
+              styles.section
+            }
+          >
+            {'Home \uD06C\uAE30\u00B7\uBC14\uB2E5 \uBCF4\uC815'}
+          </Text>
+
+          {canCalibrate ? (
+            <View
+              style={
+                styles.calibrationCard
+              }
+            >
+              <Text
+                style={
+                  styles.calibrationValue
+                }
+              >
+                {'\uD06C\uAE30: '}
+                {
+                  override.scale.toFixed(
+                    2
+                  )
+                }
+                {'  /  Y: '}
+                {
+                  override.translateY
+                }
+                px
+              </Text>
+
+              <Text
+                style={
+                  styles.calibrationHint
+                }
+              >
+                {'Y\uAC00 \uC791\uC544\uC9C0\uBA74 \uC704\uB85C, \uCEE4\uC9C0\uBA74 \uC544\uB798\uB85C \uC774\uB3D9\uD569\uB2C8\uB2E4.'}
+              </Text>
+
+              <View
+                style={
+                  styles.calibrationRow
+                }
+              >
+                <Pressable
+                  disabled={
+                    calibrating ||
+                    override.scale <=
+                      CHARACTER_SCALE_MIN
+                  }
+                  onPress={
+                    () => {
+                      void adjust(
+                        -CHARACTER_SCALE_STEP,
+                        0
+                      );
+                    }
+                  }
+                  style={[
+                    styles.calibrationButton,
+                    (
+                      calibrating ||
+                      override.scale <=
+                        CHARACTER_SCALE_MIN
+                    ) &&
+                      styles.disabled,
+                  ]}
+                >
+                  <Text
+                    style={
+                      styles.calibrationButtonText
+                    }
+                  >
+                    {'\uD06C\uAE30 -'}
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  disabled={
+                    calibrating ||
+                    override.scale >=
+                      CHARACTER_SCALE_MAX
+                  }
+                  onPress={
+                    () => {
+                      void adjust(
+                        CHARACTER_SCALE_STEP,
+                        0
+                      );
+                    }
+                  }
+                  style={[
+                    styles.calibrationButton,
+                    (
+                      calibrating ||
+                      override.scale >=
+                        CHARACTER_SCALE_MAX
+                    ) &&
+                      styles.disabled,
+                  ]}
+                >
+                  <Text
+                    style={
+                      styles.calibrationButtonText
+                    }
+                  >
+                    {'\uD06C\uAE30 +'}
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  disabled={
+                    calibrating ||
+                    override.translateY <=
+                      CHARACTER_TRANSLATE_Y_MIN
+                  }
+                  onPress={
+                    () => {
+                      void adjust(
+                        0,
+                        -CHARACTER_TRANSLATE_Y_STEP
+                      );
+                    }
+                  }
+                  style={[
+                    styles.calibrationButton,
+                    (
+                      calibrating ||
+                      override.translateY <=
+                        CHARACTER_TRANSLATE_Y_MIN
+                    ) &&
+                      styles.disabled,
+                  ]}
+                >
+                  <Text
+                    style={
+                      styles.calibrationButtonText
+                    }
+                  >
+                    {'\uC704\uB85C'}
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  disabled={
+                    calibrating ||
+                    override.translateY >=
+                      CHARACTER_TRANSLATE_Y_MAX
+                  }
+                  onPress={
+                    () => {
+                      void adjust(
+                        0,
+                        CHARACTER_TRANSLATE_Y_STEP
+                      );
+                    }
+                  }
+                  style={[
+                    styles.calibrationButton,
+                    (
+                      calibrating ||
+                      override.translateY >=
+                        CHARACTER_TRANSLATE_Y_MAX
+                    ) &&
+                      styles.disabled,
+                  ]}
+                >
+                  <Text
+                    style={
+                      styles.calibrationButtonText
+                    }
+                  >
+                    {'\uC544\uB798\uB85C'}
+                  </Text>
+                </Pressable>
+              </View>
+
+              <Pressable
+                disabled={
+                  calibrating ||
+                  (
+                    override.scale ===
+                      1 &&
+                    override.translateY ===
+                      0
+                  )
+                }
+                onPress={
+                  () => {
+                    void reset();
+                  }
+                }
+                style={[
+                  styles.resetButton,
+                  (
+                    calibrating ||
+                    (
+                      override.scale ===
+                        1 &&
+                      override.translateY ===
+                        0
+                    )
+                  ) &&
+                    styles.disabled,
+                ]}
+              >
+                <Text
+                  style={
+                    styles.resetButtonText
+                  }
+                >
+                  {'\uBCF4\uC815\uAC12 \uCD08\uAE30\uD654'}
+                </Text>
+              </Pressable>
+
+              <Text
+                style={
+                  styles.calibrationSaved
+                }
+              >
+                {'\uBC84\uD2BC\uC744 \uB204\uB974\uBA74 \uC790\uB3D9 \uC800\uC7A5\uB418\uACE0 Home\uC5D0 \uBC18\uC601\uB429\uB2C8\uB2E4.'}
+              </Text>
+            </View>
+          ) : (
+            <View
+              style={
+                styles.note
+              }
+            >
+              <Text
+                style={
+                  styles.noteText
+                }
+              >
+                {'\uB8E8\uD2F0\uB294 \uAE30\uC874 Legacy RootySprite\uC758 \uD06C\uAE30\u00B7\uBC29\uD5A5\u00B7fallback \uACBD\uB85C\uB97C \uBCF4\uD638\uD558\uAE30 \uC704\uD574 V72 \uBCF4\uC815 \uB300\uC0C1\uC5D0\uC11C \uC81C\uC678\uD569\uB2C8\uB2E4.'}
+              </Text>
+            </View>
+          )}
+
           <View
             style={
               styles.note
@@ -433,7 +760,7 @@ export default function CharacterPreviewScreen() {
                 styles.noteText
               }
             >
-              {'\uB8E8\uD2F0\uB294 \uAE30\uC874 RootySprite\uC640 \uBC29\uD5A5/fallback \uACBD\uB85C\uB97C \uADF8\uB300\uB85C \uC0AC\uC6A9\uD569\uB2C8\uB2E4.'}
+              {'\uBAA8\uB8E8\u00B7\uBABD\uC2E4\u00B7\uB2E4\uBBF8\uB294 \uAC01\uAC01 \uB2E4\uB978 \uBCF4\uC815\uAC12\uC744 \uC800\uC7A5\uD569\uB2C8\uB2E4.'}
             </Text>
 
             <Text
@@ -441,15 +768,7 @@ export default function CharacterPreviewScreen() {
                 styles.noteText
               }
             >
-              {'\uBAA8\uB8E8\u00B7\uBABD\uC2E4\u00B7\uB2E4\uBBF8\uB294 \uD589\uB3D9\uBCC4 \uD504\uB808\uC784 \uC18D\uB3C4\uB97C \uC801\uC6A9\uD569\uB2C8\uB2E4.'}
-            </Text>
-
-            <Text
-              style={
-                styles.noteText
-              }
-            >
-              {'\uD06C\uAE30\uC640 \uC138\uB85C \uC704\uCE58\uB294 \uC2E4\uAE30\uAE30 \uD655\uC778 \uC804\uC5D0\uB294 \uC911\uB9BD\uAC12\uC744 \uC720\uC9C0\uD569\uB2C8\uB2E4.'}
+              {'\uBCF4\uC815\uAC12\uC744 \uC800\uC7A5\uD55C \uB4A4 \uC571\uC744 \uB2E4\uC2DC \uCF1C\uB3C4 \uC720\uC9C0\uB429\uB2C8\uB2E4.'}
             </Text>
           </View>
         </ScrollView>
@@ -548,6 +867,57 @@ const styles =
     },
     selectedText: {
       color: '#FFFFFF',
+    },
+    calibrationCard: {
+      padding: 16,
+      borderRadius: 16,
+      backgroundColor: '#FFFFFF',
+      gap: 10,
+    },
+    calibrationValue: {
+      fontSize: 15,
+      fontWeight: '800',
+      color: '#2F2B26',
+    },
+    calibrationHint: {
+      fontSize: 12,
+      color: '#746B61',
+    },
+    calibrationRow: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 8,
+    },
+    calibrationButton: {
+      minWidth: 78,
+      alignItems: 'center',
+      paddingVertical: 9,
+      paddingHorizontal: 12,
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: '#BEB2A3',
+      backgroundColor: '#F8F4EE',
+    },
+    calibrationButtonText: {
+      fontSize: 13,
+      fontWeight: '800',
+      color: '#4F473F',
+    },
+    resetButton: {
+      alignSelf: 'flex-start',
+      paddingVertical: 9,
+      paddingHorizontal: 12,
+      borderRadius: 10,
+      backgroundColor: '#2F2B26',
+    },
+    resetButtonText: {
+      fontSize: 13,
+      fontWeight: '800',
+      color: '#FFFFFF',
+    },
+    calibrationSaved: {
+      fontSize: 12,
+      color: '#5F704F',
     },
     note: {
       padding: 16,

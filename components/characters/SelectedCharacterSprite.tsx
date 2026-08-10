@@ -5,6 +5,9 @@ import React, {
 import LegacyRootySprite from '../rooty/RootySprite';
 import CharacterSprite from './CharacterSprite';
 import {
+  resolveStandardCharacterScaleX,
+} from '../../constants/characterFacing';
+import {
   getCharacterPlaybackMode,
 } from '../../constants/characterPlayback';
 import {
@@ -26,6 +29,7 @@ type LegacyProps =
 // CHARACTER_V71_STANDARD_PRESENTATION_TUNING
 // CHARACTER_V72_DEVICE_PRESENTATION_CALIBRATION
 // CHARACTER_V73_HOME_PLAYBACK_IDENTITY
+// CHARACTER_V74_STANDARD_HOME_FACING
 export function SelectedCharacterSprite(
   props: LegacyProps
 ) {
@@ -65,6 +69,18 @@ export function SelectedCharacterSprite(
           ''
         )
       : '';
+
+  const legacyDirection =
+    (
+      props as unknown as {
+        direction?: unknown;
+      }
+    ).direction;
+
+  const facingScaleX =
+    resolveStandardCharacterScaleX(
+      legacyDirection
+    );
 
   const baseSize =
     (
@@ -126,9 +142,13 @@ export function SelectedCharacterSprite(
           {
             translateY,
           },
+          {
+            scaleX:
+              facingScaleX,
+          },
         ],
       }}
-      testID="character-v73-home-sprite"
+      testID="character-v74-home-sprite"
     />
   );
 }

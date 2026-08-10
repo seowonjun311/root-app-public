@@ -23,6 +23,9 @@ import {
   type CharacterId,
 } from '../constants/characterAssets';
 import {
+  resolveStandardCharacterScaleX,
+} from '../constants/characterFacing';
+import {
   getCharacterPlaybackMode,
 } from '../constants/characterPlayback';
 import {
@@ -74,6 +77,7 @@ const ACTION_LABEL:
 // CHARACTER_V71_PRESENTATION_PREVIEW
 // CHARACTER_V72_DEVICE_CALIBRATION_SCREEN
 // CHARACTER_V73_PLAYBACK_REPLAY_PREVIEW
+// CHARACTER_V74_STANDARD_FACING_PREVIEW
 export default function CharacterPreviewScreen() {
   const {
     selectedCharacter,
@@ -115,6 +119,17 @@ export default function CharacterPreviewScreen() {
     setPlaybackKey,
   ] =
     useState(0);
+
+  const [
+    previewFacing,
+    setPreviewFacing,
+  ] =
+    useState<
+      'left' |
+      'right'
+    >(
+      'right'
+    );
 
   const {
     override,
@@ -179,6 +194,13 @@ export default function CharacterPreviewScreen() {
   const effectivePreviewTranslateY =
     presentation.previewTranslateY +
     override.translateY;
+
+  const previewScaleX =
+    characterId === 'rooty'
+      ? 1
+      : resolveStandardCharacterScaleX(
+          previewFacing
+        );
 
   const isCurrent =
     ready &&
@@ -332,6 +354,10 @@ export default function CharacterPreviewScreen() {
                   {
                     translateY:
                       effectivePreviewTranslateY,
+                  },
+                  {
+                    scaleX:
+                      previewScaleX,
                   },
                 ],
               }}
@@ -562,6 +588,88 @@ export default function CharacterPreviewScreen() {
               )
             )}
           </View>
+
+          <Text
+            style={
+              styles.section
+            }
+          >
+            {'\uBC29\uD5A5 \uBBF8\uB9AC\uBCF4\uAE30'}
+          </Text>
+
+          {characterId !== 'rooty' ? (
+            <View
+              style={
+                styles.row
+              }
+            >
+              <Pressable
+                onPress={
+                  () =>
+                    setPreviewFacing(
+                      'left'
+                    )
+                }
+                style={[
+                  styles.choice,
+                  previewFacing ===
+                    'left' &&
+                    styles.selected,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.choiceText,
+                    previewFacing ===
+                      'left' &&
+                      styles.selectedText,
+                  ]}
+                >
+                  {'\uC67C\uCABD'}
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={
+                  () =>
+                    setPreviewFacing(
+                      'right'
+                    )
+                }
+                style={[
+                  styles.choice,
+                  previewFacing ===
+                    'right' &&
+                    styles.selected,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.choiceText,
+                    previewFacing ===
+                      'right' &&
+                      styles.selectedText,
+                  ]}
+                >
+                  {'\uC624\uB978\uCABD'}
+                </Text>
+              </Pressable>
+            </View>
+          ) : (
+            <View
+              style={
+                styles.note
+              }
+            >
+              <Text
+                style={
+                  styles.noteText
+                }
+              >
+                {'\uB8E8\uD2F0 Home\uC740 \uAE30\uC874 directional resolver\uB97C \uADF8\uB300\uB85C \uC0AC\uC6A9\uD569\uB2C8\uB2E4.'}
+              </Text>
+            </View>
+          )}
 
           <Text
             style={

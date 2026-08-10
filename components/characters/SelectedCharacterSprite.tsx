@@ -5,6 +5,9 @@ import React, {
 import LegacyRootySprite from '../rooty/RootySprite';
 import CharacterSprite from './CharacterSprite';
 import {
+  getCharacterPresentationProfile,
+} from '../../constants/characterPresentation';
+import {
   useSelectedCharacter,
 } from '../../store/selectedCharacter';
 
@@ -14,6 +17,7 @@ type LegacyProps =
   >;
 
 // CHARACTER_V70_SAFE_HOME_RENDER_SWITCH
+// CHARACTER_V71_STANDARD_PRESENTATION_TUNING
 export function SelectedCharacterSprite(
   props: LegacyProps
 ) {
@@ -47,7 +51,7 @@ export function SelectedCharacterSprite(
         )
       : '';
 
-  const size =
+  const baseSize =
     (
       'size' in props &&
       typeof props.size ===
@@ -55,6 +59,20 @@ export function SelectedCharacterSprite(
     )
       ? props.size
       : 160;
+
+  const presentation =
+    getCharacterPresentationProfile(
+      selectedCharacter
+    );
+
+  const size =
+    Math.max(
+      1,
+      Math.round(
+        baseSize *
+        presentation.homeScale
+      )
+    );
 
   return (
     <CharacterSprite
@@ -74,7 +92,20 @@ export function SelectedCharacterSprite(
       size={
         size
       }
-      testID="character-v70-home-sprite"
+      frameDurationMs={
+        presentation.frameDurationMs[
+          action
+        ]
+      }
+      style={{
+        transform: [
+          {
+            translateY:
+              presentation.homeTranslateY,
+          },
+        ],
+      }}
+      testID="character-v71-home-sprite"
     />
   );
 }

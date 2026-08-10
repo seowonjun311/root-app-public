@@ -9053,6 +9053,34 @@ const previewSize = isTwoByTwoBuilding
           }
         />
       </Pressable>
+          {/* CHARACTER_V71_HOME_SELECTION_ENTRY */}
+          <Pressable
+            onPress={() =>
+              router.push(
+                '/character-preview' as never
+              )
+            }
+            style={{
+              alignSelf: 'flex-end',
+              marginTop: 6,
+              paddingHorizontal: 10,
+              paddingVertical: 6,
+              borderRadius: 12,
+              borderWidth: 1,
+              borderColor: 'rgba(95, 87, 79, 0.20)',
+              backgroundColor: 'rgba(255, 255, 255, 0.90)',
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 12,
+                fontWeight: '700',
+                color: '#5F574F',
+              }}
+            >
+              {'\uCE90\uB9AD\uD130 \uBCC0\uACBD'}
+            </Text>
+          </Pressable>
     </View>
   </View>
 </View>

@@ -23,6 +23,9 @@ import {
   type CharacterId,
 } from '../constants/characterAssets';
 import {
+  getCharacterPresentationProfile,
+} from '../constants/characterPresentation';
+import {
   useSelectedCharacter,
 } from '../store/selectedCharacter';
 
@@ -56,6 +59,7 @@ const ACTION_LABEL:
 
 // CHARACTER_V69_COMPATIBILITY_PREVIEW_SCREEN
 // CHARACTER_V70_SELECT_AND_SAVE_SCREEN
+// CHARACTER_V71_PRESENTATION_PREVIEW
 export default function CharacterPreviewScreen() {
   const {
     selectedCharacter,
@@ -105,6 +109,11 @@ export default function CharacterPreviewScreen() {
       characterId
     );
 
+  const presentation =
+    getCharacterPresentationProfile(
+      characterId
+    );
+
   const rawFrames =
     definition.frames[action].length;
 
@@ -113,6 +122,15 @@ export default function CharacterPreviewScreen() {
       characterId,
       action
     ).length;
+
+  const previewSize =
+    Math.max(
+      1,
+      Math.round(
+        220 *
+        presentation.previewScale
+      )
+    );
 
   const isCurrent =
     ready &&
@@ -168,7 +186,7 @@ export default function CharacterPreviewScreen() {
               styles.title
             }
           >
-            Character V70
+            Character V71
           </Text>
 
           <Text
@@ -191,7 +209,22 @@ export default function CharacterPreviewScreen() {
               action={
                 action
               }
-              size={220}
+              size={
+                previewSize
+              }
+              frameDurationMs={
+                presentation.frameDurationMs[
+                  action
+                ]
+              }
+              style={{
+                transform: [
+                  {
+                    translateY:
+                      presentation.previewTranslateY,
+                  },
+                ],
+              }}
             />
 
             <Text
@@ -225,6 +258,20 @@ export default function CharacterPreviewScreen() {
                 rawFrames
               } / resolved: {
                 resolvedFrames
+              }
+            </Text>
+
+            <Text
+              style={
+                styles.meta
+              }
+            >
+              frame: {
+                presentation.frameDurationMs[
+                  action
+                ]
+              }ms / scale: {
+                presentation.previewScale
               }
             </Text>
 
@@ -394,7 +441,15 @@ export default function CharacterPreviewScreen() {
                 styles.noteText
               }
             >
-              {'\uBAA8\uB8E8\u00B7\uBABD\uC2E4\u00B7\uB2E4\uBBF8\uB294 Home\uC758 \uAE30\uC874 action\uC744 CharacterSprite\uB85C \uD45C\uC2DC\uD569\uB2C8\uB2E4.'}
+              {'\uBAA8\uB8E8\u00B7\uBABD\uC2E4\u00B7\uB2E4\uBBF8\uB294 \uD589\uB3D9\uBCC4 \uD504\uB808\uC784 \uC18D\uB3C4\uB97C \uC801\uC6A9\uD569\uB2C8\uB2E4.'}
+            </Text>
+
+            <Text
+              style={
+                styles.noteText
+              }
+            >
+              {'\uD06C\uAE30\uC640 \uC138\uB85C \uC704\uCE58\uB294 \uC2E4\uAE30\uAE30 \uD655\uC778 \uC804\uC5D0\uB294 \uC911\uB9BD\uAC12\uC744 \uC720\uC9C0\uD569\uB2C8\uB2E4.'}
             </Text>
           </View>
         </ScrollView>

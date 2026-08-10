@@ -35,6 +35,10 @@ import {
   getRootyConditionWalkStepRange,
 } from '../../store/rootyConditionBehaviorPolicy';
 import {
+  getRootySpontaneousHappyChance,
+  shouldStartRootySpontaneousHappy,
+} from '../../store/rootyMoodExpressionPolicy';
+import {
   getRootyStateRestProbabilities,
   pickRootyRestBehavior,
 } from '../../store/rootyBehaviorPolicy';
@@ -3063,7 +3067,56 @@ useEffect(() => {
       );
     };
 
-  // ROOTY_BEHAVIOR_V56_AUTOMATIC_STATE_CHANGES
+  // ROOTY_BEHAVIOR_V61_MOOD_BASED_EXPRESSION_SYSTEM
+  const startRootySpontaneousHappy =
+    () => {
+      if (
+        cancelled ||
+        rootyReactingRef.current
+      ) {
+        return;
+      }
+
+      rootyReactingRef.current =
+        true;
+
+      cancelAnimation(
+        foxX
+      );
+
+      cancelAnimation(
+        foxY
+      );
+
+      faceRootyForAction(
+        'happy'
+      );
+
+      applyRootyAction(
+        'happy'
+      );
+
+      if (__DEV__) {
+        console.log(
+          '[ROOTY V61] spontaneous happy start',
+          {
+            condition:
+              rootyConditionRef.current,
+          }
+        );
+      }
+
+      /**
+       * Reuses the existing happy animation-end path:
+       * handleRootyAnimationEnd clears reacting and starts
+       * a fresh natural cycle.
+       */
+      setRootyCycleKey(
+        (current) =>
+          current + 1
+      );
+    };
+// ROOTY_BEHAVIOR_V56_AUTOMATIC_STATE_CHANGES
 // ROOTY_BEHAVIOR_V55_STATE_BASED_PROBABILITY_SYSTEM
   const startRootyRest =
     () => {
@@ -3077,13 +3130,50 @@ useEffect(() => {
       const state =
         rootyStateRef.current;
 
+      const condition =
+        rootyConditionRef.current;
+
+      const expressionChance =
+        getRootySpontaneousHappyChance(
+          condition
+        );
+
+      const expressionRoll =
+        Math.random();
+
+      const shouldExpressHappy =
+        shouldStartRootySpontaneousHappy(
+          condition,
+          expressionRoll
+        );
+
+      if (__DEV__) {
+        console.log(
+          '[ROOTY V61] expression policy',
+          {
+            moodCondition:
+              condition.mood,
+            energyCondition:
+              condition.energy,
+            chance:
+              expressionChance,
+            roll:
+              expressionRoll,
+            triggered:
+              shouldExpressHappy,
+          }
+        );
+      }
+
+      if (shouldExpressHappy) {
+        startRootySpontaneousHappy();
+        return;
+      }
+
       const baseProbabilities =
         getRootyStateRestProbabilities(
           state
         );
-
-      const condition =
-        rootyConditionRef.current;
 
       const probabilities =
         getRootyConditionRestProbabilities(

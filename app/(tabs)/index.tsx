@@ -1363,7 +1363,8 @@ const applyRootyStateDelta =
         'walk-session' |
         'look-around' |
         'sit-rest' |
-        'nap'
+        'nap' |
+        'time-mood'
     ) => {
       if (
         !rootyStateReadyRef.current
@@ -1472,6 +1473,69 @@ useEffect(() => {
   };
 }, []);
 
+// ROOTY_BEHAVIOR_V57_TIME_BASED_STATE_DRIFT
+useEffect(() => {
+  if (!rootyAppActive) {
+    return;
+  }
+
+  const applyMoodTimeDrift =
+    () => {
+      if (
+        !rootyStateReadyRef.current
+      ) {
+        return;
+      }
+
+      const currentMood =
+        rootyStateRef.current.mood;
+
+      const moodBaseline =
+        ROOTY_STATE_SIMULATION
+          .moodBaseline;
+
+      const distance =
+        moodBaseline -
+        currentMood;
+
+      if (distance === 0) {
+        return;
+      }
+
+      const step =
+        Math.min(
+          Math.abs(distance),
+          ROOTY_STATE_SIMULATION
+            .moodDriftStep
+        );
+
+      applyRootyStateDelta(
+        {
+          mood:
+            distance > 0
+              ? step
+              : -step,
+        },
+        'time-mood'
+      );
+    };
+
+  const interval =
+    setInterval(
+      applyMoodTimeDrift,
+      ROOTY_STATE_SIMULATION
+        .moodDriftIntervalMs
+    );
+
+  return () => {
+    clearInterval(
+      interval
+    );
+  };
+}, [
+  rootyAppActive,
+  applyRootyStateDelta,
+]);
 // ROOTY_BEHAVIOR_V15_ATOMIC_STATE_SYNC
 const applyRootyAction =
   useCallback(

@@ -5,6 +5,9 @@ import React, {
 import LegacyRootySprite from '../rooty/RootySprite';
 import CharacterSprite from './CharacterSprite';
 import {
+  getCharacterPlaybackMode,
+} from '../../constants/characterPlayback';
+import {
   getCharacterPresentationProfile,
 } from '../../constants/characterPresentation';
 import {
@@ -22,6 +25,7 @@ type LegacyProps =
 // CHARACTER_V70_SAFE_HOME_RENDER_SWITCH
 // CHARACTER_V71_STANDARD_PRESENTATION_TUNING
 // CHARACTER_V72_DEVICE_PRESENTATION_CALIBRATION
+// CHARACTER_V73_HOME_PLAYBACK_IDENTITY
 export function SelectedCharacterSprite(
   props: LegacyProps
 ) {
@@ -54,7 +58,7 @@ export function SelectedCharacterSprite(
     props.action ??
     'idle';
 
-  const cycleKey =
+  const playbackKey =
     'cycleKey' in props
       ? String(
           props.cycleKey ??
@@ -76,6 +80,11 @@ export function SelectedCharacterSprite(
       selectedCharacter
     );
 
+  const playbackMode =
+    getCharacterPlaybackMode(
+      action
+    );
+
   const size =
     Math.max(
       1,
@@ -92,18 +101,17 @@ export function SelectedCharacterSprite(
 
   return (
     <CharacterSprite
-      key={
-        selectedCharacter +
-        '-' +
-        action +
-        '-' +
-        cycleKey
-      }
       characterId={
         selectedCharacter
       }
       action={
         action
+      }
+      playbackKey={
+        playbackKey
+      }
+      playbackMode={
+        playbackMode
       }
       size={
         size
@@ -120,7 +128,7 @@ export function SelectedCharacterSprite(
           },
         ],
       }}
-      testID="character-v72-home-sprite"
+      testID="character-v73-home-sprite"
     />
   );
 }

@@ -23,6 +23,9 @@ import {
   type CharacterId,
 } from '../constants/characterAssets';
 import {
+  getCharacterPlaybackMode,
+} from '../constants/characterPlayback';
+import {
   getCharacterPresentationProfile,
 } from '../constants/characterPresentation';
 import {
@@ -70,6 +73,7 @@ const ACTION_LABEL:
 // CHARACTER_V70_SELECT_AND_SAVE_SCREEN
 // CHARACTER_V71_PRESENTATION_PREVIEW
 // CHARACTER_V72_DEVICE_CALIBRATION_SCREEN
+// CHARACTER_V73_PLAYBACK_REPLAY_PREVIEW
 export default function CharacterPreviewScreen() {
   const {
     selectedCharacter,
@@ -106,6 +110,12 @@ export default function CharacterPreviewScreen() {
   ] =
     useState(false);
 
+  const [
+    playbackKey,
+    setPlaybackKey,
+  ] =
+    useState(0);
+
   const {
     override,
     adjustOverride,
@@ -137,6 +147,11 @@ export default function CharacterPreviewScreen() {
   const presentation =
     getCharacterPresentationProfile(
       characterId
+    );
+
+  const playbackMode =
+    getCharacterPlaybackMode(
+      action
     );
 
   const rawFrames =
@@ -298,6 +313,12 @@ export default function CharacterPreviewScreen() {
               action={
                 action
               }
+              playbackKey={
+                playbackKey
+              }
+              playbackMode={
+                playbackMode
+              }
               size={
                 previewSize
               }
@@ -361,6 +382,38 @@ export default function CharacterPreviewScreen() {
                 ]
               }ms
             </Text>
+
+            <Text
+              style={
+                styles.meta
+              }
+            >
+              playback: {
+                playbackMode
+              }
+            </Text>
+
+            <Pressable
+              onPress={
+                () => {
+                  setPlaybackKey(
+                    (current) =>
+                      current + 1
+                  );
+                }
+              }
+              style={
+                styles.replayButton
+              }
+            >
+              <Text
+                style={
+                  styles.replayButtonText
+                }
+              >
+                {'\uB2E4\uC2DC \uC7AC\uC0DD'}
+              </Text>
+            </Pressable>
 
             <Text
               style={
@@ -817,6 +870,20 @@ const styles =
       marginTop: 8,
       fontSize: 13,
       fontWeight: '700',
+      color: '#4F473F',
+    },
+    replayButton: {
+      marginTop: 6,
+      paddingVertical: 8,
+      paddingHorizontal: 14,
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: '#BEB2A3',
+      backgroundColor: '#F8F4EE',
+    },
+    replayButtonText: {
+      fontSize: 13,
+      fontWeight: '800',
       color: '#4F473F',
     },
     save: {

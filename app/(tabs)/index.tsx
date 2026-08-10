@@ -3221,6 +3221,37 @@ const [placedBuildings, setPlacedBuildings] =
 const applyPlacedBuildings = (
   nextPlacedBuildings: any[]
 ) => {
+  // ROOTY_BEHAVIOR_V51_SKIP_UNCHANGED_VILLAGE_REAPPLY
+  const previousPlacedBuildings =
+    placedBuildingsRef.current;
+
+  let hasSameVillageLayout =
+    previousPlacedBuildings ===
+    nextPlacedBuildings;
+
+  if (
+    !hasSameVillageLayout &&
+    previousPlacedBuildings.length ===
+      nextPlacedBuildings.length
+  ) {
+    try {
+      hasSameVillageLayout =
+        JSON.stringify(
+          previousPlacedBuildings
+        ) ===
+        JSON.stringify(
+          nextPlacedBuildings
+        );
+    } catch {
+      hasSameVillageLayout =
+        false;
+    }
+  }
+
+  if (hasSameVillageLayout) {
+    return;
+  }
+
   // ROOTY_BEHAVIOR_V33_RUNTIME_STRESS_TRACING
   logRootyDebugEvent(
     'village-layout-edit',

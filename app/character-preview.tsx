@@ -1,5 +1,5 @@
 import React, {
-  useMemo,
+  useEffect,
   useState,
 } from 'react';
 import {
@@ -22,8 +22,11 @@ import {
   type CharacterAction,
   type CharacterId,
 } from '../constants/characterAssets';
+import {
+  useSelectedCharacter,
+} from '../store/selectedCharacter';
 
-const CHARACTER_ACTIONS:
+const ACTIONS:
   readonly CharacterAction[] = [
   'idle',
   'walk',
@@ -33,11 +36,16 @@ const CHARACTER_ACTIONS:
   'touch',
 ];
 
-const ACTION_LABELS:
-  Record<
-    CharacterAction,
-    string
-  > = {
+const CHARACTER_LABEL:
+  Record<CharacterId, string> = {
+  rooty: '\uB8E8\uD2F0',
+  moru: '\uBAA8\uB8E8',
+  mongsil: '\uBABD\uC2E4',
+  dami: '\uB2E4\uBBF8',
+};
+
+const ACTION_LABEL:
+  Record<CharacterAction, string> = {
   idle: '\uAE30\uBCF8',
   walk: '\uAC77\uAE30',
   sit: '\uC549\uAE30',
@@ -46,19 +54,16 @@ const ACTION_LABELS:
   touch: '\uD130\uCE58',
 };
 
-const CHARACTER_LABELS:
-  Record<
-    CharacterId,
-    string
-  > = {
-  rooty: '\uB8E8\uD2F0',
-  moru: '\uBAA8\uB8E8',
-  mongsil: '\uBABD\uC2E4',
-  dami: '\uB2E4\uBBF8',
-};
-
 // CHARACTER_V69_COMPATIBILITY_PREVIEW_SCREEN
+// CHARACTER_V70_SELECT_AND_SAVE_SCREEN
 export default function CharacterPreviewScreen() {
+  const {
+    selectedCharacter,
+    ready,
+    selectCharacter,
+  } =
+    useSelectedCharacter();
+
   const [
     characterId,
     setCharacterId,
@@ -76,49 +81,81 @@ export default function CharacterPreviewScreen() {
     );
 
   const [
-    paused,
-    setPaused,
+    saving,
+    setSaving,
   ] =
     useState(false);
 
+  useEffect(
+    () => {
+      if (ready) {
+        setCharacterId(
+          selectedCharacter
+        );
+      }
+    },
+    [
+      ready,
+      selectedCharacter,
+    ]
+  );
+
   const definition =
-    useMemo(
-      () =>
-        getCharacterAssetDefinition(
-          characterId
-        ),
-      [
-        characterId,
-      ]
+    getCharacterAssetDefinition(
+      characterId
     );
 
-  const rawFrameCount =
-    definition.frames[
-      action
-    ].length;
+  const rawFrames =
+    definition.frames[action].length;
 
-  const resolvedFrameCount =
+  const resolvedFrames =
     getCharacterFrames(
       characterId,
       action
     ).length;
 
-  const fallbackUsed =
-    rawFrameCount === 0 &&
-    resolvedFrameCount > 0;
+  const isCurrent =
+    ready &&
+    characterId ===
+      selectedCharacter;
+
+  const save =
+    async () => {
+      if (
+        saving ||
+        isCurrent
+      ) {
+        return;
+      }
+
+      setSaving(
+        true
+      );
+
+      try {
+        await selectCharacter(
+          characterId
+        );
+      }
+      finally {
+        setSaving(
+          false
+        );
+      }
+    };
 
   return (
     <>
       <Stack.Screen
         options={{
           title:
-            '\uCE90\uB9AD\uD130 \uD504\uB9AC\uBDF0',
+            '\uCE90\uB9AD\uD130 \uC120\uD0DD',
         }}
       />
 
       <SafeAreaView
         style={
-          styles.safeArea
+          styles.screen
         }
       >
         <ScrollView
@@ -131,20 +168,20 @@ export default function CharacterPreviewScreen() {
               styles.title
             }
           >
-            Character V69
+            Character V70
           </Text>
 
           <Text
             style={
-              styles.subtitle
+              styles.sub
             }
           >
-            {'Home \uC5F0\uACB0 \uC804 \uACF5\uC6A9 \uC561\uC158 \uD638\uD658 \uD504\uB9AC\uBDF0'}
+            {'\uCE90\uB9AD\uD130\uB97C \uBBF8\uB9AC \uBCF4\uACE0 Home\uC5D0 \uC0AC\uC6A9\uD560 \uCE90\uB9AD\uD130\uB97C \uC800\uC7A5\uD558\uC138\uC694.'}
           </Text>
 
           <View
             style={
-              styles.previewCard
+              styles.card
             }
           >
             <CharacterSprite
@@ -154,20 +191,16 @@ export default function CharacterPreviewScreen() {
               action={
                 action
               }
-              paused={
-                paused
-              }
               size={220}
-              testID="character-v69-preview-sprite"
             />
 
             <Text
               style={
-                styles.characterName
+                styles.name
               }
             >
               {
-                CHARACTER_LABELS[
+                CHARACTER_LABEL[
                   characterId
                 ]
               }
@@ -188,54 +221,58 @@ export default function CharacterPreviewScreen() {
                 styles.meta
               }
             >
-              action: {
-                action
+              frames: {
+                rawFrames
+              } / resolved: {
+                resolvedFrames
               }
             </Text>
 
             <Text
               style={
-                styles.meta
+                styles.current
               }
             >
-              raw frames: {
-                rawFrameCount
-              } / resolved: {
-                resolvedFrameCount
+              {'\uD604\uC7AC Home: '}
+              {
+                ready
+                  ? CHARACTER_LABEL[
+                      selectedCharacter
+                    ]
+                  : '\uBD88\uB7EC\uC624\uB294 \uC911'
               }
             </Text>
 
-            {fallbackUsed ? (
-              <Text
-                style={
-                  styles.fallback
-                }
-              >
-                {'idle fallback \uC0AC\uC6A9 \uC911'}
-              </Text>
-            ) : null}
-
             <Pressable
+              disabled={
+                saving ||
+                isCurrent
+              }
               onPress={
-                () =>
-                  setPaused(
-                    (current) =>
-                      !current
-                  )
+                () => {
+                  void save();
+                }
               }
-              style={
-                styles.pauseButton
-              }
+              style={[
+                styles.save,
+                (
+                  saving ||
+                  isCurrent
+                ) &&
+                  styles.disabled,
+              ]}
             >
               <Text
                 style={
-                  styles.pauseButtonText
+                  styles.saveText
                 }
               >
                 {
-                  paused
-                    ? '\uC7AC\uC0DD'
-                    : '\uC77C\uC2DC\uC815\uC9C0'
+                  saving
+                    ? '\uC800\uC7A5 \uC911...'
+                    : isCurrent
+                      ? '\uD604\uC7AC \uC0AC\uC6A9 \uC911'
+                      : 'Home\uC5D0 \uC0AC\uC6A9'
                 }
               </Text>
             </Pressable>
@@ -243,7 +280,7 @@ export default function CharacterPreviewScreen() {
 
           <Text
             style={
-              styles.sectionTitle
+              styles.section
             }
           >
             {'\uCE90\uB9AD\uD130'}
@@ -251,52 +288,48 @@ export default function CharacterPreviewScreen() {
 
           <View
             style={
-              styles.buttonGrid
+              styles.row
             }
           >
             {CHARACTER_IDS.map(
-              (id) => {
-                const selected =
-                  id ===
-                  characterId;
-
-                return (
-                  <Pressable
-                    key={id}
-                    onPress={
-                      () =>
-                        setCharacterId(
-                          id
-                        )
-                    }
+              (id) => (
+                <Pressable
+                  key={id}
+                  onPress={
+                    () =>
+                      setCharacterId(
+                        id
+                      )
+                  }
+                  style={[
+                    styles.choice,
+                    id ===
+                      characterId &&
+                      styles.selected,
+                  ]}
+                >
+                  <Text
                     style={[
-                      styles.choiceButton,
-                      selected &&
-                        styles.choiceButtonSelected,
+                      styles.choiceText,
+                      id ===
+                        characterId &&
+                        styles.selectedText,
                     ]}
                   >
-                    <Text
-                      style={[
-                        styles.choiceText,
-                        selected &&
-                          styles.choiceTextSelected,
-                      ]}
-                    >
-                      {
-                        CHARACTER_LABELS[
-                          id
-                        ]
-                      }
-                    </Text>
-                  </Pressable>
-                );
-              }
+                    {
+                      CHARACTER_LABEL[
+                        id
+                      ]
+                    }
+                  </Text>
+                </Pressable>
+              )
             )}
           </View>
 
           <Text
             style={
-              styles.sectionTitle
+              styles.section
             }
           >
             {'\uD589\uB3D9'}
@@ -304,60 +337,56 @@ export default function CharacterPreviewScreen() {
 
           <View
             style={
-              styles.buttonGrid
+              styles.row
             }
           >
-            {CHARACTER_ACTIONS.map(
-              (item) => {
-                const selected =
-                  item ===
-                  action;
-
-                return (
-                  <Pressable
-                    key={item}
-                    onPress={
-                      () =>
-                        setAction(
-                          item
-                        )
-                    }
+            {ACTIONS.map(
+              (item) => (
+                <Pressable
+                  key={item}
+                  onPress={
+                    () =>
+                      setAction(
+                        item
+                      )
+                  }
+                  style={[
+                    styles.choice,
+                    item ===
+                      action &&
+                      styles.selected,
+                  ]}
+                >
+                  <Text
                     style={[
-                      styles.choiceButton,
-                      selected &&
-                        styles.choiceButtonSelected,
+                      styles.choiceText,
+                      item ===
+                        action &&
+                        styles.selectedText,
                     ]}
                   >
-                    <Text
-                      style={[
-                        styles.choiceText,
-                        selected &&
-                          styles.choiceTextSelected,
-                      ]}
-                    >
-                      {
-                        ACTION_LABELS[
-                          item
-                        ]
-                      }
-                    </Text>
-                  </Pressable>
-                );
-              }
+                    {
+                      ACTION_LABEL[
+                        item
+                      ]
+                    }
+                  </Text>
+                </Pressable>
+              )
             )}
           </View>
 
           <View
             style={
-              styles.noteCard
+              styles.note
             }
           >
             <Text
               style={
-                styles.noteTitle
+                styles.noteText
               }
             >
-              {'V69 \uAC80\uC99D \uAE30\uC900'}
+              {'\uB8E8\uD2F0\uB294 \uAE30\uC874 RootySprite\uC640 \uBC29\uD5A5/fallback \uACBD\uB85C\uB97C \uADF8\uB300\uB85C \uC0AC\uC6A9\uD569\uB2C8\uB2E4.'}
             </Text>
 
             <Text
@@ -365,23 +394,7 @@ export default function CharacterPreviewScreen() {
                 styles.noteText
               }
             >
-              {'\uB8E8\uD2F0\uB294 legacy-rooty \uAC00\uBCC0 \uD504\uB808\uC784\uACFC fallback\uC744 \uC720\uC9C0\uD569\uB2C8\uB2E4.'}
-            </Text>
-
-            <Text
-              style={
-                styles.noteText
-              }
-            >
-              {'\uBAA8\uB8E8\u00B7\uBABD\uC2E4\u00B7\uB2E4\uBBF8\uB294 standard-23 \uD504\uB808\uC784\uC744 \uACF5\uC6A9 CharacterSprite\uB85C \uC7AC\uC0DD\uD569\uB2C8\uB2E4.'}
-            </Text>
-
-            <Text
-              style={
-                styles.noteText
-              }
-            >
-              {'\uC774 \uD654\uBA74\uC740 Home \uD589\uB3D9 \uC5D4\uC9C4\uACFC \uCE90\uB9AD\uD130 \uC120\uD0DD \uC800\uC7A5\uC5D0\uB294 \uC544\uC9C1 \uC5F0\uACB0\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.'}
+              {'\uBAA8\uB8E8\u00B7\uBABD\uC2E4\u00B7\uB2E4\uBBF8\uB294 Home\uC758 \uAE30\uC874 action\uC744 CharacterSprite\uB85C \uD45C\uC2DC\uD569\uB2C8\uB2E4.'}
             </Text>
           </View>
         </ScrollView>
@@ -392,36 +405,32 @@ export default function CharacterPreviewScreen() {
 
 const styles =
   StyleSheet.create({
-    safeArea: {
+    screen: {
       flex: 1,
-      backgroundColor:
-        '#F6F1E8',
+      backgroundColor: '#F6F1E8',
     },
     content: {
       padding: 20,
       paddingBottom: 48,
-      gap: 16,
+      gap: 14,
     },
     title: {
       fontSize: 24,
       fontWeight: '800',
       color: '#2F2B26',
     },
-    subtitle: {
+    sub: {
       fontSize: 14,
       color: '#6E665D',
     },
-    previewCard: {
+    card: {
       alignItems: 'center',
-      paddingVertical: 24,
-      paddingHorizontal: 16,
+      padding: 20,
       borderRadius: 20,
-      backgroundColor:
-        '#FFFFFF',
+      backgroundColor: '#FFFFFF',
       gap: 6,
     },
-    characterName: {
-      marginTop: 8,
+    name: {
       fontSize: 20,
       fontWeight: '800',
       color: '#2F2B26',
@@ -430,76 +439,66 @@ const styles =
       fontSize: 13,
       color: '#746B61',
     },
-    fallback: {
-      marginTop: 4,
-      fontSize: 12,
+    current: {
+      marginTop: 8,
+      fontSize: 13,
       fontWeight: '700',
-      color: '#9A6E2E',
+      color: '#4F473F',
     },
-    pauseButton: {
-      marginTop: 12,
-      minWidth: 96,
+    save: {
+      marginTop: 10,
+      minWidth: 130,
       alignItems: 'center',
-      paddingVertical: 10,
+      paddingVertical: 11,
       paddingHorizontal: 16,
       borderRadius: 12,
-      backgroundColor:
-        '#2F2B26',
+      backgroundColor: '#2F2B26',
     },
-    pauseButtonText: {
+    disabled: {
+      opacity: 0.45,
+    },
+    saveText: {
       fontSize: 14,
       fontWeight: '700',
       color: '#FFFFFF',
     },
-    sectionTitle: {
-      marginTop: 4,
+    section: {
       fontSize: 16,
       fontWeight: '800',
       color: '#2F2B26',
     },
-    buttonGrid: {
+    row: {
       flexDirection: 'row',
       flexWrap: 'wrap',
       gap: 8,
     },
-    choiceButton: {
+    choice: {
       minWidth: 88,
       alignItems: 'center',
       paddingVertical: 10,
-      paddingHorizontal: 14,
+      paddingHorizontal: 12,
       borderRadius: 12,
       borderWidth: 1,
-      borderColor:
-        '#D8CEC0',
-      backgroundColor:
-        '#FFFFFF',
+      borderColor: '#D8CEC0',
+      backgroundColor: '#FFFFFF',
     },
-    choiceButtonSelected: {
-      borderColor:
-        '#2F2B26',
-      backgroundColor:
-        '#2F2B26',
+    selected: {
+      borderColor: '#2F2B26',
+      backgroundColor: '#2F2B26',
     },
     choiceText: {
       fontSize: 14,
       fontWeight: '700',
       color: '#5F574F',
     },
-    choiceTextSelected: {
+    selectedText: {
       color: '#FFFFFF',
     },
-    noteCard: {
-      marginTop: 8,
+    note: {
       padding: 16,
       borderRadius: 16,
-      backgroundColor:
-        '#EEE6D9',
+      backgroundColor: '#EEE6D9',
       gap: 8,
-    },
-    noteTitle: {
-      fontSize: 14,
-      fontWeight: '800',
-      color: '#2F2B26',
     },
     noteText: {
       fontSize: 13,

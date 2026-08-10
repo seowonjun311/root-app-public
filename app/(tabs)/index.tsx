@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import {
   getApp,
 } from '@react-native-firebase/app';
-import RootySprite from '../../components/rooty/RootySprite';
+import RootySprite from '../../components/characters/SelectedCharacterSprite';
 import type { RootyAction } from '../../constants/rootyAssets';
 import { ROOTY_WALK_MOTION } from '../../constants/rootyMotion';
 import { ROOTY_NATURAL_BEHAVIOR } from '../../constants/rootyBehavior';

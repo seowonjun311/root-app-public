@@ -324,6 +324,28 @@ export default function CharacterPreviewScreen() {
             {'\uCE90\uB9AD\uD130\uB97C \uC120\uD0DD\uD558\uACE0 \uD06C\uAE30\uC640 \uBC14\uB2E5 \uC704\uCE58\uB97C \uC2E4\uAE30\uAE30\uC5D0\uC11C \uB9DE\uCD94\uC138\uC694.'}
           </Text>
 
+          {/* CHARACTER_V81_DEVICE_VALIDATION_ENTRY */}
+          <Link
+            href={
+              '/character-device-validation' as never
+            }
+            asChild
+          >
+            <Pressable
+              style={
+                styles.diagnosticsButton
+              }
+            >
+              <Text
+                style={
+                  styles.diagnosticsButtonText
+                }
+              >
+                {'\uC2E4\uAE30\uAE30 \uC885\uD569 \uAC80\uC99D'}
+              </Text>
+            </Pressable>
+          </Link>
+
           {/* CHARACTER_V77_DIAGNOSTICS_ENTRY */}
           <Link
             href={

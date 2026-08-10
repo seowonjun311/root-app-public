@@ -42,6 +42,10 @@ import {
   getRootyLowMoodRestProbabilities,
 } from '../../store/rootyLowMoodBehaviorPolicy';
 import {
+  getRootyBondedTapFollowUpChance,
+  shouldQueueRootyBondedTapFollowUp,
+} from '../../store/rootyAffectionInteractionPolicy';
+import {
   getRootyStateRestProbabilities,
   pickRootyRestBehavior,
 } from '../../store/rootyBehaviorPolicy';
@@ -1376,6 +1380,11 @@ const rootyConditionRef =
       ROOTY_DEFAULT_STATE
     )
   );
+
+
+// ROOTY_BEHAVIOR_V63_AFFECTION_SOCIAL_RESPONSE
+const rootyBondedTapFollowUpRef =
+  useRef(false);
 
 const rootyStateReadyRef =
   useRef(false);
@@ -3080,6 +3089,10 @@ useEffect(() => {
         return;
       }
 
+
+      rootyBondedTapFollowUpRef.current =
+        false;
+
       rootyReactingRef.current =
         true;
 
@@ -3295,6 +3308,43 @@ const handleRootyPress =
       },
       'tap'
     );
+
+    const interactionCondition =
+      rootyConditionRef.current;
+
+    const bondedFollowUpChance =
+      getRootyBondedTapFollowUpChance(
+        interactionCondition
+      );
+
+    const bondedFollowUpRoll =
+      Math.random();
+
+    const shouldQueueBondedFollowUp =
+      shouldQueueRootyBondedTapFollowUp(
+        interactionCondition,
+        bondedFollowUpRoll
+      );
+
+    rootyBondedTapFollowUpRef.current =
+      shouldQueueBondedFollowUp;
+
+    if (__DEV__) {
+      console.log(
+        '[ROOTY V63] affection interaction policy',
+        {
+          affectionCondition:
+            interactionCondition.affection,
+          chance:
+            bondedFollowUpChance,
+          roll:
+            bondedFollowUpRoll,
+          queued:
+            shouldQueueBondedFollowUp,
+        }
+      );
+    }
+
 // ROOTY_BEHAVIOR_V9_TAP_FREEZE_REACTION
     cancelAnimation(
       foxX
@@ -3358,6 +3408,10 @@ const handleRootyLongPress =
       true;
 
 
+
+    rootyBondedTapFollowUpRef.current =
+      false;
+
     applyRootyStateDelta(
       {
         mood: 3,
@@ -3387,6 +3441,36 @@ const handleRootyAnimationEnd =
     finishedAction:
       RootyAction
   ) => {
+
+    if (
+      finishedAction ===
+        'happy' &&
+      rootyBondedTapFollowUpRef.current
+    ) {
+      rootyBondedTapFollowUpRef.current =
+        false;
+
+      rootyActionRef.current =
+        'touch';
+
+      applyRootyAction(
+        'touch'
+      );
+
+      if (__DEV__) {
+        console.log(
+          '[ROOTY V63] bonded follow-up touch',
+          {
+            affectionCondition:
+              rootyConditionRef.current
+                .affection,
+          }
+        );
+      }
+
+      return;
+    }
+
     if (
       finishedAction !==
         'happy' &&
@@ -3395,6 +3479,10 @@ const handleRootyAnimationEnd =
     ) {
       return;
     }
+
+
+    rootyBondedTapFollowUpRef.current =
+      false;
 
     rootyReactingRef.current =
       false;

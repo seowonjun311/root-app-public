@@ -51,6 +51,10 @@ import {
   shouldStartRootyBondedPassiveAttention,
 } from '../../store/rootyPassiveSocialPolicy';
 import {
+  getRootySpontaneousCooldownAfterTrigger,
+  resolveRootySpontaneousCooldown,
+} from '../../store/rootySpontaneousCooldownPolicy';
+import {
   getRootyStateRestProbabilities,
   pickRootyRestBehavior,
 } from '../../store/rootyBehaviorPolicy';
@@ -1390,6 +1394,10 @@ const rootyConditionRef =
 // ROOTY_BEHAVIOR_V63_AFFECTION_SOCIAL_RESPONSE
 const rootyBondedTapFollowUpRef =
   useRef(false);
+
+// ROOTY_BEHAVIOR_V65_SPONTANEOUS_ANTI_REPETITION_COOLDOWN
+const rootySpontaneousCooldownRef =
+  useRef(0);
 
 const rootyStateReadyRef =
   useRef(false);
@@ -3098,6 +3106,22 @@ useEffect(() => {
       rootyBondedTapFollowUpRef.current =
         false;
 
+      rootySpontaneousCooldownRef.current =
+        getRootySpontaneousCooldownAfterTrigger();
+
+      if (__DEV__) {
+        console.log(
+          '[ROOTY V65] cooldown armed',
+          {
+            source:
+              'spontaneous-happy',
+            cooldownCycles:
+              rootySpontaneousCooldownRef
+                .current,
+          }
+        );
+      }
+
       rootyReactingRef.current =
         true;
 
@@ -3141,6 +3165,9 @@ useEffect(() => {
   let skipBondedPassiveAttentionOnce =
     false;
 
+  let skipSpontaneousCooldownConsumeOnce =
+    false;
+
   const startRootyBondedPassiveAttention =
     () => {
       if (
@@ -3148,6 +3175,23 @@ useEffect(() => {
         rootyReactingRef.current
       ) {
         return;
+      }
+
+
+      rootySpontaneousCooldownRef.current =
+        getRootySpontaneousCooldownAfterTrigger();
+
+      if (__DEV__) {
+        console.log(
+          '[ROOTY V65] cooldown armed',
+          {
+            source:
+              'passive-attention',
+            cooldownCycles:
+              rootySpontaneousCooldownRef
+                .current,
+          }
+        );
       }
 
       const currentDirection =
@@ -3196,6 +3240,10 @@ useEffect(() => {
           skipBondedPassiveAttentionOnce =
             true;
 
+
+          skipSpontaneousCooldownConsumeOnce =
+            true;
+
           startRootyRest();
         },
         randomInt(
@@ -3223,15 +3271,57 @@ useEffect(() => {
       const condition =
         rootyConditionRef.current;
 
-      const expressionChance =
-        getRootySpontaneousHappyChance(
-          condition
+      const skipCooldownConsume =
+        skipSpontaneousCooldownConsumeOnce;
+
+      if (skipCooldownConsume) {
+        skipSpontaneousCooldownConsumeOnce =
+          false;
+      }
+
+      const cooldownResolution =
+        resolveRootySpontaneousCooldown(
+          rootySpontaneousCooldownRef.current,
+          skipCooldownConsume
         );
+
+      rootySpontaneousCooldownRef.current =
+        cooldownResolution
+          .nextCooldownCycles;
+
+      const spontaneousSuppressed =
+        cooldownResolution.suppressed;
+
+      if (__DEV__) {
+        console.log(
+          '[ROOTY V65] spontaneous cooldown',
+          {
+            suppressed:
+              spontaneousSuppressed,
+            skippedConsumption:
+              skipCooldownConsume,
+            before:
+              cooldownResolution
+                .currentCooldownCycles,
+            after:
+              cooldownResolution
+                .nextCooldownCycles,
+          }
+        );
+      }
+
+      const expressionChance =
+        spontaneousSuppressed
+          ? 0
+          : getRootySpontaneousHappyChance(
+              condition
+            );
 
       const expressionRoll =
         Math.random();
 
       const shouldExpressHappy =
+        !spontaneousSuppressed &&
         shouldStartRootySpontaneousHappy(
           condition,
           expressionRoll
@@ -3270,7 +3360,8 @@ useEffect(() => {
       }
 
       const passiveAttentionChance =
-        skipPassiveAttention
+        skipPassiveAttention ||
+        spontaneousSuppressed
           ? 0
           : getRootyBondedPassiveAttentionChance(
               condition
@@ -3281,6 +3372,7 @@ useEffect(() => {
 
       const shouldShowPassiveAttention =
         !skipPassiveAttention &&
+        !spontaneousSuppressed &&
         shouldStartRootyBondedPassiveAttention(
           condition,
           passiveAttentionRoll

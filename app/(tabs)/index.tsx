@@ -59,6 +59,11 @@ import {
   pickRootyRestBehavior,
 } from '../../store/rootyBehaviorPolicy';
 import {
+  getRootyNextRestAntiRepeatState,
+  getRootyRestAntiRepeatProbabilities,
+  type RootyRestAntiRepeatState,
+} from '../../store/rootyRestAntiRepeatPolicy';
+import {
   ROOTY_STATE_SIMULATION,
 } from '../../constants/rootyStateSimulation';
 import {
@@ -1398,6 +1403,14 @@ const rootyBondedTapFollowUpRef =
 // ROOTY_BEHAVIOR_V65_SPONTANEOUS_ANTI_REPETITION_COOLDOWN
 const rootySpontaneousCooldownRef =
   useRef(0);
+
+
+// ROOTY_BEHAVIOR_V66_NORMAL_REST_ANTI_REPETITION
+const rootyRestAntiRepeatStateRef =
+  useRef<RootyRestAntiRepeatState>({
+    behavior: null,
+    streak: 0,
+  });
 
 const rootyStateReadyRef =
   useRef(false);
@@ -3425,10 +3438,48 @@ useEffect(() => {
           condition
         );
 
+
+      const antiRepeatStateBefore =
+        rootyRestAntiRepeatStateRef.current;
+
+      const antiRepeatProbabilities =
+        getRootyRestAntiRepeatProbabilities(
+          probabilities,
+          antiRepeatStateBefore
+        );
+
       const behavior =
         pickRootyRestBehavior(
-          probabilities
+          antiRepeatProbabilities
         );
+
+      const antiRepeatStateAfter =
+        getRootyNextRestAntiRepeatState(
+          antiRepeatStateBefore,
+          behavior
+        );
+
+      rootyRestAntiRepeatStateRef.current =
+        antiRepeatStateAfter;
+
+      if (__DEV__) {
+        console.log(
+          '[ROOTY V66] rest anti-repeat',
+          {
+            previousBehavior:
+              antiRepeatStateBefore.behavior,
+            streakBefore:
+              antiRepeatStateBefore.streak,
+            probabilitiesBefore:
+              probabilities,
+            probabilitiesAfter:
+              antiRepeatProbabilities,
+            behavior,
+            streakAfter:
+              antiRepeatStateAfter.streak,
+          }
+        );
+      }
 
       if (__DEV__) {
         console.log(
@@ -3436,7 +3487,10 @@ useEffect(() => {
           {
             behavior,
             state,
-            probabilities,
+            probabilities:
+              antiRepeatProbabilities,
+            conditionProbabilities:
+              probabilities,
           }
         );
 

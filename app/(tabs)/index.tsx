@@ -31,6 +31,10 @@ import {
   type RootyConditionSnapshot,
 } from '../../store/rootyCondition';
 import {
+  getRootyConditionRestProbabilities,
+  getRootyConditionWalkStepRange,
+} from '../../store/rootyConditionBehaviorPolicy';
+import {
   getRootyStateRestProbabilities,
   pickRootyRestBehavior,
 } from '../../store/rootyBehaviorPolicy';
@@ -2709,11 +2713,30 @@ useEffect(() => {
         'walk'
       );
 
+      // ROOTY_BEHAVIOR_V60_CONDITION_BASED_BEHAVIOR_CONTROL
+      const energyCondition =
+        rootyConditionRef.current.energy;
+
+      const walkStepRange =
+        getRootyConditionWalkStepRange(
+          energyCondition
+        );
+
       let remainingSteps =
         randomInt(
-          ROOTY_NATURAL_BEHAVIOR.walkSessionMinSteps,
-          ROOTY_NATURAL_BEHAVIOR.walkSessionMaxSteps
+          walkStepRange.minSteps,
+          walkStepRange.maxSteps
         );
+
+      if (__DEV__) {
+        console.log(
+          '[ROOTY V60] walk policy',
+          {
+            energyCondition,
+            walkStepRange,
+          }
+        );
+      }
 
       let currentWalkDirection =
         pickNextWalkDirection(
@@ -3054,9 +3077,18 @@ useEffect(() => {
       const state =
         rootyStateRef.current;
 
-      const probabilities =
+      const baseProbabilities =
         getRootyStateRestProbabilities(
           state
+        );
+
+      const condition =
+        rootyConditionRef.current;
+
+      const probabilities =
+        getRootyConditionRestProbabilities(
+          baseProbabilities,
+          condition.energy
         );
 
       const behavior =
@@ -3071,6 +3103,17 @@ useEffect(() => {
             behavior,
             state,
             probabilities,
+          }
+        );
+
+        console.log(
+          '[ROOTY V60] rest policy',
+          {
+            energyCondition:
+              condition.energy,
+            baseProbabilities,
+            probabilities,
+            behavior,
           }
         );
       }

@@ -10,6 +10,10 @@ import {
   type CharacterRestWeights,
   type CharacterSocialChanceChannel,
 } from './characterPersonalityPolicy';
+import {
+  recordCharacterRestStatistic,
+  recordCharacterSocialStatistic,
+} from './characterRuntimeStatistics';
 
 export type CharacterRuntimeDiagnosticsSnapshot = {
   characterId: CharacterId;
@@ -99,6 +103,16 @@ export function recordCharacterFinalRestDecision(
   weights: CharacterRestWeights,
   behavior: string
 ): void {
+  // CHARACTER_V78_PERSISTENT_REST_STATISTICS
+  recordCharacterRestStatistic(
+    characterId,
+    snapshot.characterId === characterId
+      ? snapshot.personalityRest
+      : null,
+    weights,
+    behavior
+  );
+
   snapshot = {
     ...snapshot,
     characterId,
@@ -120,6 +134,13 @@ export function recordCharacterSocialChance(
     CharacterSocialChanceChannel,
   chance: number
 ): void {
+  // CHARACTER_V78_PERSISTENT_SOCIAL_STATISTICS
+  recordCharacterSocialStatistic(
+    characterId,
+    channel,
+    chance
+  );
+
   snapshot = {
     ...snapshot,
     characterId,

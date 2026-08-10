@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
+  Link,
   Stack,
 } from 'expo-router';
 import React, {
@@ -240,6 +241,28 @@ export default function CharacterRuntimeDiagnosticsScreen() {
           >
             {'\uC77D\uAE30 \uC804\uC6A9 \uAD00\uCC30 \uD654\uBA74\uC785\uB2C8\uB2E4. \uD589\uB3D9 \uD655\uB960\uACFC \uC0C1\uD0DC\uB97C \uBCF4\uC5EC\uC8FC\uAE30\uB9CC \uD558\uACE0 \uAC12\uC744 \uBCC0\uACBD\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.'}
           </Text>
+
+          {/* CHARACTER_V78_STATISTICS_ENTRY */}
+          <Link
+            href={
+              '/character-runtime-statistics' as never
+            }
+            asChild
+          >
+            <Pressable
+              style={
+                styles.statisticsButton
+              }
+            >
+              <Text
+                style={
+                  styles.statisticsButtonText
+                }
+              >
+                {'\uCE90\uB9AD\uD130\uBCC4 \uB204\uC801 \uD1B5\uACC4'}
+              </Text>
+            </Pressable>
+          </Link>
 
           <View
             style={
@@ -632,6 +655,18 @@ const styles =
       fontSize: 13,
       lineHeight: 19,
       color: '#6E665D',
+    },
+    statisticsButton: {
+      alignSelf: 'flex-start',
+      paddingVertical: 9,
+      paddingHorizontal: 13,
+      borderRadius: 11,
+      backgroundColor: '#2F2B26',
+    },
+    statisticsButtonText: {
+      fontSize: 13,
+      fontWeight: '800',
+      color: '#FFFFFF',
     },
     card: {
       padding: 16,

@@ -39,6 +39,9 @@ import {
   shouldStartRootySpontaneousHappy,
 } from '../../store/rootyMoodExpressionPolicy';
 import {
+  getRootyLowMoodRestProbabilities,
+} from '../../store/rootyLowMoodBehaviorPolicy';
+import {
   getRootyStateRestProbabilities,
   pickRootyRestBehavior,
 } from '../../store/rootyBehaviorPolicy';
@@ -3175,10 +3178,17 @@ useEffect(() => {
           state
         );
 
-      const probabilities =
+      // ROOTY_BEHAVIOR_V62_LOW_MOOD_CALM_REST
+      const energyProbabilities =
         getRootyConditionRestProbabilities(
           baseProbabilities,
           condition.energy
+        );
+
+      const probabilities =
+        getRootyLowMoodRestProbabilities(
+          energyProbabilities,
+          condition
         );
 
       const behavior =
@@ -3202,6 +3212,20 @@ useEffect(() => {
             energyCondition:
               condition.energy,
             baseProbabilities,
+            probabilities:
+              energyProbabilities,
+            behavior,
+          }
+        );
+
+        console.log(
+          '[ROOTY V62] low mood rest policy',
+          {
+            moodCondition:
+              condition.mood,
+            energyCondition:
+              condition.energy,
+            energyProbabilities,
             probabilities,
             behavior,
           }

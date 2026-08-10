@@ -66,6 +66,10 @@ type RootySpriteProps = {
    */
   onPress?: () => void;
 
+  // ROOTY_BEHAVIOR_V53_LONG_PRESS_PROP
+  onLongPress?: () => void;
+  longPressDelayMs?: number;
+
   /**
    * loop=false인 애니메이션이 마지막 프레임까지 재생되면 호출됩니다.
    */
@@ -86,6 +90,8 @@ function RootySpriteComponent({
   flipX,
   enableMotion = true,
   onPress,
+  onLongPress,
+  longPressDelayMs = 550,
   onAnimationEnd,
   style,
   imageStyle,
@@ -332,6 +338,8 @@ function RootySpriteComponent({
     <Pressable
       testID={testID}
       onPress={onPress}
+      onLongPress={onLongPress}
+      delayLongPress={longPressDelayMs}
       hitSlop={8}
       style={[styles.container, style]}
     >

@@ -2699,6 +2699,35 @@ applyRootyAction(
     );
   };
 
+// ROOTY_BEHAVIOR_V53_LONG_PRESS_INTERACTION
+const handleRootyLongPress =
+  () => {
+    if (
+      rootyReactingRef.current
+    ) {
+      return;
+    }
+
+    rootyReactingRef.current =
+      true;
+
+    cancelAnimation(
+      foxX
+    );
+
+    cancelAnimation(
+      foxY
+    );
+
+    applyRootyAction(
+      'touch'
+    );
+
+    setRootyCycleKey(
+      (current) =>
+        current + 1
+    );
+  };
 const handleRootyAnimationEnd =
   (
     finishedAction:
@@ -2706,7 +2735,9 @@ const handleRootyAnimationEnd =
   ) => {
     if (
       finishedAction !==
-      'happy'
+        'happy' &&
+      finishedAction !==
+        'touch'
     ) {
       return;
     }
@@ -8280,6 +8311,9 @@ top:
     direction={foxDirection}
     onPress={
       handleRootyPress
+    }
+    onLongPress={
+      handleRootyLongPress
     }
     onAnimationEnd={
       handleRootyAnimationEnd

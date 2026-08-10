@@ -26,6 +26,10 @@ import {
   saveRootyState,
   type RootyState,
 } from '../../store/rootyState';
+import {
+  getRootyStateRestProbabilities,
+  pickRootyRestBehavior,
+} from '../../store/rootyBehaviorPolicy';
 
 import {
   getAuth,
@@ -2718,6 +2722,7 @@ useEffect(() => {
       );
     };
 
+  // ROOTY_BEHAVIOR_V55_STATE_BASED_PROBABILITY_SYSTEM
   const startRootyRest =
     () => {
       if (
@@ -2727,17 +2732,42 @@ useEffect(() => {
         return;
       }
 
-      const roll =
-        Math.random();
+      const state =
+        rootyStateRef.current;
 
-      if (roll <
-        ROOTY_NATURAL_BEHAVIOR.lookAroundThreshold) {
+      const probabilities =
+        getRootyStateRestProbabilities(
+          state
+        );
+
+      const behavior =
+        pickRootyRestBehavior(
+          probabilities
+        );
+
+      if (__DEV__) {
+        console.log(
+          '[ROOTY V55] rest choice',
+          {
+            behavior,
+            state,
+            probabilities,
+          }
+        );
+      }
+
+      if (
+        behavior ===
+        'lookAround'
+      ) {
         startRootyLookAround();
         return;
       }
 
-      if (roll <
-        ROOTY_NATURAL_BEHAVIOR.sitRestThreshold) {
+      if (
+        behavior ===
+        'sitRest'
+      ) {
         startRootySitRest();
         return;
       }

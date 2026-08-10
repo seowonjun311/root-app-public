@@ -30,6 +30,9 @@ import {
   getRootyStateRestProbabilities,
   pickRootyRestBehavior,
 } from '../../store/rootyBehaviorPolicy';
+import {
+  ROOTY_STATE_SIMULATION,
+} from '../../constants/rootyStateSimulation';
 
 import {
   getAuth,
@@ -1356,7 +1359,11 @@ const applyRootyStateDelta =
         Partial<RootyState>,
       reason:
         'tap' |
-        'long-press'
+        'long-press' |
+        'walk-session' |
+        'look-around' |
+        'sit-rest' |
+        'nap'
     ) => {
       if (
         !rootyStateReadyRef.current
@@ -2465,6 +2472,7 @@ useEffect(() => {
         );
 
       let blockedRetries = 0;
+      let movedSteps = 0;
 
       const chooseNextSegment =
         () => {
@@ -2497,6 +2505,7 @@ useEffect(() => {
           if (movedDirection) {
             remainingSteps -= 1;
             blockedRetries = 0;
+            movedSteps += 1;
 
             if (
               movedDirection !==
@@ -2530,6 +2539,17 @@ useEffect(() => {
             blockedRetries >=
               ROOTY_NATURAL_BEHAVIOR.blockedRetryLimit
           ) {
+            if (movedSteps > 0) {
+              applyRootyStateDelta(
+                {
+                  energy:
+                    ROOTY_STATE_SIMULATION
+                      .walkSessionEnergyDelta,
+                },
+                'walk-session'
+              );
+            }
+
             applyRootyAction(
               'idle'
             );
@@ -2609,6 +2629,22 @@ useEffect(() => {
             () => {
               faceAnotherDirection();
 
+              if (
+                cancelled ||
+                rootyReactingRef.current
+              ) {
+                return;
+              }
+
+              applyRootyStateDelta(
+                {
+                  energy:
+                    ROOTY_STATE_SIMULATION
+                      .lookAroundEnergyDelta,
+                },
+                'look-around'
+              );
+
               later(
                 startRootyWalkSession,
                 randomInt(
@@ -2671,6 +2707,15 @@ useEffect(() => {
                 return;
               }
 
+              applyRootyStateDelta(
+                {
+                  energy:
+                    ROOTY_STATE_SIMULATION
+                      .napEnergyDelta,
+                },
+                'nap'
+              );
+
               // Sit once after sleep so waking up
               // does not jump directly into walking.
               applyRootyAction(
@@ -2714,7 +2759,25 @@ useEffect(() => {
       );
 
       later(
-        finishRestAndWalk,
+        () => {
+          if (
+            cancelled ||
+            rootyReactingRef.current
+          ) {
+            return;
+          }
+
+          applyRootyStateDelta(
+            {
+              energy:
+                ROOTY_STATE_SIMULATION
+                  .sitRestEnergyDelta,
+            },
+            'sit-rest'
+          );
+
+          finishRestAndWalk();
+        },
         randomInt(
           ROOTY_NATURAL_BEHAVIOR.sitRestDurationMinMs,
           ROOTY_NATURAL_BEHAVIOR.sitRestDurationMaxMs
@@ -2722,7 +2785,8 @@ useEffect(() => {
       );
     };
 
-  // ROOTY_BEHAVIOR_V55_STATE_BASED_PROBABILITY_SYSTEM
+  // ROOTY_BEHAVIOR_V56_AUTOMATIC_STATE_CHANGES
+// ROOTY_BEHAVIOR_V55_STATE_BASED_PROBABILITY_SYSTEM
   const startRootyRest =
     () => {
       if (

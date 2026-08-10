@@ -46,6 +46,11 @@ import {
   shouldQueueRootyBondedTapFollowUp,
 } from '../../store/rootyAffectionInteractionPolicy';
 import {
+  getRootyBondedPassiveAttentionChance,
+  ROOTY_PASSIVE_SOCIAL_POLICY,
+  shouldStartRootyBondedPassiveAttention,
+} from '../../store/rootyPassiveSocialPolicy';
+import {
   getRootyStateRestProbabilities,
   pickRootyRestBehavior,
 } from '../../store/rootyBehaviorPolicy';
@@ -3132,6 +3137,75 @@ useEffect(() => {
           current + 1
       );
     };
+// ROOTY_BEHAVIOR_V64_BONDED_PASSIVE_SOCIAL_ATTENTION
+  let skipBondedPassiveAttentionOnce =
+    false;
+
+  const startRootyBondedPassiveAttention =
+    () => {
+      if (
+        cancelled ||
+        rootyReactingRef.current
+      ) {
+        return;
+      }
+
+      const currentDirection =
+        rootyDirectionRef.current;
+
+      const attentionDirection:
+        RootyDirection =
+        currentDirection === 'upLeft' ||
+        currentDirection === 'downLeft'
+          ? 'downLeft'
+          : 'downRight';
+
+      rootyDirectionRef.current =
+        attentionDirection;
+
+      applyRootyDirection(
+        attentionDirection
+      );
+
+      applyRootyAction(
+        'idle'
+      );
+
+      if (__DEV__) {
+        console.log(
+          '[ROOTY V64] passive social attention start',
+          {
+            affectionCondition:
+              rootyConditionRef.current
+                .affection,
+            direction:
+              attentionDirection,
+          }
+        );
+      }
+
+      later(
+        () => {
+          if (
+            cancelled ||
+            rootyReactingRef.current
+          ) {
+            return;
+          }
+
+          skipBondedPassiveAttentionOnce =
+            true;
+
+          startRootyRest();
+        },
+        randomInt(
+          ROOTY_PASSIVE_SOCIAL_POLICY
+            .attentionDurationMinMs,
+          ROOTY_PASSIVE_SOCIAL_POLICY
+            .attentionDurationMaxMs
+        )
+      );
+    };
 // ROOTY_BEHAVIOR_V56_AUTOMATIC_STATE_CHANGES
 // ROOTY_BEHAVIOR_V55_STATE_BASED_PROBABILITY_SYSTEM
   const startRootyRest =
@@ -3183,6 +3257,61 @@ useEffect(() => {
 
       if (shouldExpressHappy) {
         startRootySpontaneousHappy();
+        return;
+      }
+
+
+      const skipPassiveAttention =
+        skipBondedPassiveAttentionOnce;
+
+      if (skipPassiveAttention) {
+        skipBondedPassiveAttentionOnce =
+          false;
+      }
+
+      const passiveAttentionChance =
+        skipPassiveAttention
+          ? 0
+          : getRootyBondedPassiveAttentionChance(
+              condition
+            );
+
+      const passiveAttentionRoll =
+        Math.random();
+
+      const shouldShowPassiveAttention =
+        !skipPassiveAttention &&
+        shouldStartRootyBondedPassiveAttention(
+          condition,
+          passiveAttentionRoll
+        );
+
+      if (__DEV__) {
+        console.log(
+          '[ROOTY V64] passive social policy',
+          {
+            affectionCondition:
+              condition.affection,
+            energyCondition:
+              condition.energy,
+            moodCondition:
+              condition.mood,
+            chance:
+              passiveAttentionChance,
+            roll:
+              passiveAttentionRoll,
+            skipped:
+              skipPassiveAttention,
+            triggered:
+              shouldShowPassiveAttention,
+          }
+        );
+      }
+
+      if (
+        shouldShowPassiveAttention
+      ) {
+        startRootyBondedPassiveAttention();
         return;
       }
 

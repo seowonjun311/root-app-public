@@ -44,6 +44,9 @@ import {
 import {
   useSelectedCharacter,
 } from '../store/selectedCharacter';
+import {
+  useCharacterProgression,
+} from '../store/characterProgression';
 
 const ACTIONS:
   readonly CharacterAction[] = [
@@ -79,6 +82,10 @@ export default function CharacterPreviewScreen() {
     selectCharacter,
   } =
     useSelectedCharacter();
+
+  // CHARACTER_V97B_ACQUISITION_AWARE_PREVIEW
+  const progression =
+    useCharacterProgression();
 
   const [
     characterId,
@@ -196,6 +203,15 @@ export default function CharacterPreviewScreen() {
           previewFacing
         );
 
+  const progressionSnapshot =
+    progression.snapshots[
+      characterId
+    ];
+
+  const isAcquired =
+    progression.ready &&
+    progressionSnapshot.acquired;
+
   const isCurrent =
     ready &&
     characterId ===
@@ -209,7 +225,9 @@ export default function CharacterPreviewScreen() {
     async () => {
       if (
         saving ||
-        isCurrent
+        isCurrent ||
+        !progression.ready ||
+        !isAcquired
       ) {
         return;
       }
@@ -219,9 +237,16 @@ export default function CharacterPreviewScreen() {
       );
 
       try {
-        await selectCharacter(
-          characterId
-        );
+        const saved =
+          await selectCharacter(
+            characterId
+          );
+
+        if (
+          !saved
+        ) {
+          return;
+        }
       }
       finally {
         setSaving(
@@ -361,6 +386,28 @@ export default function CharacterPreviewScreen() {
             </Pressable>
           </Link>
           {/* CHARACTER_V86_PREVIEW_TEXT_FIX */}
+          {/* CHARACTER_V97B_PROGRESSION_DIAGNOSTICS_ENTRY */}
+          <Link
+            href={
+              '/character-progression-diagnostics' as never
+            }
+            asChild
+          >
+            <Pressable
+              style={
+                styles.diagnosticsButton
+              }
+            >
+              <Text
+                style={
+                  styles.diagnosticsButtonText
+                }
+              >
+                {'\uD68D\uB4DD\u00B7\uC131\uC7A5 \uC9C4\uB2E8'}
+              </Text>
+            </Pressable>
+          </Link>
+
           {/* CHARACTER_V96C_RELATIONSHIP_DIAGNOSTICS_ENTRY */}
           <Link
             href={
@@ -536,10 +583,33 @@ export default function CharacterPreviewScreen() {
               }
             </Text>
 
+            {/* CHARACTER_V97B_ACQUISITION_STATUS */}
+            <Text
+              style={
+                styles.current
+              }
+            >
+              {
+                !progression.ready
+                  ? '\uD68D\uB4DD \uC815\uBCF4 \uBD88\uB7EC\uC624\uB294 \uC911'
+                  : isAcquired
+                    ? (
+                        '\uD68D\uB4DD\uB428  \u00B7  Lv.' +
+                        progressionSnapshot.growthLevel +
+                        '  \u00B7  ' +
+                        progressionSnapshot.growthXp +
+                        ' XP'
+                      )
+                    : '\uC7A0\uAE40  \u00B7  \uD68D\uB4DD \uC870\uAC74\uC774 \uD544\uC694\uD569\uB2C8\uB2E4'
+              }
+            </Text>
+
             <Pressable
               disabled={
                 saving ||
-                isCurrent
+                isCurrent ||
+                !progression.ready ||
+                !isAcquired
               }
               onPress={
                 () => {
@@ -550,7 +620,9 @@ export default function CharacterPreviewScreen() {
                 styles.save,
                 (
                   saving ||
-                  isCurrent
+                  isCurrent ||
+                  !progression.ready ||
+                  !isAcquired
                 ) &&
                   styles.disabled,
               ]}
@@ -561,11 +633,15 @@ export default function CharacterPreviewScreen() {
                 }
               >
                 {
-                  saving
-                    ? '\uC800\uC7A5 \uC911...'
-                    : isCurrent
-                      ? '\uD604\uC7A5 \uC0AC\uC6A9 \uC911'
-                      : 'Home\uC5D0 \uC0AC\uC6A9'
+                  !progression.ready
+                    ? '\uD68D\uB4DD \uD655\uC778 \uC911...'
+                    : !isAcquired
+                      ? '\uC7A0\uAE34 \uCE90\uB9AD\uD130'
+                      : saving
+                        ? '\uC800\uC7A5 \uC911...'
+                        : isCurrent
+                          ? '\uD604\uC7AC \uC0AC\uC6A9 \uC911'
+                          : 'Home\uC5D0 \uC0AC\uC6A9'
                 }
               </Text>
             </Pressable>

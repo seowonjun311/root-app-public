@@ -9,6 +9,11 @@ import {
   CHARACTER_IDS,
   type CharacterId,
 } from '../constants/characterAssets';
+import {
+  getCharacterProgressionSnapshot,
+  loadCharacterProgression,
+  seedLegacySelectedCharacterAcquisition,
+} from './characterProgression';
 
 const STORAGE_KEY =
   'selected_character_v1';
@@ -111,6 +116,29 @@ export async function loadSelectedCharacter():
         }
       }
 
+      // CHARACTER_V97B_LEGACY_SELECTION_SEED
+      // Preserve the character this existing user already had selected
+      // before acquisition locks become authoritative.
+      await loadCharacterProgression();
+
+      await seedLegacySelectedCharacterAcquisition(
+        next
+      );
+
+      if (
+        !getCharacterProgressionSnapshot(
+          next
+        ).acquired
+      ) {
+        next =
+          DEFAULT_CHARACTER;
+
+        await AsyncStorage.setItem(
+          STORAGE_KEY,
+          next
+        );
+      }
+
       cachedCharacter =
         next;
 
@@ -135,7 +163,29 @@ export async function loadSelectedCharacter():
 
 export async function saveSelectedCharacter(
   characterId: CharacterId
-): Promise<void> {
+): Promise<boolean> {
+  // CHARACTER_V97B_ACQUISITION_SELECTION_GATE
+  await loadCharacterProgression();
+
+  if (
+    !getCharacterProgressionSnapshot(
+      characterId
+    ).acquired
+  ) {
+    if (
+      __DEV__
+    ) {
+      console.warn(
+        '[CHARACTER V97] locked selection rejected',
+        {
+          characterId,
+        }
+      );
+    }
+
+    return false;
+  }
+
   await AsyncStorage.setItem(
     STORAGE_KEY,
     characterId
@@ -159,6 +209,8 @@ export async function saveSelectedCharacter(
       }
     );
   }
+  return true;
+
 }
 
 export function subscribeSelectedCharacter(
@@ -247,7 +299,7 @@ export function useSelectedCharacter() {
         characterId:
           CharacterId
       ) => {
-        await saveSelectedCharacter(
+        return saveSelectedCharacter(
           characterId
         );
       },

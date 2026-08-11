@@ -14,6 +14,10 @@ import {
   type CharacterGrowthLevel,
   type CharacterGrowthReward,
 } from '../constants/characterProgression';
+import {
+  useEffect,
+  useState,
+} from 'react';
 
 // CHARACTER_V97A_PROGRESSION_PERSISTENCE
 const STORAGE_KEY =
@@ -958,3 +962,95 @@ const _characterProgressionRegistryContract:
   CHARACTER_IDS;
 
 void _characterProgressionRegistryContract;
+// CHARACTER_V97B_ACQUISITION_QUERY
+export function isCharacterAcquired(
+  characterId:
+    CharacterId
+): boolean {
+  return getCharacterProgressionSnapshot(
+    characterId
+  ).acquired;
+}
+
+// CHARACTER_V97B_PROGRESSION_REACTIVE_HOOK
+export function useCharacterProgression() {
+  const [
+    progressionReady,
+    setProgressionReady,
+  ] =
+    useState(
+      loaded
+    );
+
+  const [
+    revision,
+    setRevision,
+  ] =
+    useState(
+      0
+    );
+
+  useEffect(
+    () => {
+      let cancelled =
+        false;
+
+      const unsubscribe =
+        subscribeCharacterProgression(
+          () => {
+            if (
+              cancelled
+            ) {
+              return;
+            }
+
+            setProgressionReady(
+              true
+            );
+
+            setRevision(
+              (current) =>
+                current + 1
+            );
+          }
+        );
+
+      void loadCharacterProgression()
+        .then(
+          () => {
+            if (
+              cancelled
+            ) {
+              return;
+            }
+
+            setProgressionReady(
+              true
+            );
+
+            setRevision(
+              (current) =>
+                current + 1
+            );
+          }
+        );
+
+      return () => {
+        cancelled =
+          true;
+
+        unsubscribe();
+      };
+    },
+    []
+  );
+
+  void revision;
+
+  return {
+    ready:
+      progressionReady,
+    snapshots:
+      getAllCharacterProgressionSnapshots(),
+  };
+}

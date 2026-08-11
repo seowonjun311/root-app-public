@@ -31,6 +31,7 @@ const CHARACTER_IDS:
   'moru',
   'mongsil',
   'dami',
+  'pio',
 ];
 
 const LABEL:
@@ -38,7 +39,9 @@ const LABEL:
   rooty: '\uB8E8\uD2F0',
   moru: '\uBAA8\uB8E8',
   mongsil: '\uBABD\uC2E4',
-  dami: '\uB2E4\uBBF8',
+  dami: '\uB2E4\uBBF8',  // CHARACTER_V90B_PIO_IMAGE_DIAGNOSTICS
+  pio: '\uD53C\uC624',
+
 };
 
 const DIRECT_STANDARD_SOURCE:
@@ -51,7 +54,9 @@ const DIRECT_STANDARD_SOURCE:
   mongsil:
     require('../characters/mongsil/mongsil_idle_01.png'),
   dami:
-    require('../characters/dami/dami_idle_01.png'),
+    require('../characters/dami/dami_idle_01.png'),  pio:
+    require('../characters/pio/pio_idle_01.png'),
+
 };
 
 type AssetProbeProps = {

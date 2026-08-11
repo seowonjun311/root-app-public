@@ -38,7 +38,9 @@ const CHARACTER_LABEL:
   rooty: '\uB8E8\uD2F0',
   moru: '\uBAA8\uB8E8',
   mongsil: '\uBABD\uC2E4',
-  dami: '\uB2E4\uBBF8',
+  dami: '\uB2E4\uBBF8',  // CHARACTER_V90B_PIO_DEVICE_VALIDATION_SCREEN
+  pio: '\uD53C\uC624',
+
 };
 
 const CHECK_LABEL:

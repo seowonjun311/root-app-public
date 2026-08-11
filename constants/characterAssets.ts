@@ -11,6 +11,7 @@ export const CHARACTER_IDS = [
   'moru',
   'mongsil',
   'dami',
+  'pio',
 ] as const;
 
 export type CharacterId =
@@ -153,6 +154,46 @@ const DAMI_CHARACTER_FRAMES:
   ],
 };
 
+// CHARACTER_V90B_PIO_FRAME_REGISTRY
+const PIO_CHARACTER_FRAMES:
+  CharacterFrameSet = {
+  idle: [
+    require('../characters/pio/pio_idle_01.png'),
+    require('../characters/pio/pio_idle_02.png'),
+    require('../characters/pio/pio_idle_03.png'),
+    require('../characters/pio/pio_idle_04.png'),
+  ],
+  walk: [
+    require('../characters/pio/pio_walk_01.png'),
+    require('../characters/pio/pio_walk_02.png'),
+    require('../characters/pio/pio_walk_03.png'),
+    require('../characters/pio/pio_walk_04.png'),
+  ],
+  sit: [
+    require('../characters/pio/pio_sit_01.png'),
+    require('../characters/pio/pio_sit_02.png'),
+    require('../characters/pio/pio_sit_03.png'),
+    require('../characters/pio/pio_sit_04.png'),
+  ],
+  sleep: [
+    require('../characters/pio/pio_sleep_01.png'),
+    require('../characters/pio/pio_sleep_02.png'),
+    require('../characters/pio/pio_sleep_03.png'),
+    require('../characters/pio/pio_sleep_04.png'),
+    require('../characters/pio/pio_sleep_05.png'),
+  ],
+  happy: [
+    require('../characters/pio/pio_happy_01.png'),
+    require('../characters/pio/pio_happy_02.png'),
+    require('../characters/pio/pio_happy_03.png'),
+    require('../characters/pio/pio_happy_04.png'),
+  ],
+  touch: [
+    require('../characters/pio/pio_touch_01.png'),
+    require('../characters/pio/pio_touch_02.png'),
+  ],
+};
+
 export const CHARACTER_ASSET_REGISTRY:
   Record<CharacterId, CharacterAssetDefinition> = {
   // CHARACTER_V88_REGISTRY_DISPLAY_NAMES
@@ -183,7 +224,16 @@ export const CHARACTER_ASSET_REGISTRY:
     frames: DAMI_CHARACTER_FRAMES,
     referenceSheet:
       require('../characters/dami/dami_reference_sheet.png'),
+  },  // CHARACTER_V90B_PIO_ASSET_DEFINITION
+  pio: {
+    id: 'pio',
+    displayName: '\uD53C\uC624',
+    frameProfile: 'standard-23',
+    frames: PIO_CHARACTER_FRAMES,
+    referenceSheet:
+      require('../characters/pio/pio_reference_sheet.png'),
   },
+
 };
 
 export function getCharacterAssetDefinition(

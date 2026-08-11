@@ -402,8 +402,11 @@ function createSignatureCheck(
   }
   else if (
     characterId ===
-    'moru'
+      'moru' ||
+    characterId ===
+      'pio'
   ) {
+    // CHARACTER_V90B_PIO_PERSONALITY_VALIDATION
     pass =
       delta.lookAround >
         DELTA_TOLERANCE &&

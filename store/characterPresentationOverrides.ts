@@ -46,6 +46,7 @@ const STANDARD_IDS:
   'moru',
   'mongsil',
   'dami',
+  'pio',
 ];
 
 const DEFAULT_OVERRIDE:
@@ -78,6 +79,10 @@ function createDefaultMap():
       ...DEFAULT_OVERRIDE,
     },
     dami: {
+      ...DEFAULT_OVERRIDE,
+    },
+    // CHARACTER_V90B_PIO_PRESENTATION_OVERRIDE
+    pio: {
       ...DEFAULT_OVERRIDE,
     },
   };

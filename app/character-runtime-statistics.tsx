@@ -40,7 +40,9 @@ const CHARACTER_LABEL:
   rooty: '\uB8E8\uD2F0',
   moru: '\uBAA8\uB8E8',
   mongsil: '\uBABD\uC2E4',
-  dami: '\uB2E4\uBBF8',
+  dami: '\uB2E4\uBBF8',  // CHARACTER_V90B_PIO_RUNTIME_STATISTICS_SCREEN
+  pio: '\uD53C\uC624',
+
 };
 
 const SOCIAL_CHANNELS:

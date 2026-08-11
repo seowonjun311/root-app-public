@@ -114,6 +114,9 @@ function createEmptyMap():
       createEmptyRecord(),
     dami:
       createEmptyRecord(),
+    // CHARACTER_V90B_PIO_DEVICE_VALIDATION
+    pio:
+      createEmptyRecord(),
   };
 }
 
@@ -248,6 +251,10 @@ function cloneMap(
     dami:
       cloneRecord(
         value.dami
+      ),
+    pio:
+      cloneRecord(
+        value.pio
       ),
   };
 }

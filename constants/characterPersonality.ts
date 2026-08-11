@@ -79,7 +79,21 @@ export const CHARACTER_PERSONALITY:
       passiveAttention: 1.5,
       bondedFollowUpTouch: 1.4,
     },
+  },  // CHARACTER_V90B_PIO_PERSONALITY
+  pio: {
+    id: 'curious-active',
+    restMultipliers: {
+      lookAround: 1.25,
+      sitRest: 0.95,
+      nap: 0.7,
+    },
+    socialChanceMultipliers: {
+      spontaneousHappy: 1.35,
+      passiveAttention: 0.85,
+      bondedFollowUpTouch: 0.9,
+    },
   },
+
 };
 
 export function getCharacterPersonalityProfile(

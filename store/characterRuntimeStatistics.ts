@@ -73,6 +73,9 @@ function createEmptyMap():
       emptyCharacterStatistics(),
     dami:
       emptyCharacterStatistics(),
+    // CHARACTER_V90B_PIO_RUNTIME_STATISTICS
+    pio:
+      emptyCharacterStatistics(),
   };
 }
 
@@ -439,6 +442,10 @@ function cloneMap(
     dami:
       cloneCharacterStatistics(
         value.dami
+      ),
+    pio:
+      cloneCharacterStatistics(
+        value.pio
       ),
   };
 }

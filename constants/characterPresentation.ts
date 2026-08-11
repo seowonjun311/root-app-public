@@ -81,7 +81,16 @@ export const CHARACTER_PRESENTATION:
     previewTranslateY: 0,
     frameDurationMs:
       STANDARD_FRAME_DURATION_MS,
+  },  // CHARACTER_V90B_PIO_PRESENTATION
+  pio: {
+    homeScale: 1.18,
+    homeTranslateY: 5,
+    previewScale: 1,
+    previewTranslateY: 0,
+    frameDurationMs:
+      STANDARD_FRAME_DURATION_MS,
   },
+
 };
 
 export function getCharacterPresentationProfile(

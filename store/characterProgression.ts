@@ -1054,3 +1054,82 @@ export function useCharacterProgression() {
       getAllCharacterProgressionSnapshots(),
   };
 }
+// CHARACTER_V97C_SERIALIZED_INTERACTION_GROWTH
+export type CharacterGrowthInteraction =
+  | 'tap'
+  | 'longPress';
+
+let characterGrowthInteractionQueue:
+  Promise<void> =
+  Promise.resolve();
+
+export function recordCharacterGrowthInteraction(
+  characterId:
+    CharacterId,
+  interaction:
+    CharacterGrowthInteraction
+): Promise<void> {
+  const amount =
+    interaction ===
+      'longPress'
+      ? 2
+      : 1;
+
+  // Capture characterId and amount now, then serialize the mutation.
+  // This prevents rapid taps from reading the same pre-increment XP value.
+  characterGrowthInteractionQueue =
+    characterGrowthInteractionQueue
+      .then(
+        async () => {
+          const result =
+            await addCharacterGrowthXp(
+              characterId,
+              amount
+            );
+
+          if (
+            __DEV__
+          ) {
+            console.log(
+              '[CHARACTER V97] growth interaction',
+              {
+                characterId,
+                interaction,
+                amount,
+                acquired:
+                  result.acquired,
+                beforeXp:
+                  result.beforeXp,
+                afterXp:
+                  result.afterXp,
+                beforeLevel:
+                  result.beforeLevel,
+                afterLevel:
+                  result.afterLevel,
+                newlyReachedLevels:
+                  result.newlyReachedLevels,
+              }
+            );
+          }
+        }
+      )
+      .catch(
+        (error) => {
+          if (
+            __DEV__
+          ) {
+            console.warn(
+              '[CHARACTER V97] growth interaction failed',
+              {
+                characterId,
+                interaction,
+                amount,
+                error,
+              }
+            );
+          }
+        }
+      );
+
+  return characterGrowthInteractionQueue;
+}

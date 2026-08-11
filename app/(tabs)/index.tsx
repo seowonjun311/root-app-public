@@ -180,6 +180,12 @@ import {
   recordSelectedCharacterRelationshipInteraction,
   seedCharacterRelationshipFromLegacyAffection,
 } from '../../store/characterRelationship';
+import {
+  recordCharacterGrowthInteraction,
+} from '../../store/characterProgression';
+import {
+  getSelectedCharacterSnapshot as getV97SelectedCharacterSnapshot,
+} from '../../store/selectedCharacter';
 
 const firebaseApp =
   getApp();
@@ -3755,6 +3761,12 @@ const handleRootyPress =
       'tap'
     );
 
+    // CHARACTER_V97C_SELECTED_GROWTH_TAP
+    void recordCharacterGrowthInteraction(
+      getV97SelectedCharacterSnapshot(),
+      'tap'
+    );
+
     const interactionCondition =
       rootyConditionRef.current;
 
@@ -3868,6 +3880,12 @@ const handleRootyLongPress =
 
     // CHARACTER_V96B_SELECTED_RELATIONSHIP_LONG_PRESS
     recordSelectedCharacterRelationshipInteraction(
+      'longPress'
+    );
+
+    // CHARACTER_V97C_SELECTED_GROWTH_LONG_PRESS
+    void recordCharacterGrowthInteraction(
+      getV97SelectedCharacterSnapshot(),
       'longPress'
     );
 cancelAnimation(

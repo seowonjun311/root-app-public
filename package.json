@@ -10,7 +10,8 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "generate:exploration-home-names": "node scripts/generate-exploration-home-names.mjs",
-    "verify:exploration-home-names": "node scripts/generate-exploration-home-names.mjs --check"
+    "verify:exploration-home-names": "node scripts/generate-exploration-home-names.mjs --check",
+    "verify:character-assets": "node scripts/verify-standard-character-assets.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

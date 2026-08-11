@@ -18,6 +18,9 @@ import {
   useEffect,
   useState,
 } from 'react';
+import {
+  grantCharacterGrowthMilestoneRootPoints,
+} from './characterGrowthPointReward';
 
 // CHARACTER_V97A_PROGRESSION_PERSISTENCE
 const STORAGE_KEY =
@@ -1087,6 +1090,12 @@ export function recordCharacterGrowthInteraction(
               amount
             );
 
+          // CHARACTER_V97D_GROWTH_REWARD_SETTLEMENT
+          const rewardSettlements =
+            await settleCharacterGrowthMilestoneRewards(
+              characterId
+            );
+
           if (
             __DEV__
           ) {
@@ -1108,6 +1117,7 @@ export function recordCharacterGrowthInteraction(
                   result.afterLevel,
                 newlyReachedLevels:
                   result.newlyReachedLevels,
+                rewardSettlements,
               }
             );
           }
@@ -1132,4 +1142,113 @@ export function recordCharacterGrowthInteraction(
       );
 
   return characterGrowthInteractionQueue;
+}
+// CHARACTER_V97D_GROWTH_REWARD_SETTLEMENT_API
+export type CharacterGrowthRewardSettlement = {
+  level:
+    CharacterGrowthLevel;
+  pointReward: number;
+  newlyGranted: boolean;
+  markedClaimed: boolean;
+  grantId: string;
+  rootPointAdjustment: number;
+};
+
+export async function settleCharacterGrowthMilestoneRewards(
+  characterId:
+    CharacterId
+): Promise<
+  CharacterGrowthRewardSettlement[]
+> {
+  await loadCharacterProgression();
+
+  const pending =
+    getCharacterUnclaimedGrowthRewards(
+      characterId
+    );
+
+  const settled:
+    CharacterGrowthRewardSettlement[] =
+    [];
+
+  for (
+    const reward of
+    pending
+  ) {
+    try {
+      const grant =
+        await grantCharacterGrowthMilestoneRootPoints(
+          characterId,
+          reward.level,
+          reward.pointReward
+        );
+
+      const markedClaimed =
+        await markCharacterGrowthRewardClaimed(
+          characterId,
+          reward.level
+        );
+
+      settled.push({
+        level:
+          reward.level,
+        pointReward:
+          reward.pointReward,
+        newlyGranted:
+          grant.newlyGranted,
+        markedClaimed,
+        grantId:
+          grant.grantId,
+        rootPointAdjustment:
+          grant.rootPointAdjustment,
+      });
+
+      if (
+        __DEV__
+      ) {
+        console.log(
+          '[CHARACTER V97] growth reward settled',
+          {
+            characterId,
+            level:
+              reward.level,
+            pointReward:
+              reward.pointReward,
+            newlyGranted:
+              grant.newlyGranted,
+            markedClaimed,
+            grantId:
+              grant.grantId,
+            rootPointAdjustment:
+              grant.rootPointAdjustment,
+          }
+        );
+      }
+    }
+    catch (
+      error
+    ) {
+      if (
+        __DEV__
+      ) {
+        console.warn(
+          '[CHARACTER V97] growth reward pending after grant failure',
+          {
+            characterId,
+            level:
+              reward.level,
+            pointReward:
+              reward.pointReward,
+            error,
+          }
+        );
+      }
+
+      // Do not mark claimed. The next interaction retries every unclaimed
+      // milestone, while the ROOT reward ledger prevents duplicate points.
+      break;
+    }
+  }
+
+  return settled;
 }

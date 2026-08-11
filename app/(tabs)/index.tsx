@@ -186,6 +186,9 @@ import {
 import {
   getSelectedCharacterSnapshot as getV97SelectedCharacterSnapshot,
 } from '../../store/selectedCharacter';
+import {
+  subscribeCharacterGrowthPointRewardRootData,
+} from '../../store/characterGrowthPointReward';
 
 const firebaseApp =
   getApp();
@@ -3736,6 +3739,22 @@ useEffect(() => {
     );
   };
 }, [rootyCycleKey, rootyRuntimeReady, rootyAppActive, rootyHomeFocused]);
+
+// CHARACTER_V97D_HOME_POINT_REWARD_SYNC
+useEffect(
+  () => {
+    return subscribeCharacterGrowthPointRewardRootData(
+      (
+        nextRootData
+      ) => {
+        setOnboardingData(
+          nextRootData
+        );
+      }
+    );
+  },
+  []
+);
 
 const handleRootyPress =
   () => {

@@ -205,6 +205,7 @@ import {
 } from '../../store/characterRelationship';
 import CharacterHomeDialogueBubble from '../../components/characters/CharacterHomeDialogueBubble';
 import {
+  considerCharacterAutonomousDialogue,
   emitCharacterMicroDialogue,
 } from '../../store/characterMicroDialogue';
 
@@ -3096,7 +3097,20 @@ useEffect(() => {
 
       faceRootyForAction('idle');
 
-      applyRootyAction(
+            // CHARACTER_V99D_AUTONOMOUS_IDLE
+      considerCharacterAutonomousDialogue({
+        characterId:
+          getV97SelectedCharacterSnapshot(),
+        context:
+          'idle',
+        condition:
+          rootyConditionRef.current,
+        relationshipPoints:
+          getSelectedCharacterRelationshipSnapshot()
+            .points,
+      });
+
+applyRootyAction(
         'idle'
       );
 
@@ -3118,7 +3132,20 @@ useEffect(() => {
         return;
       }
 
-      applyRootyAction(
+            // CHARACTER_V99D_AUTONOMOUS_LOOK_AROUND
+      considerCharacterAutonomousDialogue({
+        characterId:
+          getV97SelectedCharacterSnapshot(),
+        context:
+          'lookAround',
+        condition:
+          rootyConditionRef.current,
+        relationshipPoints:
+          getSelectedCharacterRelationshipSnapshot()
+            .points,
+      });
+
+applyRootyAction(
         'idle'
       );
 
@@ -3197,7 +3224,20 @@ useEffect(() => {
 
           faceRootyForAction('sleep');
 
-          applyRootyAction(
+                    // CHARACTER_V99D_AUTONOMOUS_SLEEP
+          considerCharacterAutonomousDialogue({
+            characterId:
+              getV97SelectedCharacterSnapshot(),
+            context:
+              'sleep',
+            condition:
+              rootyConditionRef.current,
+            relationshipPoints:
+              getSelectedCharacterRelationshipSnapshot()
+                .points,
+          });
+
+applyRootyAction(
             'sleep'
           );
 
@@ -3257,7 +3297,20 @@ useEffect(() => {
 
       faceRootyForAction('sit');
 
-      applyRootyAction(
+            // CHARACTER_V99D_AUTONOMOUS_SIT
+      considerCharacterAutonomousDialogue({
+        characterId:
+          getV97SelectedCharacterSnapshot(),
+        context:
+          'sit',
+        condition:
+          rootyConditionRef.current,
+        relationshipPoints:
+          getSelectedCharacterRelationshipSnapshot()
+            .points,
+      });
+
+applyRootyAction(
         'sit'
       );
 

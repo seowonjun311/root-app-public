@@ -112,6 +112,15 @@ function expectedRuntimeNames(
     }
   }
 
+  // CHARACTER_V92_TORI_STANDARD22_EXCEPTION
+  // Tori intentionally uses 3 happy frames, for 22 runtime frames total.
+  if (characterId === 'tori') {
+    return names.filter(
+      (name) =>
+        name !== 'tori_happy_04.png'
+    );
+  }
+
   return names;
 }
 
@@ -336,12 +345,17 @@ function validateCharacter(
         )
     );
 
+  const expectedRuntimeCount =
+    characterId === 'tori'
+      ? EXPECTED_RUNTIME_COUNT - 1
+      : EXPECTED_RUNTIME_COUNT;
+
   if (
     runtimeNames.length !==
-      EXPECTED_RUNTIME_COUNT
+      expectedRuntimeCount
   ) {
     fail(
-      `${characterId}: expected ${EXPECTED_RUNTIME_COUNT} runtime frames, found ${runtimeNames.length}`
+      `${characterId}: expected ${expectedRuntimeCount} runtime frames, found ${runtimeNames.length}`
     );
   }
 
@@ -545,7 +559,7 @@ if (
 }
 
 console.log(
-  `STANDARD-23 PREFLIGHT: ${characterIds.join(', ')}`
+  `STANDARD CHARACTER PREFLIGHT: ${characterIds.join(', ')}`
 );
 
 const failures = [];
@@ -598,6 +612,6 @@ if (
     1;
 } else {
   console.log(
-    'PASS - All requested standard-23 character assets are ready for registry work.'
+    'PASS - All requested standard character assets are ready for registry work.'
   );
 }

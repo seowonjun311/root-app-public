@@ -1,11 +1,13 @@
 import React, {
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import {
   Image,
   View,
+  type ImageSourcePropType,
   type ImageStyle,
   type StyleProp,
   type ViewStyle,
@@ -32,11 +34,259 @@ export type CharacterSpriteProps = {
   style?: StyleProp<ImageStyle>;
   testID?: string;
 };
+type StandardFrameBufferSlot =
+  | 'a'
+  | 'b';
+
+type StandardFrameBufferProps = {
+  source: ImageSourcePropType;
+  size: number;
+  testID?: string;
+};
+
+function StandardFrameDoubleBuffer({
+  source,
+  size,
+  testID,
+}: StandardFrameBufferProps) {
+  const desiredSourceRef =
+    useRef<ImageSourcePropType>(
+      source
+    );
+
+  const [
+    slotA,
+    setSlotA,
+  ] =
+    useState<ImageSourcePropType>(
+      source
+    );
+
+  const [
+    slotB,
+    setSlotB,
+  ] =
+    useState<ImageSourcePropType>(
+      source
+    );
+
+  const [
+    slotALoaded,
+    setSlotALoaded,
+  ] =
+    useState(false);
+
+  const [
+    slotBLoaded,
+    setSlotBLoaded,
+  ] =
+    useState(false);
+
+  const [
+    activeSlot,
+    setActiveSlot,
+  ] =
+    useState<StandardFrameBufferSlot>(
+      'a'
+    );
+
+  useEffect(
+    () => {
+      desiredSourceRef.current =
+        source;
+
+      const activeSource =
+        activeSlot === 'a'
+          ? slotA
+          : slotB;
+
+      if (
+        source ===
+        activeSource
+      ) {
+        return;
+      }
+
+      if (
+        activeSlot === 'a'
+      ) {
+        if (
+          slotB ===
+          source
+        ) {
+          if (
+            slotBLoaded
+          ) {
+            setActiveSlot(
+              'b'
+            );
+          }
+
+          return;
+        }
+
+        setSlotBLoaded(
+          false
+        );
+
+        setSlotB(
+          source
+        );
+
+        return;
+      }
+
+      if (
+        slotA ===
+        source
+      ) {
+        if (
+          slotALoaded
+        ) {
+          setActiveSlot(
+            'a'
+          );
+        }
+
+        return;
+      }
+
+      setSlotALoaded(
+        false
+      );
+
+      setSlotA(
+        source
+      );
+    },
+    [
+      source,
+      activeSlot,
+      slotA,
+      slotB,
+      slotALoaded,
+      slotBLoaded,
+    ]
+  );
+
+  const handleLoaded =
+    (
+      slot:
+        StandardFrameBufferSlot,
+      loadedSource:
+        ImageSourcePropType
+    ) => {
+      if (
+        slot === 'a'
+      ) {
+        setSlotALoaded(
+          true
+        );
+      }
+      else {
+        setSlotBLoaded(
+          true
+        );
+      }
+
+      if (
+        loadedSource !==
+        desiredSourceRef.current
+      ) {
+        return;
+      }
+
+      setActiveSlot(
+        slot
+      );
+    };
+
+  const imageBaseStyle = {
+    position:
+      'absolute' as const,
+    left: 0,
+    top: 0,
+    width: size,
+    height: size,
+  };
+
+  return (
+    <View
+      testID={
+        testID
+      }
+      pointerEvents="none"
+      style={{
+        width: size,
+        height: size,
+      }}
+    >
+      <Image
+        key={
+          `standard-buffer-a-${String(slotA)}`
+        }
+        source={
+          slotA
+        }
+        fadeDuration={0}
+        resizeMode="contain"
+        onLoad={
+          () => {
+            handleLoaded(
+              'a',
+              slotA
+            );
+          }
+        }
+        style={[
+          imageBaseStyle,
+          {
+            opacity:
+              activeSlot ===
+                'a'
+                ? 1
+                : 0,
+          },
+        ]}
+      />
+
+      <Image
+        key={
+          `standard-buffer-b-${String(slotB)}`
+        }
+        source={
+          slotB
+        }
+        fadeDuration={0}
+        resizeMode="contain"
+        onLoad={
+          () => {
+            handleLoaded(
+              'b',
+              slotB
+            );
+          }
+        }
+        style={[
+          imageBaseStyle,
+          {
+            opacity:
+              activeSlot ===
+                'b'
+                ? 1
+                : 0,
+          },
+        ]}
+      />
+    </View>
+  );
+}
 
 // CHARACTER_V69_CHARACTER_SPRITE_COMPATIBILITY_PREVIEW
 // CHARACTER_V73_PLAYBACK_STABILITY_ENGINE
 // CHARACTER_V82_STANDARD_FRAME_CANVAS_NORMALIZATION
 // CHARACTER_V84_ANDROID_FRAME_FADE_FIX
+// CHARACTER_V85_PERSISTENT_DOUBLE_BUFFER
 export function CharacterSprite({
   characterId,
   action,
@@ -192,15 +442,11 @@ export function CharacterSprite({
           style as StyleProp<ViewStyle>,
         ]}
       >
-        <Image
+        <StandardFrameDoubleBuffer
+          key={characterId}
           testID={testID}
           source={source}
-          fadeDuration={0}
-          resizeMode="contain"
-          style={{
-            width: normalizedSize,
-            height: normalizedSize,
-          }}
+          size={normalizedSize}
         />
       </View>
     );

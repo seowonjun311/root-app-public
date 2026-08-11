@@ -101,9 +101,10 @@ export const CHARACTER_PRESENTATION:
       STANDARD_FRAME_DURATION_MS,
   },
   // CHARACTER_V92B_TORI_PRESENTATION
+  // CHARACTER_V94C_TORI_SIZE_CALIBRATION
   // Initial Tori device baseline. V72 remains available for final tuning.
   tori: {
-    homeScale: 1.1,
+    homeScale: 1.16,
     homeTranslateY: 5,
     previewScale: 1,
     previewTranslateY: 0,

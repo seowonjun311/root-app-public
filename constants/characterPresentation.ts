@@ -90,6 +90,16 @@ export const CHARACTER_PRESENTATION:
     frameDurationMs:
       STANDARD_FRAME_DURATION_MS,
   },
+  // CHARACTER_V91B_NURI_PRESENTATION
+  // Initial device baseline. V72 remains available for final tuning.
+  nuri: {
+    homeScale: 1.12,
+    homeTranslateY: 5,
+    previewScale: 1,
+    previewTranslateY: 0,
+    frameDurationMs:
+      STANDARD_FRAME_DURATION_MS,
+  },
 
 };
 

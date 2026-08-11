@@ -47,6 +47,7 @@ const STANDARD_IDS:
   'mongsil',
   'dami',
   'pio',
+  'nuri',
 ];
 
 const DEFAULT_OVERRIDE:
@@ -83,6 +84,10 @@ function createDefaultMap():
     },
     // CHARACTER_V90B_PIO_PRESENTATION_OVERRIDE
     pio: {
+      ...DEFAULT_OVERRIDE,
+    },
+    // CHARACTER_V91B_NURI_PRESENTATION_OVERRIDE
+    nuri: {
       ...DEFAULT_OVERRIDE,
     },
   };

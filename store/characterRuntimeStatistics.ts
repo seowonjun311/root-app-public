@@ -76,6 +76,9 @@ function createEmptyMap():
     // CHARACTER_V90B_PIO_RUNTIME_STATISTICS
     pio:
       emptyCharacterStatistics(),
+    // CHARACTER_V91B_NURI_RUNTIME_STATISTICS
+    nuri:
+      emptyCharacterStatistics(),
   };
 }
 
@@ -446,6 +449,10 @@ function cloneMap(
     pio:
       cloneCharacterStatistics(
         value.pio
+      ),
+    nuri:
+      cloneCharacterStatistics(
+        value.nuri
       ),
   };
 }

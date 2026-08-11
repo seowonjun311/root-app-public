@@ -34,6 +34,8 @@ const CHARACTER_LABEL:
   mongsil: '\uBABD\uC2E4',
   dami: '\uB2E4\uBBF8',  // CHARACTER_V90B_PIO_PERSONALITY_VALIDATION_SCREEN
   pio: '\uD53C\uC624',
+  // CHARACTER_V91B_NURI_PERSONALITY_VALIDATION_SCREEN
+  nuri: '\uB204\uB9AC',
 
 };
 
@@ -310,6 +312,11 @@ export default function CharacterPersonalityValidationScreen() {
       'pio'
     );
 
+  const nuri =
+    useCharacterRuntimeStatistics(
+      'nuri'
+    );
+
   const reports =
     useMemo(
       () => [
@@ -333,6 +340,10 @@ export default function CharacterPersonalityValidationScreen() {
           'pio',
           pio.statistics
         ),
+        validateCharacterPersonalityRuntime(
+          'nuri',
+          nuri.statistics
+        ),
       ],
       [
         rooty.statistics,
@@ -340,6 +351,7 @@ export default function CharacterPersonalityValidationScreen() {
         mongsil.statistics,
         dami.statistics,
         pio.statistics,
+        nuri.statistics,
       ]
     );
 
@@ -348,7 +360,8 @@ export default function CharacterPersonalityValidationScreen() {
     moru.ready &&
     mongsil.ready &&
     dami.ready &&
-    pio.ready;
+    pio.ready &&
+    nuri.ready;
 
   const passCount =
     reports.filter(

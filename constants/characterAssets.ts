@@ -12,6 +12,7 @@ export const CHARACTER_IDS = [
   'mongsil',
   'dami',
   'pio',
+  'nuri',
 ] as const;
 
 export type CharacterId =
@@ -194,6 +195,46 @@ const PIO_CHARACTER_FRAMES:
   ],
 };
 
+// CHARACTER_V91B_NURI_FRAME_REGISTRY
+const NURI_CHARACTER_FRAMES:
+  CharacterFrameSet = {
+  idle: [
+    require('../characters/nuri/nuri_idle_01.png'),
+    require('../characters/nuri/nuri_idle_02.png'),
+    require('../characters/nuri/nuri_idle_03.png'),
+    require('../characters/nuri/nuri_idle_04.png'),
+  ],
+  walk: [
+    require('../characters/nuri/nuri_walk_01.png'),
+    require('../characters/nuri/nuri_walk_02.png'),
+    require('../characters/nuri/nuri_walk_03.png'),
+    require('../characters/nuri/nuri_walk_04.png'),
+  ],
+  sit: [
+    require('../characters/nuri/nuri_sit_01.png'),
+    require('../characters/nuri/nuri_sit_02.png'),
+    require('../characters/nuri/nuri_sit_03.png'),
+    require('../characters/nuri/nuri_sit_04.png'),
+  ],
+  sleep: [
+    require('../characters/nuri/nuri_sleep_01.png'),
+    require('../characters/nuri/nuri_sleep_02.png'),
+    require('../characters/nuri/nuri_sleep_03.png'),
+    require('../characters/nuri/nuri_sleep_04.png'),
+    require('../characters/nuri/nuri_sleep_05.png'),
+  ],
+  happy: [
+    require('../characters/nuri/nuri_happy_01.png'),
+    require('../characters/nuri/nuri_happy_02.png'),
+    require('../characters/nuri/nuri_happy_03.png'),
+    require('../characters/nuri/nuri_happy_04.png'),
+  ],
+  touch: [
+    require('../characters/nuri/nuri_touch_01.png'),
+    require('../characters/nuri/nuri_touch_02.png'),
+  ],
+};
+
 export const CHARACTER_ASSET_REGISTRY:
   Record<CharacterId, CharacterAssetDefinition> = {
   // CHARACTER_V88_REGISTRY_DISPLAY_NAMES
@@ -232,6 +273,15 @@ export const CHARACTER_ASSET_REGISTRY:
     frames: PIO_CHARACTER_FRAMES,
     referenceSheet:
       require('../characters/pio/pio_reference_sheet.png'),
+  },
+  // CHARACTER_V91B_NURI_ASSET_DEFINITION
+  nuri: {
+    id: 'nuri',
+    displayName: '\uB204\uB9AC',
+    frameProfile: 'standard-23',
+    frames: NURI_CHARACTER_FRAMES,
+    referenceSheet:
+      require('../characters/nuri/nuri_reference_sheet.png'),
   },
 
 };

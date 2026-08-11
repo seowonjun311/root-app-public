@@ -117,6 +117,9 @@ function createEmptyMap():
     // CHARACTER_V90B_PIO_DEVICE_VALIDATION
     pio:
       createEmptyRecord(),
+    // CHARACTER_V91B_NURI_DEVICE_VALIDATION
+    nuri:
+      createEmptyRecord(),
   };
 }
 
@@ -255,6 +258,10 @@ function cloneMap(
     pio:
       cloneRecord(
         value.pio
+      ),
+    nuri:
+      cloneRecord(
+        value.nuri
       ),
   };
 }

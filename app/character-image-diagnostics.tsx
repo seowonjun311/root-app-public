@@ -32,6 +32,7 @@ const CHARACTER_IDS:
   'mongsil',
   'dami',
   'pio',
+  'nuri',
 ];
 
 const LABEL:
@@ -41,6 +42,8 @@ const LABEL:
   mongsil: '\uBABD\uC2E4',
   dami: '\uB2E4\uBBF8',  // CHARACTER_V90B_PIO_IMAGE_DIAGNOSTICS
   pio: '\uD53C\uC624',
+  // CHARACTER_V91B_NURI_IMAGE_DIAGNOSTICS
+  nuri: '\uB204\uB9AC',
 
 };
 
@@ -56,6 +59,8 @@ const DIRECT_STANDARD_SOURCE:
   dami:
     require('../characters/dami/dami_idle_01.png'),  pio:
     require('../characters/pio/pio_idle_01.png'),
+  nuri:
+    require('../characters/nuri/nuri_idle_01.png'),
 
 };
 

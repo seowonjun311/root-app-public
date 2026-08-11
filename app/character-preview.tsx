@@ -404,6 +404,28 @@ useCharacterAcquisitionCelebration();
             </Pressable>
           </Link>
           {/* CHARACTER_V86_PREVIEW_TEXT_FIX */}
+          {/* CHARACTER_V98D_CLOUD_DIAGNOSTICS_ENTRY */}
+          <Link
+            href={
+              '/character-cloud-diagnostics' as never
+            }
+            asChild
+          >
+            <Pressable
+              style={
+                styles.diagnosticsButton
+              }
+            >
+              <Text
+                style={
+                  styles.diagnosticsButtonText
+                }
+              >
+                {'\uD074\uB77C\uC6B0\uB4DC \uC9C4\uB2E8'}
+              </Text>
+            </Pressable>
+          </Link>
+
           {/* CHARACTER_V97B_PROGRESSION_DIAGNOSTICS_ENTRY */}
           <Link
             href={

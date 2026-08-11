@@ -57,6 +57,14 @@ import {
   saveRootOnboardingData
 } from '../store/rootMemory';
 import { useRootTheme } from '../store/rootTheme';
+import {
+  getCharacterAccountScopeSnapshot,
+  refreshCharacterAccountScope,
+  type CharacterAccountScopeSnapshot,
+} from '../store/characterAccountScope';
+import {
+  migrateGuestCharacterBundleToAuthenticatedUserIfEmpty,
+} from '../store/characterCloudSync';
 
 const firebaseApp =
   getApp();
@@ -1927,6 +1935,22 @@ await reconcileDailyDataAfterServerRead({
           }
         : null;
 
+    // CHARACTER_V98D_GUEST_CHARACTER_SCOPE_CAPTURE
+    const characterScopeBeforeGoogleLogin:
+      CharacterAccountScopeSnapshot | null =
+      previousRootBeforeLogin
+        ?.loginType ===
+        'guest'
+        ? getCharacterAccountScopeSnapshot()
+        : null;
+
+    const guestCharacterScopeBeforeGoogleLogin =
+      characterScopeBeforeGoogleLogin
+        ?.kind ===
+        'guest'
+        ? characterScopeBeforeGoogleLogin
+        : null;
+
     const normalizeRootArrays =
       (
         value: any
@@ -2060,6 +2084,54 @@ const result =
 
       const user =
         result.user;
+
+      // CHARACTER_V98D_GUEST_TO_GOOGLE_CHARACTER_HANDOFF
+      if (
+        guestCharacterScopeBeforeGoogleLogin
+      ) {
+        try {
+          const authenticatedCharacterScope =
+            refreshCharacterAccountScope();
+
+          const migratedCharacterState =
+            await migrateGuestCharacterBundleToAuthenticatedUserIfEmpty(
+              guestCharacterScopeBeforeGoogleLogin,
+              authenticatedCharacterScope
+            );
+
+          console.log(
+            'CHARACTER V98D GUEST HANDOFF',
+            {
+              guestScopeId:
+                guestCharacterScopeBeforeGoogleLogin
+                  .scopeId,
+              userScopeId:
+                authenticatedCharacterScope
+                  .scopeId,
+              migrated:
+                migratedCharacterState,
+            }
+          );
+        }
+        catch (error: any) {
+          // Character handoff must never block the existing ROOT login.
+          console.log(
+            'CHARACTER V98D GUEST HANDOFF SKIPPED',
+            {
+              code:
+                error
+                  ?.code ??
+                null,
+              message:
+                error
+                  ?.message ??
+                String(
+                  error
+                ),
+            }
+          );
+        }
+      }
 
       console.log(
         'GOOGLE UID',

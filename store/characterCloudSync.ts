@@ -1559,3 +1559,155 @@ subscribeCharacterAccountScope(
     );
   }
 );
+// CHARACTER_V98D_CLOUD_DIAGNOSTICS_API
+export type CharacterCloudDiagnosticsSnapshot = {
+  scope:
+    CharacterAccountScopeSnapshot;
+  localHasData: boolean;
+  localFieldCount: number;
+  dirty: boolean;
+  lastLocalMutationAt:
+    string | null;
+  lastCloudUpdatedAt:
+    string | null;
+  lastSyncAt:
+    string | null;
+  cloudExists: boolean;
+  cloudUpdatedAt:
+    string | null;
+  cloudOwnerUid:
+    string | null;
+  cloudScopeId:
+    string | null;
+  retryAttempt: number;
+  retryScheduled: boolean;
+  syncInFlight: boolean;
+};
+
+export async function getCharacterCloudDiagnosticsSnapshot():
+  Promise<CharacterCloudDiagnosticsSnapshot> {
+  const scope =
+    refreshCharacterAccountScope();
+
+  await ensureCharacterScopedStorageReady(
+    scope
+  );
+
+  const [
+    local,
+    meta,
+  ] =
+    await Promise.all([
+      readScopedCharacterLocalBundle(
+        scope
+      ),
+      readCloudSyncMeta(
+        scope
+      ),
+    ]);
+
+  let cloud:
+    CharacterCloudEnvelope | null =
+    null;
+
+  if (
+    scope.kind ===
+    'user'
+  ) {
+    try {
+      cloud =
+        await loadCharacterCloudEnvelope(
+          scope
+        );
+    }
+    catch (error) {
+      if (
+        __DEV__
+      ) {
+        console.warn(
+          '[CHARACTER V98] diagnostics cloud read failed',
+          error
+        );
+      }
+    }
+  }
+
+  const localFieldCount =
+    Object.values(
+      local
+    ).filter(
+      (
+        value
+      ) =>
+        value !==
+        null
+    ).length;
+
+  return {
+    scope,
+    localHasData:
+      hasAnyData(
+        local
+      ),
+    localFieldCount,
+    dirty:
+      meta
+        ?.dirty ??
+      false,
+    lastLocalMutationAt:
+      meta
+        ?.lastLocalMutationAt ??
+      null,
+    lastCloudUpdatedAt:
+      meta
+        ?.lastCloudUpdatedAt ??
+      null,
+    lastSyncAt:
+      meta
+        ?.lastSyncAt ??
+      null,
+    cloudExists:
+      cloud !==
+      null,
+    cloudUpdatedAt:
+      cloud
+        ?.updatedAt ??
+      null,
+    cloudOwnerUid:
+      cloud
+        ?.ownerUid ??
+      null,
+    cloudScopeId:
+      cloud
+        ?.scopeId ??
+      null,
+    retryAttempt:
+      cloudRetryAttempts.get(
+        scope.scopeId
+      ) ??
+      0,
+    retryScheduled:
+      cloudRetryTimers.has(
+        scope.scopeId
+      ),
+    syncInFlight:
+      cloudSyncQueues.has(
+        scope.scopeId
+      ),
+  };
+}
+
+// CHARACTER_V98D_MANUAL_CLOUD_RETRY
+export async function retryCharacterCloudSyncNow():
+  Promise<CharacterCloudSyncResult> {
+  const scope =
+    refreshCharacterAccountScope();
+
+  clearRetryTimer(
+    scope.scopeId
+  );
+
+  return runCharacterCloudSync(
+    scope
+  );
+}

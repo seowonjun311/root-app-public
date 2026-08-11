@@ -5,11 +5,14 @@ import React, {
 } from 'react';
 import {
   Image,
+  View,
   type ImageStyle,
   type StyleProp,
+  type ViewStyle,
 } from 'react-native';
 
 import {
+  getCharacterAssetDefinition,
   getCharacterFrames,
   type CharacterAction,
   type CharacterId,
@@ -32,6 +35,7 @@ export type CharacterSpriteProps = {
 
 // CHARACTER_V69_CHARACTER_SPRITE_COMPATIBILITY_PREVIEW
 // CHARACTER_V73_PLAYBACK_STABILITY_ENGINE
+// CHARACTER_V82_STANDARD_FRAME_CANVAS_NORMALIZATION
 export function CharacterSprite({
   characterId,
   action,
@@ -154,6 +158,50 @@ export function CharacterSprite({
 
   if (!source) {
     return null;
+  }
+
+  const frameProfile =
+    getCharacterAssetDefinition(
+      characterId
+    ).frameProfile;
+
+  const usesStandardCanvas =
+    frameProfile ===
+      'standard-23';
+
+  if (usesStandardCanvas) {
+    const normalizedSize =
+      Math.max(
+        1,
+        Math.round(
+          size * 1.6
+        )
+      );
+
+    return (
+      <View
+        style={[
+          {
+            width: size,
+            height: size,
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'visible',
+          },
+          style as StyleProp<ViewStyle>,
+        ]}
+      >
+        <Image
+          testID={testID}
+          source={source}
+          resizeMode="contain"
+          style={{
+            width: normalizedSize,
+            height: normalizedSize,
+          }}
+        />
+      </View>
+    );
   }
 
   return (

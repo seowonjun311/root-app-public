@@ -47,6 +47,10 @@ import {
 import {
   useCharacterProgression,
 } from '../store/characterProgression';
+import {
+  evaluateCharacterAcquisitionRewards,
+  getCharacterAcquisitionRequirementText,
+} from '../store/characterAcquisitionRewards';
 
 const ACTIONS:
   readonly CharacterAction[] = [
@@ -86,6 +90,14 @@ export default function CharacterPreviewScreen() {
   // CHARACTER_V97B_ACQUISITION_AWARE_PREVIEW
   const progression =
     useCharacterProgression();
+
+  // CHARACTER_V97E_PREVIEW_ACQUISITION_EVALUATION
+  useEffect(
+    () => {
+      void evaluateCharacterAcquisitionRewards();
+    },
+    []
+  );
 
   const [
     characterId,
@@ -600,7 +612,12 @@ export default function CharacterPreviewScreen() {
                         progressionSnapshot.growthXp +
                         ' XP'
                       )
-                    : '\uC7A0\uAE40  \u00B7  \uD68D\uB4DD \uC870\uAC74\uC774 \uD544\uC694\uD569\uB2C8\uB2E4'
+                    : (
+                        '\uC7A0\uAE40  \u00B7  ' +
+                        getCharacterAcquisitionRequirementText(
+                          characterId
+                        )
+                      )
               }
             </Text>
 

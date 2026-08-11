@@ -189,6 +189,9 @@ import {
 import {
   subscribeCharacterGrowthPointRewardRootData,
 } from '../../store/characterGrowthPointReward';
+import {
+  evaluateCharacterAcquisitionRewards,
+} from '../../store/characterAcquisitionRewards';
 
 const firebaseApp =
   getApp();
@@ -3740,6 +3743,14 @@ useEffect(() => {
   };
 }, [rootyCycleKey, rootyRuntimeReady, rootyAppActive, rootyHomeFocused]);
 
+// CHARACTER_V97E_HOME_ACQUISITION_EVALUATION
+useEffect(
+  () => {
+    void evaluateCharacterAcquisitionRewards();
+  },
+  []
+);
+
 // CHARACTER_V97D_HOME_POINT_REWARD_SYNC
 useEffect(
   () => {
@@ -3784,6 +3795,9 @@ const handleRootyPress =
     void recordCharacterGrowthInteraction(
       getV97SelectedCharacterSnapshot(),
       'tap'
+    ).then(
+      () =>
+        evaluateCharacterAcquisitionRewards()
     );
 
     const interactionCondition =
@@ -3906,6 +3920,9 @@ const handleRootyLongPress =
     void recordCharacterGrowthInteraction(
       getV97SelectedCharacterSnapshot(),
       'longPress'
+    ).then(
+      () =>
+        evaluateCharacterAcquisitionRewards()
     );
 cancelAnimation(
       foxX

@@ -196,6 +196,13 @@ import {
   useCharacterAcquisitionCelebration,
 } from '../../store/characterAcquisitionCelebration';
 import CharacterRewardPresentationOverlay from '../../components/characters/CharacterRewardPresentationOverlay';
+import CharacterHomeProgressFeedback from '../../components/characters/CharacterHomeProgressFeedback';
+import {
+  emitCharacterHomeInteractionFeedback,
+} from '../../store/characterHomeFeedback';
+import {
+  getSelectedCharacterRelationshipSnapshot,
+} from '../../store/characterRelationship';
 
 const firebaseApp =
   getApp();
@@ -3793,10 +3800,41 @@ const handleRootyPress =
       'tap'
     );
 
+    // CHARACTER_V99B_RELATIONSHIP_MICROFEEDBACK_TAP
+    const v99bTapCharacterId =
+      getV97SelectedCharacterSnapshot();
+
+    const v99bTapRelationshipBefore =
+      getSelectedCharacterRelationshipSnapshot();
+
     // CHARACTER_V96B_SELECTED_RELATIONSHIP_TAP
     recordSelectedCharacterRelationshipInteraction(
       'tap'
     );
+
+    const v99bTapRelationshipAfter =
+      getSelectedCharacterRelationshipSnapshot();
+
+    const v99bTapRelationshipDelta =
+      Math.max(
+        0,
+        v99bTapRelationshipAfter.points -
+          v99bTapRelationshipBefore.points
+      );
+
+    if (
+      v99bTapRelationshipDelta >
+      0
+    ) {
+      emitCharacterHomeInteractionFeedback({
+        characterId:
+          v99bTapCharacterId,
+        relationshipDelta:
+          v99bTapRelationshipDelta,
+        source:
+          'relationship',
+      });
+    }
 
     // CHARACTER_V97C_SELECTED_GROWTH_TAP
     void recordCharacterGrowthInteraction(
@@ -3918,10 +3956,41 @@ const handleRootyLongPress =
       'long-press'
     );
 
+    // CHARACTER_V99B_RELATIONSHIP_MICROFEEDBACK_LONG_PRESS
+    const v99bLongCharacterId =
+      getV97SelectedCharacterSnapshot();
+
+    const v99bLongRelationshipBefore =
+      getSelectedCharacterRelationshipSnapshot();
+
     // CHARACTER_V96B_SELECTED_RELATIONSHIP_LONG_PRESS
     recordSelectedCharacterRelationshipInteraction(
       'longPress'
     );
+
+    const v99bLongRelationshipAfter =
+      getSelectedCharacterRelationshipSnapshot();
+
+    const v99bLongRelationshipDelta =
+      Math.max(
+        0,
+        v99bLongRelationshipAfter.points -
+          v99bLongRelationshipBefore.points
+      );
+
+    if (
+      v99bLongRelationshipDelta >
+      0
+    ) {
+      emitCharacterHomeInteractionFeedback({
+        characterId:
+          v99bLongCharacterId,
+        relationshipDelta:
+          v99bLongRelationshipDelta,
+        source:
+          'relationship',
+      });
+    }
 
     // CHARACTER_V97C_SELECTED_GROWTH_LONG_PRESS
     void recordCharacterGrowthInteraction(
@@ -9123,6 +9192,8 @@ const previewSize = isTwoByTwoBuilding
  return (
   <GestureHandlerRootView style={{ flex: 1 }}>
         {/* CHARACTER_V99A_REWARD_PRESENTATION_HOST_HOME */}
+        {/* CHARACTER_V99B_HOME_PROGRESS_FEEDBACK_HOST */}
+        <CharacterHomeProgressFeedback />
         <CharacterRewardPresentationOverlay
           hostId="home"
         />

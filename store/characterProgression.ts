@@ -35,6 +35,9 @@ import {
 import {
   enqueueCharacterGrowthLevelPresentations,
 } from './characterRewardPresentation';
+import {
+  emitCharacterHomeInteractionFeedback,
+} from './characterHomeFeedback';
 
 // CHARACTER_V97A_PROGRESSION_PERSISTENCE
 const STORAGE_KEY =
@@ -1242,6 +1245,27 @@ export function recordCharacterGrowthInteraction(
               characterId,
               amount
             );
+          // CHARACTER_V99B_CONFIRMED_XP_MICROFEEDBACK
+          const confirmedXpDelta =
+            Math.max(
+              0,
+              result.afterXp -
+                result.beforeXp
+            );
+
+          if (
+            confirmedXpDelta >
+            0
+          ) {
+            emitCharacterHomeInteractionFeedback({
+              characterId:
+                result.characterId,
+              xpDelta:
+                confirmedXpDelta,
+              source:
+                'growth',
+            });
+          }
           // CHARACTER_V99A_GROWTH_PRESENTATION_EMIT
           if (
             result

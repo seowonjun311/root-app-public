@@ -55,25 +55,28 @@ export const CHARACTER_PRESENTATION:
     frameDurationMs:
       ROOTY_PREVIEW_FRAME_DURATION_MS,
   },
+  // CHARACTER_V87_HOME_SIZE_GROUND_CALIBRATION
+  // Standard-character artwork has different transparent-canvas geometry.
+  // These Home-only baselines equalize visual presence and ground contact.
   moru: {
-    homeScale: 1,
-    homeTranslateY: 0,
+    homeScale: 0.98,
+    homeTranslateY: 5,
     previewScale: 1,
     previewTranslateY: 0,
     frameDurationMs:
       STANDARD_FRAME_DURATION_MS,
   },
   mongsil: {
-    homeScale: 1,
-    homeTranslateY: 0,
+    homeScale: 1.2,
+    homeTranslateY: 2,
     previewScale: 1,
     previewTranslateY: 0,
     frameDurationMs:
       STANDARD_FRAME_DURATION_MS,
   },
   dami: {
-    homeScale: 1,
-    homeTranslateY: 0,
+    homeScale: 1.03,
+    homeTranslateY: 4,
     previewScale: 1,
     previewTranslateY: 0,
     frameDurationMs:

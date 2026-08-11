@@ -203,6 +203,10 @@ import {
 import {
   getSelectedCharacterRelationshipSnapshot,
 } from '../../store/characterRelationship';
+import CharacterHomeDialogueBubble from '../../components/characters/CharacterHomeDialogueBubble';
+import {
+  emitCharacterMicroDialogue,
+} from '../../store/characterMicroDialogue';
 
 const firebaseApp =
   getApp();
@@ -3836,6 +3840,18 @@ const handleRootyPress =
       });
     }
 
+    // CHARACTER_V99C_PERSONALITY_STATE_DIALOGUE_TAP
+    emitCharacterMicroDialogue({
+      characterId:
+        v99bTapCharacterId,
+      interaction:
+        'tap',
+      condition:
+        rootyConditionRef.current,
+      relationshipPoints:
+        v99bTapRelationshipAfter.points,
+    });
+
     // CHARACTER_V97C_SELECTED_GROWTH_TAP
     void recordCharacterGrowthInteraction(
       getV97SelectedCharacterSnapshot(),
@@ -3991,6 +4007,18 @@ const handleRootyLongPress =
           'relationship',
       });
     }
+
+    // CHARACTER_V99C_PERSONALITY_STATE_DIALOGUE_LONG_PRESS
+    emitCharacterMicroDialogue({
+      characterId:
+        v99bLongCharacterId,
+      interaction:
+        'longPress',
+      condition:
+        rootyConditionRef.current,
+      relationshipPoints:
+        v99bLongRelationshipAfter.points,
+    });
 
     // CHARACTER_V97C_SELECTED_GROWTH_LONG_PRESS
     void recordCharacterGrowthInteraction(
@@ -9194,6 +9222,8 @@ const previewSize = isTwoByTwoBuilding
         {/* CHARACTER_V99A_REWARD_PRESENTATION_HOST_HOME */}
         {/* CHARACTER_V99B_HOME_PROGRESS_FEEDBACK_HOST */}
         <CharacterHomeProgressFeedback />
+        {/* CHARACTER_V99C_HOME_DIALOGUE_HOST */}
+        <CharacterHomeDialogueBubble />
         <CharacterRewardPresentationOverlay
           hostId="home"
         />

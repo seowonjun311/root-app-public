@@ -36,6 +36,7 @@ export type CharacterSpriteProps = {
 // CHARACTER_V69_CHARACTER_SPRITE_COMPATIBILITY_PREVIEW
 // CHARACTER_V73_PLAYBACK_STABILITY_ENGINE
 // CHARACTER_V82_STANDARD_FRAME_CANVAS_NORMALIZATION
+// CHARACTER_V84_ANDROID_FRAME_FADE_FIX
 export function CharacterSprite({
   characterId,
   action,
@@ -194,6 +195,7 @@ export function CharacterSprite({
         <Image
           testID={testID}
           source={source}
+          fadeDuration={0}
           resizeMode="contain"
           style={{
             width: normalizedSize,

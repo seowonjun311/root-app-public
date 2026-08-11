@@ -192,6 +192,9 @@ import {
 import {
   evaluateCharacterAcquisitionRewards,
 } from '../../store/characterAcquisitionRewards';
+import {
+  useCharacterAcquisitionCelebration,
+} from '../../store/characterAcquisitionCelebration';
 
 const firebaseApp =
   getApp();
@@ -3742,6 +3745,9 @@ useEffect(() => {
     );
   };
 }, [rootyCycleKey, rootyRuntimeReady, rootyAppActive, rootyHomeFocused]);
+
+// CHARACTER_V97F_HOME_ACQUISITION_CELEBRATION
+useCharacterAcquisitionCelebration();
 
 // CHARACTER_V97E_HOME_ACQUISITION_EVALUATION
 useEffect(

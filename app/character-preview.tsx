@@ -51,6 +51,9 @@ import {
   evaluateCharacterAcquisitionRewards,
   getCharacterAcquisitionRequirementText,
 } from '../store/characterAcquisitionRewards';
+import {
+  useCharacterAcquisitionCelebration,
+} from '../store/characterAcquisitionCelebration';
 
 const ACTIONS:
   readonly CharacterAction[] = [
@@ -91,7 +94,10 @@ export default function CharacterPreviewScreen() {
   const progression =
     useCharacterProgression();
 
-  // CHARACTER_V97E_PREVIEW_ACQUISITION_EVALUATION
+  // CHARACTER_V97F_PREVIEW_ACQUISITION_CELEBRATION
+useCharacterAcquisitionCelebration();
+
+// CHARACTER_V97E_PREVIEW_ACQUISITION_EVALUATION
   useEffect(
     () => {
       void evaluateCharacterAcquisitionRewards();

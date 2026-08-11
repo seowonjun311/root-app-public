@@ -108,18 +108,22 @@ export const CHARACTER_PERSONALITY:
     },
   },
   // CHARACTER_V92B_TORI_PERSONALITY
-  // Initial safe baseline; can be tuned independently in a later version.
+  // CHARACTER_V93_TORI_GENTLE_SHY_PERSONALITY
+  // Tori stays on the validated social-warm runtime profile id, while
+  // these per-character multipliers make the behavior more reserved:
+  // quiet observation, longer seated rest, less unsolicited celebration,
+  // and warmer follow-up interaction after bonding.
   tori: {
     id: 'social-warm',
     restMultipliers: {
-      lookAround: 1.15,
-      sitRest: 1.2,
-      nap: 0.8,
+      lookAround: 1.25,
+      sitRest: 1.45,
+      nap: 1.1,
     },
     socialChanceMultipliers: {
-      spontaneousHappy: 1.15,
-      passiveAttention: 1.5,
-      bondedFollowUpTouch: 1.4,
+      spontaneousHappy: 0.8,
+      passiveAttention: 0.85,
+      bondedFollowUpTouch: 1.55,
     },
   },
 

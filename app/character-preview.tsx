@@ -409,6 +409,28 @@ useCharacterAcquisitionCelebration();
             </Pressable>
           </Link>
           {/* CHARACTER_V86_PREVIEW_TEXT_FIX */}
+          {/* CHARACTER_V99E_DIALOGUE_DIAGNOSTICS_ENTRY */}
+          <Link
+            href={
+              '/character-dialogue-diagnostics' as never
+            }
+            asChild
+          >
+            <Pressable
+              style={
+                styles.diagnosticsButton
+              }
+            >
+              <Text
+                style={
+                  styles.diagnosticsButtonText
+                }
+              >
+                대사 정책 진단
+              </Text>
+            </Pressable>
+          </Link>
+
           {/* CHARACTER_V98D_CLOUD_DIAGNOSTICS_ENTRY */}
           <Link
             href={

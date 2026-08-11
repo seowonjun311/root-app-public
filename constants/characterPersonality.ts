@@ -6,7 +6,10 @@ export type CharacterPersonalityId =
   'balanced' |
   'curious-active' |
   'cozy-calm' |
-  'social-warm';
+  'social-warm' |
+  'explorer-curious' |
+  'playful-adventurous' |
+  'gentle-shy';
 
 export type CharacterPersonalityProfile = {
   id: CharacterPersonalityId;
@@ -80,8 +83,9 @@ export const CHARACTER_PERSONALITY:
       bondedFollowUpTouch: 1.4,
     },
   },  // CHARACTER_V90B_PIO_PERSONALITY
-  pio: {
-    id: 'curious-active',
+  // CHARACTER_V95A_PIO_EXPLORER_IDENTITY
+pio: {
+    id: 'explorer-curious',
     restMultipliers: {
       lookAround: 1.25,
       sitRest: 0.95,
@@ -94,8 +98,9 @@ export const CHARACTER_PERSONALITY:
     },
   },
   // CHARACTER_V91B_NURI_PERSONALITY
-  nuri: {
-    id: 'curious-active',
+  // CHARACTER_V95A_NURI_PLAYFUL_IDENTITY
+nuri: {
+    id: 'playful-adventurous',
     restMultipliers: {
       lookAround: 1.25,
       sitRest: 0.95,
@@ -113,8 +118,9 @@ export const CHARACTER_PERSONALITY:
   // these per-character multipliers make the behavior more reserved:
   // quiet observation, longer seated rest, less unsolicited celebration,
   // and warmer follow-up interaction after bonding.
-  tori: {
-    id: 'social-warm',
+  // CHARACTER_V95A_TORI_GENTLE_SHY_IDENTITY
+tori: {
+    id: 'gentle-shy',
     restMultipliers: {
       lookAround: 1.25,
       sitRest: 1.45,

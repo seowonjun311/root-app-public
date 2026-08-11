@@ -370,85 +370,113 @@ function createSignatureCheck(
       beforeAverage
     );
 
+  // CHARACTER_V95A_PROFILE_DRIVEN_SIGNATURE_VALIDATION
+  const profile =
+    getCharacterPersonalityProfile(
+      characterId
+    );
+
   let pass =
     false;
 
   let intent =
     '';
 
-  if (
-    characterId ===
-    'rooty'
+  switch (
+    profile.id
   ) {
-    const maximum =
-      Math.max(
-        Math.abs(
-          delta.lookAround
-        ),
-        Math.abs(
-          delta.sitRest
-        ),
-        Math.abs(
+    case 'balanced': {
+      const maximum =
+        Math.max(
+          Math.abs(
+            delta.lookAround
+          ),
+          Math.abs(
+            delta.sitRest
+          ),
+          Math.abs(
+            delta.nap
+          )
+        );
+
+      pass =
+        maximum <=
+        0.001;
+
+      intent =
+        'balanced delta near 0';
+
+      break;
+    }
+
+    case 'curious-active':
+    case 'explorer-curious':
+    case 'playful-adventurous': {
+      pass =
+        delta.lookAround >
+          DELTA_TOLERANCE &&
+        delta.nap <
+          -DELTA_TOLERANCE;
+
+      intent =
+        profile.id +
+        ': look up / nap down';
+
+      break;
+    }
+
+    case 'cozy-calm': {
+      pass =
+        delta.lookAround <
+          -DELTA_TOLERANCE &&
+        delta.nap >
+          DELTA_TOLERANCE &&
+        (
+          delta.sitRest +
           delta.nap
-        )
-      );
+        ) >
+          DELTA_TOLERANCE;
 
-    pass =
-      maximum <=
-      0.001;
+      intent =
+        'cozy-calm: look down / restful share up';
 
-    intent =
-      'balanced delta near 0';
-  }
-  else if (
-    characterId ===
-      'moru' ||
-    characterId ===
-      'pio' ||
-    characterId ===
-      'nuri'
-  ) {
-    // CHARACTER_V90B_PIO_PERSONALITY_VALIDATION
-    // CHARACTER_V91B_NURI_PERSONALITY_VALIDATION
-    pass =
-      delta.lookAround >
-        DELTA_TOLERANCE &&
-      delta.nap <
-        -DELTA_TOLERANCE;
+      break;
+    }
 
-    intent =
-      'look up / nap down';
-  }
-  else if (
-    characterId ===
-    'mongsil'
-  ) {
-    pass =
-      delta.lookAround <
-        -DELTA_TOLERANCE &&
-      delta.nap >
-        DELTA_TOLERANCE &&
-      (
-        delta.sitRest +
-        delta.nap
-      ) >
+    case 'social-warm': {
+      pass =
+        delta.nap <
+          -DELTA_TOLERANCE &&
+        (
+          delta.lookAround +
+          delta.sitRest
+        ) >
+          DELTA_TOLERANCE;
+
+      intent =
+        'social-warm: nap down / awake-rest share up';
+
+      break;
+    }
+
+    case 'gentle-shy': {
+      pass =
+        delta.sitRest >
         DELTA_TOLERANCE;
 
-    intent =
-      'look down / restful share up';
-  }
-  else {
-    pass =
-      delta.nap <
-        -DELTA_TOLERANCE &&
-      (
-        delta.lookAround +
-        delta.sitRest
-      ) >
-        DELTA_TOLERANCE;
+      intent =
+        'gentle-shy: seated-rest share up';
 
-    intent =
-      'nap down / awake-rest share up';
+      break;
+    }
+
+    default: {
+      pass =
+        false;
+
+      intent =
+        'unknown personality';
+    }
   }
 
   return {

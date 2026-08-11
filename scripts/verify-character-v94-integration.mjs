@@ -320,7 +320,7 @@ console.log(
 for (
   const token of [
     'CHARACTER_V92B_TORI_PRESENTATION',
-    'homeScale: 1.1',
+    'homeScale: 1.16',
     'homeTranslateY: 5',
   ]
 ) {
@@ -334,7 +334,7 @@ for (
 for (
   const token of [
     'CHARACTER_V93_TORI_GENTLE_SHY_PERSONALITY',
-    "id: 'social-warm'",
+    "id: 'gentle-shy'",
     'lookAround: 1.25',
     'sitRest: 1.45',
     'nap: 1.1',

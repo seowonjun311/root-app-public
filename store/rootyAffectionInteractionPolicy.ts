@@ -4,6 +4,9 @@ import type {
 import {
   applySelectedCharacterPersonalityToSocialChance,
 } from './characterPersonalityPolicy';
+import {
+  applySelectedCharacterRelationshipToSocialChance,
+} from './characterRelationship';
 
 // ROOTY_BEHAVIOR_V63_AFFECTION_SOCIAL_RESPONSE_POLICY
 export const ROOTY_AFFECTION_INTERACTION_POLICY = {
@@ -14,18 +17,21 @@ export function getRootyBondedTapFollowUpChance(
   condition:
     RootyConditionSnapshot
 ): number {
-  if (
-    !condition.flags.isBonded
-  ) {
-    return 0;
-  }
+  // CHARACTER_V96B_V63_SELECTED_RELATIONSHIP_GATE
+  // The selected-character relationship multiplier now owns the
+  // distant/familiar/close/bonded progression.
+  void condition;
 
-  return (
+return (
     // CHARACTER_V76_PERSONALITY_SOCIAL_63
-    applySelectedCharacterPersonalityToSocialChance(
+  // CHARACTER_V96B_RELATIONSHIP_SOCIAL_V63
+    applySelectedCharacterRelationshipToSocialChance(
       'bondedFollowUpTouch',
-      ROOTY_AFFECTION_INTERACTION_POLICY
-      .bondedTapFollowUpTouchChance
+  applySelectedCharacterPersonalityToSocialChance(
+        'bondedFollowUpTouch',
+        ROOTY_AFFECTION_INTERACTION_POLICY
+        .bondedTapFollowUpTouchChance
+      )
     )
   );
 }

@@ -4,6 +4,9 @@ import type {
 import {
   applySelectedCharacterPersonalityToSocialChance,
 } from './characterPersonalityPolicy';
+import {
+  applySelectedCharacterRelationshipToSocialChance,
+} from './characterRelationship';
 
 // ROOTY_BEHAVIOR_V64_BONDED_PASSIVE_SOCIAL_ATTENTION_POLICY
 export const ROOTY_PASSIVE_SOCIAL_POLICY = {
@@ -16,13 +19,11 @@ export function getRootyBondedPassiveAttentionChance(
   condition:
     RootyConditionSnapshot
 ): number {
-  if (
-    !condition.flags.isBonded
-  ) {
-    return 0;
-  }
+  // CHARACTER_V96B_V64_SELECTED_RELATIONSHIP_GATE
+  // The selected-character relationship multiplier now owns
+  // distant/familiar/close/bonded social familiarity.
 
-  /**
+/**
    * V60/V62 recovery and low-mood calm behavior
    * keep priority over passive social expression.
    */
@@ -35,10 +36,14 @@ export function getRootyBondedPassiveAttentionChance(
 
   return (
     // CHARACTER_V76_PERSONALITY_SOCIAL_64
-    applySelectedCharacterPersonalityToSocialChance(
+  // CHARACTER_V96B_RELATIONSHIP_SOCIAL_V64
+    applySelectedCharacterRelationshipToSocialChance(
       'passiveAttention',
-      ROOTY_PASSIVE_SOCIAL_POLICY
-      .bondedAttentionChance
+  applySelectedCharacterPersonalityToSocialChance(
+        'passiveAttention',
+        ROOTY_PASSIVE_SOCIAL_POLICY
+        .bondedAttentionChance
+      )
     )
   );
 }

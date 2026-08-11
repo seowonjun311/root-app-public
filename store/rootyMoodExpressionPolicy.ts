@@ -4,6 +4,9 @@ import type {
 import {
   applySelectedCharacterPersonalityToSocialChance,
 } from './characterPersonalityPolicy';
+import {
+  applySelectedCharacterRelationshipToSocialChance,
+} from './characterRelationship';
 
 // ROOTY_BEHAVIOR_V61_MOOD_BASED_EXPRESSION_POLICY
 export const ROOTY_MOOD_EXPRESSION_POLICY = {
@@ -33,10 +36,14 @@ export function getRootySpontaneousHappyChance(
 
   return (
     // CHARACTER_V76_PERSONALITY_SOCIAL_61
-    applySelectedCharacterPersonalityToSocialChance(
+  // CHARACTER_V96B_RELATIONSHIP_SOCIAL_V61
+    applySelectedCharacterRelationshipToSocialChance(
       'spontaneousHappy',
-      ROOTY_MOOD_EXPRESSION_POLICY
-      .excitedSpontaneousHappyChance
+  applySelectedCharacterPersonalityToSocialChance(
+        'spontaneousHappy',
+        ROOTY_MOOD_EXPRESSION_POLICY
+        .excitedSpontaneousHappyChance
+      )
     )
   );
 }

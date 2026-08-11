@@ -175,6 +175,11 @@ import {
 import {
   getSelectedCharacterSnapshot,
 } from '../../store/selectedCharacter';
+import {
+  loadCharacterRelationships,
+  recordSelectedCharacterRelationshipInteraction,
+  seedCharacterRelationshipFromLegacyAffection,
+} from '../../store/characterRelationship';
 
 const firebaseApp =
   getApp();
@@ -1648,6 +1653,20 @@ useEffect(() => {
 
       rootyStateRef.current =
         next;
+
+      // CHARACTER_V96B_RELATIONSHIP_BOOTSTRAP
+      await loadCharacterRelationships();
+
+      await seedCharacterRelationshipFromLegacyAffection(
+        'rooty',
+        next.affection
+      );
+
+      if (
+        cancelled
+      ) {
+        return;
+      }
 
 
       const nextCondition =
@@ -3731,6 +3750,11 @@ const handleRootyPress =
       'tap'
     );
 
+    // CHARACTER_V96B_SELECTED_RELATIONSHIP_TAP
+    recordSelectedCharacterRelationshipInteraction(
+      'tap'
+    );
+
     const interactionCondition =
       rootyConditionRef.current;
 
@@ -3840,6 +3864,11 @@ const handleRootyLongPress =
         affection: 2,
       },
       'long-press'
+    );
+
+    // CHARACTER_V96B_SELECTED_RELATIONSHIP_LONG_PRESS
+    recordSelectedCharacterRelationshipInteraction(
+      'longPress'
     );
 cancelAnimation(
       foxX

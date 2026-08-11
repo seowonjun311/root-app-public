@@ -4,9 +4,14 @@ import {
   type CharacterId,
 } from '../constants/characterAssets';
 import {
+  applyCharacterRelationshipToSocialChance,
   getCharacterRelationshipTier,
+  type CharacterRelationshipSocialChannel,
   type CharacterRelationshipTier,
 } from './characterRelationshipPolicy';
+import {
+  getSelectedCharacterSnapshot,
+} from './selectedCharacter';
 
 // CHARACTER_V96A_PER_CHARACTER_RELATIONSHIP_STORE
 const STORAGE_KEY =
@@ -382,53 +387,74 @@ export async function loadCharacterRelationships():
   }
 }
 
+// CHARACTER_V96B_SYNCHRONOUS_RELATIONSHIP_MUTATION
 function enqueueMutation(
   mutate:
     (
       next:
         CharacterRelationshipMap
     ) => void
-): void {
-  writeQueue =
-    writeQueue
-      .then(
-        async () => {
-          await loadCharacterRelationships();
+): Promise<void> {
+  const applyLoadedMutation =
+    () => {
+      const next =
+        cloneMap(
+          cached
+        );
 
-          const next =
-            cloneMap(
-              cached
-            );
-
-          mutate(
-            next
-          );
-
-          cached =
-            next;
-
-          emit();
-
-          await AsyncStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(
-              next
-            )
-          );
-        }
-      )
-      .catch(
-        (error) => {
-          if (
-            __DEV__
-          ) {
-            console.warn(
-              '[CHARACTER V96] relationship write failed',
-              error
-            );
-          }
-        }
+      mutate(
+        next
       );
+
+      // The in-memory relationship changes synchronously before returning.
+      // This preserves same-interaction threshold behavior while disk writes
+      // remain serialized.
+      cached =
+        next;
+
+      emit();
+
+      const serialized =
+        JSON.stringify(
+          next
+        );
+
+      writeQueue =
+        writeQueue
+          .then(
+            () =>
+              AsyncStorage.setItem(
+                STORAGE_KEY,
+                serialized
+              )
+          )
+          .catch(
+            (error) => {
+              if (
+                __DEV__
+              ) {
+                console.warn(
+                  '[CHARACTER V96] relationship write failed',
+                  error
+                );
+              }
+            }
+          );
+
+      return writeQueue;
+    };
+
+  if (
+    loaded
+  ) {
+    return applyLoadedMutation();
+  }
+
+  return loadCharacterRelationships()
+    .then(
+      () =>
+        applyLoadedMutation()
+    );
 }
 
 // CHARACTER_V96A_RELATIONSHIP_SYNC_SNAPSHOT
@@ -502,7 +528,7 @@ export function recordCharacterRelationshipInteraction(
       ? 2
       : 1;
 
-  enqueueMutation(
+  void enqueueMutation(
     (next) => {
       const current =
         next[
@@ -545,11 +571,11 @@ export function recordCharacterRelationshipInteraction(
 // This does not run automatically in V96A.
 // V96B can use it once for Rooty so the original V54/V59 relationship
 // progress is not lost when per-character relationship becomes active.
-export function seedCharacterRelationshipFromLegacyAffection(
+export async function seedCharacterRelationshipFromLegacyAffection(
   characterId: CharacterId,
   legacyAffection: number
-): void {
-  enqueueMutation(
+): Promise<void> {
+  await enqueueMutation(
     (next) => {
       const current =
         next[
@@ -578,4 +604,57 @@ export function seedCharacterRelationshipFromLegacyAffection(
       };
     }
   );
+}
+// CHARACTER_V96B_SELECTED_RELATIONSHIP_RUNTIME_ADAPTERS
+export function recordSelectedCharacterRelationshipInteraction(
+  interaction:
+    CharacterRelationshipInteraction
+): void {
+  recordCharacterRelationshipInteraction(
+    getSelectedCharacterSnapshot(),
+    interaction
+  );
+}
+
+export function getSelectedCharacterRelationshipSnapshot():
+  CharacterRelationshipSnapshot {
+  return getCharacterRelationshipSnapshot(
+    getSelectedCharacterSnapshot()
+  );
+}
+
+export function applySelectedCharacterRelationshipToSocialChance(
+  channel:
+    CharacterRelationshipSocialChannel,
+  personalityChance: number
+): number {
+  const snapshot =
+    getSelectedCharacterRelationshipSnapshot();
+
+  const next =
+    applyCharacterRelationshipToSocialChance(
+      snapshot.tier,
+      channel,
+      personalityChance
+    );
+
+  if (
+    __DEV__
+  ) {
+    console.log(
+      '[CHARACTER V96] relationship social chance',
+      {
+        characterId:
+          getSelectedCharacterSnapshot(),
+        tier:
+          snapshot.tier,
+        channel,
+        personalityChance,
+        finalChance:
+          next,
+      }
+    );
+  }
+
+  return next;
 }

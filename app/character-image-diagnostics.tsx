@@ -33,6 +33,7 @@ const CHARACTER_IDS:
   'dami',
   'pio',
   'nuri',
+  'tori',
 ];
 
 const LABEL:
@@ -44,6 +45,8 @@ const LABEL:
   pio: '\uD53C\uC624',
   // CHARACTER_V91B_NURI_IMAGE_DIAGNOSTICS
   nuri: '\uB204\uB9AC',
+  // CHARACTER_V92B_TORI_IMAGE_DIAGNOSTICS
+  tori: '\uD1A0\uB9AC',
 
 };
 
@@ -61,6 +64,8 @@ const DIRECT_STANDARD_SOURCE:
     require('../characters/pio/pio_idle_01.png'),
   nuri:
     require('../characters/nuri/nuri_idle_01.png'),
+  tori:
+    require('../characters/tori/tori_idle_01.png'),
 
 };
 

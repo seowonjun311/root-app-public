@@ -13,6 +13,7 @@ export const CHARACTER_IDS = [
   'dami',
   'pio',
   'nuri',
+  'tori',
 ] as const;
 
 export type CharacterId =
@@ -235,6 +236,48 @@ const NURI_CHARACTER_FRAMES:
   ],
 };
 
+// CHARACTER_V92B_TORI_FRAME_REGISTRY
+// Tori intentionally has 22 runtime frames.
+// The shared standard renderer supports variable frame-array lengths;
+// only happy uses 3 frames for Tori.
+const TORI_CHARACTER_FRAMES:
+  CharacterFrameSet = {
+  idle: [
+    require('../characters/tori/tori_idle_01.png'),
+    require('../characters/tori/tori_idle_02.png'),
+    require('../characters/tori/tori_idle_03.png'),
+    require('../characters/tori/tori_idle_04.png'),
+  ],
+  walk: [
+    require('../characters/tori/tori_walk_01.png'),
+    require('../characters/tori/tori_walk_02.png'),
+    require('../characters/tori/tori_walk_03.png'),
+    require('../characters/tori/tori_walk_04.png'),
+  ],
+  sit: [
+    require('../characters/tori/tori_sit_01.png'),
+    require('../characters/tori/tori_sit_02.png'),
+    require('../characters/tori/tori_sit_03.png'),
+    require('../characters/tori/tori_sit_04.png'),
+  ],
+  sleep: [
+    require('../characters/tori/tori_sleep_01.png'),
+    require('../characters/tori/tori_sleep_02.png'),
+    require('../characters/tori/tori_sleep_03.png'),
+    require('../characters/tori/tori_sleep_04.png'),
+    require('../characters/tori/tori_sleep_05.png'),
+  ],
+  happy: [
+    require('../characters/tori/tori_happy_01.png'),
+    require('../characters/tori/tori_happy_02.png'),
+    require('../characters/tori/tori_happy_03.png'),
+  ],
+  touch: [
+    require('../characters/tori/tori_touch_01.png'),
+    require('../characters/tori/tori_touch_02.png'),
+  ],
+};
+
 export const CHARACTER_ASSET_REGISTRY:
   Record<CharacterId, CharacterAssetDefinition> = {
   // CHARACTER_V88_REGISTRY_DISPLAY_NAMES
@@ -282,6 +325,17 @@ export const CHARACTER_ASSET_REGISTRY:
     frames: NURI_CHARACTER_FRAMES,
     referenceSheet:
       require('../characters/nuri/nuri_reference_sheet.png'),
+  },
+  // CHARACTER_V92B_TORI_ASSET_DEFINITION
+  // Keep the existing standard renderer profile; V92A owns the
+  // Tori-only 22-frame validation exception.
+  tori: {
+    id: 'tori',
+    displayName: '\uD1A0\uB9AC',
+    frameProfile: 'standard-23',
+    frames: TORI_CHARACTER_FRAMES,
+    referenceSheet:
+      require('../characters/tori/tori_reference_sheet.png'),
   },
 
 };

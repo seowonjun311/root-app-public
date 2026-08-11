@@ -120,6 +120,9 @@ function createEmptyMap():
     // CHARACTER_V91B_NURI_DEVICE_VALIDATION
     nuri:
       createEmptyRecord(),
+    // CHARACTER_V92B_TORI_DEVICE_VALIDATION
+    tori:
+      createEmptyRecord(),
   };
 }
 
@@ -262,6 +265,10 @@ function cloneMap(
     nuri:
       cloneRecord(
         value.nuri
+      ),
+    tori:
+      cloneRecord(
+        value.tori
       ),
   };
 }

@@ -107,6 +107,21 @@ export const CHARACTER_PERSONALITY:
       bondedFollowUpTouch: 0.9,
     },
   },
+  // CHARACTER_V92B_TORI_PERSONALITY
+  // Initial safe baseline; can be tuned independently in a later version.
+  tori: {
+    id: 'social-warm',
+    restMultipliers: {
+      lookAround: 1.15,
+      sitRest: 1.2,
+      nap: 0.8,
+    },
+    socialChanceMultipliers: {
+      spontaneousHappy: 1.15,
+      passiveAttention: 1.5,
+      bondedFollowUpTouch: 1.4,
+    },
+  },
 
 };
 

@@ -817,6 +817,8 @@ function resolveConfidence(
 }
 
 // CHARACTER_V79_PERSONALITY_AUTO_VALIDATION
+// CHARACTER_V92B_TORI_PERSONALITY_VALIDATION
+// Tori is covered by this validator's existing profile-driven generic path.
 export function validateCharacterPersonalityRuntime(
   characterId: CharacterId,
   statistics:

@@ -48,6 +48,7 @@ const STANDARD_IDS:
   'dami',
   'pio',
   'nuri',
+  'tori',
 ];
 
 const DEFAULT_OVERRIDE:
@@ -88,6 +89,10 @@ function createDefaultMap():
     },
     // CHARACTER_V91B_NURI_PRESENTATION_OVERRIDE
     nuri: {
+      ...DEFAULT_OVERRIDE,
+    },
+    // CHARACTER_V92B_TORI_PRESENTATION_OVERRIDE
+    tori: {
       ...DEFAULT_OVERRIDE,
     },
   };

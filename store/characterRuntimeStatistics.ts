@@ -79,6 +79,9 @@ function createEmptyMap():
     // CHARACTER_V91B_NURI_RUNTIME_STATISTICS
     nuri:
       emptyCharacterStatistics(),
+    // CHARACTER_V92B_TORI_RUNTIME_STATISTICS
+    tori:
+      emptyCharacterStatistics(),
   };
 }
 
@@ -453,6 +456,10 @@ function cloneMap(
     nuri:
       cloneCharacterStatistics(
         value.nuri
+      ),
+    tori:
+      cloneCharacterStatistics(
+        value.tori
       ),
   };
 }

@@ -2574,11 +2574,125 @@ useEffect(() => {
       upLeft: 'downRight',
     };
 
+  // ROOTY_BEHAVIOR_V86_BALANCED_ROAMING
+  const ROOTY_V86_ROAMING = {
+    centerPullThreshold: 0.65,
+    centerPullChance: 0.8,
+  } as const;
+
+  const getRootyCenterSeekingDirection =
+    (): (typeof directions)[number] => {
+      const centerX =
+        (
+          ROOTY_VILLAGE_BOUNDS.minX +
+          ROOTY_VILLAGE_BOUNDS.maxX
+        ) / 2;
+
+      const centerY =
+        (
+          ROOTY_VILLAGE_BOUNDS.minY +
+          ROOTY_VILLAGE_BOUNDS.maxY
+        ) / 2;
+
+      const moveRight =
+        foxX.value < centerX;
+
+      const moveDown =
+        foxY.value < centerY;
+
+      if (moveRight && moveDown) {
+        return 'downRight';
+      }
+
+      if (moveRight && !moveDown) {
+        return 'upRight';
+      }
+
+      if (!moveRight && moveDown) {
+        return 'downLeft';
+      }
+
+      return 'upLeft';
+    };
+
+  const shouldPullRootyTowardCenter =
+    () => {
+      const centerX =
+        (
+          ROOTY_VILLAGE_BOUNDS.minX +
+          ROOTY_VILLAGE_BOUNDS.maxX
+        ) / 2;
+
+      const centerY =
+        (
+          ROOTY_VILLAGE_BOUNDS.minY +
+          ROOTY_VILLAGE_BOUNDS.maxY
+        ) / 2;
+
+      const halfWidth =
+        Math.max(
+          1,
+          (
+            ROOTY_VILLAGE_BOUNDS.maxX -
+            ROOTY_VILLAGE_BOUNDS.minX
+          ) / 2
+        );
+
+      const halfHeight =
+        Math.max(
+          1,
+          (
+            ROOTY_VILLAGE_BOUNDS.maxY -
+            ROOTY_VILLAGE_BOUNDS.minY
+          ) / 2
+        );
+
+      const normalizedX =
+        Math.abs(
+          foxX.value - centerX
+        ) / halfWidth;
+
+      const normalizedY =
+        Math.abs(
+          foxY.value - centerY
+        ) / halfHeight;
+
+      return (
+        Math.max(
+          normalizedX,
+          normalizedY
+        ) >=
+          ROOTY_V86_ROAMING.centerPullThreshold &&
+        Math.random() <
+          ROOTY_V86_ROAMING.centerPullChance
+      );
+    };
+
   const pickNextWalkDirection =
     (
       currentDirection?:
         (typeof directions)[number]
     ) => {
+      if (
+        shouldPullRootyTowardCenter()
+      ) {
+        const centerDirection =
+          getRootyCenterSeekingDirection();
+
+        if (__DEV__) {
+          console.log(
+            '[ROOTY V86] center pull',
+            {
+              direction: centerDirection,
+              x: foxX.value,
+              y: foxY.value,
+            }
+          );
+        }
+
+        return centerDirection;
+      }
+
       if (!currentDirection) {
         return (
           directions[
@@ -2686,6 +2800,11 @@ useEffect(() => {
           nextY -= ROOTY_WALK_MOTION.stepY;
         }
 
+        const rawNextX =
+          nextX;
+        const rawNextY =
+          nextY;
+
         nextX =
           Math.max(
             ROOTY_VILLAGE_BOUNDS.minX,
@@ -2703,6 +2822,15 @@ useEffect(() => {
               ROOTY_VILLAGE_BOUNDS.maxY
             )
           );
+
+        // ROOTY_BEHAVIOR_V86_EDGE_SLIDE_GUARD
+        // Reject a step that had to be clamped to a rectangular edge.
+        if (
+          nextX !== rawNextX ||
+          nextY !== rawNextY
+        ) {
+          continue;
+        }
 
         if (
           isFoxOutsideVillage(

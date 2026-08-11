@@ -366,7 +366,9 @@ export default function CharacterPreviewScreen() {
                 {'\uC774\uBBF8\uC9C0 \uB85C\uB529 \uC9C4\uB2E8'}
               </Text>
             </Pressable>
-          </Link>          {/* CHARACTER_V77_DIAGNOSTICS_ENTRY */}
+          </Link>
+          {/* CHARACTER_V86_PREVIEW_TEXT_FIX */}
+          {/* CHARACTER_V77_DIAGNOSTICS_ENTRY */}
           <Link
             href={
               '/character-runtime-diagnostics' as never

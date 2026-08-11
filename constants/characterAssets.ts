@@ -155,15 +155,16 @@ const DAMI_CHARACTER_FRAMES:
 
 export const CHARACTER_ASSET_REGISTRY:
   Record<CharacterId, CharacterAssetDefinition> = {
+  // CHARACTER_V88_REGISTRY_DISPLAY_NAMES
   rooty: {
     id: 'rooty',
-    displayName: '猷⑦떚',
+    displayName: '\uB8E8\uD2F0',
     frameProfile: 'legacy-rooty',
     frames: ROOTY_FRAMES,
   },
   moru: {
     id: 'moru',
-    displayName: '紐⑤（',
+    displayName: '\uBAA8\uB8E8',
     frameProfile: 'standard-23',
     frames: MORU_CHARACTER_FRAMES,
     referenceSheet:
@@ -171,13 +172,13 @@ export const CHARACTER_ASSET_REGISTRY:
   },
   mongsil: {
     id: 'mongsil',
-    displayName: '紐쎌떎',
+    displayName: '\uBABD\uC2E4',
     frameProfile: 'standard-23',
     frames: MONGSIL_CHARACTER_FRAMES,
   },
   dami: {
     id: 'dami',
-    displayName: '?ㅻ?',
+    displayName: '\uB2E4\uBBF8',
     frameProfile: 'standard-23',
     frames: DAMI_CHARACTER_FRAMES,
     referenceSheet:

@@ -55,14 +55,7 @@ const ACTIONS:
   'touch',
 ];
 
-const CHARACTER_LABEL:
-  Record<CharacterId, string> = {
-  rooty: '\uB8E8\uD2F0',
-  moru: '\uBAA8\uB8E8',
-  mongsil: '\uBABD\uC2E4',
-  dami: '\uB2E4\uBBF8',
-};
-
+// CHARACTER_V88_REGISTRY_DISPLAY_NAME_SOURCE
 const ACTION_LABEL:
   Record<CharacterAction, string> = {
   idle: '\uAE30\uBCF8',
@@ -436,9 +429,7 @@ export default function CharacterPreviewScreen() {
               }
             >
               {
-                CHARACTER_LABEL[
-                  characterId
-                ]
+                definition.displayName
               }
             </Text>
 
@@ -516,9 +507,9 @@ export default function CharacterPreviewScreen() {
               {'\uD604\uC7AC Home: '}
               {
                 ready
-                  ? CHARACTER_LABEL[
+                  ? getCharacterAssetDefinition(
                       selectedCharacter
-                    ]
+                    ).displayName
                   : '\uBD88\uB7EC\uC624\uB294 \uC911'
               }
             </Text>
@@ -597,9 +588,9 @@ export default function CharacterPreviewScreen() {
                     ]}
                   >
                     {
-                      CHARACTER_LABEL[
+                      getCharacterAssetDefinition(
                         id
-                      ]
+                      ).displayName
                     }
                   </Text>
                 </Pressable>

@@ -22,6 +22,8 @@ import {
 } from './characterAccountScope';
 import {
   ensureCharacterScopedStorageReady,
+  persistCharacterScopedValueAndSchedule,
+  subscribeCharacterScopedStorageRefresh,
 } from './characterCloudSync';
 
 const STORAGE_KEY =
@@ -107,6 +109,27 @@ subscribeCharacterAccountScope(
   }
 );
 
+// CHARACTER_V98C_SELECTED_CLOUD_REFRESH
+subscribeCharacterScopedStorageRefresh(
+  (
+    scope
+  ) => {
+    if (
+      refreshCharacterAccountScope()
+        .scopeId !==
+      scope.scopeId
+    ) {
+      return;
+    }
+
+    resetSelectedCharacterScope(
+      scope.scopeId
+    );
+
+    void loadSelectedCharacter();
+  }
+);
+
 // CHARACTER_V70_SELECTED_CHARACTER_PERSISTENCE
 export function isCharacterId(
   value: unknown
@@ -177,12 +200,10 @@ export async function loadSelectedCharacter():
         else if (
           raw !== null
         ) {
-          await AsyncStorage.setItem(
-            getCharacterScopedStorageKey(
-              STORAGE_KEY,
-              scope
-            ),
-            DEFAULT_CHARACTER
+          await persistCharacterScopedValueAndSchedule(
+            STORAGE_KEY,
+            DEFAULT_CHARACTER,
+            scope
           );
         }
       }
@@ -305,12 +326,11 @@ export async function saveSelectedCharacter(
   }
 
   // CHARACTER_V98B_SELECTED_SCOPED_WRITE
-  await AsyncStorage.setItem(
-    getCharacterScopedStorageKey(
-      STORAGE_KEY,
-      scope
-    ),
-    characterId
+  // CHARACTER_V98C_SELECTED_CLOUD_DIRTY_WRITE
+  await persistCharacterScopedValueAndSchedule(
+    STORAGE_KEY,
+    characterId,
+    scope
   );
 
   cachedCharacter =

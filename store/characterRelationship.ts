@@ -20,6 +20,8 @@ import {
 } from './characterAccountScope';
 import {
   ensureCharacterScopedStorageReady,
+  persistCharacterScopedValueAndSchedule,
+  subscribeCharacterScopedStorageRefresh,
 } from './characterCloudSync';
 
 // CHARACTER_V96A_PER_CHARACTER_RELATIONSHIP_STORE
@@ -373,6 +375,27 @@ subscribeCharacterAccountScope(
   }
 );
 
+// CHARACTER_V98C_RELATIONSHIP_CLOUD_REFRESH
+subscribeCharacterScopedStorageRefresh(
+  (
+    scope
+  ) => {
+    if (
+      refreshCharacterAccountScope()
+        .scopeId !==
+      scope.scopeId
+    ) {
+      return;
+    }
+
+    resetCharacterRelationshipScope(
+      scope.scopeId
+    );
+
+    void loadCharacterRelationships();
+  }
+);
+
 function emit(): void {
   listeners.forEach(
     (listener) => {
@@ -492,11 +515,7 @@ function enqueueMutation(
   const scope =
     ensureCharacterRelationshipScope();
 
-  const storageKey =
-    getCharacterScopedStorageKey(
-      STORAGE_KEY,
-      scope
-    );
+
 
   const applyLoadedMutation =
     () => {
@@ -534,9 +553,10 @@ function enqueueMutation(
         writeQueue
           .then(
             () =>
-              AsyncStorage.setItem(
-                storageKey,
-                serialized
+              persistCharacterScopedValueAndSchedule(
+                STORAGE_KEY,
+                serialized,
+                scope
               )
           )
           .catch(

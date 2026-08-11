@@ -23,6 +23,8 @@ import {
 } from './characterAccountScope';
 import {
   ensureCharacterScopedStorageReady,
+  persistCharacterScopedValueAndSchedule,
+  subscribeCharacterScopedStorageRefresh,
 } from './characterCloudSync';
 
 const STORAGE_KEY =
@@ -60,6 +62,27 @@ let checkPromise:
 // CHARACTER_V98B_CELEBRATION_SCOPE_RESET
 subscribeCharacterAccountScope(
   () => {
+    activeCharacter =
+      null;
+
+    checkPromise =
+      null;
+  }
+);
+
+// CHARACTER_V98C_CELEBRATION_CLOUD_REFRESH
+subscribeCharacterScopedStorageRefresh(
+  (
+    scope
+  ) => {
+    if (
+      refreshCharacterAccountScope()
+        .scopeId !==
+      scope.scopeId
+    ) {
+      return;
+    }
+
     activeCharacter =
       null;
 
@@ -174,15 +197,14 @@ async function markSeen(
   }
 
   // CHARACTER_V98B_CELEBRATION_SCOPED_WRITE
-  await AsyncStorage.setItem(
-    getCharacterScopedStorageKey(
-      STORAGE_KEY,
-      scope
-    ),
+  // CHARACTER_V98C_CELEBRATION_CLOUD_DIRTY_WRITE
+  await persistCharacterScopedValueAndSchedule(
+    STORAGE_KEY,
     JSON.stringify([
       ...current,
       characterId,
-    ])
+    ]),
+    scope
   );
 }
 

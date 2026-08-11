@@ -29,6 +29,8 @@ import {
 } from './characterAccountScope';
 import {
   ensureCharacterScopedStorageReady,
+  persistCharacterScopedValueAndSchedule,
+  subscribeCharacterScopedStorageRefresh,
 } from './characterCloudSync';
 
 // CHARACTER_V97A_PROGRESSION_PERSISTENCE
@@ -518,6 +520,27 @@ subscribeCharacterAccountScope(
   }
 );
 
+// CHARACTER_V98C_PROGRESSION_CLOUD_REFRESH
+subscribeCharacterScopedStorageRefresh(
+  (
+    scope
+  ) => {
+    if (
+      refreshCharacterAccountScope()
+        .scopeId !==
+      scope.scopeId
+    ) {
+      return;
+    }
+
+    resetCharacterProgressionScope(
+      scope.scopeId
+    );
+
+    void loadCharacterProgression();
+  }
+);
+
 function emit(): void {
   listeners.forEach(
     (listener) => {
@@ -533,11 +556,7 @@ function serializeWrite(
     CharacterAccountScopeSnapshot =
       ensureCharacterProgressionScope()
 ): Promise<void> {
-  const storageKey =
-    getCharacterScopedStorageKey(
-      STORAGE_KEY,
-      scope
-    );
+
   const serialized =
     JSON.stringify(
       next
@@ -547,9 +566,10 @@ function serializeWrite(
     writeQueue
       .then(
         () =>
-          AsyncStorage.setItem(
-            storageKey,
-            serialized
+          persistCharacterScopedValueAndSchedule(
+            STORAGE_KEY,
+            serialized,
+            scope
           )
       )
       .catch(

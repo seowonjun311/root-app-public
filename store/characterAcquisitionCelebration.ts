@@ -15,6 +15,15 @@ import {
   loadCharacterProgression,
   useCharacterProgression,
 } from './characterProgression';
+import {
+  getCharacterScopedStorageKey,
+  refreshCharacterAccountScope,
+  subscribeCharacterAccountScope,
+  type CharacterAccountScopeSnapshot,
+} from './characterAccountScope';
+import {
+  ensureCharacterScopedStorageReady,
+} from './characterCloudSync';
 
 const STORAGE_KEY =
   'character_acquisition_celebration_v1';
@@ -47,6 +56,17 @@ let activeCharacter:
 let checkPromise:
   Promise<void> | null =
   null;
+
+// CHARACTER_V98B_CELEBRATION_SCOPE_RESET
+subscribeCharacterAccountScope(
+  () => {
+    activeCharacter =
+      null;
+
+    checkPromise =
+      null;
+  }
+);
 
 function normalizeSeen(
   value: unknown
@@ -81,12 +101,22 @@ function normalizeSeen(
   );
 }
 
-async function loadSeen():
-  Promise<CharacterId[]> {
+async function loadSeen(
+  scope:
+    CharacterAccountScopeSnapshot =
+      refreshCharacterAccountScope()
+): Promise<CharacterId[]> {
+  await ensureCharacterScopedStorageReady(
+    scope
+  );
+
   try {
     const raw =
       await AsyncStorage.getItem(
-        STORAGE_KEY
+        getCharacterScopedStorageKey(
+          STORAGE_KEY,
+          scope
+        )
       );
 
     if (
@@ -119,8 +149,13 @@ async function markSeen(
   characterId:
     CharacterId
 ): Promise<void> {
+  const scope =
+    refreshCharacterAccountScope();
+
   const current =
-    await loadSeen();
+    await loadSeen(
+      scope
+    );
 
   if (
     current.includes(
@@ -130,8 +165,20 @@ async function markSeen(
     return;
   }
 
+  if (
+    refreshCharacterAccountScope()
+      .scopeId !==
+    scope.scopeId
+  ) {
+    return;
+  }
+
+  // CHARACTER_V98B_CELEBRATION_SCOPED_WRITE
   await AsyncStorage.setItem(
-    STORAGE_KEY,
+    getCharacterScopedStorageKey(
+      STORAGE_KEY,
+      scope
+    ),
     JSON.stringify([
       ...current,
       characterId,

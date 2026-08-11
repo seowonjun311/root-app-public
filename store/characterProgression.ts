@@ -21,6 +21,15 @@ import {
 import {
   grantCharacterGrowthMilestoneRootPoints,
 } from './characterGrowthPointReward';
+import {
+  getCharacterScopedStorageKey,
+  refreshCharacterAccountScope,
+  subscribeCharacterAccountScope,
+  type CharacterAccountScopeSnapshot,
+} from './characterAccountScope';
+import {
+  ensureCharacterScopedStorageReady,
+} from './characterCloudSync';
 
 // CHARACTER_V97A_PROGRESSION_PERSISTENCE
 const STORAGE_KEY =
@@ -452,6 +461,63 @@ let writeQueue:
   Promise<void> =
   Promise.resolve();
 
+let characterProgressionScopeId:
+  string | null =
+  null;
+
+function resetCharacterProgressionScope(
+  scopeId: string
+): void {
+  characterProgressionScopeId =
+    scopeId;
+
+  cached =
+    createDefaultMap();
+
+  loaded =
+    false;
+
+  loadPromise =
+    null;
+}
+
+// CHARACTER_V98B_PROGRESSION_SCOPE_RESET
+function ensureCharacterProgressionScope():
+  CharacterAccountScopeSnapshot {
+  const scope =
+    refreshCharacterAccountScope();
+
+  if (
+    characterProgressionScopeId !==
+    scope.scopeId
+  ) {
+    resetCharacterProgressionScope(
+      scope.scopeId
+    );
+  }
+
+  return scope;
+}
+
+subscribeCharacterAccountScope(
+  (
+    scope
+  ) => {
+    if (
+      characterProgressionScopeId ===
+      scope.scopeId
+    ) {
+      return;
+    }
+
+    resetCharacterProgressionScope(
+      scope.scopeId
+    );
+
+    void loadCharacterProgression();
+  }
+);
+
 function emit(): void {
   listeners.forEach(
     (listener) => {
@@ -462,8 +528,16 @@ function emit(): void {
 
 function serializeWrite(
   next:
-    CharacterProgressionMap
+    CharacterProgressionMap,
+  scope:
+    CharacterAccountScopeSnapshot =
+      ensureCharacterProgressionScope()
 ): Promise<void> {
+  const storageKey =
+    getCharacterScopedStorageKey(
+      STORAGE_KEY,
+      scope
+    );
   const serialized =
     JSON.stringify(
       next
@@ -474,7 +548,7 @@ function serializeWrite(
       .then(
         () =>
           AsyncStorage.setItem(
-            STORAGE_KEY,
+            storageKey,
             serialized
           )
       )
@@ -496,6 +570,13 @@ function serializeWrite(
 
 export async function loadCharacterProgression():
   Promise<CharacterProgressionMap> {
+  const scope =
+    ensureCharacterProgressionScope();
+
+  await ensureCharacterScopedStorageReady(
+    scope
+  );
+
   if (
     loaded
   ) {
@@ -518,7 +599,10 @@ export async function loadCharacterProgression():
       try {
         const raw =
           await AsyncStorage.getItem(
-            STORAGE_KEY
+            getCharacterScopedStorageKey(
+              STORAGE_KEY,
+              scope
+            )
           );
 
         if (
@@ -543,6 +627,16 @@ export async function loadCharacterProgression():
         }
       }
 
+      if (
+        refreshCharacterAccountScope()
+          .scopeId !==
+        scope.scopeId
+      ) {
+        return cloneMap(
+          createDefaultMap()
+        );
+      }
+
       cached =
         next;
 
@@ -556,12 +650,20 @@ export async function loadCharacterProgression():
       );
     })();
 
+  const currentLoadPromise =
+    loadPromise;
+
   try {
-    return await loadPromise;
+    return await currentLoadPromise;
   }
   finally {
-    loadPromise =
-      null;
+    if (
+      loadPromise ===
+      currentLoadPromise
+    ) {
+      loadPromise =
+        null;
+    }
   }
 }
 
@@ -679,7 +781,20 @@ async function mutateRecord(
     ) =>
       CharacterProgressionRecord
 ): Promise<void> {
+  const scope =
+    ensureCharacterProgressionScope();
+
   await loadCharacterProgression();
+
+  if (
+    refreshCharacterAccountScope()
+      .scopeId !==
+    scope.scopeId
+  ) {
+    throw new Error(
+      'CHARACTER_PROGRESSION_SCOPE_CHANGED'
+    );
+  }
 
   const next =
     cloneMap(
@@ -702,8 +817,10 @@ async function mutateRecord(
 
   emit();
 
+  // CHARACTER_V98B_PROGRESSION_SCOPED_WRITE
   await serializeWrite(
-    next
+    next,
+    scope
   );
 }
 
@@ -1072,6 +1189,11 @@ export function recordCharacterGrowthInteraction(
   interaction:
     CharacterGrowthInteraction
 ): Promise<void> {
+  // CHARACTER_V98B_GROWTH_INTERACTION_SCOPE_CAPTURE
+  const interactionScopeId =
+    refreshCharacterAccountScope()
+      .scopeId;
+
   const amount =
     interaction ===
       'longPress'
@@ -1084,6 +1206,14 @@ export function recordCharacterGrowthInteraction(
     characterGrowthInteractionQueue
       .then(
         async () => {
+          if (
+            refreshCharacterAccountScope()
+              .scopeId !==
+            interactionScopeId
+          ) {
+            return;
+          }
+
           const result =
             await addCharacterGrowthXp(
               characterId,

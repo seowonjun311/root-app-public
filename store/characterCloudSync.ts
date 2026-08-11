@@ -43,13 +43,24 @@ export type CharacterScopedSeedResult = {
   reason:
     | 'seeded-from-legacy'
     | 'scoped-data-exists'
-    | 'legacy-data-empty';
+    | 'legacy-data-empty'
+    | 'legacy-claimed-by-another-scope';
   scope:
     CharacterAccountScopeSnapshot;
 };
 
 const CLOUD_FIELD =
   'characterSystemV98';
+
+// CHARACTER_V98B_LEGACY_SCOPE_CLAIM
+const LEGACY_SCOPE_CLAIM_KEY =
+  'character_account_scope_v1:legacy_claim_owner';
+
+const scopedPreparationPromises =
+  new Map<
+    string,
+    Promise<CharacterScopedSeedResult>
+  >();
 
 function hasAnyData(
   bundle:
@@ -217,16 +228,58 @@ export async function seedScopedCharacterLocalBundleFromLegacyIfEmpty(
       scope
     );
 
+  const claimOwner =
+    await AsyncStorage.getItem(
+      LEGACY_SCOPE_CLAIM_KEY
+    );
+
   if (
     hasAnyData(
       scoped
     )
   ) {
+    // If this scope already contains migrated data and nobody claimed the
+    // legacy bundle yet, make the ownership explicit before another account
+    // can inherit the same V97 state.
+    if (
+      claimOwner ===
+      null
+    ) {
+      const legacy =
+        await readLegacyCharacterLocalBundle();
+
+      if (
+        hasAnyData(
+          legacy
+        )
+      ) {
+        await AsyncStorage.setItem(
+          LEGACY_SCOPE_CLAIM_KEY,
+          scope.scopeId
+        );
+      }
+    }
+
     return {
       seeded:
         false,
       reason:
         'scoped-data-exists',
+      scope,
+    };
+  }
+
+  if (
+    claimOwner !==
+      null &&
+    claimOwner !==
+      scope.scopeId
+  ) {
+    return {
+      seeded:
+        false,
+      reason:
+        'legacy-claimed-by-another-scope',
       scope,
     };
   }
@@ -246,6 +299,18 @@ export async function seedScopedCharacterLocalBundleFromLegacyIfEmpty(
         'legacy-data-empty',
       scope,
     };
+  }
+
+  // Claim first. If the following copy fails, the same scope may retry
+  // because claimOwner === scope.scopeId remains allowed.
+  if (
+    claimOwner ===
+    null
+  ) {
+    await AsyncStorage.setItem(
+      LEGACY_SCOPE_CLAIM_KEY,
+      scope.scopeId
+    );
   }
 
   await writeScopedCharacterLocalBundle(
@@ -497,4 +562,47 @@ export async function downloadCharacterCloudBundleToScopedLocal(
   );
 
   return true;
+}
+// CHARACTER_V98B_SCOPED_STORAGE_PREPARATION
+export function ensureCharacterScopedStorageReady(
+  scope:
+    CharacterAccountScopeSnapshot =
+      getCharacterAccountScopeSnapshot()
+): Promise<CharacterScopedSeedResult> {
+  const existing =
+    scopedPreparationPromises.get(
+      scope.scopeId
+    );
+
+  if (
+    existing
+  ) {
+    return existing;
+  }
+
+  const task =
+    seedScopedCharacterLocalBundleFromLegacyIfEmpty(
+      scope
+    )
+      .finally(
+        () => {
+          if (
+            scopedPreparationPromises.get(
+              scope.scopeId
+            ) ===
+            task
+          ) {
+            scopedPreparationPromises.delete(
+              scope.scopeId
+            );
+          }
+        }
+      );
+
+  scopedPreparationPromises.set(
+    scope.scopeId,
+    task
+  );
+
+  return task;
 }

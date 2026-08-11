@@ -14,6 +14,15 @@ import {
   loadCharacterProgression,
   seedLegacySelectedCharacterAcquisition,
 } from './characterProgression';
+import {
+  getCharacterScopedStorageKey,
+  refreshCharacterAccountScope,
+  subscribeCharacterAccountScope,
+  type CharacterAccountScopeSnapshot,
+} from './characterAccountScope';
+import {
+  ensureCharacterScopedStorageReady,
+} from './characterCloudSync';
 
 const STORAGE_KEY =
   'selected_character_v1';
@@ -40,6 +49,63 @@ let loadPromise:
 
 const listeners =
   new Set<Listener>();
+
+let selectedCharacterScopeId:
+  string | null =
+  null;
+
+function resetSelectedCharacterScope(
+  scopeId: string
+): void {
+  selectedCharacterScopeId =
+    scopeId;
+
+  cachedCharacter =
+    DEFAULT_CHARACTER;
+
+  ready =
+    false;
+
+  loadPromise =
+    null;
+}
+
+// CHARACTER_V98B_SELECTED_SCOPE_RESET
+function ensureSelectedCharacterScope():
+  CharacterAccountScopeSnapshot {
+  const scope =
+    refreshCharacterAccountScope();
+
+  if (
+    selectedCharacterScopeId !==
+    scope.scopeId
+  ) {
+    resetSelectedCharacterScope(
+      scope.scopeId
+    );
+  }
+
+  return scope;
+}
+
+subscribeCharacterAccountScope(
+  (
+    scope
+  ) => {
+    if (
+      selectedCharacterScopeId ===
+      scope.scopeId
+    ) {
+      return;
+    }
+
+    resetSelectedCharacterScope(
+      scope.scopeId
+    );
+
+    void loadSelectedCharacter();
+  }
+);
 
 // CHARACTER_V70_SELECTED_CHARACTER_PERSISTENCE
 export function isCharacterId(
@@ -70,6 +136,13 @@ function emit(
 
 export async function loadSelectedCharacter():
   Promise<CharacterId> {
+  const scope =
+    ensureSelectedCharacterScope();
+
+  await ensureCharacterScopedStorageReady(
+    scope
+  );
+
   if (ready) {
     return cachedCharacter;
   }
@@ -87,7 +160,10 @@ export async function loadSelectedCharacter():
       try {
         const raw =
           await AsyncStorage.getItem(
-            STORAGE_KEY
+            getCharacterScopedStorageKey(
+              STORAGE_KEY,
+              scope
+            )
           );
 
         if (
@@ -102,7 +178,10 @@ export async function loadSelectedCharacter():
           raw !== null
         ) {
           await AsyncStorage.setItem(
-            STORAGE_KEY,
+            getCharacterScopedStorageKey(
+              STORAGE_KEY,
+              scope
+            ),
             DEFAULT_CHARACTER
           );
         }
@@ -114,6 +193,14 @@ export async function loadSelectedCharacter():
             error
           );
         }
+      }
+
+      if (
+        refreshCharacterAccountScope()
+          .scopeId !==
+        scope.scopeId
+      ) {
+        return DEFAULT_CHARACTER;
       }
 
       // CHARACTER_V97B_LEGACY_SELECTION_SEED
@@ -139,6 +226,14 @@ export async function loadSelectedCharacter():
         );
       }
 
+      if (
+        refreshCharacterAccountScope()
+          .scopeId !==
+        scope.scopeId
+      ) {
+        return DEFAULT_CHARACTER;
+      }
+
       cachedCharacter =
         next;
 
@@ -152,18 +247,33 @@ export async function loadSelectedCharacter():
       return next;
     })();
 
+  const currentLoadPromise =
+    loadPromise;
+
   try {
-    return await loadPromise;
+    return await currentLoadPromise;
   }
   finally {
-    loadPromise =
-      null;
+    if (
+      loadPromise ===
+      currentLoadPromise
+    ) {
+      loadPromise =
+        null;
+    }
   }
 }
 
 export async function saveSelectedCharacter(
   characterId: CharacterId
 ): Promise<boolean> {
+  const scope =
+    ensureSelectedCharacterScope();
+
+  await ensureCharacterScopedStorageReady(
+    scope
+  );
+
   // CHARACTER_V97B_ACQUISITION_SELECTION_GATE
   await loadCharacterProgression();
 
@@ -186,8 +296,20 @@ export async function saveSelectedCharacter(
     return false;
   }
 
+  if (
+    refreshCharacterAccountScope()
+      .scopeId !==
+    scope.scopeId
+  ) {
+    return false;
+  }
+
+  // CHARACTER_V98B_SELECTED_SCOPED_WRITE
   await AsyncStorage.setItem(
-    STORAGE_KEY,
+    getCharacterScopedStorageKey(
+      STORAGE_KEY,
+      scope
+    ),
     characterId
   );
 

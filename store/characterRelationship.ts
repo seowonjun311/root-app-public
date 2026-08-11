@@ -12,6 +12,15 @@ import {
 import {
   getSelectedCharacterSnapshot,
 } from './selectedCharacter';
+import {
+  getCharacterScopedStorageKey,
+  refreshCharacterAccountScope,
+  subscribeCharacterAccountScope,
+  type CharacterAccountScopeSnapshot,
+} from './characterAccountScope';
+import {
+  ensureCharacterScopedStorageReady,
+} from './characterCloudSync';
 
 // CHARACTER_V96A_PER_CHARACTER_RELATIONSHIP_STORE
 const STORAGE_KEY =
@@ -307,6 +316,63 @@ let writeQueue:
   Promise<void> =
   Promise.resolve();
 
+let characterRelationshipScopeId:
+  string | null =
+  null;
+
+function resetCharacterRelationshipScope(
+  scopeId: string
+): void {
+  characterRelationshipScopeId =
+    scopeId;
+
+  cached =
+    createEmptyMap();
+
+  loaded =
+    false;
+
+  loadPromise =
+    null;
+}
+
+// CHARACTER_V98B_RELATIONSHIP_SCOPE_RESET
+function ensureCharacterRelationshipScope():
+  CharacterAccountScopeSnapshot {
+  const scope =
+    refreshCharacterAccountScope();
+
+  if (
+    characterRelationshipScopeId !==
+    scope.scopeId
+  ) {
+    resetCharacterRelationshipScope(
+      scope.scopeId
+    );
+  }
+
+  return scope;
+}
+
+subscribeCharacterAccountScope(
+  (
+    scope
+  ) => {
+    if (
+      characterRelationshipScopeId ===
+      scope.scopeId
+    ) {
+      return;
+    }
+
+    resetCharacterRelationshipScope(
+      scope.scopeId
+    );
+
+    void loadCharacterRelationships();
+  }
+);
+
 function emit(): void {
   listeners.forEach(
     (listener) => {
@@ -318,6 +384,13 @@ function emit(): void {
 // CHARACTER_V96A_RELATIONSHIP_PERSISTENCE
 export async function loadCharacterRelationships():
   Promise<CharacterRelationshipMap> {
+  const scope =
+    ensureCharacterRelationshipScope();
+
+  await ensureCharacterScopedStorageReady(
+    scope
+  );
+
   if (
     loaded
   ) {
@@ -340,7 +413,10 @@ export async function loadCharacterRelationships():
       try {
         const raw =
           await AsyncStorage.getItem(
-            STORAGE_KEY
+            getCharacterScopedStorageKey(
+              STORAGE_KEY,
+              scope
+            )
           );
 
         if (
@@ -365,6 +441,16 @@ export async function loadCharacterRelationships():
         }
       }
 
+      if (
+        refreshCharacterAccountScope()
+          .scopeId !==
+        scope.scopeId
+      ) {
+        return cloneMap(
+          createEmptyMap()
+        );
+      }
+
       cached =
         next;
 
@@ -378,12 +464,20 @@ export async function loadCharacterRelationships():
       );
     })();
 
+  const currentLoadPromise =
+    loadPromise;
+
   try {
-    return await loadPromise;
+    return await currentLoadPromise;
   }
   finally {
-    loadPromise =
-      null;
+    if (
+      loadPromise ===
+      currentLoadPromise
+    ) {
+      loadPromise =
+        null;
+    }
   }
 }
 
@@ -395,8 +489,25 @@ function enqueueMutation(
         CharacterRelationshipMap
     ) => void
 ): Promise<void> {
+  const scope =
+    ensureCharacterRelationshipScope();
+
+  const storageKey =
+    getCharacterScopedStorageKey(
+      STORAGE_KEY,
+      scope
+    );
+
   const applyLoadedMutation =
     () => {
+      if (
+        refreshCharacterAccountScope()
+          .scopeId !==
+        scope.scopeId
+      ) {
+        return Promise.resolve();
+      }
+
       const next =
         cloneMap(
           cached
@@ -424,7 +535,7 @@ function enqueueMutation(
           .then(
             () =>
               AsyncStorage.setItem(
-                STORAGE_KEY,
+                storageKey,
                 serialized
               )
           )
@@ -450,10 +561,25 @@ function enqueueMutation(
     return applyLoadedMutation();
   }
 
-  return loadCharacterRelationships()
+  return ensureCharacterScopedStorageReady(
+    scope
+  )
     .then(
       () =>
-        applyLoadedMutation()
+        loadCharacterRelationships()
+    )
+    .then(
+      () => {
+        if (
+          refreshCharacterAccountScope()
+            .scopeId !==
+          scope.scopeId
+        ) {
+          return;
+        }
+
+        return applyLoadedMutation();
+      }
     );
 }
 

@@ -121,3 +121,109 @@ export function getCharacterScopedStorageKey(
     baseKey
   );
 }
+// CHARACTER_V98B_ACCOUNT_SCOPE_CHANGE_OBSERVER
+type CharacterAccountScopeListener =
+  (
+    scope:
+      CharacterAccountScopeSnapshot
+  ) => void;
+
+const characterAccountScopeListeners =
+  new Set<
+    CharacterAccountScopeListener
+  >();
+
+let observedScopeId:
+  string | null =
+  null;
+
+let authObserverInstalled =
+  false;
+
+function emitCharacterAccountScope(
+  scope:
+    CharacterAccountScopeSnapshot
+): void {
+  characterAccountScopeListeners
+    .forEach(
+      (
+        listener
+      ) => {
+        listener(
+          scope
+        );
+      }
+    );
+}
+
+export function refreshCharacterAccountScope():
+  CharacterAccountScopeSnapshot {
+  const scope =
+    getCharacterAccountScopeSnapshot();
+
+  if (
+    observedScopeId !==
+    scope.scopeId
+  ) {
+    observedScopeId =
+      scope.scopeId;
+
+    emitCharacterAccountScope(
+      scope
+    );
+
+    if (
+      __DEV__
+    ) {
+      console.log(
+        '[CHARACTER V98] account scope changed',
+        {
+          kind:
+            scope.kind,
+          scopeId:
+            scope.scopeId,
+        }
+      );
+    }
+  }
+
+  return scope;
+}
+
+function ensureCharacterAccountAuthObserver():
+  void {
+  if (
+    authObserverInstalled
+  ) {
+    return;
+  }
+
+  authObserverInstalled =
+    true;
+
+  auth()
+    .onAuthStateChanged(
+      () => {
+        refreshCharacterAccountScope();
+      }
+    );
+}
+
+export function subscribeCharacterAccountScope(
+  listener:
+    CharacterAccountScopeListener
+): () => void {
+  ensureCharacterAccountAuthObserver();
+
+  characterAccountScopeListeners
+    .add(
+      listener
+    );
+
+  return () => {
+    characterAccountScopeListeners
+      .delete(
+        listener
+      );
+  };
+}

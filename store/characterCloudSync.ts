@@ -8,6 +8,9 @@ import {
   subscribeCharacterAccountScope,
   type CharacterAccountScopeSnapshot,
 } from './characterAccountScope';
+import {
+  CHARACTER_IDS,
+} from '../constants/characterAssets';
 
 export const CHARACTER_LOCAL_STATE_KEYS = {
   selectedCharacter:
@@ -401,6 +404,359 @@ function normalizeBundle(
   };
 }
 
+// CHARACTER_V98E_RELEASE_SCHEMA_GUARD
+export const CHARACTER_CLOUD_SCHEMA_VERSION =
+  1 as const;
+
+const CHARACTER_CLOUD_PERMANENT_ERROR_CODES =
+  new Set([
+    'CHARACTER_CLOUD_SCHEMA_UNSUPPORTED',
+    'CHARACTER_CLOUD_OWNER_MISMATCH',
+    'CHARACTER_CLOUD_SCOPE_MISMATCH',
+    'CHARACTER_CLOUD_UPDATED_AT_INVALID',
+    'CHARACTER_CLOUD_BUNDLE_INVALID',
+    'CHARACTER_CLOUD_LOCAL_BUNDLE_INVALID',
+  ]);
+
+const cloudPermanentErrors =
+  new Map<
+    string,
+    string
+  >();
+
+function createCharacterCloudPermanentError(
+  code: string,
+  message: string
+): Error {
+  const error =
+    new Error(
+      message
+    ) as Error & {
+      code?: string;
+    };
+
+  error.name =
+    'CharacterCloudPermanentError';
+
+  error.code =
+    code;
+
+  return error;
+}
+
+function getCharacterCloudErrorCode(
+  error: unknown
+): string | null {
+  if (
+    !error ||
+    typeof error !==
+      'object'
+  ) {
+    return null;
+  }
+
+  const code =
+    (
+      error as {
+        code?: unknown;
+      }
+    ).code;
+
+  return typeof code ===
+    'string'
+    ? code
+    : null;
+}
+
+function isPermanentCharacterCloudSyncError(
+  error: unknown
+): boolean {
+  const code =
+    getCharacterCloudErrorCode(
+      error
+    );
+
+  return (
+    code !==
+      null &&
+    CHARACTER_CLOUD_PERMANENT_ERROR_CODES.has(
+      code
+    )
+  );
+}
+
+function assertJsonObjectPayload(
+  raw: string,
+  label: string,
+  requireCharacterKeys: boolean
+): void {
+  let parsed:
+    unknown;
+
+  try {
+    parsed =
+      JSON.parse(
+        raw
+      );
+  }
+  catch {
+    throw createCharacterCloudPermanentError(
+      'CHARACTER_CLOUD_BUNDLE_INVALID',
+      label +
+        ' is not valid JSON.'
+    );
+  }
+
+  if (
+    !parsed ||
+    typeof parsed !==
+      'object' ||
+    Array.isArray(
+      parsed
+    )
+  ) {
+    throw createCharacterCloudPermanentError(
+      'CHARACTER_CLOUD_BUNDLE_INVALID',
+      label +
+        ' must be a JSON object.'
+    );
+  }
+
+  if (
+    requireCharacterKeys
+  ) {
+    const record =
+      parsed as
+        Record<
+          string,
+          unknown
+        >;
+
+    const missing =
+      CHARACTER_IDS.filter(
+        (
+          characterId
+        ) =>
+          !Object.prototype
+            .hasOwnProperty
+            .call(
+              record,
+              characterId
+            )
+      );
+
+    if (
+      missing.length >
+      0
+    ) {
+      throw createCharacterCloudPermanentError(
+        'CHARACTER_CLOUD_BUNDLE_INVALID',
+        label +
+          ' is missing character keys: ' +
+          missing.join(
+            ','
+          )
+      );
+    }
+  }
+}
+
+function assertCharacterLocalStateBundleIntegrity(
+  bundle:
+    CharacterLocalStateBundle,
+  source:
+    'cloud' |
+    'local-upload'
+): void {
+  const errorCode =
+    source ===
+      'cloud'
+      ? 'CHARACTER_CLOUD_BUNDLE_INVALID'
+      : 'CHARACTER_CLOUD_LOCAL_BUNDLE_INVALID';
+
+  const fail =
+    (
+      message: string
+    ): never => {
+      throw createCharacterCloudPermanentError(
+        errorCode,
+        message
+      );
+    };
+
+  const selected =
+    bundle
+      .selectedCharacter;
+
+  if (
+    selected !==
+      null &&
+    !(
+      CHARACTER_IDS as
+        readonly string[]
+    ).includes(
+      selected
+    )
+  ) {
+    fail(
+      'selectedCharacter is invalid: ' +
+      selected
+    );
+  }
+
+  if (
+    bundle.progression !==
+    null
+  ) {
+    try {
+      assertJsonObjectPayload(
+        bundle.progression,
+        'progression',
+        true
+      );
+    }
+    catch (error) {
+      if (
+        source ===
+        'local-upload'
+      ) {
+        fail(
+          (
+            error as Error
+          ).message
+        );
+      }
+
+      throw error;
+    }
+  }
+
+  if (
+    bundle.relationship !==
+    null
+  ) {
+    try {
+      assertJsonObjectPayload(
+        bundle.relationship,
+        'relationship',
+        true
+      );
+    }
+    catch (error) {
+      if (
+        source ===
+        'local-upload'
+      ) {
+        fail(
+          (
+            error as Error
+          ).message
+        );
+      }
+
+      throw error;
+    }
+  }
+
+  if (
+    bundle.acquisitionCelebration !==
+    null
+  ) {
+    let parsed:
+      unknown;
+
+    try {
+      parsed =
+        JSON.parse(
+          bundle
+            .acquisitionCelebration
+        );
+    }
+    catch {
+      fail(
+        'acquisitionCelebration is not valid JSON.'
+      );
+    }
+
+    if (
+      !Array.isArray(
+        parsed
+      ) ||
+      parsed.some(
+        (
+          value
+        ) =>
+          typeof value !==
+            'string' ||
+          !(
+            CHARACTER_IDS as
+              readonly string[]
+          ).includes(
+            value
+          )
+      )
+    ) {
+      fail(
+        'acquisitionCelebration must contain only valid character ids.'
+      );
+    }
+  }
+}
+
+function assertRawCharacterBundleFieldTypes(
+  value: unknown
+): void {
+  if (
+    !value ||
+    typeof value !==
+      'object' ||
+    Array.isArray(
+      value
+    )
+  ) {
+    throw createCharacterCloudPermanentError(
+      'CHARACTER_CLOUD_BUNDLE_INVALID',
+      'Cloud character bundle must be an object.'
+    );
+  }
+
+  const record =
+    value as
+      Record<
+        string,
+        unknown
+      >;
+
+  for (
+    const field of [
+      'selectedCharacter',
+      'progression',
+      'relationship',
+      'acquisitionCelebration',
+    ]
+  ) {
+    const fieldValue =
+      record[
+        field
+      ];
+
+    if (
+      fieldValue !==
+        undefined &&
+      fieldValue !==
+        null &&
+      typeof fieldValue !==
+        'string'
+    ) {
+      throw createCharacterCloudPermanentError(
+        'CHARACTER_CLOUD_BUNDLE_INVALID',
+        field +
+          ' must be a string or null.'
+      );
+    }
+  }
+}
+
 // CHARACTER_V98A_FIRESTORE_CHARACTER_ENVELOPE_READ
 export async function loadCharacterCloudEnvelope(
   scope:
@@ -444,6 +800,63 @@ export async function loadCharacterCloudEnvelope(
         unknown
       >;
 
+  const version =
+    Number(
+      record.version
+    );
+
+  if (
+    version !==
+    CHARACTER_CLOUD_SCHEMA_VERSION
+  ) {
+    throw createCharacterCloudPermanentError(
+      'CHARACTER_CLOUD_SCHEMA_UNSUPPORTED',
+      'Unsupported character cloud schema version: ' +
+      String(
+        record.version
+      )
+    );
+  }
+
+  if (
+    record.ownerUid !==
+    uid
+  ) {
+    throw createCharacterCloudPermanentError(
+      'CHARACTER_CLOUD_OWNER_MISMATCH',
+      'Character cloud ownerUid does not match the active Firebase user.'
+    );
+  }
+
+  if (
+    record.scopeId !==
+    scope.scopeId
+  ) {
+    throw createCharacterCloudPermanentError(
+      'CHARACTER_CLOUD_SCOPE_MISMATCH',
+      'Character cloud scopeId does not match the active account scope.'
+    );
+  }
+
+  if (
+    typeof record.updatedAt !==
+      'string' ||
+    !Number.isFinite(
+      Date.parse(
+        record.updatedAt
+      )
+    )
+  ) {
+    throw createCharacterCloudPermanentError(
+      'CHARACTER_CLOUD_UPDATED_AT_INVALID',
+      'Character cloud updatedAt is missing or invalid.'
+    );
+  }
+
+  assertRawCharacterBundleFieldTypes(
+    record.bundle
+  );
+
   const bundle =
     normalizeBundle(
       record.bundle
@@ -452,8 +865,16 @@ export async function loadCharacterCloudEnvelope(
   if (
     bundle === null
   ) {
-    return null;
+    throw createCharacterCloudPermanentError(
+      'CHARACTER_CLOUD_BUNDLE_INVALID',
+      'Character cloud bundle could not be normalized.'
+    );
   }
+
+  assertCharacterLocalStateBundleIntegrity(
+    bundle,
+    'cloud'
+  );
 
   return {
     version: 1,
@@ -488,6 +909,11 @@ export async function saveCharacterCloudEnvelope(
     assertAuthenticatedScope(
       scope
     );
+
+  assertCharacterLocalStateBundleIntegrity(
+    bundle,
+    'local-upload'
+  );
 
   const envelope:
     CharacterCloudEnvelope = {
@@ -936,6 +1362,10 @@ function markCloudSyncSucceeded(
     scope.scopeId,
     0
   );
+
+  cloudPermanentErrors.delete(
+    scope.scopeId
+  );
 }
 
 // CHARACTER_V98C_ATOMIC_SCOPED_DIRTY_WRITE
@@ -1038,6 +1468,11 @@ async function saveCharacterCloudEnvelopeIfUnchanged(
       scope
     );
 
+  assertCharacterLocalStateBundleIntegrity(
+    bundle,
+    'local-upload'
+  );
+
   const reference =
     firestore()
       .collection(
@@ -1133,6 +1568,11 @@ async function applyCloudEnvelopeToLocal(
   scope:
     CharacterAccountScopeSnapshot
 ): Promise<void> {
+  assertCharacterLocalStateBundleIntegrity(
+    envelope.bundle,
+    'cloud'
+  );
+
   await writeScopedCharacterLocalBundle(
     envelope.bundle,
     scope
@@ -1376,9 +1816,29 @@ function enqueueCharacterCloudSync(
             );
           }
 
-          scheduleRetry(
-            scope
-          );
+          // CHARACTER_V98E_PERMANENT_ERROR_RETRY_GUARD
+          if (
+            isPermanentCharacterCloudSyncError(
+              error
+            )
+          ) {
+            clearRetryTimer(
+              scope.scopeId
+            );
+
+            cloudPermanentErrors.set(
+              scope.scopeId,
+              getCharacterCloudErrorCode(
+                error
+              ) ??
+              'CHARACTER_CLOUD_PERMANENT_ERROR'
+            );
+          }
+          else {
+            scheduleRetry(
+              scope
+            );
+          }
 
           throw error;
         }
@@ -1582,6 +2042,12 @@ export type CharacterCloudDiagnosticsSnapshot = {
   retryAttempt: number;
   retryScheduled: boolean;
   syncInFlight: boolean;
+  releaseSchemaVersion: number;
+  releaseSchemaGuardActive: boolean;
+  cloudReadError:
+    string | null;
+  permanentSyncError:
+    string | null;
 };
 
 export async function getCharacterCloudDiagnosticsSnapshot():
@@ -1610,6 +2076,10 @@ export async function getCharacterCloudDiagnosticsSnapshot():
     CharacterCloudEnvelope | null =
     null;
 
+  let cloudReadError:
+    string | null =
+    null;
+
   if (
     scope.kind ===
     'user'
@@ -1629,6 +2099,18 @@ export async function getCharacterCloudDiagnosticsSnapshot():
           error
         );
       }
+
+      cloudReadError =
+        getCharacterCloudErrorCode(
+          error
+        ) ??
+        (
+          error instanceof Error
+            ? error.message
+            : String(
+                error
+              )
+        );
     }
   }
 
@@ -1694,6 +2176,16 @@ export async function getCharacterCloudDiagnosticsSnapshot():
       cloudSyncQueues.has(
         scope.scopeId
       ),
+    releaseSchemaVersion:
+      CHARACTER_CLOUD_SCHEMA_VERSION,
+    releaseSchemaGuardActive:
+      true,
+    cloudReadError,
+    permanentSyncError:
+      cloudPermanentErrors.get(
+        scope.scopeId
+      ) ??
+      null,
   };
 }
 

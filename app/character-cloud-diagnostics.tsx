@@ -570,6 +570,73 @@ export default function CharacterCloudDiagnosticsScreen() {
                     </Text>
                   </View>
 
+                  {/* CHARACTER_V98E_RELEASE_INTEGRITY_CARD */}
+                  <View
+                    style={
+                      styles.card
+                    }
+                  >
+                    <Text
+                      style={
+                        styles.cardTitle
+                      }
+                    >
+                      {'Release Integrity'}
+                    </Text>
+
+                    <Text
+                      style={
+                        styles.detail
+                      }
+                    >
+                      {
+                        'schemaVersion: ' +
+                        snapshot.releaseSchemaVersion
+                      }
+                    </Text>
+
+                    <Text
+                      style={
+                        styles.detail
+                      }
+                    >
+                      {
+                        'schemaGuard: ' +
+                        boolText(
+                          snapshot.releaseSchemaGuardActive
+                        )
+                      }
+                    </Text>
+
+                    <Text
+                      style={
+                        styles.detail
+                      }
+                    >
+                      {
+                        'cloudReadError: ' +
+                        (
+                          snapshot.cloudReadError ??
+                          '-'
+                        )
+                      }
+                    </Text>
+
+                    <Text
+                      style={
+                        styles.detail
+                      }
+                    >
+                      {
+                        'permanentSyncError: ' +
+                        (
+                          snapshot.permanentSyncError ??
+                          '-'
+                        )
+                      }
+                    </Text>
+                  </View>
+
                   <View
                     style={
                       styles.card

@@ -13,6 +13,8 @@ export type CharacterPersonalityId =
 
 export type CharacterPersonalityProfile = {
   id: CharacterPersonalityId;
+  // CHARACTER_V95B_PERSONALITY_POLICY_VERSION
+  policyVersion: number;
   restMultipliers: {
     lookAround: number;
     sitRest: number;
@@ -33,6 +35,7 @@ export const CHARACTER_PERSONALITY:
   > = {
   rooty: {
     id: 'balanced',
+    policyVersion: 1,
     restMultipliers: {
       lookAround: 1,
       sitRest: 1,
@@ -46,6 +49,7 @@ export const CHARACTER_PERSONALITY:
   },
   moru: {
     id: 'curious-active',
+    policyVersion: 1,
     restMultipliers: {
       lookAround: 1.25,
       sitRest: 0.95,
@@ -59,6 +63,7 @@ export const CHARACTER_PERSONALITY:
   },
   mongsil: {
     id: 'cozy-calm',
+    policyVersion: 1,
     restMultipliers: {
       lookAround: 0.75,
       sitRest: 1.15,
@@ -72,6 +77,7 @@ export const CHARACTER_PERSONALITY:
   },
   dami: {
     id: 'social-warm',
+    policyVersion: 1,
     restMultipliers: {
       lookAround: 1.15,
       sitRest: 1.2,
@@ -86,30 +92,32 @@ export const CHARACTER_PERSONALITY:
   // CHARACTER_V95A_PIO_EXPLORER_IDENTITY
 pio: {
     id: 'explorer-curious',
+    policyVersion: 2,
     restMultipliers: {
-      lookAround: 1.25,
-      sitRest: 0.95,
-      nap: 0.7,
+      lookAround: 1.55,
+      sitRest: 0.85,
+      nap: 0.55,
     },
     socialChanceMultipliers: {
-      spontaneousHappy: 1.35,
-      passiveAttention: 0.85,
-      bondedFollowUpTouch: 0.9,
+      spontaneousHappy: 1.15,
+      passiveAttention: 0.75,
+      bondedFollowUpTouch: 0.85,
     },
   },
   // CHARACTER_V91B_NURI_PERSONALITY
   // CHARACTER_V95A_NURI_PLAYFUL_IDENTITY
 nuri: {
     id: 'playful-adventurous',
+    policyVersion: 2,
     restMultipliers: {
-      lookAround: 1.25,
-      sitRest: 0.95,
-      nap: 0.7,
+      lookAround: 1.15,
+      sitRest: 0.8,
+      nap: 0.6,
     },
     socialChanceMultipliers: {
-      spontaneousHappy: 1.35,
-      passiveAttention: 0.85,
-      bondedFollowUpTouch: 0.9,
+      spontaneousHappy: 1.65,
+      passiveAttention: 1.05,
+      bondedFollowUpTouch: 1,
     },
   },
   // CHARACTER_V92B_TORI_PERSONALITY
@@ -121,6 +129,7 @@ nuri: {
   // CHARACTER_V95A_TORI_GENTLE_SHY_IDENTITY
 tori: {
     id: 'gentle-shy',
+    policyVersion: 2,
     restMultipliers: {
       lookAround: 1.25,
       sitRest: 1.45,

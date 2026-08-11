@@ -8,6 +8,9 @@ import {
   CHARACTER_IDS,
   type CharacterId,
 } from '../constants/characterAssets';
+import {
+  getCharacterPersonalityProfile,
+} from '../constants/characterPersonality';
 import type {
   CharacterRestWeights,
   CharacterSocialChanceChannel,
@@ -21,6 +24,8 @@ export const CHARACTER_RUNTIME_STATISTICS_LIMIT =
 
 export type CharacterRestStatisticSample = {
   timestamp: number;
+  // CHARACTER_V95B_VERSIONED_REST_STATISTICS
+  personalityPolicyVersion: number;
   personalityRest:
     CharacterRestWeights | null;
   finalRest:
@@ -30,6 +35,8 @@ export type CharacterRestStatisticSample = {
 
 export type CharacterSocialStatisticSample = {
   timestamp: number;
+  // CHARACTER_V95B_VERSIONED_SOCIAL_STATISTICS
+  personalityPolicyVersion: number;
   channel:
     CharacterSocialChanceChannel;
   chance: number;
@@ -225,8 +232,20 @@ function normalizeRestSample(
       ? record.behavior
       : 'unknown';
 
+  const personalityPolicyVersion =
+    typeof record.personalityPolicyVersion ===
+      'number' &&
+    Number.isInteger(
+      record.personalityPolicyVersion
+    ) &&
+    record.personalityPolicyVersion >=
+      0
+      ? record.personalityPolicyVersion
+      : 0;
+
   return {
     timestamp,
+    personalityPolicyVersion,
     personalityRest:
       normalizeRestWeights(
         record.personalityRest
@@ -285,8 +304,20 @@ function normalizeSocialSample(
       ? record.timestamp
       : 0;
 
+  const personalityPolicyVersion =
+    typeof record.personalityPolicyVersion ===
+      'number' &&
+    Number.isInteger(
+      record.personalityPolicyVersion
+    ) &&
+    record.personalityPolicyVersion >=
+      0
+      ? record.personalityPolicyVersion
+      : 0;
+
   return {
     timestamp,
+    personalityPolicyVersion,
     channel:
       record.channel,
     chance:
@@ -589,6 +620,10 @@ export function recordCharacterRestStatistic(
     CharacterRestStatisticSample = {
     timestamp:
       Date.now(),
+    personalityPolicyVersion:
+      getCharacterPersonalityProfile(
+        characterId
+      ).policyVersion,
     personalityRest:
       personalityRest
         ? {
@@ -627,6 +662,10 @@ export function recordCharacterSocialStatistic(
     CharacterSocialStatisticSample = {
     timestamp:
       Date.now(),
+    personalityPolicyVersion:
+      getCharacterPersonalityProfile(
+        characterId
+      ).policyVersion,
     channel,
     chance:
       clampChance(

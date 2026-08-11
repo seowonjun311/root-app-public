@@ -852,15 +852,37 @@ export function validateCharacterPersonalityRuntime(
   statistics:
     CharacterRuntimeStatistics
 ): CharacterPersonalityValidationReport {
+  // CHARACTER_V95B_CURRENT_POLICY_STATISTICS_ONLY
+  const currentPolicyVersion =
+    getCharacterPersonalityProfile(
+      characterId
+    ).policyVersion;
+
+  const currentStatistics:
+    CharacterRuntimeStatistics = {
+    restSamples:
+      statistics.restSamples.filter(
+        (sample) =>
+          sample.personalityPolicyVersion ===
+          currentPolicyVersion
+      ),
+    socialSamples:
+      statistics.socialSamples.filter(
+        (sample) =>
+          sample.personalityPolicyVersion ===
+          currentPolicyVersion
+      ),
+  };
+
   const signature =
     createSignatureCheck(
       characterId,
-      statistics
+      currentStatistics
     );
 
   const execution =
     createExecutionCheck(
-      statistics
+      currentStatistics
     );
 
   const socialChecks =
@@ -874,7 +896,7 @@ export function validateCharacterPersonalityRuntime(
       (channel) =>
         createSocialCheck(
           characterId,
-          statistics,
+          currentStatistics,
           channel
         )
     );
@@ -911,12 +933,12 @@ export function validateCharacterPersonalityRuntime(
     overallStatus,
     confidence:
       resolveConfidence(
-        statistics.restSamples.length
+        currentStatistics.restSamples.length
       ),
     restSampleCount:
-      statistics.restSamples.length,
+      currentStatistics.restSamples.length,
     socialSampleCount:
-      statistics.socialSamples.length,
+      currentStatistics.socialSamples.length,
     personalityDelta:
       signature.delta,
     selectorMaxError:

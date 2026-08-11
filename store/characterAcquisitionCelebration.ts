@@ -26,6 +26,10 @@ import {
   persistCharacterScopedValueAndSchedule,
   subscribeCharacterScopedStorageRefresh,
 } from './characterCloudSync';
+import {
+  hasCharacterRewardPresentationConsumer,
+  presentCharacterAcquisitionReward,
+} from './characterRewardPresentation';
 
 const STORAGE_KEY =
   'character_acquisition_celebration_v1';
@@ -320,57 +324,108 @@ async function showNext():
     characterId;
 
   // CHARACTER_V97F_ONE_TIME_ACQUISITION_ALERT
-  Alert.alert(
+    // CHARACTER_V99A_RICH_ACQUISITION_PRESENTATION
+  const showFallbackAcquisitionAlert =
+    () => {
+    Alert.alert(
     '\uC0C8 \uCE90\uB9AD\uD130 \uD68D\uB4DD!',
     (
-      CHARACTER_LABEL[
-        characterId
-      ] +
-      '\uB97C \uD68D\uB4DD\uD588\uC5B4\uC694.\n' +
-      acquisitionSourceText(
-        snapshot.acquisitionSource
-      ) +
-      '\uC73C\uB85C \uC7A0\uAE08\uC774 \uD574\uC81C\uB418\uC5C8\uC2B5\uB2C8\uB2E4.'
+    CHARACTER_LABEL[
+    characterId
+    ] +
+    '\uB97C \uD68D\uB4DD\uD588\uC5B4\uC694.\n' +
+    acquisitionSourceText(
+    snapshot.acquisitionSource
+    ) +
+    '\uC73C\uB85C \uC7A0\uAE08\uC774 \uD574\uC81C\uB418\uC5C8\uC2B5\uB2C8\uB2E4.'
     ),
     [
-      {
-        text:
-          '\uD655\uC778',
-        onPress:
-          () => {
-            const completed =
-              characterId;
+    {
+    text:
+    '\uD655\uC778',
+    onPress:
+    () => {
+    const completed =
+    characterId;
 
-            activeCharacter =
-              null;
+    activeCharacter =
+    null;
 
-            void markSeen(
-              completed
-            )
-              .then(
-                () =>
-                  showNext()
-              )
-              .catch(
-                (error) => {
-                  if (
-                    __DEV__
-                  ) {
-                    console.warn(
-                      '[CHARACTER V97] acquisition celebration save failed',
-                      error
-                    );
-                  }
-                }
-              );
-          },
-      },
+    void markSeen(
+    completed
+    )
+    .then(
+    () =>
+    showNext()
+    )
+    .catch(
+    (error) => {
+    if (
+    __DEV__
+    ) {
+    console.warn(
+    '[CHARACTER V97] acquisition celebration save failed',
+    error
+    );
+    }
+    }
+    );
+    },
+    },
     ],
     {
-      cancelable:
-        false,
+    cancelable:
+    false,
     }
-  );
+    );
+    };
+
+  if (
+    hasCharacterRewardPresentationConsumer()
+  ) {
+    void presentCharacterAcquisitionReward({
+      characterId,
+      sourceText:
+        acquisitionSourceText(
+          snapshot.acquisitionSource
+        ),
+    })
+      .then(
+        () => {
+          const completed =
+            characterId;
+
+          activeCharacter =
+            null;
+
+          return markSeen(
+            completed
+          )
+            .then(
+              () =>
+                showNext()
+            );
+        }
+      )
+      .catch(
+        (error) => {
+          if (
+            __DEV__
+          ) {
+            console.warn(
+              '[CHARACTER V99] acquisition presentation failed; using Alert fallback',
+              error
+            );
+          }
+
+          showFallbackAcquisitionAlert();
+        }
+      );
+
+    return;
+  }
+
+  showFallbackAcquisitionAlert();
 }
 
 // CHARACTER_V97F_SERIALIZED_CELEBRATION_CHECK

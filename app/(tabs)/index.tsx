@@ -195,6 +195,7 @@ import {
 import {
   useCharacterAcquisitionCelebration,
 } from '../../store/characterAcquisitionCelebration';
+import CharacterRewardPresentationOverlay from '../../components/characters/CharacterRewardPresentationOverlay';
 
 const firebaseApp =
   getApp();
@@ -9121,6 +9122,10 @@ const previewSize = isTwoByTwoBuilding
 
  return (
   <GestureHandlerRootView style={{ flex: 1 }}>
+        {/* CHARACTER_V99A_REWARD_PRESENTATION_HOST_HOME */}
+        <CharacterRewardPresentationOverlay
+          hostId="home"
+        />
     <ScrollView
   style={[
     styles.container,

@@ -32,6 +32,9 @@ import {
   persistCharacterScopedValueAndSchedule,
   subscribeCharacterScopedStorageRefresh,
 } from './characterCloudSync';
+import {
+  enqueueCharacterGrowthLevelPresentations,
+} from './characterRewardPresentation';
 
 // CHARACTER_V97A_PROGRESSION_PERSISTENCE
 const STORAGE_KEY =
@@ -1239,6 +1242,22 @@ export function recordCharacterGrowthInteraction(
               characterId,
               amount
             );
+          // CHARACTER_V99A_GROWTH_PRESENTATION_EMIT
+          if (
+            result
+              .newlyReachedLevels
+              .length >
+            0
+          ) {
+            enqueueCharacterGrowthLevelPresentations({
+              characterId:
+                result.characterId,
+              beforeLevel:
+                result.beforeLevel,
+              newlyReachedLevels:
+                result.newlyReachedLevels,
+            });
+          }
 
           // CHARACTER_V97D_GROWTH_REWARD_SETTLEMENT
           const rewardSettlements =

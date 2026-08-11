@@ -54,6 +54,7 @@ import {
 import {
   useCharacterAcquisitionCelebration,
 } from '../store/characterAcquisitionCelebration';
+import CharacterRewardPresentationOverlay from '../components/characters/CharacterRewardPresentationOverlay';
 
 const ACTIONS:
   readonly CharacterAction[] = [
@@ -327,6 +328,10 @@ useCharacterAcquisitionCelebration();
 
   return (
     <>
+        {/* CHARACTER_V99A_REWARD_PRESENTATION_HOST_PREVIEW */}
+        <CharacterRewardPresentationOverlay
+          hostId="preview"
+        />
       <Stack.Screen
         options={{
           title:

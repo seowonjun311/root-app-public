@@ -346,7 +346,27 @@ export default function CharacterPreviewScreen() {
             </Pressable>
           </Link>
 
-          {/* CHARACTER_V77_DIAGNOSTICS_ENTRY */}
+          {/* CHARACTER_V83_IMAGE_LOAD_DIAGNOSTICS_ENTRY */}
+          <Link
+            href={
+              '/character-image-diagnostics' as never
+            }
+            asChild
+          >
+            <Pressable
+              style={
+                styles.diagnosticsButton
+              }
+            >
+              <Text
+                style={
+                  styles.diagnosticsButtonText
+                }
+              >
+                {'\uC774\uBBF8\uC9C0 \uB85C\uB529 \uC9C4\uB2E8'}
+              </Text>
+            </Pressable>
+          </Link>          {/* CHARACTER_V77_DIAGNOSTICS_ENTRY */}
           <Link
             href={
               '/character-runtime-diagnostics' as never

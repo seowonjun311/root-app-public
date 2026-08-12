@@ -5,9 +5,12 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.ServiceInfo
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.PixelFormat
 import android.graphics.drawable.GradientDrawable
@@ -15,6 +18,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.os.PowerManager
 import android.os.SystemClock
 import android.provider.Settings
 import android.view.Gravity
@@ -40,6 +44,7 @@ import org.json.JSONObject
 // CHARACTER_V101I_QUIET_SLEEP_MODE
 // CHARACTER_V101J_BEHAVIOR_ANIMATION_STATE_MACHINE
 // CHARACTER_V101K_SCREEN_EDGE_LIFE_AVOIDANCE
+// CHARACTER_V101L_FINAL_STABILITY_HARDENING
 class RootFloatingCharacterService : Service() {
   private data class GoalCompletion(
     val id: String,
@@ -82,6 +87,8 @@ class RootFloatingCharacterService : Service() {
     private const val PREF_CHARACTER_ID = "characterId"
     private const val PREF_X = "x"
     private const val PREF_Y = "y"
+    private const val PREF_DISPLAY_WIDTH_PX = "displayWidthPx"
+    private const val PREF_DISPLAY_HEIGHT_PX = "displayHeightPx"
     private const val PREF_SCALE = "scale"
     private const val PREF_AUTO_MOVE = "autoMoveEnabled"
     private const val PREF_GOALS_JSON = "goalSnapshotJson"
@@ -122,6 +129,8 @@ class RootFloatingCharacterService : Service() {
     private const val AUTO_MOVE_EDGE_PERCH_CHANCE_PERCENT = 22
     private const val AUTO_MOVE_LOWER_BAND_CHANCE_PERCENT = 36
     private const val AUTO_MOVE_TARGET_ATTEMPTS = 12
+    private const val DISPLAY_RECONCILE_DELAY_MS = 140L
+    private const val SCREEN_RESUME_DELAY_MS = 220L
     private const val USER_REJECT_DRAG_DISTANCE_DP = 52
     private const val USER_AVOID_RADIUS_DP = 110
     private const val USER_AVOID_MEMORY_MS = 480000L
@@ -1329,6 +1338,43 @@ class RootFloatingCharacterService : Service() {
 
   private lateinit var windowManager: WindowManager
 
+  // CHARACTER_V101L_ROTATION_RESOLUTION_RUNTIME
+  private val stabilityHandler =
+    Handler(
+      Looper.getMainLooper()
+    )
+
+  private var screenInteractive = true
+  private var screenStateReceiverRegistered = false
+  private var lastKnownDisplayWidth = 0
+  private var lastKnownDisplayHeight = 0
+
+  private val displayReconcileRunnable =
+    Runnable {
+      reconcileOverlayForCurrentDisplay()
+    }
+
+  // CHARACTER_V101L_SCREEN_POWER_RUNTIME
+  private val screenStateReceiver =
+    object : BroadcastReceiver() {
+      override fun onReceive(
+        context: Context?,
+        intent: Intent?
+      ) {
+        when (intent?.action) {
+          Intent.ACTION_SCREEN_OFF ->
+            handleScreenInteractiveChanged(
+              false
+            )
+
+          Intent.ACTION_SCREEN_ON ->
+            handleScreenInteractiveChanged(
+              true
+            )
+        }
+      }
+    }
+
   private var overlayView: ImageView? = null
   private var overlayParams: WindowManager.LayoutParams? = null
 
@@ -1384,6 +1430,10 @@ class RootFloatingCharacterService : Service() {
   private val animationRunnable =
     object : Runnable {
       override fun run() {
+        if (!screenInteractive) {
+          return
+        }
+
         val view =
           overlayView
             ?: return
@@ -1660,6 +1710,10 @@ class RootFloatingCharacterService : Service() {
   private val behaviorStateRunnable =
     object : Runnable {
       override fun run() {
+        if (!screenInteractive) {
+          return
+        }
+
         val now =
           SystemClock.uptimeMillis()
 
@@ -1764,6 +1818,13 @@ class RootFloatingCharacterService : Service() {
       behaviorStateRunnable
     )
 
+    if (
+      !screenInteractive ||
+      overlayView == null
+    ) {
+      return
+    }
+
     behaviorHandler.postDelayed(
       behaviorStateRunnable,
       BEHAVIOR_STATE_CHECK_MS
@@ -1799,6 +1860,10 @@ class RootFloatingCharacterService : Service() {
   private val motionRunnable =
     object : Runnable {
       override fun run() {
+        if (!screenInteractive) {
+          return
+        }
+
         val view =
           overlayView
             ?: return
@@ -2071,6 +2136,7 @@ class RootFloatingCharacterService : Service() {
     object : Runnable {
       override fun run() {
         if (
+          !screenInteractive ||
           !goalSpeechEnabled ||
           quietActive ||
           overlayView == null
@@ -2117,6 +2183,17 @@ class RootFloatingCharacterService : Service() {
       getSystemService(
         WINDOW_SERVICE
       ) as WindowManager
+
+    screenInteractive =
+      isScreenInteractiveNow()
+
+    lastKnownDisplayWidth =
+      currentDisplayWidth()
+
+    lastKnownDisplayHeight =
+      currentDisplayHeight()
+
+    registerScreenStateReceiver()
 
     currentScale =
       readScale(
@@ -2170,7 +2247,14 @@ class RootFloatingCharacterService : Service() {
     flags: Int,
     startId: Int
   ): Int {
-    when (intent?.action) {
+    if (intent == null) {
+      restoreAfterStickyServiceRestart()
+      return START_STICKY
+    }
+
+    scheduleDisplayReconcile()
+
+    when (intent.action) {
       ACTION_STOP -> {
         stopSelf()
         return START_NOT_STICKY
@@ -2364,7 +2448,22 @@ class RootFloatingCharacterService : Service() {
     intent: Intent?
   ): IBinder? = null
 
+  override fun onConfigurationChanged(
+    newConfig: Configuration
+  ) {
+    super.onConfigurationChanged(
+      newConfig
+    )
+
+    // CHARACTER_V101L_ROTATION_RESOLUTION_RECONCILE
+    scheduleDisplayReconcile()
+  }
+
   override fun onDestroy() {
+    stabilityHandler.removeCallbacksAndMessages(
+      null
+    )
+    unregisterScreenStateReceiver()
     removeOverlay()
     isRunning = false
     super.onDestroy()
@@ -2378,6 +2477,554 @@ class RootFloatingCharacterService : Service() {
     // after the ROOT Activity is removed from Recents.
     super.onTaskRemoved(
       rootIntent
+    )
+  }
+
+  // CHARACTER_V101L_SERVICE_RESTART_RECOVERY
+  private fun restoreAfterStickyServiceRestart() {
+    currentScale =
+      readScale(
+        this
+      )
+
+    autoMoveEnabled =
+      readAutoMoveEnabled(
+        this
+      )
+
+    goalSpeechEnabled =
+      readGoalSpeechEnabled(
+        this
+      )
+
+    pendingGoals =
+      parseGoalSnapshot(
+        prefs.getString(
+          PREF_GOALS_JSON,
+          "[]"
+        )
+          ?: "[]"
+      )
+
+    quietActive =
+      isQuietActiveNow(
+        this
+      )
+
+    scheduledQuietActive =
+      isScheduledQuietNow(
+        this
+      )
+
+    screenInteractive =
+      isScreenInteractiveNow()
+
+    showOrUpdateOverlay(
+      readSelectedCharacter(
+        this
+      )
+    )
+
+    scheduleDisplayReconcile()
+
+    if (screenInteractive) {
+      refreshQuietMode(
+        force = true
+      )
+    }
+    else {
+      suspendVisualRuntimeForScreenOff()
+    }
+  }
+
+  private fun currentDisplayWidth(): Int =
+    resources
+      .displayMetrics
+      .widthPixels
+      .coerceAtLeast(
+        1
+      )
+
+  private fun currentDisplayHeight(): Int =
+    resources
+      .displayMetrics
+      .heightPixels
+      .coerceAtLeast(
+        1
+      )
+
+  private fun remapDisplayCoordinate(
+    value: Int,
+    oldMax: Int,
+    newMax: Int
+  ): Int {
+    if (newMax <= 0) {
+      return 0
+    }
+
+    if (oldMax <= 0) {
+      return value.coerceIn(
+        0,
+        newMax
+      )
+    }
+
+    val safeValue =
+      value.coerceIn(
+        0,
+        oldMax
+      )
+
+    return (
+      safeValue.toLong() *
+        newMax.toLong() /
+        oldMax.toLong()
+    )
+      .toInt()
+      .coerceIn(
+        0,
+        newMax
+      )
+  }
+
+  private fun restoreOverlayPositionForCurrentDisplay(
+    params: WindowManager.LayoutParams
+  ) {
+    val width =
+      currentDisplayWidth()
+
+    val height =
+      currentDisplayHeight()
+
+    val savedWidth =
+      prefs
+        .getInt(
+          PREF_DISPLAY_WIDTH_PX,
+          width
+        )
+        .coerceAtLeast(
+          1
+        )
+
+    val savedHeight =
+      prefs
+        .getInt(
+          PREF_DISPLAY_HEIGHT_PX,
+          height
+        )
+        .coerceAtLeast(
+          1
+        )
+
+    val oldMaxX =
+      (
+        savedWidth -
+          params.width
+      ).coerceAtLeast(
+        0
+      )
+
+    val oldMaxY =
+      (
+        savedHeight -
+          params.height
+      ).coerceAtLeast(
+        0
+      )
+
+    val newMaxX =
+      (
+        width -
+          params.width
+      ).coerceAtLeast(
+        0
+      )
+
+    val newMaxY =
+      (
+        height -
+          params.height
+      ).coerceAtLeast(
+        0
+      )
+
+    params.x =
+      remapDisplayCoordinate(
+        params.x,
+        oldMaxX,
+        newMaxX
+      )
+
+    params.y =
+      remapDisplayCoordinate(
+        params.y,
+        oldMaxY,
+        newMaxY
+      )
+
+    clampOverlayPosition(
+      params
+    )
+
+    lastKnownDisplayWidth =
+      width
+    lastKnownDisplayHeight =
+      height
+
+    saveOverlayPosition(
+      params
+    )
+  }
+
+  private fun scheduleDisplayReconcile() {
+    stabilityHandler.removeCallbacks(
+      displayReconcileRunnable
+    )
+
+    stabilityHandler.postDelayed(
+      displayReconcileRunnable,
+      DISPLAY_RECONCILE_DELAY_MS
+    )
+  }
+
+  private fun reconcileOverlayForCurrentDisplay() {
+    val view =
+      overlayView
+        ?: run {
+          lastKnownDisplayWidth =
+            currentDisplayWidth()
+          lastKnownDisplayHeight =
+            currentDisplayHeight()
+          return
+        }
+
+    val params =
+      overlayParams
+        ?: return
+
+    val nextWidth =
+      currentDisplayWidth()
+
+    val nextHeight =
+      currentDisplayHeight()
+
+    val previousWidth =
+      if (
+        lastKnownDisplayWidth >
+          0
+      ) {
+        lastKnownDisplayWidth
+      }
+      else {
+        prefs.getInt(
+          PREF_DISPLAY_WIDTH_PX,
+          nextWidth
+        )
+      }
+        .coerceAtLeast(
+          1
+        )
+
+    val previousHeight =
+      if (
+        lastKnownDisplayHeight >
+          0
+      ) {
+        lastKnownDisplayHeight
+      }
+      else {
+        prefs.getInt(
+          PREF_DISPLAY_HEIGHT_PX,
+          nextHeight
+        )
+      }
+        .coerceAtLeast(
+          1
+        )
+
+    val oldParamsWidth =
+      params.width.coerceAtLeast(
+        1
+      )
+
+    val oldParamsHeight =
+      params.height.coerceAtLeast(
+        1
+      )
+
+    val oldMaxX =
+      (
+        previousWidth -
+          oldParamsWidth
+      ).coerceAtLeast(
+        0
+      )
+
+    val oldMaxY =
+      (
+        previousHeight -
+          oldParamsHeight
+      ).coerceAtLeast(
+        0
+      )
+
+    params.width =
+      scaledWidth(
+        currentScale
+      )
+
+    params.height =
+      scaledHeight(
+        currentScale
+      )
+
+    val newMaxX =
+      (
+        nextWidth -
+          params.width
+      ).coerceAtLeast(
+        0
+      )
+
+    val newMaxY =
+      (
+        nextHeight -
+          params.height
+      ).coerceAtLeast(
+        0
+      )
+
+    if (
+      previousWidth !=
+        nextWidth ||
+      previousHeight !=
+        nextHeight
+    ) {
+      params.x =
+        remapDisplayCoordinate(
+          params.x,
+          oldMaxX,
+          newMaxX
+        )
+
+      params.y =
+        remapDisplayCoordinate(
+          params.y,
+          oldMaxY,
+          newMaxY
+        )
+    }
+
+    clampOverlayPosition(
+      params
+    )
+
+    autoTargetX = null
+    autoTargetY = null
+
+    lastKnownDisplayWidth =
+      nextWidth
+    lastKnownDisplayHeight =
+      nextHeight
+
+    safelyUpdateOverlayLayout(
+      view,
+      params
+    )
+
+    saveOverlayPosition(
+      params
+    )
+  }
+
+  private fun isScreenInteractiveNow(): Boolean {
+    val powerManager =
+      getSystemService(
+        POWER_SERVICE
+      ) as PowerManager
+
+    return powerManager.isInteractive
+  }
+
+  private fun registerScreenStateReceiver() {
+    if (screenStateReceiverRegistered) {
+      return
+    }
+
+    val filter =
+      IntentFilter().apply {
+        addAction(
+          Intent.ACTION_SCREEN_OFF
+        )
+        addAction(
+          Intent.ACTION_SCREEN_ON
+        )
+      }
+
+    try {
+      if (
+        Build.VERSION.SDK_INT >=
+          Build.VERSION_CODES.TIRAMISU
+      ) {
+        registerReceiver(
+          screenStateReceiver,
+          filter,
+          Context.RECEIVER_NOT_EXPORTED
+        )
+      }
+      else {
+        @Suppress(
+          "DEPRECATION"
+        )
+        registerReceiver(
+          screenStateReceiver,
+          filter
+        )
+      }
+
+      screenStateReceiverRegistered =
+        true
+    }
+    catch (
+      ignored: Throwable
+    ) {
+      screenStateReceiverRegistered =
+        false
+    }
+  }
+
+  private fun unregisterScreenStateReceiver() {
+    if (!screenStateReceiverRegistered) {
+      return
+    }
+
+    try {
+      unregisterReceiver(
+        screenStateReceiver
+      )
+    }
+    catch (
+      ignored: Throwable
+    ) {
+    }
+
+    screenStateReceiverRegistered =
+      false
+  }
+
+  // CHARACTER_V101L_BATTERY_SCREEN_OFF_SUSPEND
+  private fun suspendVisualRuntimeForScreenOff() {
+    animationHandler.removeCallbacks(
+      animationRunnable
+    )
+    behaviorHandler.removeCallbacks(
+      behaviorStateRunnable
+    )
+    motionHandler.removeCallbacks(
+      motionRunnable
+    )
+    speechHandler.removeCallbacks(
+      goalSpeechRunnable
+    )
+    speechHandler.removeCallbacks(
+      retryCompletionReactionRunnable
+    )
+    speechHandler.removeCallbacks(
+      finishCompletionReactionRunnable
+    )
+    speechHandler.removeCallbacks(
+      retryLifestyleReactionRunnable
+    )
+    speechHandler.removeCallbacks(
+      finishLifestyleReactionRunnable
+    )
+
+    walkingAnimationActive = false
+    happyAnimationActive = false
+    happyAnimationStep = 0
+    touchAnimationActive = false
+    touchAnimationStep = 0
+    completionReactionActive = false
+    lifestyleReactionActive = false
+    autoTargetX = null
+    autoTargetY = null
+
+    hideSpeechBubble()
+    hideActionMenu()
+  }
+
+  private fun handleScreenInteractiveChanged(
+    interactive: Boolean
+  ) {
+    if (
+      screenInteractive ==
+        interactive
+    ) {
+      return
+    }
+
+    screenInteractive =
+      interactive
+
+    if (!interactive) {
+      suspendVisualRuntimeForScreenOff()
+      return
+    }
+
+    scheduleDisplayReconcile()
+
+    refreshQuietMode(
+      force = true
+    )
+
+    if (
+      !quietActive &&
+      !quietSleepForced
+    ) {
+      startIdleAnimation(
+        animatedCharacterId
+      )
+    }
+
+    if (
+      autoMoveEnabled &&
+      !shouldSuppressAutoMoveForQuiet()
+    ) {
+      autoMoveResumeAt =
+        SystemClock.uptimeMillis() +
+          SCREEN_RESUME_DELAY_MS
+
+      startAutoMoveLoop(
+        SCREEN_RESUME_DELAY_MS
+      )
+    }
+
+    scheduleBehaviorStateCheck()
+
+    stabilityHandler.postDelayed(
+      {
+        if (
+          screenInteractive &&
+          !quietActive
+        ) {
+          if (
+            completionQueue.isNotEmpty()
+          ) {
+            playNextGoalCompletionCelebration()
+          }
+          else if (
+            lifestyleReactionQueue.isNotEmpty()
+          ) {
+            playNextLifestyleReaction()
+          }
+          else if (goalSpeechEnabled) {
+            scheduleNextGoalSpeech(
+              initial = true
+            )
+          }
+        }
+      },
+      SCREEN_RESUME_DELAY_MS
     )
   }
 
@@ -2656,7 +3303,7 @@ class RootFloatingCharacterService : Service() {
           )
       }
 
-    clampOverlayPosition(
+    restoreOverlayPositionForCurrentDisplay(
       params
     )
 
@@ -2978,6 +3625,11 @@ class RootFloatingCharacterService : Service() {
     scheduledQuietActive =
       nextScheduled
 
+    if (!screenInteractive) {
+      suspendVisualRuntimeForScreenOff()
+      return
+    }
+
     if (!changed) {
       return
     }
@@ -3103,6 +3755,7 @@ class RootFloatingCharacterService : Service() {
     )
 
     if (
+      !screenInteractive ||
       !autoMoveEnabled ||
       shouldSuppressAutoMoveForQuiet()
     ) {
@@ -4044,12 +4697,30 @@ class RootFloatingCharacterService : Service() {
   }
 
   private fun persistScaleAndPosition() {
+    val displayWidth =
+      currentDisplayWidth()
+    val displayHeight =
+      currentDisplayHeight()
+
+    lastKnownDisplayWidth =
+      displayWidth
+    lastKnownDisplayHeight =
+      displayHeight
+
     val editor =
       prefs
         .edit()
         .putFloat(
           PREF_SCALE,
           currentScale
+        )
+        .putInt(
+          PREF_DISPLAY_WIDTH_PX,
+          displayWidth
+        )
+        .putInt(
+          PREF_DISPLAY_HEIGHT_PX,
+          displayHeight
         )
 
     overlayParams
@@ -4071,6 +4742,16 @@ class RootFloatingCharacterService : Service() {
   private fun saveOverlayPosition(
     params: WindowManager.LayoutParams
   ) {
+    val displayWidth =
+      currentDisplayWidth()
+    val displayHeight =
+      currentDisplayHeight()
+
+    lastKnownDisplayWidth =
+      displayWidth
+    lastKnownDisplayHeight =
+      displayHeight
+
     prefs
       .edit()
       .putInt(
@@ -4080,6 +4761,14 @@ class RootFloatingCharacterService : Service() {
       .putInt(
         PREF_Y,
         params.y
+      )
+      .putInt(
+        PREF_DISPLAY_WIDTH_PX,
+        displayWidth
+      )
+      .putInt(
+        PREF_DISPLAY_HEIGHT_PX,
+        displayHeight
       )
       .apply()
   }
@@ -4243,6 +4932,10 @@ class RootFloatingCharacterService : Service() {
     message: String,
     durationMs: Long
   ) {
+    if (!screenInteractive) {
+      return
+    }
+
     val characterParams =
       overlayParams
         ?: return
@@ -4830,6 +5523,7 @@ class RootFloatingCharacterService : Service() {
     )
 
     if (
+      !screenInteractive ||
       !goalSpeechEnabled ||
       quietActive ||
       overlayView == null
@@ -4863,6 +5557,7 @@ class RootFloatingCharacterService : Service() {
     force: Boolean
   ): Boolean {
     if (
+      !screenInteractive ||
       !goalSpeechEnabled ||
       quietActive ||
       overlayView == null
@@ -6045,6 +6740,7 @@ class RootFloatingCharacterService : Service() {
 
   private fun playNextLifestyleReaction() {
     if (
+      !screenInteractive ||
       lifestyleReactionActive ||
       lifestyleReactionQueue.isEmpty() ||
       overlayView == null
@@ -6238,6 +6934,7 @@ class RootFloatingCharacterService : Service() {
 
   private fun playNextGoalCompletionCelebration() {
     if (
+      !screenInteractive ||
       completionReactionActive ||
       completionQueue.isEmpty() ||
       overlayView == null
@@ -6620,6 +7317,9 @@ class RootFloatingCharacterService : Service() {
   }
 
   private fun removeOverlay() {
+    stabilityHandler.removeCallbacks(
+      displayReconcileRunnable
+    )
     behaviorHandler.removeCallbacks(
       behaviorStateRunnable
     )

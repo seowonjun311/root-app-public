@@ -48,6 +48,7 @@ import org.json.JSONObject
 // CHARACTER_V101M_BOOT_PACKAGE_RECOVERY
 // CHARACTER_V101N_HOME_FLOATING_HANDOFF
 // CHARACTER_V101O_RUNTIME_HEALTH_CONTROLS
+// CHARACTER_V101P_RECOVERY_EDGE_HARDENING
 class RootFloatingCharacterService : Service() {
   private data class GoalCompletion(
     val id: String,
@@ -2822,7 +2823,31 @@ class RootFloatingCharacterService : Service() {
   }
 
   // CHARACTER_V101L_SERVICE_RESTART_RECOVERY
+  // CHARACTER_V101P_STICKY_RESTART_INTENT_GATE
   private fun restoreAfterStickyServiceRestart() {
+    if (!readUserEnabled(this)) {
+      stopSelf()
+      return
+    }
+
+    val permissionGranted =
+      if (
+        Build.VERSION.SDK_INT <
+          Build.VERSION_CODES.M
+      ) {
+        true
+      }
+      else {
+        Settings.canDrawOverlays(
+          this
+        )
+      }
+
+    if (!permissionGranted) {
+      stopSelf()
+      return
+    }
+
     currentScale =
       readScale(
         this
@@ -3432,8 +3457,34 @@ class RootFloatingCharacterService : Service() {
   }
 
   // CHARACTER_V101O_SAFE_RUNTIME_REPAIR
+  // CHARACTER_V101P_REPAIR_RACE_GUARD
   private fun repairVisibleRuntime() {
     if (homeHandoffActive) {
+      return
+    }
+
+    if (!readUserEnabled(this)) {
+      removeOverlay()
+      stopSelf()
+      return
+    }
+
+    val permissionGranted =
+      if (
+        Build.VERSION.SDK_INT <
+          Build.VERSION_CODES.M
+      ) {
+        true
+      }
+      else {
+        Settings.canDrawOverlays(
+          this
+        )
+      }
+
+    if (!permissionGranted) {
+      removeOverlay()
+      stopSelf()
       return
     }
 
@@ -3490,6 +3541,32 @@ class RootFloatingCharacterService : Service() {
       .apply()
 
     userAvoidZones.clear()
+
+    // CHARACTER_V101P_RESET_RACE_GUARD
+    if (!readUserEnabled(this)) {
+      removeOverlay()
+      stopSelf()
+      return
+    }
+
+    val permissionGranted =
+      if (
+        Build.VERSION.SDK_INT <
+          Build.VERSION_CODES.M
+      ) {
+        true
+      }
+      else {
+        Settings.canDrawOverlays(
+          this
+        )
+      }
+
+    if (!permissionGranted) {
+      removeOverlay()
+      stopSelf()
+      return
+    }
 
     if (homeHandoffActive) {
       return
@@ -3768,9 +3845,16 @@ class RootFloatingCharacterService : Service() {
     return builder.build()
   }
 
+  // CHARACTER_V101P_CENTRAL_OVERLAY_INTENT_GATE
   private fun showOrUpdateOverlay(
     characterId: String
   ) {
+    if (!readUserEnabled(this)) {
+      removeOverlay()
+      stopSelf()
+      return
+    }
+
     if (
       Build.VERSION.SDK_INT >=
         Build.VERSION_CODES.M &&

@@ -13,6 +13,7 @@ import expo.modules.kotlin.modules.ModuleDefinition
 // CHARACTER_V101F_GOAL_COMPLETION_NATIVE_BRIDGE
 // CHARACTER_V101G_LIFESTYLE_NATIVE_BRIDGE
 // CHARACTER_V101I_QUIET_NATIVE_BRIDGE
+// CHARACTER_V101N_HOME_HANDOFF_NATIVE_BRIDGE
 class RootFloatingCharacterModule : Module() {
   override fun definition() =
     ModuleDefinition {
@@ -274,6 +275,23 @@ class RootFloatingCharacterModule : Module() {
           .setAutoMoveEnabled(
             context,
             enabled
+          )
+      }
+
+      AsyncFunction(
+        "setHomeHandoffActive"
+      ) {
+        active:
+          Boolean ->
+
+        val context =
+          appContext.reactContext
+            ?: return@AsyncFunction false
+
+        RootFloatingCharacterService
+          .setHomeHandoffActive(
+            context,
+            active
           )
       }
 

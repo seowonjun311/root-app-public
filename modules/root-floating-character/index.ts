@@ -47,6 +47,10 @@ type RootFloatingCharacterNativeModule = {
     enabled: boolean
   ):
     Promise<boolean>;
+  setHomeHandoffActive(
+    active: boolean
+  ):
+    Promise<boolean>;
   setGoalSnapshot(
     goalsJson: string
   ):
@@ -96,6 +100,7 @@ const nativeModule =
 // CHARACTER_V101F_GOAL_COMPLETION_JS_BRIDGE
 // CHARACTER_V101G_LIFESTYLE_JS_BRIDGE
 // CHARACTER_V101I_QUIET_JS_BRIDGE
+// CHARACTER_V101N_HOME_HANDOFF_JS_BRIDGE
 export function isFloatingCharacterSupported():
   boolean {
   return (
@@ -240,6 +245,21 @@ export async function setFloatingCharacterAutoMoveEnabled(
 
   return nativeModule.setAutoMoveEnabled(
     enabled
+  );
+}
+
+export async function setFloatingCharacterHomeHandoffActive(
+  active: boolean
+): Promise<boolean> {
+  if (
+    nativeModule ===
+    null
+  ) {
+    return false;
+  }
+
+  return nativeModule.setHomeHandoffActive(
+    active
   );
 }
 

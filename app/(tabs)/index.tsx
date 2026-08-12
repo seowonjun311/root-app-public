@@ -3,6 +3,9 @@ import {
   getApp,
 } from '@react-native-firebase/app';
 import RootySprite from '../../components/characters/SelectedCharacterSprite';
+import {
+  useFloatingCharacterHomeHandoff,
+} from '../../hooks/useFloatingCharacterHomeHandoff';
 import type { RootyAction } from '../../constants/rootyAssets';
 import { ROOTY_WALK_MOTION } from '../../constants/rootyMotion';
 import { ROOTY_NATURAL_BEHAVIOR } from '../../constants/rootyBehavior';
@@ -1284,6 +1287,9 @@ function DraggableDecorateSticker({
 }
 
 export default function HomeScreen() {
+
+  // CHARACTER_V101N_HOME_HANDOFF_HOOK
+  useFloatingCharacterHomeHandoff();
   const params = useLocalSearchParams<{
     widgetAction?: string;
     goalId?: string;

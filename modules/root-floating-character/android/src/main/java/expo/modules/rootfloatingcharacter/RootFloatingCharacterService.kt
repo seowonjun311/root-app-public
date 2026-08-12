@@ -46,6 +46,7 @@ import org.json.JSONObject
 // CHARACTER_V101K_SCREEN_EDGE_LIFE_AVOIDANCE
 // CHARACTER_V101L_FINAL_STABILITY_HARDENING
 // CHARACTER_V101M_BOOT_PACKAGE_RECOVERY
+// CHARACTER_V101N_HOME_FLOATING_HANDOFF
 class RootFloatingCharacterService : Service() {
   private data class GoalCompletion(
     val id: String,
@@ -63,6 +64,7 @@ class RootFloatingCharacterService : Service() {
     private const val ACTION_UPDATE = "root.floating.UPDATE"
     private const val ACTION_SET_SCALE = "root.floating.SET_SCALE"
     private const val ACTION_SET_AUTO_MOVE = "root.floating.SET_AUTO_MOVE"
+    private const val ACTION_SET_HOME_HANDOFF = "root.floating.SET_HOME_HANDOFF"
     private const val ACTION_SET_GOAL_SNAPSHOT = "root.floating.SET_GOAL_SNAPSHOT"
     private const val ACTION_SET_GOAL_SPEECH = "root.floating.SET_GOAL_SPEECH"
     private const val ACTION_SHOW_GOAL_SPEECH_NOW = "root.floating.SHOW_GOAL_SPEECH_NOW"
@@ -74,6 +76,7 @@ class RootFloatingCharacterService : Service() {
     private const val EXTRA_CHARACTER_ID = "characterId"
     private const val EXTRA_SCALE = "scale"
     private const val EXTRA_AUTO_MOVE = "autoMoveEnabled"
+    private const val EXTRA_HOME_HANDOFF = "homeHandoffActive"
     private const val EXTRA_GOALS_JSON = "goalsJson"
     private const val EXTRA_GOAL_SPEECH = "goalSpeechEnabled"
     private const val EXTRA_COMPLETIONS_JSON = "completionsJson"
@@ -983,6 +986,45 @@ class RootFloatingCharacterService : Service() {
       return enabled
     }
 
+    // CHARACTER_V101N_HOME_HANDOFF_CONTROL
+    fun setHomeHandoffActive(
+      context: Context,
+      active: Boolean
+    ): Boolean {
+      if (!readUserEnabled(context)) {
+        return false
+      }
+
+      if (!isRunning) {
+        if (!active) {
+          start(
+            context,
+            readSelectedCharacter(
+              context
+            )
+          )
+        }
+
+        return true
+      }
+
+      context.startService(
+        Intent(
+          context,
+          RootFloatingCharacterService::class.java
+        ).apply {
+          action =
+            ACTION_SET_HOME_HANDOFF
+          putExtra(
+            EXTRA_HOME_HANDOFF,
+            active
+          )
+        }
+      )
+
+      return true
+    }
+
     fun setGoalSnapshot(
       context: Context,
       goalsJson: String
@@ -1403,6 +1445,10 @@ class RootFloatingCharacterService : Service() {
     )
 
   private var screenInteractive = true
+
+  // CHARACTER_V101N_HOME_HANDOFF_RUNTIME
+  private var homeHandoffActive = false
+
   private var screenStateReceiverRegistered = false
   private var lastKnownDisplayWidth = 0
   private var lastKnownDisplayHeight = 0
@@ -2314,6 +2360,15 @@ class RootFloatingCharacterService : Service() {
 
     when (intent.action) {
       ACTION_STOP -> {
+        // V101N also covers notification "hide": explicit OFF must stay OFF.
+        prefs
+          .edit()
+          .putBoolean(
+            PREF_USER_ENABLED,
+            false
+          )
+          .apply()
+
         stopSelf()
         return START_NOT_STICKY
       }
@@ -2355,6 +2410,16 @@ class RootFloatingCharacterService : Service() {
             )
           ),
           persist = true
+        )
+        return START_STICKY
+      }
+
+      ACTION_SET_HOME_HANDOFF -> {
+        applyHomeHandoff(
+          intent.getBooleanExtra(
+            EXTRA_HOME_HANDOFF,
+            false
+          )
         )
         return START_STICKY
       }
@@ -3086,6 +3151,100 @@ class RootFloatingCharacterService : Service() {
     )
   }
 
+  // CHARACTER_V101N_HOME_HANDOFF_VISIBILITY
+  private fun applyHomeHandoff(
+    active: Boolean
+  ) {
+    if (
+      homeHandoffActive ==
+        active
+    ) {
+      return
+    }
+
+    homeHandoffActive =
+      active
+
+    if (active) {
+      overlayParams
+        ?.let {
+          saveOverlayPosition(
+            it
+          )
+        }
+
+      suspendVisualRuntimeForScreenOff()
+      completionQueue.clear()
+      lifestyleReactionQueue.clear()
+      completionReactionActive = false
+      lifestyleReactionActive = false
+
+      detachOverlayViewForHomeHandoff()
+      return
+    }
+
+    showOrUpdateOverlay(
+      readSelectedCharacter(
+        this
+      )
+    )
+
+    scheduleDisplayReconcile()
+
+    if (screenInteractive) {
+      refreshQuietMode(
+        force = true
+      )
+
+      scheduleBehaviorStateCheck()
+
+      if (
+        autoMoveEnabled &&
+        !shouldSuppressAutoMoveForQuiet()
+      ) {
+        autoMoveResumeAt =
+          SystemClock.uptimeMillis() +
+            SCREEN_RESUME_DELAY_MS
+
+        startAutoMoveLoop(
+          SCREEN_RESUME_DELAY_MS
+        )
+      }
+
+      if (
+        !quietActive &&
+        goalSpeechEnabled
+      ) {
+        scheduleNextGoalSpeech(
+          initial = true
+        )
+      }
+    }
+    else {
+      suspendVisualRuntimeForScreenOff()
+    }
+  }
+
+  private fun detachOverlayViewForHomeHandoff() {
+    val view =
+      overlayView
+
+    if (view != null) {
+      try {
+        windowManager.removeView(
+          view
+        )
+      }
+      catch (
+        ignored: Throwable
+      ) {
+      }
+    }
+
+    overlayView = null
+    overlayParams = null
+  }
+
   private fun createNotificationChannel() {
     if (
       Build.VERSION.SDK_INT <
@@ -3247,6 +3406,12 @@ class RootFloatingCharacterService : Service() {
         safeId
       )
       .apply()
+
+    if (homeHandoffActive) {
+      animatedCharacterId =
+        safeId
+      return
+    }
 
     val existing =
       overlayView
@@ -6797,6 +6962,12 @@ class RootFloatingCharacterService : Service() {
   }
 
   private fun playNextLifestyleReaction() {
+    if (homeHandoffActive) {
+      lifestyleReactionQueue.clear()
+      lifestyleReactionActive = false
+      return
+    }
+
     if (
       !screenInteractive ||
       lifestyleReactionActive ||
@@ -6991,6 +7162,12 @@ class RootFloatingCharacterService : Service() {
   }
 
   private fun playNextGoalCompletionCelebration() {
+    if (homeHandoffActive) {
+      completionQueue.clear()
+      completionReactionActive = false
+      return
+    }
+
     if (
       !screenInteractive ||
       completionReactionActive ||

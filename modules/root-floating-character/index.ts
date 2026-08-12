@@ -22,6 +22,26 @@ export type RootFloatingCharacterStatus = {
   quietActive: boolean;
 };
 
+export type FloatingCharacterRuntimeHealth = {
+  userEnabled: boolean;
+  permissionGranted: boolean;
+  serviceRunning: boolean;
+  instanceReady: boolean;
+  overlayAttached: boolean;
+  homeHandoffActive: boolean;
+  screenInteractive: boolean;
+  runtimeState: string;
+  behaviorMode: string;
+  characterId: string;
+  x: number;
+  y: number;
+  displayWidthPx: number;
+  displayHeightPx: number;
+  positionSaved: boolean;
+  scale: number;
+  autoMoveEnabled: boolean;
+};
+
 type RootFloatingCharacterNativeModule = {
   canDrawOverlays():
     Promise<boolean>;
@@ -50,6 +70,12 @@ type RootFloatingCharacterNativeModule = {
   setHomeHandoffActive(
     active: boolean
   ):
+    Promise<boolean>;
+  getRuntimeHealth():
+    Promise<FloatingCharacterRuntimeHealth>;
+  repairRuntime():
+    Promise<string>;
+  resetPosition():
     Promise<boolean>;
   setGoalSnapshot(
     goalsJson: string
@@ -101,6 +127,7 @@ const nativeModule =
 // CHARACTER_V101G_LIFESTYLE_JS_BRIDGE
 // CHARACTER_V101I_QUIET_JS_BRIDGE
 // CHARACTER_V101N_HOME_HANDOFF_JS_BRIDGE
+// CHARACTER_V101O_RUNTIME_HEALTH_JS_BRIDGE
 export function isFloatingCharacterSupported():
   boolean {
   return (
@@ -261,6 +288,60 @@ export async function setFloatingCharacterHomeHandoffActive(
   return nativeModule.setHomeHandoffActive(
     active
   );
+}
+
+export async function getFloatingCharacterRuntimeHealth():
+  Promise<FloatingCharacterRuntimeHealth> {
+  if (
+    nativeModule ===
+    null
+  ) {
+    return {
+      userEnabled: false,
+      permissionGranted: false,
+      serviceRunning: false,
+      instanceReady: false,
+      overlayAttached: false,
+      homeHandoffActive: false,
+      screenInteractive: true,
+      runtimeState: 'unsupported',
+      behaviorMode: 'stopped',
+      characterId: 'rooty',
+      x: 0,
+      y: 0,
+      displayWidthPx: 0,
+      displayHeightPx: 0,
+      positionSaved: false,
+      scale: 1,
+      autoMoveEnabled: true,
+    };
+  }
+
+  return nativeModule.getRuntimeHealth();
+}
+
+export async function repairFloatingCharacterRuntime():
+  Promise<string> {
+  if (
+    nativeModule ===
+    null
+  ) {
+    return 'unsupported';
+  }
+
+  return nativeModule.repairRuntime();
+}
+
+export async function resetFloatingCharacterPosition():
+  Promise<boolean> {
+  if (
+    nativeModule ===
+    null
+  ) {
+    return false;
+  }
+
+  return nativeModule.resetPosition();
 }
 
 export type FloatingCharacterGoalSnapshotItem = {

@@ -14,6 +14,7 @@ import expo.modules.kotlin.modules.ModuleDefinition
 // CHARACTER_V101G_LIFESTYLE_NATIVE_BRIDGE
 // CHARACTER_V101I_QUIET_NATIVE_BRIDGE
 // CHARACTER_V101N_HOME_HANDOFF_NATIVE_BRIDGE
+// CHARACTER_V101O_RUNTIME_HEALTH_NATIVE_BRIDGE
 class RootFloatingCharacterModule : Module() {
   override fun definition() =
     ModuleDefinition {
@@ -292,6 +293,64 @@ class RootFloatingCharacterModule : Module() {
           .setHomeHandoffActive(
             context,
             active
+          )
+      }
+
+      // CHARACTER_V101O_DIAGNOSTIC_BRIDGE_FUNCTIONS
+      AsyncFunction(
+        "getRuntimeHealth"
+      ) {
+        val context =
+          appContext.reactContext
+            ?: return@AsyncFunction mapOf(
+              "userEnabled" to false,
+              "permissionGranted" to false,
+              "serviceRunning" to false,
+              "instanceReady" to false,
+              "overlayAttached" to false,
+              "homeHandoffActive" to false,
+              "screenInteractive" to true,
+              "runtimeState" to "unsupported",
+              "behaviorMode" to "stopped",
+              "characterId" to "rooty",
+              "x" to 0,
+              "y" to 0,
+              "displayWidthPx" to 0,
+              "displayHeightPx" to 0,
+              "positionSaved" to false,
+              "scale" to 1.0,
+              "autoMoveEnabled" to true
+            )
+
+        RootFloatingCharacterService
+          .readRuntimeHealth(
+            context
+          )
+      }
+
+      AsyncFunction(
+        "repairRuntime"
+      ) {
+        val context =
+          appContext.reactContext
+            ?: return@AsyncFunction "unsupported"
+
+        RootFloatingCharacterService
+          .repairRuntime(
+            context
+          )
+      }
+
+      AsyncFunction(
+        "resetPosition"
+      ) {
+        val context =
+          appContext.reactContext
+            ?: return@AsyncFunction false
+
+        RootFloatingCharacterService
+          .resetOverlayPosition(
+            context
           )
       }
 

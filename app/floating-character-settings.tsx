@@ -23,9 +23,12 @@ import {
 
 import {
   canDrawFloatingCharacter,
+  getFloatingCharacterRuntimeHealth,
   getFloatingCharacterStatus,
   isFloatingCharacterSupported,
   openFloatingCharacterPermissionSettings,
+  repairFloatingCharacterRuntime,
+  resetFloatingCharacterPosition,
   setFloatingCharacterAutoMoveEnabled,
   setFloatingCharacterGoalSpeechEnabled,
   setFloatingCharacterQuietSchedule,
@@ -35,6 +38,7 @@ import {
   startFloatingCharacter,
   stopFloatingCharacter,
   updateFloatingCharacter,
+  type FloatingCharacterRuntimeHealth,
   type RootFloatingCharacterStatus,
 } from '../modules/root-floating-character';
 import {
@@ -139,10 +143,59 @@ function shiftQuietHour(
     60;
 }
 
+function formatRuntimeState(
+  state: string
+) {
+  switch (state) {
+    case 'off':
+      return '사용자 OFF';
+    case 'permission_missing':
+      return '권한 필요';
+    case 'stopped':
+      return '서비스 복구 필요';
+    case 'instance_missing':
+      return '서비스 인스턴스 복구 필요';
+    case 'home_owned':
+      return '정상 · Home 소유';
+    case 'screen_off':
+      return '정상 · 화면 OFF';
+    case 'visible':
+      return '정상 · 표시 중';
+    case 'overlay_missing':
+      return '복구 필요 · 오버레이 누락';
+    default:
+      return state;
+  }
+}
+
+function formatBehaviorMode(
+  mode: string
+) {
+  switch (mode) {
+    case 'idle':
+      return '대기';
+    case 'walk':
+      return '걷기';
+    case 'sit':
+      return '앉기';
+    case 'sleep':
+      return '수면';
+    case 'happy':
+      return '기쁨';
+    case 'touch':
+      return '터치 반응';
+    case 'stopped':
+      return '중지';
+    default:
+      return mode;
+  }
+}
+
 // CHARACTER_V101A_FLOATING_OVERLAY_SETTINGS
 // CHARACTER_V101C_FLOATING_MOTION_SCALE_SETTINGS
 // CHARACTER_V101E_GOAL_SPEECH_INTERACTION_SETTINGS
 // CHARACTER_V101I_QUIET_SLEEP_SETTINGS
+// CHARACTER_V101O_RUNTIME_HEALTH_SETTINGS
 export default function FloatingCharacterSettingsScreen() {
   const {
     selectedCharacter,
@@ -189,6 +242,32 @@ export default function FloatingCharacterSettingsScreen() {
     });
 
   const [
+    runtimeHealth,
+    setRuntimeHealth,
+  ] =
+    useState<
+      FloatingCharacterRuntimeHealth
+    >({
+      userEnabled: false,
+      permissionGranted: false,
+      serviceRunning: false,
+      instanceReady: false,
+      overlayAttached: false,
+      homeHandoffActive: false,
+      screenInteractive: true,
+      runtimeState: 'stopped',
+      behaviorMode: 'stopped',
+      characterId: 'rooty',
+      x: 0,
+      y: 0,
+      displayWidthPx: 0,
+      displayHeightPx: 0,
+      positionSaved: false,
+      scale: 1,
+      autoMoveEnabled: true,
+    });
+
+  const [
     busy,
     setBusy,
   ] =
@@ -227,11 +306,20 @@ export default function FloatingCharacterSettingsScreen() {
               []
           );
 
-          const next =
-            await getFloatingCharacterStatus();
+          const [
+            next,
+            nextRuntimeHealth,
+          ] =
+            await Promise.all([
+              getFloatingCharacterStatus(),
+              getFloatingCharacterRuntimeHealth(),
+            ]);
 
           setStatus(
             next
+          );
+          setRuntimeHealth(
+            nextRuntimeHealth
           );
         }
         catch {
@@ -735,6 +823,90 @@ export default function FloatingCharacterSettingsScreen() {
       }
     };
 
+  const repairRuntime =
+    async () => {
+      setBusy(
+        true
+      );
+
+      try {
+        const result =
+          await repairFloatingCharacterRuntime();
+
+        await refresh();
+
+        if (
+          result ===
+          'disabled'
+        ) {
+          Alert.alert(
+            '플로팅 캐릭터가 꺼져 있어요',
+            '사용자 OFF 상태는 자동으로 바꾸지 않습니다. 아래의 켜기 버튼으로 직접 시작해 주세요.'
+          );
+        }
+        else if (
+          result ===
+          'permission_missing'
+        ) {
+          Alert.alert(
+            '화면 위 표시 권한이 필요해요',
+            '권한을 허용한 뒤 다시 복구를 눌러 주세요.'
+          );
+        }
+        else if (
+          result ===
+          'home_owned'
+        ) {
+          Alert.alert(
+            'Home이 캐릭터를 표시 중이에요',
+            'Home handoff 중에는 시스템 오버레이를 겹쳐 띄우지 않습니다.'
+          );
+        }
+      }
+      finally {
+        setBusy(
+          false
+        );
+      }
+    };
+
+  const resetPositionNow =
+    async () => {
+      setBusy(
+        true
+      );
+
+      try {
+        await resetFloatingCharacterPosition();
+        await refresh();
+      }
+      finally {
+        setBusy(
+          false
+        );
+      }
+    };
+
+  const confirmResetPosition =
+    () => {
+      Alert.alert(
+        '플로팅 위치를 초기화할까요?',
+        '사용자 ON/OFF와 크기 설정은 유지하고 위치만 기본값으로 되돌립니다.',
+        [
+          {
+            text: '취소',
+            style: 'cancel',
+          },
+          {
+            text: '위치 초기화',
+            onPress: () => {
+              void resetPositionNow();
+            },
+          },
+        ]
+      );
+    };
+
   const supported =
     isFloatingCharacterSupported();
 
@@ -936,6 +1108,140 @@ export default function FloatingCharacterSettingsScreen() {
               }
             </Text>
           </View>
+        </View>
+
+        <View
+          style={
+            styles.card
+          }
+        >
+          <Text
+            style={
+              styles.sectionTitle
+            }
+          >
+            런타임 진단
+          </Text>
+
+          <View style={styles.statusRow}>
+            <Text style={styles.statusLabel}>전체 상태</Text>
+            <Text style={styles.statusValue}>
+              {formatRuntimeState(runtimeHealth.runtimeState)}
+            </Text>
+          </View>
+
+          <View style={styles.statusRow}>
+            <Text style={styles.statusLabel}>사용자 설정</Text>
+            <Text style={styles.statusValue}>
+              {runtimeHealth.userEnabled ? '켜짐' : '꺼짐'}
+            </Text>
+          </View>
+
+          <View style={styles.statusRow}>
+            <Text style={styles.statusLabel}>Foreground service</Text>
+            <Text style={styles.statusValue}>
+              {runtimeHealth.serviceRunning ? '실행' : '중지'}
+            </Text>
+          </View>
+
+          <View style={styles.statusRow}>
+            <Text style={styles.statusLabel}>오버레이 뷰</Text>
+            <Text style={styles.statusValue}>
+              {runtimeHealth.overlayAttached ? '부착됨' : '분리됨'}
+            </Text>
+          </View>
+
+          <View style={styles.statusRow}>
+            <Text style={styles.statusLabel}>Home handoff</Text>
+            <Text style={styles.statusValue}>
+              {runtimeHealth.homeHandoffActive ? '활성' : '해제'}
+            </Text>
+          </View>
+
+          <View style={styles.statusRow}>
+            <Text style={styles.statusLabel}>화면 상태</Text>
+            <Text style={styles.statusValue}>
+              {runtimeHealth.screenInteractive ? 'ON' : 'OFF'}
+            </Text>
+          </View>
+
+          <View style={styles.statusRow}>
+            <Text style={styles.statusLabel}>현재 행동</Text>
+            <Text style={styles.statusValue}>
+              {formatBehaviorMode(runtimeHealth.behaviorMode)}
+            </Text>
+          </View>
+
+          <View style={styles.statusRow}>
+            <Text style={styles.statusLabel}>플로팅 위치</Text>
+            <Text style={styles.statusValue}>
+              {runtimeHealth.x}, {runtimeHealth.y}
+            </Text>
+          </View>
+
+          <View style={styles.statusRow}>
+            <Text style={styles.statusLabel}>화면 크기</Text>
+            <Text style={styles.statusValue}>
+              {runtimeHealth.displayWidthPx} × {runtimeHealth.displayHeightPx}
+            </Text>
+          </View>
+
+          <View style={styles.statusRow}>
+            <Text style={styles.statusLabel}>저장 스케일</Text>
+            <Text style={styles.statusValue}>
+              {Math.round(runtimeHealth.scale * 100)}%
+            </Text>
+          </View>
+
+          <Pressable
+            disabled={busy}
+            onPress={() => {
+              void refresh();
+            }}
+            style={[
+              styles.secondaryButton,
+              { marginTop: 12 },
+              busy && styles.disabledButton,
+            ]}
+          >
+            <Text style={styles.secondaryButtonText}>
+              상태 새로고침
+            </Text>
+          </Pressable>
+
+          <Pressable
+            disabled={busy || !supported}
+            onPress={() => {
+              void repairRuntime();
+            }}
+            style={[
+              styles.secondaryButton,
+              { marginTop: 8 },
+              (busy || !supported) && styles.disabledButton,
+            ]}
+          >
+            <Text style={styles.secondaryButtonText}>
+              플로팅 복구
+            </Text>
+          </Pressable>
+
+          <Pressable
+            disabled={busy || !supported}
+            onPress={confirmResetPosition}
+            style={[
+              styles.secondaryButton,
+              { marginTop: 8 },
+              (busy || !supported) && styles.disabledButton,
+            ]}
+          >
+            <Text style={styles.secondaryButtonText}>
+              위치 초기화
+            </Text>
+          </Pressable>
+
+          <Text style={styles.helperText}>
+            복구는 사용자 ON/OFF를 바꾸지 않으며, Home이 캐릭터를 소유한 동안에는 오버레이를 겹쳐 띄우지 않습니다.
+          </Text>
         </View>
 
         <View
@@ -1472,7 +1778,7 @@ export default function FloatingCharacterSettingsScreen() {
               styles.helperText
             }
           >
-            수면 시간의 실제 sleep 애니메이션은 다음 V101J에서 연결합니다. V101I에서는 idle 상태로 조용히 머뭅니다.
+            수면 시간에는 V101J sleep 애니메이션으로 조용히 쉬며, 빠른 조용히는 자동 말풍선을 억제합니다.
           </Text>
         </View>
 

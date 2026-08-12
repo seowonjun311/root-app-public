@@ -47,6 +47,7 @@ import org.json.JSONObject
 // CHARACTER_V101L_FINAL_STABILITY_HARDENING
 // CHARACTER_V101M_BOOT_PACKAGE_RECOVERY
 // CHARACTER_V101N_HOME_FLOATING_HANDOFF
+// CHARACTER_V101O_RUNTIME_HEALTH_CONTROLS
 class RootFloatingCharacterService : Service() {
   private data class GoalCompletion(
     val id: String,
@@ -65,6 +66,8 @@ class RootFloatingCharacterService : Service() {
     private const val ACTION_SET_SCALE = "root.floating.SET_SCALE"
     private const val ACTION_SET_AUTO_MOVE = "root.floating.SET_AUTO_MOVE"
     private const val ACTION_SET_HOME_HANDOFF = "root.floating.SET_HOME_HANDOFF"
+    private const val ACTION_REPAIR_RUNTIME = "root.floating.REPAIR_RUNTIME"
+    private const val ACTION_RESET_POSITION = "root.floating.RESET_POSITION"
     private const val ACTION_SET_GOAL_SNAPSHOT = "root.floating.SET_GOAL_SNAPSHOT"
     private const val ACTION_SET_GOAL_SPEECH = "root.floating.SET_GOAL_SPEECH"
     private const val ACTION_SHOW_GOAL_SPEECH_NOW = "root.floating.SHOW_GOAL_SPEECH_NOW"
@@ -182,6 +185,10 @@ class RootFloatingCharacterService : Service() {
     @Volatile
     var isRunning: Boolean = false
       private set
+
+    // CHARACTER_V101O_ACTIVE_SERVICE_INSTANCE
+    @Volatile
+    private var activeInstance: RootFloatingCharacterService? = null
 
     private fun sanitizeCharacterId(characterId: String): String =
       when (characterId) {
@@ -1021,6 +1028,198 @@ class RootFloatingCharacterService : Service() {
           )
         }
       )
+
+      return true
+    }
+
+    // CHARACTER_V101O_RUNTIME_HEALTH_API
+    fun readRuntimeHealth(
+      context: Context
+    ): Map<String, Any?> {
+      val permissionGranted =
+        if (
+          Build.VERSION.SDK_INT <
+          Build.VERSION_CODES.M
+        ) {
+          true
+        }
+        else {
+          Settings.canDrawOverlays(
+            context
+          )
+        }
+
+      val instance =
+        activeInstance
+
+      if (instance != null) {
+        return instance.runtimeHealthSnapshot(
+          context,
+          permissionGranted
+        )
+      }
+
+      val stored =
+        prefs(context)
+      val density =
+        context.resources.displayMetrics.density
+      val defaultX =
+        (18f * density).toInt()
+      val defaultY =
+        (180f * density).toInt()
+      val userEnabled =
+        readUserEnabled(context)
+      val displayWidth =
+        stored.getInt(
+          PREF_DISPLAY_WIDTH_PX,
+          context.resources.displayMetrics.widthPixels.coerceAtLeast(1)
+        )
+      val displayHeight =
+        stored.getInt(
+          PREF_DISPLAY_HEIGHT_PX,
+          context.resources.displayMetrics.heightPixels.coerceAtLeast(1)
+        )
+      val runtimeState =
+        when {
+          !userEnabled -> "off"
+          !permissionGranted -> "permission_missing"
+          isRunning -> "instance_missing"
+          else -> "stopped"
+        }
+
+      return mapOf(
+        "userEnabled" to userEnabled,
+        "permissionGranted" to permissionGranted,
+        "serviceRunning" to isRunning,
+        "instanceReady" to false,
+        "overlayAttached" to false,
+        "homeHandoffActive" to false,
+        "screenInteractive" to (
+          (
+            context.getSystemService(
+              Context.POWER_SERVICE
+            ) as PowerManager
+          ).let {
+            manager ->
+            if (
+              Build.VERSION.SDK_INT >=
+              Build.VERSION_CODES.KITKAT_WATCH
+            ) {
+              manager.isInteractive
+            }
+            else {
+              @Suppress(
+                "DEPRECATION"
+              )
+              manager.isScreenOn
+            }
+          }
+        ),
+        "runtimeState" to runtimeState,
+        "behaviorMode" to "stopped",
+        "characterId" to readSelectedCharacter(
+          context
+        ),
+        "x" to stored.getInt(
+          PREF_X,
+          defaultX
+        ),
+        "y" to stored.getInt(
+          PREF_Y,
+          defaultY
+        ),
+        "displayWidthPx" to displayWidth,
+        "displayHeightPx" to displayHeight,
+        "positionSaved" to (
+          stored.contains(PREF_X) &&
+          stored.contains(PREF_Y)
+        ),
+        "scale" to readScale(
+          context
+        ).toDouble(),
+        "autoMoveEnabled" to readAutoMoveEnabled(
+          context
+        )
+      )
+    }
+
+    fun repairRuntime(
+      context: Context
+    ): String {
+      if (!readUserEnabled(context)) {
+        return "disabled"
+      }
+
+      val permissionGranted =
+        if (
+          Build.VERSION.SDK_INT <
+          Build.VERSION_CODES.M
+        ) {
+          true
+        }
+        else {
+          Settings.canDrawOverlays(
+            context
+          )
+        }
+
+      if (!permissionGranted) {
+        return "permission_missing"
+      }
+
+      val instance =
+        activeInstance
+
+      if (
+        instance != null &&
+        instance.homeHandoffActive
+      ) {
+        return "home_owned"
+      }
+
+      if (!isRunning) {
+        start(
+          context,
+          readSelectedCharacter(
+            context
+          )
+        )
+        return "service_start_requested"
+      }
+
+      context.startService(
+        Intent(
+          context,
+          RootFloatingCharacterService::class.java
+        ).apply {
+          action = ACTION_REPAIR_RUNTIME
+        }
+      )
+
+      return "repair_requested"
+    }
+
+    fun resetOverlayPosition(
+      context: Context
+    ): Boolean {
+      prefs(context)
+        .edit()
+        .remove(PREF_X)
+        .remove(PREF_Y)
+        .remove(PREF_DISPLAY_WIDTH_PX)
+        .remove(PREF_DISPLAY_HEIGHT_PX)
+        .apply()
+
+      if (isRunning) {
+        context.startService(
+          Intent(
+            context,
+            RootFloatingCharacterService::class.java
+          ).apply {
+            action = ACTION_RESET_POSITION
+          }
+        )
+      }
 
       return true
     }
@@ -2283,6 +2482,8 @@ class RootFloatingCharacterService : Service() {
   override fun onCreate() {
     super.onCreate()
 
+    activeInstance = this
+
     windowManager =
       getSystemService(
         WINDOW_SERVICE
@@ -2351,6 +2552,8 @@ class RootFloatingCharacterService : Service() {
     flags: Int,
     startId: Int
   ): Int {
+    activeInstance = this
+
     if (intent == null) {
       restoreAfterStickyServiceRestart()
       return START_STICKY
@@ -2421,6 +2624,16 @@ class RootFloatingCharacterService : Service() {
             false
           )
         )
+        return START_STICKY
+      }
+
+      ACTION_REPAIR_RUNTIME -> {
+        repairVisibleRuntime()
+        return START_STICKY
+      }
+
+      ACTION_RESET_POSITION -> {
+        resetOverlayPositionInternal()
         return START_STICKY
       }
 
@@ -2588,6 +2801,11 @@ class RootFloatingCharacterService : Service() {
     )
     unregisterScreenStateReceiver()
     removeOverlay()
+
+    if (activeInstance === this) {
+      activeInstance = null
+    }
+
     isRunning = false
     super.onDestroy()
   }
@@ -3149,6 +3367,176 @@ class RootFloatingCharacterService : Service() {
       },
       SCREEN_RESUME_DELAY_MS
     )
+  }
+
+  // CHARACTER_V101O_RUNTIME_HEALTH_SNAPSHOT
+  private fun runtimeHealthSnapshot(
+    context: Context,
+    permissionGranted: Boolean
+  ): Map<String, Any?> {
+    val attached =
+      overlayView != null &&
+      overlayParams != null
+    val userEnabled =
+      readUserEnabled(context)
+    val currentParams =
+      overlayParams
+    val defaultX =
+      dp(18)
+    val defaultY =
+      dp(180)
+    val runtimeState =
+      when {
+        !userEnabled -> "off"
+        !permissionGranted -> "permission_missing"
+        homeHandoffActive -> "home_owned"
+        !screenInteractive -> "screen_off"
+        attached -> "visible"
+        else -> "overlay_missing"
+      }
+
+    return mapOf(
+      "userEnabled" to userEnabled,
+      "permissionGranted" to permissionGranted,
+      "serviceRunning" to isRunning,
+      "instanceReady" to true,
+      "overlayAttached" to attached,
+      "homeHandoffActive" to homeHandoffActive,
+      "screenInteractive" to screenInteractive,
+      "runtimeState" to runtimeState,
+      "behaviorMode" to behaviorAnimationMode.name.lowercase(),
+      "characterId" to animatedCharacterId,
+      "x" to (
+        currentParams?.x ?:
+        prefs.getInt(
+          PREF_X,
+          defaultX
+        )
+      ),
+      "y" to (
+        currentParams?.y ?:
+        prefs.getInt(
+          PREF_Y,
+          defaultY
+        )
+      ),
+      "displayWidthPx" to currentDisplayWidth(),
+      "displayHeightPx" to currentDisplayHeight(),
+      "positionSaved" to (
+        prefs.contains(PREF_X) &&
+        prefs.contains(PREF_Y)
+      ),
+      "scale" to currentScale.toDouble(),
+      "autoMoveEnabled" to autoMoveEnabled
+    )
+  }
+
+  // CHARACTER_V101O_SAFE_RUNTIME_REPAIR
+  private fun repairVisibleRuntime() {
+    if (homeHandoffActive) {
+      return
+    }
+
+    showOrUpdateOverlay(
+      readSelectedCharacter(
+        this
+      )
+    )
+
+    scheduleDisplayReconcile()
+
+    if (screenInteractive) {
+      refreshQuietMode(
+        force = true
+      )
+
+      scheduleBehaviorStateCheck()
+
+      if (
+        autoMoveEnabled &&
+        !shouldSuppressAutoMoveForQuiet()
+      ) {
+        autoMoveResumeAt =
+          SystemClock.uptimeMillis() +
+            SCREEN_RESUME_DELAY_MS
+
+        startAutoMoveLoop(
+          SCREEN_RESUME_DELAY_MS
+        )
+      }
+
+      if (
+        !quietActive &&
+        goalSpeechEnabled
+      ) {
+        scheduleNextGoalSpeech(
+          initial = true
+        )
+      }
+    }
+    else {
+      suspendVisualRuntimeForScreenOff()
+    }
+  }
+
+  // CHARACTER_V101O_SAFE_POSITION_RESET
+  private fun resetOverlayPositionInternal() {
+    prefs
+      .edit()
+      .remove(PREF_X)
+      .remove(PREF_Y)
+      .remove(PREF_DISPLAY_WIDTH_PX)
+      .remove(PREF_DISPLAY_HEIGHT_PX)
+      .apply()
+
+    userAvoidZones.clear()
+
+    if (homeHandoffActive) {
+      return
+    }
+
+    val view =
+      overlayView
+    val params =
+      overlayParams
+
+    if (
+      view == null ||
+      params == null
+    ) {
+      showOrUpdateOverlay(
+        readSelectedCharacter(
+          this
+        )
+      )
+      scheduleDisplayReconcile()
+      return
+    }
+
+    params.x =
+      dp(18)
+    params.y =
+      dp(180)
+
+    clampOverlayPosition(
+      params
+    )
+
+    try {
+      windowManager.updateViewLayout(
+        view,
+        params
+      )
+    }
+    catch (
+      ignored: Throwable
+    ) {
+    }
+
+    saveOverlayPosition(
+      params
+    )
+    scheduleDisplayReconcile()
   }
 
   // CHARACTER_V101N_HOME_HANDOFF_VISIBILITY

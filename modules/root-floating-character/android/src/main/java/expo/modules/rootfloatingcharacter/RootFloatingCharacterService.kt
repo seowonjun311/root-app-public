@@ -38,6 +38,7 @@ import org.json.JSONObject
 // CHARACTER_V101G_LIFESTYLE_REACTION_TRAITS
 // CHARACTER_V101H_TIME_STATE_CONTEXT_SPEECH
 // CHARACTER_V101I_QUIET_SLEEP_MODE
+// CHARACTER_V101J_BEHAVIOR_ANIMATION_STATE_MACHINE
 class RootFloatingCharacterService : Service() {
   private data class GoalCompletion(
     val id: String,
@@ -124,6 +125,13 @@ class RootFloatingCharacterService : Service() {
     private const val SAME_GOAL_COOLDOWN_MS = 1800000L
 
     private const val HAPPY_FRAME_DURATION_MS = 180L
+    private const val SIT_FRAME_DURATION_MS = 360L
+    private const val SLEEP_FRAME_DURATION_MS = 520L
+    private const val TOUCH_FRAME_DURATION_MS = 220L
+    private const val BEHAVIOR_STATE_CHECK_MS = 400L
+    private const val NATURAL_SIT_AFTER_MS = 2200L
+    private const val NATURAL_SLEEP_AFTER_MS = 4200L
+    private const val NATURAL_SLEEP_HOLD_MS = 5000L
     private const val COMPLETION_SPEECH_DISPLAY_MS = 5000L
     private const val COMPLETION_QUEUE_GAP_MS = 450L
     private const val COMPLETION_BUSY_RETRY_MS = 500L
@@ -1316,9 +1324,34 @@ class RootFloatingCharacterService : Service() {
       Looper.getMainLooper()
     )
 
+  private enum class BehaviorAnimationMode {
+    IDLE,
+    WALK,
+    SIT,
+    SLEEP,
+    HAPPY,
+    TOUCH
+  }
+
+  // CHARACTER_V101J_BEHAVIOR_STATE_RUNTIME
   private var animatedCharacterId = "rooty"
   private var animationFrameIndex = 0
   private var walkingAnimationActive = false
+  private var behaviorAnimationMode =
+    BehaviorAnimationMode.IDLE
+  private var behaviorFrameIndex = 0
+  private var stationarySinceAt =
+    SystemClock.uptimeMillis()
+  private var naturalSleepStartedAt = 0L
+  private var quietSleepForced = false
+  private var touchAnimationActive = false
+  private var touchAnimationStep = 0
+  private val touchFrameSequence =
+    intArrayOf(
+      0,
+      1,
+      0
+    )
 
   // CHARACTER_V101F_HAPPY_ANIMATION_RUNTIME
   private var happyAnimationActive = false
@@ -1354,7 +1387,12 @@ class RootFloatingCharacterService : Service() {
             happyAnimationActive = false
             happyAnimationStep = 0
             walkingAnimationActive = false
+            behaviorAnimationMode =
+              BehaviorAnimationMode.IDLE
+            behaviorFrameIndex = 0
             animationFrameIndex = 0
+            stationarySinceAt =
+              SystemClock.uptimeMillis()
 
             val idleFrames =
               drawableFramesForCharacter(
@@ -1366,6 +1404,8 @@ class RootFloatingCharacterService : Service() {
                 0
               ]
             )
+
+            scheduleBehaviorStateCheck()
 
             animationHandler.postDelayed(
               this,
@@ -1395,6 +1435,164 @@ class RootFloatingCharacterService : Service() {
           animationHandler.postDelayed(
             this,
             HAPPY_FRAME_DURATION_MS
+          )
+          return
+        }
+
+        if (touchAnimationActive) {
+          val touchFrames =
+            touchDrawableFramesForCharacter(
+              animatedCharacterId
+            )
+
+          if (
+            touchAnimationStep >=
+            touchFrameSequence.size
+          ) {
+            touchAnimationActive = false
+            touchAnimationStep = 0
+            behaviorAnimationMode =
+              BehaviorAnimationMode.IDLE
+            behaviorFrameIndex = 0
+            animationFrameIndex = 0
+            stationarySinceAt =
+              SystemClock.uptimeMillis()
+
+            val idleFrames =
+              drawableFramesForCharacter(
+                animatedCharacterId
+              )
+
+            view.setImageResource(
+              idleFrames[
+                0
+              ]
+            )
+
+            scheduleBehaviorStateCheck()
+
+            animationHandler.postDelayed(
+              this,
+              IDLE_FRAME_DURATION_MS
+            )
+            return
+          }
+
+          val frameIndex =
+            touchFrameSequence[
+              touchAnimationStep
+            ].coerceIn(
+              0,
+              touchFrames.size -
+                1
+            )
+
+          view.setImageResource(
+            touchFrames[
+              frameIndex
+            ]
+          )
+
+          touchAnimationStep +=
+            1
+
+          animationHandler.postDelayed(
+            this,
+            TOUCH_FRAME_DURATION_MS
+          )
+          return
+        }
+
+        if (
+          behaviorAnimationMode ==
+            BehaviorAnimationMode.SIT
+        ) {
+          val sitFrames =
+            sitDrawableFramesForCharacter(
+              animatedCharacterId
+            )
+
+          val frameIndex =
+            behaviorFrameIndex.coerceIn(
+              0,
+              sitFrames.size -
+                1
+            )
+
+          view.setImageResource(
+            sitFrames[
+              frameIndex
+            ]
+          )
+
+          if (
+            behaviorFrameIndex <
+              sitFrames.size -
+                1
+          ) {
+            behaviorFrameIndex +=
+              1
+          }
+
+          animationHandler.postDelayed(
+            this,
+            SIT_FRAME_DURATION_MS
+          )
+          return
+        }
+
+        if (
+          behaviorAnimationMode ==
+            BehaviorAnimationMode.SLEEP
+        ) {
+          val sleepFrames =
+            sleepDrawableFramesForCharacter(
+              animatedCharacterId
+            )
+
+          val frameIndex =
+            if (
+              behaviorFrameIndex <
+                sleepFrames.size
+            ) {
+              behaviorFrameIndex
+            }
+            else {
+              val breathingStart =
+                (
+                  sleepFrames.size -
+                    2
+                ).coerceAtLeast(
+                  0
+                )
+
+              breathingStart +
+                (
+                  (
+                    behaviorFrameIndex -
+                      sleepFrames.size
+                  ) %
+                    2
+                )
+            }
+              .coerceIn(
+                0,
+                sleepFrames.size -
+                  1
+              )
+
+          view.setImageResource(
+            sleepFrames[
+              frameIndex
+            ]
+          )
+
+          behaviorFrameIndex +=
+            1
+
+          animationHandler.postDelayed(
+            this,
+            SLEEP_FRAME_DURATION_MS
           )
           return
         }
@@ -1438,6 +1636,123 @@ class RootFloatingCharacterService : Service() {
         )
       }
     }
+
+  // CHARACTER_V101J_NATURAL_REST_STATE_MACHINE
+  private val behaviorHandler =
+    Handler(
+      Looper.getMainLooper()
+    )
+
+  private val behaviorStateRunnable =
+    object : Runnable {
+      override fun run() {
+        val now =
+          SystemClock.uptimeMillis()
+
+        if (
+          overlayView == null ||
+          userInteracting ||
+          walkingAnimationActive ||
+          happyAnimationActive ||
+          touchAnimationActive ||
+          completionReactionActive ||
+          actionMenuView != null
+        ) {
+          scheduleBehaviorStateCheck()
+          return
+        }
+
+        if (
+          scheduledQuietActive &&
+          shouldSuppressAutoMoveForQuiet()
+        ) {
+          if (
+            behaviorAnimationMode !=
+              BehaviorAnimationMode.SLEEP ||
+            !quietSleepForced
+          ) {
+            startSleepAnimation(
+              forcedByQuiet = true,
+              preserveStationaryTime = true
+            )
+          }
+
+          scheduleBehaviorStateCheck()
+          return
+        }
+
+        if (quietSleepForced) {
+          quietSleepForced = false
+          startIdleAnimation(
+            animatedCharacterId
+          )
+          scheduleBehaviorStateCheck()
+          return
+        }
+
+        val stationaryFor =
+          now -
+            stationarySinceAt
+
+        when (
+          behaviorAnimationMode
+        ) {
+          BehaviorAnimationMode.IDLE -> {
+            if (
+              stationaryFor >=
+                NATURAL_SIT_AFTER_MS
+            ) {
+              startSitAnimation(
+                preserveStationaryTime = true
+              )
+            }
+          }
+
+          BehaviorAnimationMode.SIT -> {
+            if (
+              stationaryFor >=
+                NATURAL_SLEEP_AFTER_MS
+            ) {
+              startSleepAnimation(
+                forcedByQuiet = false,
+                preserveStationaryTime = true
+              )
+            }
+          }
+
+          BehaviorAnimationMode.SLEEP -> {
+            if (
+              !quietSleepForced &&
+              naturalSleepStartedAt >
+                0L &&
+              now -
+                naturalSleepStartedAt >=
+                NATURAL_SLEEP_HOLD_MS
+            ) {
+              startIdleAnimation(
+                animatedCharacterId
+              )
+            }
+          }
+
+          else -> {
+          }
+        }
+
+        scheduleBehaviorStateCheck()
+      }
+    }
+
+  private fun scheduleBehaviorStateCheck() {
+    behaviorHandler.removeCallbacks(
+      behaviorStateRunnable
+    )
+
+    behaviorHandler.postDelayed(
+      behaviorStateRunnable,
+      BEHAVIOR_STATE_CHECK_MS
+    )
+  }
 
   // CHARACTER_V101C_AUTONOMOUS_MOTION
   private val motionHandler =
@@ -2607,9 +2922,37 @@ class RootFloatingCharacterService : Service() {
         shouldSuppressAutoMoveForQuiet()
       ) {
         stopAutoMoveLoop()
+
+        startSleepAnimation(
+          forcedByQuiet = true,
+          preserveStationaryTime = false
+        )
+      }
+      else {
+        if (quietSleepForced) {
+          quietSleepForced = false
+          startIdleAnimation(
+            animatedCharacterId
+          )
+        }
+
+        if (
+          autoMoveEnabled
+        ) {
+          startAutoMoveLoop(
+            600L
+          )
+        }
       }
 
       return
+    }
+
+    if (quietSleepForced) {
+      quietSleepForced = false
+      startIdleAnimation(
+        animatedCharacterId
+      )
     }
 
     if (
@@ -2638,9 +2981,22 @@ class RootFloatingCharacterService : Service() {
     autoTargetX = null
     autoTargetY = null
 
-    if (happyAnimationActive) {
-      happyAnimationActive = false
-      happyAnimationStep = 0
+    happyAnimationActive = false
+    happyAnimationStep = 0
+    touchAnimationActive = false
+    touchAnimationStep = 0
+    quietSleepForced = false
+
+    if (
+      behaviorAnimationMode ==
+        BehaviorAnimationMode.SIT ||
+      behaviorAnimationMode ==
+        BehaviorAnimationMode.SLEEP ||
+      behaviorAnimationMode ==
+        BehaviorAnimationMode.HAPPY ||
+      behaviorAnimationMode ==
+        BehaviorAnimationMode.TOUCH
+    ) {
       startIdleAnimation(
         animatedCharacterId
       )
@@ -2967,8 +3323,8 @@ class RootFloatingCharacterService : Service() {
         animatedCharacterId
       )
 
-    setMovementAnimation(
-      false
+    startTouchAnimation(
+      animatedCharacterId
     )
 
     showSpeechBubble(
@@ -5149,6 +5505,12 @@ class RootFloatingCharacterService : Service() {
     animatedCharacterId =
       characterId
     walkingAnimationActive = false
+    behaviorAnimationMode =
+      BehaviorAnimationMode.HAPPY
+    behaviorFrameIndex = 0
+    quietSleepForced = false
+    touchAnimationActive = false
+    touchAnimationStep = 0
     happyAnimationActive = true
     happyAnimationStep = 0
     animationFrameIndex = 0
@@ -5194,9 +5556,33 @@ class RootFloatingCharacterService : Service() {
       characterId
     happyAnimationActive = false
     happyAnimationStep = 0
+    touchAnimationActive = false
+    touchAnimationStep = 0
+    quietSleepForced = false
     walkingAnimationActive =
       walking
+    behaviorAnimationMode =
+      if (walking) {
+        BehaviorAnimationMode.WALK
+      }
+      else {
+        BehaviorAnimationMode.IDLE
+      }
+    behaviorFrameIndex = 0
     animationFrameIndex = 0
+
+    if (walking) {
+      naturalSleepStartedAt = 0L
+      behaviorHandler.removeCallbacks(
+        behaviorStateRunnable
+      )
+    }
+    else {
+      stationarySinceAt =
+        SystemClock.uptimeMillis()
+      naturalSleepStartedAt = 0L
+      scheduleBehaviorStateCheck()
+    }
 
     val frames =
       if (walking) {
@@ -5249,7 +5635,10 @@ class RootFloatingCharacterService : Service() {
   private fun setMovementAnimation(
     walking: Boolean
   ) {
-    if (happyAnimationActive) {
+    if (
+      happyAnimationActive ||
+      touchAnimationActive
+    ) {
       return
     }
 
@@ -5272,6 +5661,126 @@ class RootFloatingCharacterService : Service() {
     }
   }
 
+  private fun startSitAnimation(
+    preserveStationaryTime: Boolean
+  ) {
+    if (
+      happyAnimationActive ||
+      touchAnimationActive ||
+      walkingAnimationActive
+    ) {
+      return
+    }
+
+    animationHandler.removeCallbacks(
+      animationRunnable
+    )
+
+    if (!preserveStationaryTime) {
+      stationarySinceAt =
+        SystemClock.uptimeMillis()
+    }
+
+    behaviorAnimationMode =
+      BehaviorAnimationMode.SIT
+    behaviorFrameIndex = 1
+    naturalSleepStartedAt = 0L
+
+    overlayView
+      ?.setImageResource(
+        sitDrawableFramesForCharacter(
+          animatedCharacterId
+        )[
+          0
+        ]
+      )
+
+    animationHandler.postDelayed(
+      animationRunnable,
+      SIT_FRAME_DURATION_MS
+    )
+  }
+
+  private fun startSleepAnimation(
+    forcedByQuiet: Boolean,
+    preserveStationaryTime: Boolean
+  ) {
+    if (
+      happyAnimationActive ||
+      touchAnimationActive ||
+      walkingAnimationActive
+    ) {
+      return
+    }
+
+    animationHandler.removeCallbacks(
+      animationRunnable
+    )
+
+    if (!preserveStationaryTime) {
+      stationarySinceAt =
+        SystemClock.uptimeMillis()
+    }
+
+    behaviorAnimationMode =
+      BehaviorAnimationMode.SLEEP
+    behaviorFrameIndex = 1
+    naturalSleepStartedAt =
+      SystemClock.uptimeMillis()
+    quietSleepForced =
+      forcedByQuiet
+
+    overlayView
+      ?.setImageResource(
+        sleepDrawableFramesForCharacter(
+          animatedCharacterId
+        )[
+          0
+        ]
+      )
+
+    animationHandler.postDelayed(
+      animationRunnable,
+      SLEEP_FRAME_DURATION_MS
+    )
+
+    scheduleBehaviorStateCheck()
+  }
+
+  private fun startTouchAnimation(
+    characterId: String
+  ) {
+    animationHandler.removeCallbacks(
+      animationRunnable
+    )
+
+    animatedCharacterId =
+      characterId
+    happyAnimationActive = false
+    happyAnimationStep = 0
+    walkingAnimationActive = false
+    quietSleepForced = false
+    behaviorAnimationMode =
+      BehaviorAnimationMode.TOUCH
+    behaviorFrameIndex = 0
+    touchAnimationActive = true
+    touchAnimationStep = 1
+
+    overlayView
+      ?.setImageResource(
+        touchDrawableFramesForCharacter(
+          characterId
+        )[
+          0
+        ]
+      )
+
+    animationHandler.postDelayed(
+      animationRunnable,
+      TOUCH_FRAME_DURATION_MS
+    )
+  }
+
   private fun stopIdleAnimation() {
     animationHandler.removeCallbacks(
       animationRunnable
@@ -5280,9 +5789,22 @@ class RootFloatingCharacterService : Service() {
     walkingAnimationActive = false
     happyAnimationActive = false
     happyAnimationStep = 0
+    touchAnimationActive = false
+    touchAnimationStep = 0
+    behaviorAnimationMode =
+      BehaviorAnimationMode.IDLE
+    behaviorFrameIndex = 0
+    naturalSleepStartedAt = 0L
+    quietSleepForced = false
+    behaviorHandler.removeCallbacks(
+      behaviorStateRunnable
+    )
   }
 
   private fun removeOverlay() {
+    behaviorHandler.removeCallbacks(
+      behaviorStateRunnable
+    )
     quietHandler.removeCallbacks(
       quietCheckRunnable
     )
@@ -5496,6 +6018,163 @@ class RootFloatingCharacterService : Service() {
           R.drawable.root_character_rooty_happy_01,
           R.drawable.root_character_rooty_happy_02,
           R.drawable.root_character_rooty_happy_03
+        )
+    }
+
+  // CHARACTER_V101J_NATIVE_SIT_FRAMES
+  private fun sitDrawableFramesForCharacter(
+    characterId: String
+  ): IntArray =
+    when (characterId) {
+      "moru" ->
+        intArrayOf(
+          R.drawable.root_character_moru_sit_01,
+          R.drawable.root_character_moru_sit_02,
+          R.drawable.root_character_moru_sit_03,
+          R.drawable.root_character_moru_sit_04
+        )
+      "mongsil" ->
+        intArrayOf(
+          R.drawable.root_character_mongsil_sit_01,
+          R.drawable.root_character_mongsil_sit_02,
+          R.drawable.root_character_mongsil_sit_03,
+          R.drawable.root_character_mongsil_sit_04
+        )
+      "dami" ->
+        intArrayOf(
+          R.drawable.root_character_dami_sit_01,
+          R.drawable.root_character_dami_sit_02,
+          R.drawable.root_character_dami_sit_03,
+          R.drawable.root_character_dami_sit_04
+        )
+      "pio" ->
+        intArrayOf(
+          R.drawable.root_character_pio_sit_01,
+          R.drawable.root_character_pio_sit_02,
+          R.drawable.root_character_pio_sit_03,
+          R.drawable.root_character_pio_sit_04
+        )
+      "nuri" ->
+        intArrayOf(
+          R.drawable.root_character_nuri_sit_01,
+          R.drawable.root_character_nuri_sit_02,
+          R.drawable.root_character_nuri_sit_03,
+          R.drawable.root_character_nuri_sit_04
+        )
+      "tori" ->
+        intArrayOf(
+          R.drawable.root_character_tori_sit_01,
+          R.drawable.root_character_tori_sit_02,
+          R.drawable.root_character_tori_sit_03,
+          R.drawable.root_character_tori_sit_04
+        )
+      else ->
+        intArrayOf(
+          R.drawable.root_character_rooty_sit_01,
+          R.drawable.root_character_rooty_sit_02,
+          R.drawable.root_character_rooty_sit_03,
+          R.drawable.root_character_rooty_sit_04
+        )
+    }
+
+  // CHARACTER_V101J_NATIVE_SLEEP_FRAMES
+  private fun sleepDrawableFramesForCharacter(
+    characterId: String
+  ): IntArray =
+    when (characterId) {
+      "moru" ->
+        intArrayOf(
+          R.drawable.root_character_moru_sleep_01,
+          R.drawable.root_character_moru_sleep_02,
+          R.drawable.root_character_moru_sleep_03,
+          R.drawable.root_character_moru_sleep_04,
+          R.drawable.root_character_moru_sleep_05
+        )
+      "mongsil" ->
+        intArrayOf(
+          R.drawable.root_character_mongsil_sleep_01,
+          R.drawable.root_character_mongsil_sleep_02,
+          R.drawable.root_character_mongsil_sleep_03,
+          R.drawable.root_character_mongsil_sleep_04,
+          R.drawable.root_character_mongsil_sleep_05
+        )
+      "dami" ->
+        intArrayOf(
+          R.drawable.root_character_dami_sleep_01,
+          R.drawable.root_character_dami_sleep_02,
+          R.drawable.root_character_dami_sleep_03,
+          R.drawable.root_character_dami_sleep_04,
+          R.drawable.root_character_dami_sleep_05
+        )
+      "pio" ->
+        intArrayOf(
+          R.drawable.root_character_pio_sleep_01,
+          R.drawable.root_character_pio_sleep_02,
+          R.drawable.root_character_pio_sleep_03,
+          R.drawable.root_character_pio_sleep_04,
+          R.drawable.root_character_pio_sleep_05
+        )
+      "nuri" ->
+        intArrayOf(
+          R.drawable.root_character_nuri_sleep_01,
+          R.drawable.root_character_nuri_sleep_02,
+          R.drawable.root_character_nuri_sleep_03,
+          R.drawable.root_character_nuri_sleep_04,
+          R.drawable.root_character_nuri_sleep_05
+        )
+      "tori" ->
+        intArrayOf(
+          R.drawable.root_character_tori_sleep_01,
+          R.drawable.root_character_tori_sleep_02,
+          R.drawable.root_character_tori_sleep_03,
+          R.drawable.root_character_tori_sleep_04,
+          R.drawable.root_character_tori_sleep_05
+        )
+      else ->
+        intArrayOf(
+          R.drawable.root_character_rooty_sleep_01
+        )
+    }
+
+  // CHARACTER_V101J_NATIVE_TOUCH_FRAMES
+  private fun touchDrawableFramesForCharacter(
+    characterId: String
+  ): IntArray =
+    when (characterId) {
+      "moru" ->
+        intArrayOf(
+          R.drawable.root_character_moru_touch_01,
+          R.drawable.root_character_moru_touch_02
+        )
+      "mongsil" ->
+        intArrayOf(
+          R.drawable.root_character_mongsil_touch_01,
+          R.drawable.root_character_mongsil_touch_02
+        )
+      "dami" ->
+        intArrayOf(
+          R.drawable.root_character_dami_touch_01,
+          R.drawable.root_character_dami_touch_02
+        )
+      "pio" ->
+        intArrayOf(
+          R.drawable.root_character_pio_touch_01,
+          R.drawable.root_character_pio_touch_02
+        )
+      "nuri" ->
+        intArrayOf(
+          R.drawable.root_character_nuri_touch_01,
+          R.drawable.root_character_nuri_touch_02
+        )
+      "tori" ->
+        intArrayOf(
+          R.drawable.root_character_tori_touch_01,
+          R.drawable.root_character_tori_touch_02
+        )
+      else ->
+        intArrayOf(
+          R.drawable.root_character_rooty_happy_01,
+          R.drawable.root_character_rooty_happy_02
         )
     }
 

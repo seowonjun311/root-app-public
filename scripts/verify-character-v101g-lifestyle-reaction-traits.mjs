@@ -79,6 +79,9 @@ const lifestyleSync =
   readFileSync(
     paths.lifestyleSync,
     'utf8'
+  ).replace(
+    /\r\n/g,
+    '\n'
   );
 
 const day =

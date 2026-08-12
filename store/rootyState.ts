@@ -1,5 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import {
+  syncFloatingCharacterRootyStateContext,
+} from '../utils/floatingCharacterLifestyleSync';
+
+// CHARACTER_V101H_ROOTY_STATE_NATIVE_CONTEXT_SYNC
+
 export type RootyState = {
   mood: number;
   energy: number;
@@ -141,7 +147,7 @@ export async function loadRootyState():
       return null;
     }
 
-    return {
+    const state: RootyState = {
       mood:
         normalized.mood,
       energy:
@@ -149,6 +155,12 @@ export async function loadRootyState():
       affection:
         normalized.affection,
     };
+
+    void syncFloatingCharacterRootyStateContext(
+      state
+    );
+
+    return state;
   } catch (error) {
     console.log(
       'ROOTY STATE LOAD ERROR',
@@ -212,6 +224,10 @@ export function saveRootyState(
     createRootyStateSnapshot(
       state
     );
+
+  void syncFloatingCharacterRootyStateContext(
+    state
+  );
 
   rootyStateSaveQueue =
     rootyStateSaveQueue

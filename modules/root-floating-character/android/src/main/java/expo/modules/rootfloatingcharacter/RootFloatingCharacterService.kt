@@ -36,6 +36,7 @@ import org.json.JSONObject
 // CHARACTER_V101E_GOAL_SPEECH_INTERACTION
 // CHARACTER_V101F_GOAL_COMPLETION_CELEBRATION
 // CHARACTER_V101G_LIFESTYLE_REACTION_TRAITS
+// CHARACTER_V101H_TIME_STATE_CONTEXT_SPEECH
 class RootFloatingCharacterService : Service() {
   private data class GoalCompletion(
     val id: String,
@@ -84,6 +85,7 @@ class RootFloatingCharacterService : Service() {
     private const val PREF_LIFESTYLE_BASELINE_READY = "lifestyleBaselineReady"
     private const val PREF_LIFESTYLE_REACTION_KEYS = "lifestyleReactionKeys"
     private const val PREF_LAST_LIFESTYLE_REACTION_AT = "lastLifestyleReactionAt"
+    private const val PREF_TIME_STATE_SPEECH_KEYS = "timeStateSpeechKeys"
 
     private const val CHANNEL_ID = "root_floating_character"
     private const val NOTIFICATION_ID = 7101
@@ -778,6 +780,27 @@ class RootFloatingCharacterService : Service() {
         )
       }
 
+      fun copyStateValue(
+        key: String
+      ) {
+        if (!source.has(key)) {
+          return
+        }
+
+        result.put(
+          key,
+          source
+            .optDouble(
+              key,
+              50.0
+            )
+            .coerceIn(
+              0.0,
+              100.0
+            )
+        )
+      }
+
       copyCount(
         "pendingGoalCount"
       )
@@ -799,6 +822,16 @@ class RootFloatingCharacterService : Service() {
       )
       copyMoney(
         "monthBudget"
+      )
+
+      copyStateValue(
+        "mood"
+      )
+      copyStateValue(
+        "energy"
+      )
+      copyStateValue(
+        "affection"
       )
 
       return result.toString()
@@ -1304,8 +1337,7 @@ class RootFloatingCharacterService : Service() {
         )
       }
       else if (
-        goalSpeechEnabled &&
-        pendingGoals.isNotEmpty()
+        goalSpeechEnabled
       ) {
         scheduleNextGoalSpeech(
           initial = false
@@ -1344,8 +1376,7 @@ class RootFloatingCharacterService : Service() {
         )
       }
       else if (
-        goalSpeechEnabled &&
-        pendingGoals.isNotEmpty()
+        goalSpeechEnabled
       ) {
         scheduleNextGoalSpeech(
           initial = false
@@ -3059,16 +3090,14 @@ class RootFloatingCharacterService : Service() {
         .apply()
     }
 
-    if (pendingGoals.isEmpty()) {
-      speechHandler.removeCallbacks(
-        goalSpeechRunnable
-      )
-      return
-    }
-
     if (goalSpeechEnabled) {
       scheduleNextGoalSpeech(
         initial = true
+      )
+    }
+    else {
+      speechHandler.removeCallbacks(
+        goalSpeechRunnable
       )
     }
   }
@@ -3099,11 +3128,9 @@ class RootFloatingCharacterService : Service() {
       return
     }
 
-    if (pendingGoals.isNotEmpty()) {
-      scheduleNextGoalSpeech(
-        initial = true
-      )
-    }
+    scheduleNextGoalSpeech(
+      initial = true
+    )
   }
 
   private fun scheduleNextGoalSpeech(
@@ -3115,7 +3142,6 @@ class RootFloatingCharacterService : Service() {
 
     if (
       !goalSpeechEnabled ||
-      pendingGoals.isEmpty() ||
       overlayView == null
     ) {
       return
@@ -3153,17 +3179,6 @@ class RootFloatingCharacterService : Service() {
       return false
     }
 
-    if (pendingGoals.isEmpty()) {
-      if (force) {
-        showSpeechBubble(
-          "오늘 남은 행동목표가 없어!",
-          TAP_REACTION_DISPLAY_MS
-        )
-      }
-
-      return false
-    }
-
     if (
       !force &&
       (
@@ -3176,6 +3191,42 @@ class RootFloatingCharacterService : Service() {
         actionMenuView != null
       )
     ) {
+      return false
+    }
+
+    val contextualSpeech =
+      buildTimeStateContextSpeech(
+        force = force
+      )
+
+    if (
+      contextualSpeech !=
+        null
+    ) {
+      if (!force) {
+        markTimeStateSpeechUsed(
+          contextualSpeech.first
+        )
+      }
+
+      showSpeechBubble(
+        contextualSpeech.second,
+        GOAL_SPEECH_DISPLAY_MS
+      )
+
+      return true
+    }
+
+    if (pendingGoals.isEmpty()) {
+      if (force) {
+        showSpeechBubble(
+          "오늘 남은 행동목표가 없어! 지금은 편하게 있어도 돼.",
+          TAP_REACTION_DISPLAY_MS
+        )
+
+        return true
+      }
+
       return false
     }
 
@@ -3264,6 +3315,462 @@ class RootFloatingCharacterService : Service() {
 
     return true
   }
+
+  // CHARACTER_V101H_TIME_STATE_CONTEXT_ENGINE
+  private fun currentLifestyleContext():
+    JSONObject =
+    try {
+      JSONObject(
+        prefs.getString(
+          PREF_LIFESTYLE_CONTEXT_JSON,
+          "{}"
+        )
+          ?: "{}"
+      )
+    }
+    catch (
+      ignored: Throwable
+    ) {
+      JSONObject()
+    }
+
+  private fun localDateKey():
+    String {
+    val calendar =
+      java.util.Calendar
+        .getInstance()
+
+    return String.format(
+      java.util.Locale.US,
+      "%04d-%02d-%02d",
+      calendar.get(
+        java.util.Calendar.YEAR
+      ),
+      calendar.get(
+        java.util.Calendar.MONTH
+      ) +
+        1,
+      calendar.get(
+        java.util.Calendar.DAY_OF_MONTH
+      )
+    )
+  }
+
+  private fun currentHourOfDay():
+    Int =
+    java.util.Calendar
+      .getInstance()
+      .get(
+        java.util.Calendar.HOUR_OF_DAY
+      )
+
+  private fun currentTimePeriod(
+    hour: Int
+  ): String =
+    when (hour) {
+      in 6..10 ->
+        "morning"
+      in 11..16 ->
+        "day"
+      in 17..21 ->
+        "evening"
+      else ->
+        "late-night"
+    }
+
+  private fun isLateNightNow():
+    Boolean =
+    currentTimePeriod(
+      currentHourOfDay()
+    ) ==
+      "late-night"
+
+  private fun isLowMoodContext():
+    Boolean {
+    val context =
+      currentLifestyleContext()
+
+    return (
+      context.has(
+        "mood"
+      ) &&
+      context.optDouble(
+        "mood",
+        50.0
+      ) <
+        30.0
+    )
+  }
+
+  private fun timeStateSpeechKeyUsed(
+    key: String
+  ): Boolean =
+    (
+      prefs.getStringSet(
+        PREF_TIME_STATE_SPEECH_KEYS,
+        emptySet()
+      )
+        ?: emptySet()
+    )
+      .contains(
+        key
+      )
+
+  private fun markTimeStateSpeechUsed(
+    key: String
+  ) {
+    val today =
+      localDateKey()
+
+    val used =
+      (
+        prefs.getStringSet(
+          PREF_TIME_STATE_SPEECH_KEYS,
+          emptySet()
+        )
+          ?: emptySet()
+      )
+        .filter {
+          existing ->
+          existing.startsWith(
+            "$today|"
+          )
+        }
+        .toMutableSet()
+
+    used.add(
+      key
+    )
+
+    prefs
+      .edit()
+      .putStringSet(
+        PREF_TIME_STATE_SPEECH_KEYS,
+        used
+      )
+      .apply()
+  }
+
+  private fun buildTimeStateContextSpeech(
+    force: Boolean
+  ): Pair<
+    String,
+    String
+  >? {
+    val context =
+      currentLifestyleContext()
+
+    val hour =
+      currentHourOfDay()
+
+    val period =
+      currentTimePeriod(
+        hour
+      )
+
+    val dateKey =
+      context
+        .optString(
+          "dateKey",
+          localDateKey()
+        )
+        .ifBlank {
+          localDateKey()
+        }
+
+    val pending =
+      context.optInt(
+        "pendingGoalCount",
+        pendingGoals.size
+      )
+        .coerceAtLeast(
+          0
+        )
+
+    val completed =
+      context.optInt(
+        "completedGoalCount",
+        0
+      )
+        .coerceAtLeast(
+          0
+        )
+
+    val mood =
+      if (
+        context.has(
+          "mood"
+        )
+      ) {
+        context.optDouble(
+          "mood",
+          50.0
+        )
+      }
+      else {
+        50.0
+      }
+
+    val energy =
+      if (
+        context.has(
+          "energy"
+        )
+      ) {
+        context.optDouble(
+          "energy",
+          50.0
+        )
+      }
+      else {
+        50.0
+      }
+
+    val affection =
+      if (
+        context.has(
+          "affection"
+        )
+      ) {
+        context.optDouble(
+          "affection",
+          50.0
+        )
+      }
+      else {
+        50.0
+      }
+
+    val signal =
+      when {
+        period ==
+          "late-night" ->
+          "late-night"
+        energy <=
+          24.0 ->
+          "exhausted"
+        energy <=
+          49.0 ->
+          "tired"
+        mood <
+          30.0 ->
+          "low-mood"
+        energy >=
+          75.0 &&
+        pending >
+          0 ->
+          "energetic-goal"
+        period ==
+          "morning" ->
+          "morning"
+        period ==
+          "day" &&
+        completed >
+          0 ->
+          "day-progress"
+        period ==
+          "day" ->
+          "day-check"
+        period ==
+          "evening" ->
+          "evening"
+        else ->
+          return null
+      }
+
+    val key =
+      "$dateKey|$period|$signal"
+
+    if (
+      !force &&
+      timeStateSpeechKeyUsed(
+        key
+      )
+    ) {
+      return null
+    }
+
+    val bonded =
+      affection >=
+        75.0
+
+    val message =
+      buildTimeStateMessage(
+        signal =
+          signal,
+        pending =
+          pending,
+        completed =
+          completed,
+        bonded =
+          bonded
+      )
+
+    return key to
+      message
+  }
+
+  private fun buildTimeStateMessage(
+    signal: String,
+    pending: Int,
+    completed: Int,
+    bonded: Boolean
+  ): String {
+    val warmEnding =
+      if (bonded) {
+        " 나랑 같이 천천히 가자."
+      }
+      else {
+        ""
+      }
+
+    return when (signal) {
+      "late-night" ->
+        when (animatedCharacterId) {
+          "moru" ->
+            "이제 늦었어. 오늘은 여기까지 하고 쉬자.$warmEnding"
+          "mongsil" ->
+            "늦은 시간이야. 못 한 건 내일 천천히 해도 괜찮아.$warmEnding"
+          "dami" ->
+            "오늘도 수고했어! 이제는 편하게 쉬자 😊$warmEnding"
+          "pio" ->
+            "내일 또 움직이려면 충전해야지. 오늘은 쉬자!$warmEnding"
+          "nuri" ->
+            "오늘 미션은 여기까지! 휴식도 중요한 미션이야.$warmEnding"
+          "tori" ->
+            "이제 늦었어... 남은 건 내일 해도 돼.$warmEnding"
+          else ->
+            "오늘 못 한 건 내일 해도 돼. 이제 좀 쉬자.$warmEnding"
+        }
+
+      "exhausted" ->
+        when (animatedCharacterId) {
+          "moru" ->
+            "에너지가 많이 낮아. 지금은 목표보다 쉬는 게 먼저야.$warmEnding"
+          "dami" ->
+            "많이 지친 것 같아. 오늘은 스스로도 좀 챙겨주자 😊$warmEnding"
+          "pio" ->
+            "지금은 충전 시간! 쉬어야 다음 탐험도 재밌지.$warmEnding"
+          else ->
+            "에너지가 많이 낮아 보여. 잠깐 쉬는 걸 먼저 해도 좋아.$warmEnding"
+        }
+
+      "tired" ->
+        when (animatedCharacterId) {
+          "moru" ->
+            "조금 지쳤네. 잠깐 쉬고 다시 해보자.$warmEnding"
+          "mongsil" ->
+            "조금 피곤해 보여. 천천히 쉬었다가 해도 괜찮아.$warmEnding"
+          "dami" ->
+            "조금 쉬어도 돼! 쉬는 것도 잘하는 거야 😊$warmEnding"
+          "pio" ->
+            "잠깐 충전하고 다시 움직이자!$warmEnding"
+          else ->
+            "조금 지쳤네. 한 번 쉬었다가 남은 걸 보자.$warmEnding"
+        }
+
+      "low-mood" ->
+        when (animatedCharacterId) {
+          "moru" ->
+            "오늘은 기분이 조금 가라앉았네. 무리해서 다 하려고 하지 말자.$warmEnding"
+          "mongsil" ->
+            "오늘 마음이 조금 무거운가 봐. 천천히 있어도 괜찮아.$warmEnding"
+          "dami" ->
+            "오늘은 내가 더 응원해줄게. 작은 것 하나만 해도 충분해 😊$warmEnding"
+          "pio" ->
+            "기분 전환이 필요하면 나중에 바람 쐬러 가자.$warmEnding"
+          "nuri" ->
+            "오늘은 작은 미션 하나만 깨도 성공이야.$warmEnding"
+          "tori" ->
+            "오늘은 천천히 가자... 무리하지 않아도 돼.$warmEnding"
+          else ->
+            "오늘 기분이 좀 가라앉았네. 남은 목표는 천천히 해도 돼.$warmEnding"
+        }
+
+      "energetic-goal" ->
+        when (animatedCharacterId) {
+          "moru" ->
+            "지금 페이스 좋아! 남은 목표 $pending개 중 하나 바로 해볼까?"
+          "mongsil" ->
+            "지금은 에너지가 괜찮네. 남은 것 하나 천천히 해볼까?"
+          "dami" ->
+            "에너지 좋아 보여! 남은 목표도 충분히 할 수 있어 😊"
+          "pio" ->
+            "지금 에너지 좋다! 목표 하나 끝내고 어디 좀 가볼까?"
+          "nuri" ->
+            "에너지 충전 완료! 남은 미션 $pending개 중 하나 깨보자!"
+          "tori" ->
+            "지금은 컨디션이 괜찮아 보여... 하나 해볼까?"
+          else ->
+            "지금 에너지 좋아 보여! 남은 목표 하나 시작해볼까?"
+        }
+
+      "morning" ->
+        if (
+          pending >
+            0
+        ) {
+          "좋은 아침! 오늘 목표 $pending개, 하나씩 시작해볼까?$warmEnding"
+        }
+        else {
+          "좋은 아침! 오늘은 남은 행동목표가 없어. 가볍게 시작하자.$warmEnding"
+        }
+
+      "day-progress" ->
+        when (animatedCharacterId) {
+          "dami" ->
+            "벌써 목표 $completed개 했네! 잘하고 있어 😊"
+          "nuri" ->
+            "지금까지 미션 $completed개 클리어! 흐름 좋아."
+          "pio" ->
+            "벌써 $completed개 해냈네! 남은 것 끝내면 밖에도 나가보자."
+          else ->
+            "지금까지 목표 $completed개 해냈어. 잘하고 있어!"
+        }
+
+      "evening" ->
+        if (
+          pending >
+            0
+        ) {
+          when (animatedCharacterId) {
+            "moru" ->
+              "저녁이야. 오늘 남은 목표 $pending개, 가능한 것만 정리해보자."
+            "mongsil" ->
+              "저녁이네. 남은 목표 $pending개는 무리하지 말고 천천히 보자."
+            "dami" ->
+              "오늘 아직 $pending개 남았어. 할 수 있는 만큼만 해도 좋아 😊"
+            "pio" ->
+              "저녁이야! 남은 $pending개 중 하나 끝내고 여유 좀 만들자."
+            "nuri" ->
+              "오늘 남은 미션 $pending개! 가능한 것부터 골라보자."
+            "tori" ->
+              "오늘 아직 $pending개 남아 있어... 가능한 것만 해보자."
+            else ->
+              "오늘 아직 목표가 $pending개 남아 있어. 가능한 것부터 해보자."
+          }
+        }
+        else {
+          "오늘 할 목표는 다 정리됐어. 저녁은 편하게 보내자.$warmEnding"
+        }
+
+      else ->
+        if (
+          pending >
+            0
+        ) {
+          "오늘 남은 목표가 $pending개 있어. 하나씩 해보자.$warmEnding"
+        }
+        else {
+          "오늘 흐름 괜찮아. 지금 페이스 그대로 가자.$warmEnding"
+        }
+    }
+  }
+
+  private fun shouldSoftenNagging():
+    Boolean =
+    isLateNightNow() ||
+    isLowMoodContext()
 
   // CHARACTER_V101G_CHARACTER_COMMUNICATION_TRAITS
   private fun pickMessage(
@@ -3502,8 +4009,35 @@ class RootFloatingCharacterService : Service() {
 
   private fun buildLifestyleReactionMessage(
     signal: String
-  ): String =
-    when (signal) {
+  ): String {
+    if (
+      (
+        signal ==
+          "spend-nag" ||
+        signal ==
+          "spend-nag-strong"
+      ) &&
+      shouldSoftenNagging()
+    ) {
+      return when (animatedCharacterId) {
+        "moru" ->
+          "오늘 지출이 늘었네. 지금은 쉬고, 내일 예산만 한번 정리해보자."
+        "mongsil" ->
+          "오늘 돈을 조금 많이 썼지만 지금은 늦었어. 내일 천천히 확인하자."
+        "dami" ->
+          "오늘 지출이 좀 컸어. 그래도 지금은 쉬고 내일 같이 정리해보자 😊"
+        "pio" ->
+          "오늘 지출이 늘었네. 여행비는 내일 다시 천천히 맞춰보자."
+        "nuri" ->
+          "지출 미션은 내일 다시 정리하자. 지금은 휴식 시간이야."
+        "tori" ->
+          "오늘 조금 많이 썼네... 지금은 쉬고 내일 확인해도 돼."
+        else ->
+          "오늘 지출이 조금 늘었어. 지금은 쉬고 내일 예산을 한번 확인하자."
+      }
+    }
+
+    return when (signal) {
       "spend-praise" ->
         when (animatedCharacterId) {
           "moru" ->
@@ -3556,6 +4090,7 @@ class RootFloatingCharacterService : Service() {
             "오늘 배정 예산을 넘었어. 남은 지출은 조금 조심하자."
         }
     }
+  }
 
   // CHARACTER_V101G_LIFESTYLE_REACTION_ENGINE
   private fun applyLifestyleContextInternal(

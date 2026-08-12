@@ -269,6 +269,9 @@ export type FloatingCharacterLifestyleContextSnapshot = {
   dailyBudget?: number;
   monthExpense?: number;
   monthBudget?: number;
+  mood?: number;
+  energy?: number;
+  affection?: number;
 };
 
 export async function setFloatingCharacterLifestyleContextSnapshot(

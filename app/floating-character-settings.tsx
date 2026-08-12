@@ -871,7 +871,9 @@ export default function FloatingCharacterSettingsScreen() {
                   styles.sectionTitle
                 }
               >
-                행동목표 말해주기
+                목표·상태 말풍선
+                {/* CHARACTER_V101H_TIME_STATE_SETTINGS_COPY */}
+                {/* V101E compatibility label: 행동목표 말해주기 */}
               </Text>
 
               <Text
@@ -879,7 +881,7 @@ export default function FloatingCharacterSettingsScreen() {
                   styles.controlDescription
                 }
               >
-                오늘 남아 있는 행동목표를 캐릭터가 쉬는 동안 가끔 말해줍니다.
+                남은 행동목표와 시간대·에너지·기분 상태를 캐릭터가 쉬는 동안 가끔 말해줍니다.
               </Text>
             </View>
 
@@ -910,7 +912,7 @@ export default function FloatingCharacterSettingsScreen() {
           >
             현재 말할 수 있는 미완료 행동목표 {
               status.pendingGoalCount
-            }개 · 같은 목표는 너무 자주 반복하지 않습니다.
+            }개 · 같은 목표·시간대 반응은 반복을 줄이고, 늦은 밤에는 독촉을 부드럽게 합니다.
           </Text>
 
           <Pressable

@@ -257,3 +257,52 @@ export async function syncFloatingCharacterSpendingContext(
     )
   );
 }
+
+export type FloatingCharacterRootyStateContext = {
+  mood: number;
+  energy: number;
+  affection: number;
+};
+
+function clampStateValue(
+  value: number
+) {
+  return Math.max(
+    0,
+    Math.min(
+      100,
+      Math.round(
+        Number.isFinite(
+          value
+        )
+          ? value
+          : 50
+      )
+    )
+  );
+}
+
+// CHARACTER_V101H_ROOTY_STATE_CONTEXT_SYNC
+export async function syncFloatingCharacterRootyStateContext(
+  state:
+    FloatingCharacterRootyStateContext
+): Promise<boolean> {
+  return setFloatingCharacterLifestyleContextSnapshot({
+    dateKey:
+      formatDateKey(
+        new Date()
+      ),
+    mood:
+      clampStateValue(
+        state.mood
+      ),
+    energy:
+      clampStateValue(
+        state.energy
+      ),
+    affection:
+      clampStateValue(
+        state.affection
+      ),
+  });
+}

@@ -5968,6 +5968,7 @@ class RootFloatingCharacterService : Service() {
     actionMenuParams = null
   }
 
+  // CHARACTER_V101Q2_AUX_OVERLAY_VERTICAL_TUNE
   private fun positionSpeechBubble(
     characterParams:
       WindowManager.LayoutParams,
@@ -6011,7 +6012,7 @@ class RootFloatingCharacterService : Service() {
         (
           characterParams.y -
             dp(
-              72
+              56
             )
         ).coerceAtLeast(
           0
@@ -6069,7 +6070,7 @@ class RootFloatingCharacterService : Service() {
         (
           characterParams.y -
             dp(
-              112
+              92
             )
         ).coerceAtLeast(
           0

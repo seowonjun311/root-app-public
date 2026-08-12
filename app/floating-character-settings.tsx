@@ -27,7 +27,9 @@ import {
   isFloatingCharacterSupported,
   openFloatingCharacterPermissionSettings,
   setFloatingCharacterAutoMoveEnabled,
+  setFloatingCharacterGoalSpeechEnabled,
   setFloatingCharacterScale,
+  showFloatingCharacterGoalSpeechNow,
   startFloatingCharacter,
   stopFloatingCharacter,
   updateFloatingCharacter,
@@ -36,6 +38,12 @@ import {
 import {
   useSelectedCharacter,
 } from '../store/selectedCharacter';
+import {
+  getRootOnboardingData,
+} from '../store/rootMemory';
+import {
+  syncFloatingCharacterGoals,
+} from '../utils/floatingCharacterGoalSync';
 
 const CHARACTER_LABEL = {
   rooty:
@@ -88,6 +96,7 @@ function roundScale(
 
 // CHARACTER_V101A_FLOATING_OVERLAY_SETTINGS
 // CHARACTER_V101C_FLOATING_MOTION_SCALE_SETTINGS
+// CHARACTER_V101E_GOAL_SPEECH_INTERACTION_SETTINGS
 export default function FloatingCharacterSettingsScreen() {
   const {
     selectedCharacter,
@@ -115,6 +124,10 @@ export default function FloatingCharacterSettingsScreen() {
         1,
       autoMoveEnabled:
         true,
+      goalSpeechEnabled:
+        true,
+      pendingGoalCount:
+        0,
     });
 
   const [
@@ -150,6 +163,12 @@ export default function FloatingCharacterSettingsScreen() {
     useCallback(
       async () => {
         try {
+          await syncFloatingCharacterGoals(
+            getRootOnboardingData()
+              ?.actionGoals ??
+              []
+          );
+
           const next =
             await getFloatingCharacterStatus();
 
@@ -503,6 +522,71 @@ export default function FloatingCharacterSettingsScreen() {
       }
     };
 
+  const toggleGoalSpeech =
+    async (
+      enabled:
+        boolean
+    ) => {
+      setBusy(
+        true
+      );
+
+      setStatus(
+        (
+          current
+        ) => ({
+          ...current,
+          goalSpeechEnabled:
+            enabled,
+        })
+      );
+
+      try {
+        await setFloatingCharacterGoalSpeechEnabled(
+          enabled
+        );
+        await refresh();
+      }
+      finally {
+        setBusy(
+          false
+        );
+      }
+    };
+
+  const testGoalSpeech =
+    async () => {
+      if (
+        !status.running
+      ) {
+        Alert.alert(
+          '플로팅 캐릭터를 먼저 켜주세요',
+          '행동목표 말풍선은 화면 위 캐릭터가 켜져 있을 때 확인할 수 있어요.'
+        );
+        return;
+      }
+
+      setBusy(
+        true
+      );
+
+      try {
+        await syncFloatingCharacterGoals(
+          getRootOnboardingData()
+            ?.actionGoals ??
+            []
+        );
+
+        await showFloatingCharacterGoalSpeechNow();
+        await refresh();
+      }
+      finally {
+        setBusy(
+          false
+        );
+      }
+    };
+
   const supported =
     isFloatingCharacterSupported();
 
@@ -609,7 +693,8 @@ export default function FloatingCharacterSettingsScreen() {
             }
           >
             한 손가락으로 드래그해 위치를 옮기고, 두 손가락을 벌리거나 오므려
-            캐릭터 크기를 바꿀 수 있습니다. 가볍게 누르면 ROOT로 돌아옵니다.
+            캐릭터 크기를 바꿀 수 있습니다. 짧게 누르면 캐릭터가 반응하고,
+            길게 누르면 캐릭터 끄기·ROOT 가기 메뉴가 열립니다.
           </Text>
         </View>
 
@@ -764,6 +849,100 @@ export default function FloatingCharacterSettingsScreen() {
           >
             캐릭터를 손으로 잡으면 자동 이동이 즉시 멈추고, 손을 뗀 뒤 약 4초 후 다시 움직입니다.
           </Text>
+        </View>
+
+        <View
+          style={
+            styles.card
+          }
+        >
+          <View
+            style={
+              styles.controlHeader
+            }
+          >
+            <View
+              style={
+                styles.controlCopy
+              }
+            >
+              <Text
+                style={
+                  styles.sectionTitle
+                }
+              >
+                행동목표 말해주기
+              </Text>
+
+              <Text
+                style={
+                  styles.controlDescription
+                }
+              >
+                오늘 남아 있는 행동목표를 캐릭터가 쉬는 동안 가끔 말해줍니다.
+              </Text>
+            </View>
+
+            <Switch
+              disabled={
+                busy ||
+                !supported
+              }
+              value={
+                status.goalSpeechEnabled
+              }
+              onValueChange={
+                (
+                  enabled
+                ) => {
+                  void toggleGoalSpeech(
+                    enabled
+                  );
+                }
+              }
+            />
+          </View>
+
+          <Text
+            style={
+              styles.helperText
+            }
+          >
+            현재 말할 수 있는 미완료 행동목표 {
+              status.pendingGoalCount
+            }개 · 같은 목표는 너무 자주 반복하지 않습니다.
+          </Text>
+
+          <Pressable
+            disabled={
+              busy ||
+              !supported ||
+              !status.running ||
+              !status.goalSpeechEnabled
+            }
+            onPress={
+              testGoalSpeech
+            }
+            style={[
+              styles.secondaryButton,
+              styles.goalSpeechTestButton,
+              (
+                busy ||
+                !supported ||
+                !status.running ||
+                !status.goalSpeechEnabled
+              ) &&
+                styles.disabledButton,
+            ]}
+          >
+            <Text
+              style={
+                styles.secondaryButtonText
+              }
+            >
+              지금 말해보기
+            </Text>
+          </Pressable>
         </View>
 
         <View
@@ -1027,7 +1206,7 @@ export default function FloatingCharacterSettingsScreen() {
               styles.noticeText
             }
           >
-            자동 이동과 크기 값은 Android 네이티브 설정에 저장됩니다.
+            자동 이동·크기·행동목표 말풍선 설정은 Android 네이티브에 저장됩니다.
             ROOT를 닫거나 다른 앱을 사용해도 현재 설정을 유지합니다.
           </Text>
         </View>
@@ -1331,6 +1510,9 @@ const styles =
         '900',
       color:
         '#554B43',
+    },
+    goalSpeechTestButton: {
+      marginTop: 12,
     },
     stopButton: {
       alignItems:

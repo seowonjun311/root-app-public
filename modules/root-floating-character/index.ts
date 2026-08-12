@@ -12,6 +12,8 @@ export type RootFloatingCharacterStatus = {
   characterId: string | null;
   scale: number;
   autoMoveEnabled: boolean;
+  goalSpeechEnabled: boolean;
+  pendingGoalCount: number;
 };
 
 type RootFloatingCharacterNativeModule = {
@@ -39,6 +41,16 @@ type RootFloatingCharacterNativeModule = {
     enabled: boolean
   ):
     Promise<boolean>;
+  setGoalSnapshot(
+    goalsJson: string
+  ):
+    Promise<number>;
+  setGoalSpeechEnabled(
+    enabled: boolean
+  ):
+    Promise<boolean>;
+  showGoalSpeechNow():
+    Promise<boolean>;
 };
 
 const nativeModule =
@@ -55,6 +67,7 @@ const nativeModule =
 
 // CHARACTER_V101A_FLOATING_OVERLAY_JS_BRIDGE
 // CHARACTER_V101C_FLOATING_MOTION_SCALE_JS_BRIDGE
+// CHARACTER_V101E_GOAL_SPEECH_JS_BRIDGE
 export function isFloatingCharacterSupported():
   boolean {
   return (
@@ -108,6 +121,10 @@ export async function getFloatingCharacterStatus():
         1,
       autoMoveEnabled:
         true,
+      goalSpeechEnabled:
+        true,
+      pendingGoalCount:
+        0,
     };
   }
 
@@ -184,4 +201,54 @@ export async function setFloatingCharacterAutoMoveEnabled(
   return nativeModule.setAutoMoveEnabled(
     enabled
   );
+}
+
+export type FloatingCharacterGoalSnapshotItem = {
+  id: string;
+  title: string;
+};
+
+export async function setFloatingCharacterGoalSnapshot(
+  goals:
+    FloatingCharacterGoalSnapshotItem[]
+): Promise<number> {
+  if (
+    nativeModule ===
+    null
+  ) {
+    return 0;
+  }
+
+  return nativeModule.setGoalSnapshot(
+    JSON.stringify(
+      goals
+    )
+  );
+}
+
+export async function setFloatingCharacterGoalSpeechEnabled(
+  enabled: boolean
+): Promise<boolean> {
+  if (
+    nativeModule ===
+    null
+  ) {
+    return false;
+  }
+
+  return nativeModule.setGoalSpeechEnabled(
+    enabled
+  );
+}
+
+export async function showFloatingCharacterGoalSpeechNow():
+  Promise<boolean> {
+  if (
+    nativeModule ===
+    null
+  ) {
+    return false;
+  }
+
+  return nativeModule.showGoalSpeechNow();
 }

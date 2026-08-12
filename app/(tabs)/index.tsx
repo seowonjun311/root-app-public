@@ -134,6 +134,9 @@ import Animated, {
 } from 'react-native-reanimated';
 import { captureRef } from 'react-native-view-shot';
 import { syncRootWidgetData } from '../../utils/rootWidgetSync';
+import {
+  syncFloatingCharacterGoals,
+} from '../../utils/floatingCharacterGoalSync';
 
 import {
   getRootMainBadgeId,
@@ -4970,6 +4973,22 @@ const updateRootWidgetData = async () => {
 useEffect(() => {
   updateRootWidgetData();
 }, [actionGoals, runningGoalId]);
+
+// CHARACTER_V101E_FLOATING_GOAL_HOME_SYNC
+useEffect(() => {
+  void syncFloatingCharacterGoals(
+    actionGoals
+  ).catch(
+    (
+      error
+    ) => {
+      console.log(
+        'FLOATING CHARACTER GOAL SYNC ERROR',
+        error
+      );
+    }
+  );
+}, [actionGoals]);
 
 useFocusEffect(
   useCallback(() => {

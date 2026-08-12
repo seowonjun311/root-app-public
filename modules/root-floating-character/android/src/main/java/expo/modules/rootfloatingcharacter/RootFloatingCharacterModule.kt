@@ -9,6 +9,7 @@ import expo.modules.kotlin.modules.ModuleDefinition
 
 // CHARACTER_V101A_ANDROID_OVERLAY_NATIVE_BRIDGE
 // CHARACTER_V101C_MOTION_SCALE_NATIVE_BRIDGE
+// CHARACTER_V101E_GOAL_SPEECH_NATIVE_BRIDGE
 class RootFloatingCharacterModule : Module() {
   override fun definition() =
     ModuleDefinition {
@@ -80,7 +81,9 @@ class RootFloatingCharacterModule : Module() {
               "running" to false,
               "characterId" to null,
               "scale" to 1.0,
-              "autoMoveEnabled" to true
+              "autoMoveEnabled" to true,
+              "goalSpeechEnabled" to true,
+              "pendingGoalCount" to 0
             )
 
         val permissionGranted =
@@ -116,6 +119,16 @@ class RootFloatingCharacterModule : Module() {
           "autoMoveEnabled" to
             RootFloatingCharacterService
               .readAutoMoveEnabled(
+                context
+              ),
+          "goalSpeechEnabled" to
+            RootFloatingCharacterService
+              .readGoalSpeechEnabled(
+                context
+              ),
+          "pendingGoalCount" to
+            RootFloatingCharacterService
+              .readPendingGoalCount(
                 context
               )
         )
@@ -221,6 +234,53 @@ class RootFloatingCharacterModule : Module() {
           .setAutoMoveEnabled(
             context,
             enabled
+          )
+      }
+
+      AsyncFunction(
+        "setGoalSnapshot"
+      ) {
+        goalsJson:
+          String ->
+
+        val context =
+          appContext.reactContext
+            ?: return@AsyncFunction 0
+
+        RootFloatingCharacterService
+          .setGoalSnapshot(
+            context,
+            goalsJson
+          )
+      }
+
+      AsyncFunction(
+        "setGoalSpeechEnabled"
+      ) {
+        enabled:
+          Boolean ->
+
+        val context =
+          appContext.reactContext
+            ?: return@AsyncFunction false
+
+        RootFloatingCharacterService
+          .setGoalSpeechEnabled(
+            context,
+            enabled
+          )
+      }
+
+      AsyncFunction(
+        "showGoalSpeechNow"
+      ) {
+        val context =
+          appContext.reactContext
+            ?: return@AsyncFunction false
+
+        RootFloatingCharacterService
+          .showGoalSpeechNow(
+            context
           )
       }
     }

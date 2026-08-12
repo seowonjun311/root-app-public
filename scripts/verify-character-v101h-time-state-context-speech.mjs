@@ -190,9 +190,36 @@ for (
   }
 }
 
+const schedulerMatch =
+  service.match(
+    /private fun scheduleNextGoalSpeech\([\s\S]{0,1200}?if \(\s*([\s\S]{0,320}?)\s*\) \{\s*return/
+  );
+
+if (!schedulerMatch) {
+  fail(
+    'context speech scheduler gate could not be located'
+  );
+}
+
+const schedulerGate =
+  schedulerMatch[1];
+
 if (
-  !/!goalSpeechEnabled\s*\|\|\s*overlayView == null/.test(
-    service
+  !schedulerGate.includes(
+    '!goalSpeechEnabled'
+  ) ||
+  !schedulerGate.includes(
+    'overlayView == null'
+  )
+) {
+  fail(
+    'context speech scheduler is missing its speech-enabled or overlay gate'
+  );
+}
+
+if (
+  schedulerGate.includes(
+    'pendingGoals.isEmpty()'
   )
 ) {
   fail(

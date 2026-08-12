@@ -12,6 +12,7 @@ import expo.modules.kotlin.modules.ModuleDefinition
 // CHARACTER_V101E_GOAL_SPEECH_NATIVE_BRIDGE
 // CHARACTER_V101F_GOAL_COMPLETION_NATIVE_BRIDGE
 // CHARACTER_V101G_LIFESTYLE_NATIVE_BRIDGE
+// CHARACTER_V101I_QUIET_NATIVE_BRIDGE
 class RootFloatingCharacterModule : Module() {
   override fun definition() =
     ModuleDefinition {
@@ -85,7 +86,13 @@ class RootFloatingCharacterModule : Module() {
               "scale" to 1.0,
               "autoMoveEnabled" to true,
               "goalSpeechEnabled" to true,
-              "pendingGoalCount" to 0
+              "pendingGoalCount" to 0,
+              "quietScheduleEnabled" to true,
+              "quietStartMinute" to 1380,
+              "quietEndMinute" to 420,
+              "quietStopAutoMove" to true,
+              "quietUntilAt" to 0.0,
+              "quietActive" to false
             )
 
         val permissionGranted =
@@ -131,6 +138,37 @@ class RootFloatingCharacterModule : Module() {
           "pendingGoalCount" to
             RootFloatingCharacterService
               .readPendingGoalCount(
+                context
+              ),
+          "quietScheduleEnabled" to
+            RootFloatingCharacterService
+              .readQuietScheduleEnabled(
+                context
+              ),
+          "quietStartMinute" to
+            RootFloatingCharacterService
+              .readQuietStartMinute(
+                context
+              ),
+          "quietEndMinute" to
+            RootFloatingCharacterService
+              .readQuietEndMinute(
+                context
+              ),
+          "quietStopAutoMove" to
+            RootFloatingCharacterService
+              .readQuietStopAutoMove(
+                context
+              ),
+          "quietUntilAt" to
+            RootFloatingCharacterService
+              .readQuietUntilAt(
+                context
+              )
+              .toDouble(),
+          "quietActive" to
+            RootFloatingCharacterService
+              .isQuietActiveNow(
                 context
               )
         )
@@ -288,6 +326,50 @@ class RootFloatingCharacterModule : Module() {
             context,
             contextJson
           )
+      }
+
+      AsyncFunction(
+        "setQuietSchedule"
+      ) {
+        enabled:
+          Boolean,
+        startMinute:
+          Int,
+        endMinute:
+          Int,
+        stopAutoMove:
+          Boolean ->
+
+        val context =
+          appContext.reactContext
+            ?: return@AsyncFunction false
+
+        RootFloatingCharacterService
+          .setQuietSchedule(
+            context,
+            enabled,
+            startMinute,
+            endMinute,
+            stopAutoMove
+          )
+      }
+
+      AsyncFunction(
+        "setQuietUntil"
+      ) {
+        untilAt:
+          Double ->
+
+        val context =
+          appContext.reactContext
+            ?: return@AsyncFunction 0.0
+
+        RootFloatingCharacterService
+          .setQuietUntil(
+            context,
+            untilAt.toLong()
+          )
+          .toDouble()
       }
 
       AsyncFunction(

@@ -14,6 +14,12 @@ export type RootFloatingCharacterStatus = {
   autoMoveEnabled: boolean;
   goalSpeechEnabled: boolean;
   pendingGoalCount: number;
+  quietScheduleEnabled: boolean;
+  quietStartMinute: number;
+  quietEndMinute: number;
+  quietStopAutoMove: boolean;
+  quietUntilAt: number;
+  quietActive: boolean;
 };
 
 type RootFloatingCharacterNativeModule = {
@@ -59,6 +65,17 @@ type RootFloatingCharacterNativeModule = {
     Promise<boolean>;
   showGoalSpeechNow():
     Promise<boolean>;
+  setQuietSchedule(
+    enabled: boolean,
+    startMinute: number,
+    endMinute: number,
+    stopAutoMove: boolean
+  ):
+    Promise<boolean>;
+  setQuietUntil(
+    untilAt: number
+  ):
+    Promise<number>;
 };
 
 const nativeModule =
@@ -78,6 +95,7 @@ const nativeModule =
 // CHARACTER_V101E_GOAL_SPEECH_JS_BRIDGE
 // CHARACTER_V101F_GOAL_COMPLETION_JS_BRIDGE
 // CHARACTER_V101G_LIFESTYLE_JS_BRIDGE
+// CHARACTER_V101I_QUIET_JS_BRIDGE
 export function isFloatingCharacterSupported():
   boolean {
   return (
@@ -135,6 +153,18 @@ export async function getFloatingCharacterStatus():
         true,
       pendingGoalCount:
         0,
+      quietScheduleEnabled:
+        true,
+      quietStartMinute:
+        23 * 60,
+      quietEndMinute:
+        7 * 60,
+      quietStopAutoMove:
+        true,
+      quietUntilAt:
+        0,
+      quietActive:
+        false,
     };
   }
 
@@ -291,6 +321,42 @@ export async function setFloatingCharacterLifestyleContextSnapshot(
     JSON.stringify(
       snapshot
     )
+  );
+}
+
+export async function setFloatingCharacterQuietSchedule(
+  enabled: boolean,
+  startMinute: number,
+  endMinute: number,
+  stopAutoMove: boolean
+): Promise<boolean> {
+  if (
+    nativeModule ===
+    null
+  ) {
+    return false;
+  }
+
+  return nativeModule.setQuietSchedule(
+    enabled,
+    startMinute,
+    endMinute,
+    stopAutoMove
+  );
+}
+
+export async function setFloatingCharacterQuietUntil(
+  untilAt: number
+): Promise<number> {
+  if (
+    nativeModule ===
+    null
+  ) {
+    return 0;
+  }
+
+  return nativeModule.setQuietUntil(
+    untilAt
   );
 }
 

@@ -37,6 +37,7 @@ import org.json.JSONObject
 // CHARACTER_V101F_GOAL_COMPLETION_CELEBRATION
 // CHARACTER_V101G_LIFESTYLE_REACTION_TRAITS
 // CHARACTER_V101H_TIME_STATE_CONTEXT_SPEECH
+// CHARACTER_V101I_QUIET_SLEEP_MODE
 class RootFloatingCharacterService : Service() {
   private data class GoalCompletion(
     val id: String,
@@ -59,6 +60,8 @@ class RootFloatingCharacterService : Service() {
     private const val ACTION_SHOW_GOAL_SPEECH_NOW = "root.floating.SHOW_GOAL_SPEECH_NOW"
     private const val ACTION_SET_GOAL_COMPLETION_SNAPSHOT = "root.floating.SET_GOAL_COMPLETION_SNAPSHOT"
     private const val ACTION_SET_LIFESTYLE_CONTEXT = "root.floating.SET_LIFESTYLE_CONTEXT"
+    private const val ACTION_SET_QUIET_SCHEDULE = "root.floating.SET_QUIET_SCHEDULE"
+    private const val ACTION_SET_QUIET_UNTIL = "root.floating.SET_QUIET_UNTIL"
 
     private const val EXTRA_CHARACTER_ID = "characterId"
     private const val EXTRA_SCALE = "scale"
@@ -67,6 +70,11 @@ class RootFloatingCharacterService : Service() {
     private const val EXTRA_GOAL_SPEECH = "goalSpeechEnabled"
     private const val EXTRA_COMPLETIONS_JSON = "completionsJson"
     private const val EXTRA_LIFESTYLE_JSON = "lifestyleJson"
+    private const val EXTRA_QUIET_ENABLED = "quietEnabled"
+    private const val EXTRA_QUIET_START_MINUTE = "quietStartMinute"
+    private const val EXTRA_QUIET_END_MINUTE = "quietEndMinute"
+    private const val EXTRA_QUIET_STOP_AUTO_MOVE = "quietStopAutoMove"
+    private const val EXTRA_QUIET_UNTIL_AT = "quietUntilAt"
 
     private const val PREFS = "root_floating_character_v1"
     private const val PREF_CHARACTER_ID = "characterId"
@@ -86,6 +94,11 @@ class RootFloatingCharacterService : Service() {
     private const val PREF_LIFESTYLE_REACTION_KEYS = "lifestyleReactionKeys"
     private const val PREF_LAST_LIFESTYLE_REACTION_AT = "lastLifestyleReactionAt"
     private const val PREF_TIME_STATE_SPEECH_KEYS = "timeStateSpeechKeys"
+    private const val PREF_QUIET_SCHEDULE_ENABLED = "quietScheduleEnabled"
+    private const val PREF_QUIET_START_MINUTE = "quietStartMinute"
+    private const val PREF_QUIET_END_MINUTE = "quietEndMinute"
+    private const val PREF_QUIET_STOP_AUTO_MOVE = "quietStopAutoMove"
+    private const val PREF_QUIET_UNTIL_AT = "quietUntilAt"
 
     private const val CHANNEL_ID = "root_floating_character"
     private const val NOTIFICATION_ID = 7101
@@ -118,6 +131,11 @@ class RootFloatingCharacterService : Service() {
     private const val LIFESTYLE_REACTION_DISPLAY_MS = 5200L
     private const val LIFESTYLE_REACTION_MIN_GAP_MS = 1200000L
     private const val LIFESTYLE_REACTION_BUSY_RETRY_MS = 15000L
+
+    private const val QUIET_CHECK_INTERVAL_MS = 60000L
+    private const val DEFAULT_QUIET_START_MINUTE = 23 * 60
+    private const val DEFAULT_QUIET_END_MINUTE = 7 * 60
+    private const val MAX_QUIET_DURATION_MS = 86400000L
 
     private const val BASE_WIDTH_DP = 118
     private const val BASE_HEIGHT_DP = 176
@@ -189,6 +207,270 @@ class RootFloatingCharacterService : Service() {
           )
           ?: "[]"
       ).size
+
+
+    // CHARACTER_V101I_QUIET_PERSISTED_CONFIG
+    fun readQuietScheduleEnabled(
+      context: Context
+    ): Boolean =
+      prefs(
+        context
+      )
+        .getBoolean(
+          PREF_QUIET_SCHEDULE_ENABLED,
+          true
+        )
+
+    fun readQuietStartMinute(
+      context: Context
+    ): Int =
+      prefs(
+        context
+      )
+        .getInt(
+          PREF_QUIET_START_MINUTE,
+          DEFAULT_QUIET_START_MINUTE
+        )
+        .coerceIn(
+          0,
+          1439
+        )
+
+    fun readQuietEndMinute(
+      context: Context
+    ): Int =
+      prefs(
+        context
+      )
+        .getInt(
+          PREF_QUIET_END_MINUTE,
+          DEFAULT_QUIET_END_MINUTE
+        )
+        .coerceIn(
+          0,
+          1439
+        )
+
+    fun readQuietStopAutoMove(
+      context: Context
+    ): Boolean =
+      prefs(
+        context
+      )
+        .getBoolean(
+          PREF_QUIET_STOP_AUTO_MOVE,
+          true
+        )
+
+    fun readQuietUntilAt(
+      context: Context
+    ): Long =
+      prefs(
+        context
+      )
+        .getLong(
+          PREF_QUIET_UNTIL_AT,
+          0L
+        )
+
+    private fun minuteOfDayNow():
+      Int {
+      val calendar =
+        java.util.Calendar
+          .getInstance()
+
+      return (
+        calendar.get(
+          java.util.Calendar.HOUR_OF_DAY
+        ) *
+          60 +
+        calendar.get(
+          java.util.Calendar.MINUTE
+        )
+      )
+    }
+
+    private fun minuteInsideRange(
+      minute: Int,
+      startMinute: Int,
+      endMinute: Int
+    ): Boolean =
+      if (
+        startMinute ==
+          endMinute
+      ) {
+        false
+      }
+      else if (
+        startMinute <
+          endMinute
+      ) {
+        minute in
+          startMinute until
+            endMinute
+      }
+      else {
+        minute >=
+          startMinute ||
+        minute <
+          endMinute
+      }
+
+    fun isScheduledQuietNow(
+      context: Context
+    ): Boolean =
+      readQuietScheduleEnabled(
+        context
+      ) &&
+      minuteInsideRange(
+        minuteOfDayNow(),
+        readQuietStartMinute(
+          context
+        ),
+        readQuietEndMinute(
+          context
+        )
+      )
+
+    fun isTemporaryQuietNow(
+      context: Context
+    ): Boolean =
+      readQuietUntilAt(
+        context
+      ) >
+        System.currentTimeMillis()
+
+    fun isQuietActiveNow(
+      context: Context
+    ): Boolean =
+      isScheduledQuietNow(
+        context
+      ) ||
+      isTemporaryQuietNow(
+        context
+      )
+
+    fun setQuietSchedule(
+      context: Context,
+      enabled: Boolean,
+      startMinute: Int,
+      endMinute: Int,
+      stopAutoMove: Boolean
+    ): Boolean {
+      val safeStart =
+        startMinute.coerceIn(
+          0,
+          1439
+        )
+
+      val safeEnd =
+        endMinute.coerceIn(
+          0,
+          1439
+        )
+
+      prefs(
+        context
+      )
+        .edit()
+        .putBoolean(
+          PREF_QUIET_SCHEDULE_ENABLED,
+          enabled
+        )
+        .putInt(
+          PREF_QUIET_START_MINUTE,
+          safeStart
+        )
+        .putInt(
+          PREF_QUIET_END_MINUTE,
+          safeEnd
+        )
+        .putBoolean(
+          PREF_QUIET_STOP_AUTO_MOVE,
+          stopAutoMove
+        )
+        .apply()
+
+      if (isRunning) {
+        context.startService(
+          Intent(
+            context,
+            RootFloatingCharacterService::class.java
+          ).apply {
+            action =
+              ACTION_SET_QUIET_SCHEDULE
+            putExtra(
+              EXTRA_QUIET_ENABLED,
+              enabled
+            )
+            putExtra(
+              EXTRA_QUIET_START_MINUTE,
+              safeStart
+            )
+            putExtra(
+              EXTRA_QUIET_END_MINUTE,
+              safeEnd
+            )
+            putExtra(
+              EXTRA_QUIET_STOP_AUTO_MOVE,
+              stopAutoMove
+            )
+          }
+        )
+      }
+
+      return enabled
+    }
+
+    fun setQuietUntil(
+      context: Context,
+      requestedUntilAt: Long
+    ): Long {
+      val now =
+        System.currentTimeMillis()
+
+      val safeUntil =
+        when {
+          requestedUntilAt <=
+            now ->
+            0L
+          requestedUntilAt -
+            now >
+            MAX_QUIET_DURATION_MS ->
+            now +
+              MAX_QUIET_DURATION_MS
+          else ->
+            requestedUntilAt
+        }
+
+      prefs(
+        context
+      )
+        .edit()
+        .putLong(
+          PREF_QUIET_UNTIL_AT,
+          safeUntil
+        )
+        .apply()
+
+      if (isRunning) {
+        context.startService(
+          Intent(
+            context,
+            RootFloatingCharacterService::class.java
+          ).apply {
+            action =
+              ACTION_SET_QUIET_UNTIL
+            putExtra(
+              EXTRA_QUIET_UNTIL_AT,
+              safeUntil
+            )
+          }
+        )
+      }
+
+      return safeUntil
+    }
 
     private fun parseGoalSnapshot(
       goalsJson: String
@@ -1181,7 +1463,10 @@ class RootFloatingCharacterService : Service() {
           overlayParams
             ?: return
 
-        if (!autoMoveEnabled) {
+        if (
+          !autoMoveEnabled ||
+          shouldSuppressAutoMoveForQuiet()
+        ) {
           setMovementAnimation(
             false
           )
@@ -1282,6 +1567,32 @@ class RootFloatingCharacterService : Service() {
         motionHandler.postDelayed(
           this,
           AUTO_MOVE_TICK_MS
+        )
+      }
+    }
+
+  // CHARACTER_V101I_QUIET_RUNTIME
+  private val quietHandler =
+    Handler(
+      Looper.getMainLooper()
+    )
+
+  private var quietActive =
+    false
+
+  private var scheduledQuietActive =
+    false
+
+  private val quietCheckRunnable =
+    object : Runnable {
+      override fun run() {
+        refreshQuietMode(
+          force = false
+        )
+
+        quietHandler.postDelayed(
+          this,
+          QUIET_CHECK_INTERVAL_MS
         )
       }
     }
@@ -1399,7 +1710,7 @@ class RootFloatingCharacterService : Service() {
       override fun run() {
         if (
           !goalSpeechEnabled ||
-          pendingGoals.isEmpty() ||
+          quietActive ||
           overlayView == null
         ) {
           return
@@ -1469,10 +1780,27 @@ class RootFloatingCharacterService : Service() {
           ?: "[]"
       )
 
+    quietActive =
+      isQuietActiveNow(
+        this
+      )
+
+    scheduledQuietActive =
+      isScheduledQuietNow(
+        this
+      )
+
     createNotificationChannel()
     promoteToForeground()
 
     isRunning = true
+
+    quietHandler.removeCallbacks(
+      quietCheckRunnable
+    )
+    quietHandler.post(
+      quietCheckRunnable
+    )
   }
 
   override fun onStartCommand(
@@ -1556,6 +1884,79 @@ class RootFloatingCharacterService : Service() {
           )
             ?: "{}"
         )
+        return START_STICKY
+      }
+
+      ACTION_SET_QUIET_SCHEDULE -> {
+        prefs
+          .edit()
+          .putBoolean(
+            PREF_QUIET_SCHEDULE_ENABLED,
+            intent.getBooleanExtra(
+              EXTRA_QUIET_ENABLED,
+              readQuietScheduleEnabled(
+                this
+              )
+            )
+          )
+          .putInt(
+            PREF_QUIET_START_MINUTE,
+            intent.getIntExtra(
+              EXTRA_QUIET_START_MINUTE,
+              readQuietStartMinute(
+                this
+              )
+            ).coerceIn(
+              0,
+              1439
+            )
+          )
+          .putInt(
+            PREF_QUIET_END_MINUTE,
+            intent.getIntExtra(
+              EXTRA_QUIET_END_MINUTE,
+              readQuietEndMinute(
+                this
+              )
+            ).coerceIn(
+              0,
+              1439
+            )
+          )
+          .putBoolean(
+            PREF_QUIET_STOP_AUTO_MOVE,
+            intent.getBooleanExtra(
+              EXTRA_QUIET_STOP_AUTO_MOVE,
+              readQuietStopAutoMove(
+                this
+              )
+            )
+          )
+          .apply()
+
+        refreshQuietMode(
+          force = true
+        )
+
+        return START_STICKY
+      }
+
+      ACTION_SET_QUIET_UNTIL -> {
+        prefs
+          .edit()
+          .putLong(
+            PREF_QUIET_UNTIL_AT,
+            intent.getLongExtra(
+              EXTRA_QUIET_UNTIL_AT,
+              0L
+            )
+          )
+          .apply()
+
+        refreshQuietMode(
+          force = true
+        )
+
         return START_STICKY
       }
 
@@ -2127,6 +2528,111 @@ class RootFloatingCharacterService : Service() {
     }
   }
 
+  // CHARACTER_V101I_QUIET_POLICY
+  private fun shouldSuppressAutoMoveForQuiet():
+    Boolean =
+    scheduledQuietActive &&
+    readQuietStopAutoMove(
+      this
+    )
+
+  private fun silentlyDismissAutomaticReactions() {
+    speechHandler.removeCallbacks(
+      goalSpeechRunnable
+    )
+    speechHandler.removeCallbacks(
+      retryCompletionReactionRunnable
+    )
+    speechHandler.removeCallbacks(
+      finishCompletionReactionRunnable
+    )
+    speechHandler.removeCallbacks(
+      retryLifestyleReactionRunnable
+    )
+    speechHandler.removeCallbacks(
+      finishLifestyleReactionRunnable
+    )
+
+    completionQueue.clear()
+    lifestyleReactionQueue.clear()
+    completionReactionActive = false
+    lifestyleReactionActive = false
+
+    if (happyAnimationActive) {
+      happyAnimationActive = false
+      happyAnimationStep = 0
+      startIdleAnimation(
+        animatedCharacterId
+      )
+    }
+
+    hideSpeechBubble()
+  }
+
+  private fun refreshQuietMode(
+    force: Boolean
+  ) {
+    val nextScheduled =
+      isScheduledQuietNow(
+        this
+      )
+
+    val nextActive =
+      nextScheduled ||
+      isTemporaryQuietNow(
+        this
+      )
+
+    val changed =
+      force ||
+      nextActive !=
+        quietActive ||
+      nextScheduled !=
+        scheduledQuietActive
+
+    quietActive =
+      nextActive
+
+    scheduledQuietActive =
+      nextScheduled
+
+    if (!changed) {
+      return
+    }
+
+    if (quietActive) {
+      silentlyDismissAutomaticReactions()
+
+      if (
+        shouldSuppressAutoMoveForQuiet()
+      ) {
+        stopAutoMoveLoop()
+      }
+
+      return
+    }
+
+    if (
+      autoMoveEnabled
+    ) {
+      autoMoveResumeAt =
+        SystemClock.uptimeMillis() +
+          600L
+
+      startAutoMoveLoop(
+        600L
+      )
+    }
+
+    if (
+      goalSpeechEnabled
+    ) {
+      scheduleNextGoalSpeech(
+        initial = true
+      )
+    }
+  }
+
   private fun beginUserInteraction() {
     userInteracting = true
     autoTargetX = null
@@ -2156,7 +2662,10 @@ class RootFloatingCharacterService : Service() {
       SystemClock.uptimeMillis() +
         AUTO_MOVE_RESUME_AFTER_TOUCH_MS
 
-    if (autoMoveEnabled) {
+    if (
+      autoMoveEnabled &&
+      !shouldSuppressAutoMoveForQuiet()
+    ) {
       startAutoMoveLoop(
         AUTO_MOVE_TICK_MS
       )
@@ -2170,7 +2679,10 @@ class RootFloatingCharacterService : Service() {
       motionRunnable
     )
 
-    if (!autoMoveEnabled) {
+    if (
+      !autoMoveEnabled ||
+      shouldSuppressAutoMoveForQuiet()
+    ) {
       return
     }
 
@@ -2207,7 +2719,10 @@ class RootFloatingCharacterService : Service() {
         .apply()
     }
 
-    if (enabled) {
+    if (
+      enabled &&
+      !shouldSuppressAutoMoveForQuiet()
+    ) {
       autoMoveResumeAt =
         SystemClock.uptimeMillis() +
           600L
@@ -3142,6 +3657,7 @@ class RootFloatingCharacterService : Service() {
 
     if (
       !goalSpeechEnabled ||
+      quietActive ||
       overlayView == null
     ) {
       return
@@ -3174,6 +3690,7 @@ class RootFloatingCharacterService : Service() {
   ): Boolean {
     if (
       !goalSpeechEnabled ||
+      quietActive ||
       overlayView == null
     ) {
       return false
@@ -4361,6 +4878,13 @@ class RootFloatingCharacterService : Service() {
       return
     }
 
+    if (quietActive) {
+      lifestyleReactionQueue.removeAt(
+        0
+      )
+      return
+    }
+
     if (
       userInteracting ||
       walkingAnimationActive ||
@@ -4544,6 +5068,13 @@ class RootFloatingCharacterService : Service() {
       completionQueue.isEmpty() ||
       overlayView == null
     ) {
+      return
+    }
+
+    if (quietActive) {
+      completionQueue.removeAt(
+        0
+      )
       return
     }
 
@@ -4752,6 +5283,9 @@ class RootFloatingCharacterService : Service() {
   }
 
   private fun removeOverlay() {
+    quietHandler.removeCallbacks(
+      quietCheckRunnable
+    )
     stopIdleAnimation()
     stopAutoMoveLoop()
     speechHandler.removeCallbacks(

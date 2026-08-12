@@ -28,6 +28,8 @@ import {
   openFloatingCharacterPermissionSettings,
   setFloatingCharacterAutoMoveEnabled,
   setFloatingCharacterGoalSpeechEnabled,
+  setFloatingCharacterQuietSchedule,
+  setFloatingCharacterQuietUntil,
   setFloatingCharacterScale,
   showFloatingCharacterGoalSpeechNow,
   startFloatingCharacter,
@@ -94,9 +96,53 @@ function roundScale(
     20;
 }
 
+function formatQuietMinute(
+  minute: number
+) {
+  const safe =
+    (
+      Math.round(
+        minute
+      ) %
+        1440 +
+      1440
+    ) %
+    1440;
+
+  const hour =
+    Math.floor(
+      safe /
+        60
+    );
+
+  return `${String(hour).padStart(2, '0')}:00`;
+}
+
+function shiftQuietHour(
+  minute: number,
+  delta: number
+) {
+  const hour =
+    Math.floor(
+      minute /
+        60
+    );
+
+  return (
+    (
+      hour +
+        delta +
+        24
+    ) %
+      24
+  ) *
+    60;
+}
+
 // CHARACTER_V101A_FLOATING_OVERLAY_SETTINGS
 // CHARACTER_V101C_FLOATING_MOTION_SCALE_SETTINGS
 // CHARACTER_V101E_GOAL_SPEECH_INTERACTION_SETTINGS
+// CHARACTER_V101I_QUIET_SLEEP_SETTINGS
 export default function FloatingCharacterSettingsScreen() {
   const {
     selectedCharacter,
@@ -128,6 +174,18 @@ export default function FloatingCharacterSettingsScreen() {
         true,
       pendingGoalCount:
         0,
+      quietScheduleEnabled:
+        true,
+      quietStartMinute:
+        23 * 60,
+      quietEndMinute:
+        7 * 60,
+      quietStopAutoMove:
+        true,
+      quietUntilAt:
+        0,
+      quietActive:
+        false,
     });
 
   const [
@@ -554,6 +612,96 @@ export default function FloatingCharacterSettingsScreen() {
       }
     };
 
+  const updateQuietSchedule =
+    async (
+      patch:
+        Partial<{
+          enabled: boolean;
+          startMinute: number;
+          endMinute: number;
+          stopAutoMove: boolean;
+        }>
+    ) => {
+      const enabled =
+        patch.enabled ??
+        status.quietScheduleEnabled;
+
+      const startMinute =
+        patch.startMinute ??
+        status.quietStartMinute;
+
+      const endMinute =
+        patch.endMinute ??
+        status.quietEndMinute;
+
+      const stopAutoMove =
+        patch.stopAutoMove ??
+        status.quietStopAutoMove;
+
+      setBusy(
+        true
+      );
+
+      try {
+        await setFloatingCharacterQuietSchedule(
+          enabled,
+          startMinute,
+          endMinute,
+          stopAutoMove
+        );
+        await refresh();
+      }
+      finally {
+        setBusy(
+          false
+        );
+      }
+    };
+
+  const startQuietFor =
+    async (
+      minutes:
+        number
+    ) => {
+      setBusy(
+        true
+      );
+
+      try {
+        await setFloatingCharacterQuietUntil(
+          Date.now() +
+            minutes *
+              60 *
+              1000
+        );
+        await refresh();
+      }
+      finally {
+        setBusy(
+          false
+        );
+      }
+    };
+
+  const clearTemporaryQuiet =
+    async () => {
+      setBusy(
+        true
+      );
+
+      try {
+        await setFloatingCharacterQuietUntil(
+          0
+        );
+        await refresh();
+      }
+      finally {
+        setBusy(
+          false
+        );
+      }
+    };
+
   const testGoalSpeech =
     async () => {
       if (
@@ -932,7 +1080,8 @@ export default function FloatingCharacterSettingsScreen() {
                 busy ||
                 !supported ||
                 !status.running ||
-                !status.goalSpeechEnabled
+                !status.goalSpeechEnabled ||
+                status.quietActive
               ) &&
                 styles.disabledButton,
             ]}
@@ -945,6 +1094,386 @@ export default function FloatingCharacterSettingsScreen() {
               지금 말해보기
             </Text>
           </Pressable>
+        </View>
+
+        <View
+          style={
+            styles.card
+          }
+        >
+          <View
+            style={
+              styles.controlHeader
+            }
+          >
+            <View
+              style={
+                styles.controlCopy
+              }
+            >
+              <Text
+                style={
+                  styles.sectionTitle
+                }
+              >
+                방해 금지 · 수면 시간
+              </Text>
+
+              <Text
+                style={
+                  styles.controlDescription
+                }
+              >
+                설정 시간에는 자동 말풍선을 멈춥니다. 빠른 조용히는 말풍선만 잠시 쉬고 캐릭터 이동은 유지합니다.
+              </Text>
+            </View>
+
+            <Switch
+              disabled={
+                busy ||
+                !supported
+              }
+              value={
+                status.quietScheduleEnabled
+              }
+              onValueChange={
+                (
+                  enabled
+                ) => {
+                  void updateQuietSchedule({
+                    enabled,
+                  });
+                }
+              }
+            />
+          </View>
+
+          <Text
+            style={
+              styles.helperText
+            }
+          >
+            현재 상태: {
+              status.quietActive
+                ? '조용히 모드'
+                : '일반 모드'
+            } · 기본 23:00~07:00
+          </Text>
+
+          <View
+            style={
+              styles.scaleControlRow
+            }
+          >
+            <Pressable
+              disabled={
+                busy
+              }
+              onPress={
+                () => {
+                  void updateQuietSchedule({
+                    startMinute:
+                      shiftQuietHour(
+                        status.quietStartMinute,
+                        -1
+                      ),
+                  });
+                }
+              }
+              style={
+                styles.scaleStepButton
+              }
+            >
+              <Text
+                style={
+                  styles.scaleStepText
+                }
+              >
+                −
+              </Text>
+            </Pressable>
+
+            <Text
+              style={[
+                styles.statusValue,
+                {
+                  flex: 1,
+                  textAlign: 'center',
+                },
+              ]}
+            >
+              시작 {
+                formatQuietMinute(
+                  status.quietStartMinute
+                )
+              }
+            </Text>
+
+            <Pressable
+              disabled={
+                busy
+              }
+              onPress={
+                () => {
+                  void updateQuietSchedule({
+                    startMinute:
+                      shiftQuietHour(
+                        status.quietStartMinute,
+                        1
+                      ),
+                  });
+                }
+              }
+              style={
+                styles.scaleStepButton
+              }
+            >
+              <Text
+                style={
+                  styles.scaleStepText
+                }
+              >
+                +
+              </Text>
+            </Pressable>
+          </View>
+
+          <View
+            style={
+              styles.scaleControlRow
+            }
+          >
+            <Pressable
+              disabled={
+                busy
+              }
+              onPress={
+                () => {
+                  void updateQuietSchedule({
+                    endMinute:
+                      shiftQuietHour(
+                        status.quietEndMinute,
+                        -1
+                      ),
+                  });
+                }
+              }
+              style={
+                styles.scaleStepButton
+              }
+            >
+              <Text
+                style={
+                  styles.scaleStepText
+                }
+              >
+                −
+              </Text>
+            </Pressable>
+
+            <Text
+              style={[
+                styles.statusValue,
+                {
+                  flex: 1,
+                  textAlign: 'center',
+                },
+              ]}
+            >
+              종료 {
+                formatQuietMinute(
+                  status.quietEndMinute
+                )
+              }
+            </Text>
+
+            <Pressable
+              disabled={
+                busy
+              }
+              onPress={
+                () => {
+                  void updateQuietSchedule({
+                    endMinute:
+                      shiftQuietHour(
+                        status.quietEndMinute,
+                        1
+                      ),
+                  });
+                }
+              }
+              style={
+                styles.scaleStepButton
+              }
+            >
+              <Text
+                style={
+                  styles.scaleStepText
+                }
+              >
+                +
+              </Text>
+            </Pressable>
+          </View>
+
+          <View
+            style={[
+              styles.controlHeader,
+              {
+                marginTop: 14,
+              },
+            ]}
+          >
+            <View
+              style={
+                styles.controlCopy
+              }
+            >
+              <Text
+                style={
+                  styles.statusLabel
+                }
+              >
+                수면 시간 자동 이동 멈춤
+              </Text>
+              <Text
+                style={
+                  styles.controlDescription
+                }
+              >
+                저장된 자동 이동 ON/OFF 값은 바꾸지 않고 수면 시간에만 잠시 멈춥니다.
+              </Text>
+            </View>
+
+            <Switch
+              disabled={
+                busy ||
+                !supported
+              }
+              value={
+                status.quietStopAutoMove
+              }
+              onValueChange={
+                (
+                  stopAutoMove
+                ) => {
+                  void updateQuietSchedule({
+                    stopAutoMove,
+                  });
+                }
+              }
+            />
+          </View>
+
+          <Text
+            style={[
+              styles.statusLabel,
+              {
+                marginTop: 16,
+                marginBottom: 8,
+              },
+            ]}
+          >
+            빠른 조용히
+          </Text>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              gap: 8,
+            }}
+          >
+            {
+              [
+                [30, '30분'],
+                [60, '1시간'],
+                [120, '2시간'],
+              ].map(
+                (
+                  [
+                    minutes,
+                    label,
+                  ]
+                ) => (
+                  <Pressable
+                    key={
+                      String(
+                        minutes
+                      )
+                    }
+                    disabled={
+                      busy ||
+                      !supported
+                    }
+                    onPress={
+                      () => {
+                        void startQuietFor(
+                          Number(
+                            minutes
+                          )
+                        );
+                      }
+                    }
+                    style={[
+                      styles.secondaryButton,
+                      {
+                        flex: 1,
+                        paddingVertical: 10,
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={
+                        styles.secondaryButtonText
+                      }
+                    >
+                      {
+                        label
+                      }
+                    </Text>
+                  </Pressable>
+                )
+              )
+            }
+          </View>
+
+          {
+            status.quietUntilAt >
+              Date.now() && (
+              <Pressable
+                disabled={
+                  busy
+                }
+                onPress={
+                  () => {
+                    void clearTemporaryQuiet();
+                  }
+                }
+                style={[
+                  styles.secondaryButton,
+                  {
+                    marginTop: 8,
+                  },
+                ]}
+              >
+                <Text
+                  style={
+                    styles.secondaryButtonText
+                  }
+                >
+                  빠른 조용히 해제
+                </Text>
+              </Pressable>
+            )
+          }
+
+          <Text
+            style={
+              styles.helperText
+            }
+          >
+            수면 시간의 실제 sleep 애니메이션은 다음 V101J에서 연결합니다. V101I에서는 idle 상태로 조용히 머뭅니다.
+          </Text>
         </View>
 
         <View

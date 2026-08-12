@@ -25,6 +25,7 @@ import kotlin.random.Random
 
 // CHARACTER_V101A_ANDROID_FLOATING_CHARACTER_SERVICE
 // CHARACTER_V101C_FLOATING_MOTION_SCALE
+// CHARACTER_V101D_WALK_STATE_ANIMATION
 class RootFloatingCharacterService : Service() {
   companion object {
     private const val ACTION_START = "root.floating.START"
@@ -48,6 +49,7 @@ class RootFloatingCharacterService : Service() {
     private const val NOTIFICATION_ID = 7101
 
     private const val IDLE_FRAME_DURATION_MS = 700L
+    private const val WALK_FRAME_DURATION_MS = 220L
     private const val AUTO_MOVE_TICK_MS = 80L
     private const val AUTO_MOVE_PAUSE_MIN_MS = 2000L
     private const val AUTO_MOVE_PAUSE_MAX_MS = 5000L
@@ -279,6 +281,7 @@ class RootFloatingCharacterService : Service() {
 
   private var animatedCharacterId = "rooty"
   private var animationFrameIndex = 0
+  private var walkingAnimationActive = false
 
   private val animationRunnable =
     object : Runnable {
@@ -288,9 +291,16 @@ class RootFloatingCharacterService : Service() {
             ?: return
 
         val frames =
-          drawableFramesForCharacter(
-            animatedCharacterId
-          )
+          if (walkingAnimationActive) {
+            walkDrawableFramesForCharacter(
+              animatedCharacterId
+            )
+          }
+          else {
+            drawableFramesForCharacter(
+              animatedCharacterId
+            )
+          }
 
         animationFrameIndex =
           (
@@ -305,9 +315,17 @@ class RootFloatingCharacterService : Service() {
           ]
         )
 
+        val frameDurationMs =
+          if (walkingAnimationActive) {
+            WALK_FRAME_DURATION_MS
+          }
+          else {
+            IDLE_FRAME_DURATION_MS
+          }
+
         animationHandler.postDelayed(
           this,
-          IDLE_FRAME_DURATION_MS
+          frameDurationMs
         )
       }
     }
@@ -337,6 +355,9 @@ class RootFloatingCharacterService : Service() {
             ?: return
 
         if (!autoMoveEnabled) {
+          setMovementAnimation(
+            false
+          )
           return
         }
 
@@ -348,6 +369,10 @@ class RootFloatingCharacterService : Service() {
           now < autoMoveResumeAt ||
           now < autoMovePauseUntil
         ) {
+          setMovementAnimation(
+            false
+          )
+
           motionHandler.postDelayed(
             this,
             AUTO_MOVE_TICK_MS
@@ -378,6 +403,10 @@ class RootFloatingCharacterService : Service() {
             1
           )
 
+        setMovementAnimation(
+          true
+        )
+
         params.x =
           stepToward(
             params.x,
@@ -404,6 +433,10 @@ class RootFloatingCharacterService : Service() {
           params.x == targetX &&
           params.y == targetY
         ) {
+          setMovementAnimation(
+            false
+          )
+
           autoTargetX = null
           autoTargetY = null
           autoMovePauseUntil =
@@ -872,6 +905,9 @@ class RootFloatingCharacterService : Service() {
           ): Boolean {
             hadScaleGesture = true
             beginUserInteraction()
+            setMovementAnimation(
+              false
+            )
             return true
           }
 
@@ -927,6 +963,10 @@ class RootFloatingCharacterService : Service() {
             !scaleDetector.isInProgress &&
             !hadScaleGesture
           ) {
+            setMovementAnimation(
+              true
+            )
+
             params.x =
               startX +
                 (
@@ -982,6 +1022,9 @@ class RootFloatingCharacterService : Service() {
           }
 
           hadScaleGesture = false
+          setMovementAnimation(
+            false
+          )
           endUserInteraction()
           true
         }
@@ -989,6 +1032,9 @@ class RootFloatingCharacterService : Service() {
         MotionEvent.ACTION_CANCEL -> {
           persistScaleAndPosition()
           hadScaleGesture = false
+          setMovementAnimation(
+            false
+          )
           endUserInteraction()
           true
         }
@@ -1003,10 +1049,17 @@ class RootFloatingCharacterService : Service() {
     userInteracting = true
     autoTargetX = null
     autoTargetY = null
+    setMovementAnimation(
+      false
+    )
   }
 
   private fun endUserInteraction() {
     userInteracting = false
+    setMovementAnimation(
+      false
+    )
+
     autoMoveResumeAt =
       SystemClock.uptimeMillis() +
         AUTO_MOVE_RESUME_AFTER_TOUCH_MS
@@ -1041,6 +1094,9 @@ class RootFloatingCharacterService : Service() {
     )
     autoTargetX = null
     autoTargetY = null
+    setMovementAnimation(
+      false
+    )
   }
 
   private fun setAutoMoveEnabledInternal(
@@ -1318,8 +1374,9 @@ class RootFloatingCharacterService : Service() {
     }
   }
 
-  private fun startIdleAnimation(
-    characterId: String
+  private fun startCharacterAnimation(
+    characterId: String,
+    walking: Boolean
   ) {
     animationHandler.removeCallbacks(
       animationRunnable
@@ -1327,12 +1384,21 @@ class RootFloatingCharacterService : Service() {
 
     animatedCharacterId =
       characterId
+    walkingAnimationActive =
+      walking
     animationFrameIndex = 0
 
     val frames =
-      drawableFramesForCharacter(
-        characterId
-      )
+      if (walking) {
+        walkDrawableFramesForCharacter(
+          characterId
+        )
+      }
+      else {
+        drawableFramesForCharacter(
+          characterId
+        )
+      }
 
     overlayView
       ?.setImageResource(
@@ -1343,8 +1409,53 @@ class RootFloatingCharacterService : Service() {
 
     animationHandler.postDelayed(
       animationRunnable,
-      IDLE_FRAME_DURATION_MS
+      if (walking) {
+        WALK_FRAME_DURATION_MS
+      }
+      else {
+        IDLE_FRAME_DURATION_MS
+      }
     )
+  }
+
+  private fun startIdleAnimation(
+    characterId: String
+  ) {
+    startCharacterAnimation(
+      characterId,
+      walking = false
+    )
+  }
+
+  private fun startWalkAnimation(
+    characterId: String
+  ) {
+    startCharacterAnimation(
+      characterId,
+      walking = true
+    )
+  }
+
+  private fun setMovementAnimation(
+    walking: Boolean
+  ) {
+    if (
+      walkingAnimationActive ==
+      walking
+    ) {
+      return
+    }
+
+    if (walking) {
+      startWalkAnimation(
+        animatedCharacterId
+      )
+    }
+    else {
+      startIdleAnimation(
+        animatedCharacterId
+      )
+    }
   }
 
   private fun stopIdleAnimation() {
@@ -1352,6 +1463,7 @@ class RootFloatingCharacterService : Service() {
       animationRunnable
     )
     animationFrameIndex = 0
+    walkingAnimationActive = false
   }
 
   private fun removeOverlay() {
@@ -1438,6 +1550,62 @@ class RootFloatingCharacterService : Service() {
           R.drawable.root_character_rooty_idle_02,
           R.drawable.root_character_rooty_idle_03,
           R.drawable.root_character_rooty_idle_04
+        )
+    }
+
+  // CHARACTER_V101D_NATIVE_WALK_FRAMES
+  private fun walkDrawableFramesForCharacter(
+    characterId: String
+  ): IntArray =
+    when (characterId) {
+      "moru" ->
+        intArrayOf(
+          R.drawable.root_character_moru_walk_01,
+          R.drawable.root_character_moru_walk_02,
+          R.drawable.root_character_moru_walk_03,
+          R.drawable.root_character_moru_walk_04
+        )
+      "mongsil" ->
+        intArrayOf(
+          R.drawable.root_character_mongsil_walk_01,
+          R.drawable.root_character_mongsil_walk_02,
+          R.drawable.root_character_mongsil_walk_03,
+          R.drawable.root_character_mongsil_walk_04
+        )
+      "dami" ->
+        intArrayOf(
+          R.drawable.root_character_dami_walk_01,
+          R.drawable.root_character_dami_walk_02,
+          R.drawable.root_character_dami_walk_03,
+          R.drawable.root_character_dami_walk_04
+        )
+      "pio" ->
+        intArrayOf(
+          R.drawable.root_character_pio_walk_01,
+          R.drawable.root_character_pio_walk_02,
+          R.drawable.root_character_pio_walk_03,
+          R.drawable.root_character_pio_walk_04
+        )
+      "nuri" ->
+        intArrayOf(
+          R.drawable.root_character_nuri_walk_01,
+          R.drawable.root_character_nuri_walk_02,
+          R.drawable.root_character_nuri_walk_03,
+          R.drawable.root_character_nuri_walk_04
+        )
+      "tori" ->
+        intArrayOf(
+          R.drawable.root_character_tori_walk_01,
+          R.drawable.root_character_tori_walk_02,
+          R.drawable.root_character_tori_walk_03,
+          R.drawable.root_character_tori_walk_04
+        )
+      else ->
+        intArrayOf(
+          R.drawable.root_character_rooty_walk_01,
+          R.drawable.root_character_rooty_walk_02,
+          R.drawable.root_character_rooty_walk_03,
+          R.drawable.root_character_rooty_walk_04
         )
     }
 

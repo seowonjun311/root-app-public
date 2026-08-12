@@ -6771,7 +6771,7 @@ class RootFloatingCharacterService : Service() {
       "energetic-goal" ->
         when (animatedCharacterId) {
           "moru" ->
-            "지금 페이스 좋아! 남은 목표 $pending개 중 하나 바로 해볼까?"
+            "지금 페이스 좋아! 남은 목표 ${pending}개 중 하나 바로 해볼까?"
           "mongsil" ->
             "지금은 에너지가 괜찮네. 남은 것 하나 천천히 해볼까?"
           "dami" ->
@@ -6779,7 +6779,7 @@ class RootFloatingCharacterService : Service() {
           "pio" ->
             "지금 에너지 좋다! 목표 하나 끝내고 어디 좀 가볼까?"
           "nuri" ->
-            "에너지 충전 완료! 남은 미션 $pending개 중 하나 깨보자!"
+            "에너지 충전 완료! 남은 미션 ${pending}개 중 하나 깨보자!"
           "tori" ->
             "지금은 컨디션이 괜찮아 보여... 하나 해볼까?"
           else ->
@@ -6791,7 +6791,7 @@ class RootFloatingCharacterService : Service() {
           pending >
             0
         ) {
-          "좋은 아침! 오늘 목표 $pending개, 하나씩 시작해볼까?$warmEnding"
+          "좋은 아침! 오늘 목표 ${pending}개, 하나씩 시작해볼까?$warmEnding"
         }
         else {
           "좋은 아침! 오늘은 남은 행동목표가 없어. 가볍게 시작하자.$warmEnding"
@@ -6800,13 +6800,13 @@ class RootFloatingCharacterService : Service() {
       "day-progress" ->
         when (animatedCharacterId) {
           "dami" ->
-            "벌써 목표 $completed개 했네! 잘하고 있어 😊"
+            "벌써 목표 ${completed}개 했네! 잘하고 있어 😊"
           "nuri" ->
-            "지금까지 미션 $completed개 클리어! 흐름 좋아."
+            "지금까지 미션 ${completed}개 클리어! 흐름 좋아."
           "pio" ->
-            "벌써 $completed개 해냈네! 남은 것 끝내면 밖에도 나가보자."
+            "벌써 ${completed}개 해냈네! 남은 것 끝내면 밖에도 나가보자."
           else ->
-            "지금까지 목표 $completed개 해냈어. 잘하고 있어!"
+            "지금까지 목표 ${completed}개 해냈어. 잘하고 있어!"
         }
 
       "evening" ->
@@ -6816,19 +6816,19 @@ class RootFloatingCharacterService : Service() {
         ) {
           when (animatedCharacterId) {
             "moru" ->
-              "저녁이야. 오늘 남은 목표 $pending개, 가능한 것만 정리해보자."
+              "저녁이야. 오늘 남은 목표 ${pending}개, 가능한 것만 정리해보자."
             "mongsil" ->
-              "저녁이네. 남은 목표 $pending개는 무리하지 말고 천천히 보자."
+              "저녁이네. 남은 목표 ${pending}개는 무리하지 말고 천천히 보자."
             "dami" ->
-              "오늘 아직 $pending개 남았어. 할 수 있는 만큼만 해도 좋아 😊"
+              "오늘 아직 ${pending}개 남았어. 할 수 있는 만큼만 해도 좋아 😊"
             "pio" ->
-              "저녁이야! 남은 $pending개 중 하나 끝내고 여유 좀 만들자."
+              "저녁이야! 남은 ${pending}개 중 하나 끝내고 여유 좀 만들자."
             "nuri" ->
-              "오늘 남은 미션 $pending개! 가능한 것부터 골라보자."
+              "오늘 남은 미션 ${pending}개! 가능한 것부터 골라보자."
             "tori" ->
-              "오늘 아직 $pending개 남아 있어... 가능한 것만 해보자."
+              "오늘 아직 ${pending}개 남아 있어... 가능한 것만 해보자."
             else ->
-              "오늘 아직 목표가 $pending개 남아 있어. 가능한 것부터 해보자."
+              "오늘 아직 목표가 ${pending}개 남아 있어. 가능한 것부터 해보자."
           }
         }
         else {
@@ -6840,7 +6840,7 @@ class RootFloatingCharacterService : Service() {
           pending >
             0
         ) {
-          "오늘 남은 목표가 $pending개 있어. 하나씩 해보자.$warmEnding"
+          "오늘 남은 목표가 ${pending}개 있어. 하나씩 해보자.$warmEnding"
         }
         else {
           "오늘 흐름 괜찮아. 지금 페이스 그대로 가자.$warmEnding"

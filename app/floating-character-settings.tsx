@@ -1,15 +1,19 @@
 import React, {
   useCallback,
   useEffect,
+  useMemo,
+  useRef,
   useState,
 } from 'react';
 import {
   Alert,
   AppState,
+  PanResponder,
   Platform,
   Pressable,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   View,
 } from 'react-native';
@@ -22,6 +26,8 @@ import {
   getFloatingCharacterStatus,
   isFloatingCharacterSupported,
   openFloatingCharacterPermissionSettings,
+  setFloatingCharacterAutoMoveEnabled,
+  setFloatingCharacterScale,
   startFloatingCharacter,
   stopFloatingCharacter,
   updateFloatingCharacter,
@@ -48,7 +54,40 @@ const CHARACTER_LABEL = {
     '토리',
 } as const;
 
+const MIN_SCALE =
+  0.6;
+const MAX_SCALE =
+  1.6;
+const SCALE_RANGE =
+  MAX_SCALE -
+  MIN_SCALE;
+
+function clampScale(
+  value: number
+) {
+  return Math.max(
+    MIN_SCALE,
+    Math.min(
+      MAX_SCALE,
+      value
+    )
+  );
+}
+
+function roundScale(
+  value: number
+) {
+  return Math.round(
+    clampScale(
+      value
+    ) *
+      20
+  ) /
+    20;
+}
+
 // CHARACTER_V101A_FLOATING_OVERLAY_SETTINGS
+// CHARACTER_V101C_FLOATING_MOTION_SCALE_SETTINGS
 export default function FloatingCharacterSettingsScreen() {
   const {
     selectedCharacter,
@@ -72,6 +111,10 @@ export default function FloatingCharacterSettingsScreen() {
         false,
       characterId:
         null,
+      scale:
+        1,
+      autoMoveEnabled:
+        true,
     });
 
   const [
@@ -80,6 +123,27 @@ export default function FloatingCharacterSettingsScreen() {
   ] =
     useState(
       false
+    );
+
+  const [
+    scaleDraft,
+    setScaleDraft,
+  ] =
+    useState(
+      1
+    );
+
+  const scaleDraftRef =
+    useRef(
+      1
+    );
+
+  const [
+    scaleTrackWidth,
+    setScaleTrackWidth,
+  ] =
+    useState(
+      0
     );
 
   const refresh =
@@ -124,6 +188,24 @@ export default function FloatingCharacterSettingsScreen() {
     },
     [
       refresh,
+    ]
+  );
+
+  useEffect(
+    () => {
+      const next =
+        roundScale(
+          status.scale
+        );
+
+      setScaleDraft(
+        next
+      );
+      scaleDraftRef.current =
+        next;
+    },
+    [
+      status.scale,
     ]
   );
 
@@ -240,7 +322,178 @@ export default function FloatingCharacterSettingsScreen() {
 
       try {
         await stopFloatingCharacter();
+        await refresh();
+      }
+      finally {
+        setBusy(
+          false
+        );
+      }
+    };
 
+  const commitScale =
+    useCallback(
+      async (
+        requested:
+          number
+      ) => {
+        const next =
+          roundScale(
+            requested
+          );
+
+        setScaleDraft(
+          next
+        );
+        scaleDraftRef.current =
+          next;
+
+        setBusy(
+          true
+        );
+
+        try {
+          await setFloatingCharacterScale(
+            next
+          );
+          await refresh();
+        }
+        finally {
+          setBusy(
+            false
+          );
+        }
+      },
+      [
+        refresh,
+      ]
+    );
+
+  const applyScaleFromTrackX =
+    useCallback(
+      (
+        x:
+          number
+      ) => {
+        if (
+          scaleTrackWidth <=
+          0
+        ) {
+          return;
+        }
+
+        const ratio =
+          Math.max(
+            0,
+            Math.min(
+              1,
+              x /
+                scaleTrackWidth
+            )
+          );
+
+        const next =
+          roundScale(
+            MIN_SCALE +
+              ratio *
+                SCALE_RANGE
+          );
+
+        setScaleDraft(
+          next
+        );
+        scaleDraftRef.current =
+          next;
+      },
+      [
+        scaleTrackWidth,
+      ]
+    );
+
+  const scalePanResponder =
+    useMemo(
+      () =>
+        PanResponder.create({
+          onStartShouldSetPanResponder:
+            () =>
+              true,
+          onMoveShouldSetPanResponder:
+            () =>
+              true,
+          onPanResponderGrant:
+            (
+              event
+            ) => {
+              applyScaleFromTrackX(
+                event.nativeEvent.locationX
+              );
+            },
+          onPanResponderMove:
+            (
+              event
+            ) => {
+              applyScaleFromTrackX(
+                event.nativeEvent.locationX
+              );
+            },
+          onPanResponderRelease:
+            () => {
+              void commitScale(
+                scaleDraftRef.current
+              );
+            },
+          onPanResponderTerminate:
+            () => {
+              void commitScale(
+                scaleDraftRef.current
+              );
+            },
+        }),
+      [
+        applyScaleFromTrackX,
+        commitScale,
+      ]
+    );
+
+  const adjustScale =
+    (
+      delta:
+        number
+    ) => {
+      const next =
+        roundScale(
+          scaleDraftRef.current +
+            delta
+        );
+
+      void commitScale(
+        next
+      );
+    };
+
+  const toggleAutoMove =
+    async (
+      enabled:
+        boolean
+    ) => {
+      setBusy(
+        true
+      );
+
+      setStatus(
+        (
+          current
+        ) => ({
+          ...current,
+          autoMoveEnabled:
+            enabled,
+        })
+      );
+
+      try {
+        await setFloatingCharacterAutoMoveEnabled(
+          enabled
+        );
         await refresh();
       }
       finally {
@@ -252,6 +505,21 @@ export default function FloatingCharacterSettingsScreen() {
 
   const supported =
     isFloatingCharacterSupported();
+
+  const scaleProgress =
+    (
+      scaleDraft -
+        MIN_SCALE
+    ) /
+    SCALE_RANGE;
+
+  const scaleFillWidth =
+    scaleTrackWidth *
+    scaleProgress;
+
+  const scaleThumbLeft =
+    scaleTrackWidth *
+    scaleProgress;
 
   return (
     <View
@@ -340,8 +608,8 @@ export default function FloatingCharacterSettingsScreen() {
               styles.description
             }
           >
-            켜기를 누르면 현재 선택된 캐릭터가 Android 화면 위에 떠 있습니다.
-            캐릭터를 드래그해 위치를 옮기고, 가볍게 누르면 ROOT로 돌아옵니다.
+            한 손가락으로 드래그해 위치를 옮기고, 두 손가락을 벌리거나 오므려
+            캐릭터 크기를 바꿀 수 있습니다. 가볍게 누르면 ROOT로 돌아옵니다.
           </Text>
         </View>
 
@@ -433,6 +701,230 @@ export default function FloatingCharacterSettingsScreen() {
                   ? '켜짐'
                   : '꺼짐'
               }
+            </Text>
+          </View>
+        </View>
+
+        <View
+          style={
+            styles.card
+          }
+        >
+          <View
+            style={
+              styles.controlHeader
+            }
+          >
+            <View
+              style={
+                styles.controlCopy
+              }
+            >
+              <Text
+                style={
+                  styles.sectionTitle
+                }
+              >
+                자동 이동
+              </Text>
+
+              <Text
+                style={
+                  styles.controlDescription
+                }
+              >
+                캐릭터가 다른 앱 위에서 잠깐 쉬었다가 천천히 주변을 돌아다닙니다.
+              </Text>
+            </View>
+
+            <Switch
+              disabled={
+                busy ||
+                !supported
+              }
+              value={
+                status.autoMoveEnabled
+              }
+              onValueChange={
+                (
+                  enabled
+                ) => {
+                  void toggleAutoMove(
+                    enabled
+                  );
+                }
+              }
+            />
+          </View>
+
+          <Text
+            style={
+              styles.helperText
+            }
+          >
+            캐릭터를 손으로 잡으면 자동 이동이 즉시 멈추고, 손을 뗀 뒤 약 4초 후 다시 움직입니다.
+          </Text>
+        </View>
+
+        <View
+          style={
+            styles.card
+          }
+        >
+          <View
+            style={
+              styles.scaleHeader
+            }
+          >
+            <View>
+              <Text
+                style={
+                  styles.sectionTitle
+                }
+              >
+                캐릭터 크기
+              </Text>
+
+              <Text
+                style={
+                  styles.controlDescription
+                }
+              >
+                설정 또는 화면 위 두 손가락 제스처로 조절
+              </Text>
+            </View>
+
+            <Text
+              style={
+                styles.scalePercent
+              }
+            >
+              {
+                Math.round(
+                  scaleDraft *
+                    100
+                )
+              }%
+            </Text>
+          </View>
+
+          <View
+            style={
+              styles.scaleControlRow
+            }
+          >
+            <Pressable
+              disabled={
+                busy
+              }
+              onPress={
+                () =>
+                  adjustScale(
+                    -0.1
+                  )
+              }
+              style={[
+                styles.scaleStepButton,
+                busy &&
+                  styles.disabledButton,
+              ]}
+            >
+              <Text
+                style={
+                  styles.scaleStepText
+                }
+              >
+                −
+              </Text>
+            </Pressable>
+
+            <View
+              onLayout={
+                (
+                  event
+                ) => {
+                  setScaleTrackWidth(
+                    event.nativeEvent.layout.width
+                  );
+                }
+              }
+              style={
+                styles.scaleTrackTouch
+              }
+              {...scalePanResponder.panHandlers}
+            >
+              <View
+                style={
+                  styles.scaleTrack
+                }
+              >
+                <View
+                  style={[
+                    styles.scaleTrackFill,
+                    {
+                      width:
+                        scaleFillWidth,
+                    },
+                  ]}
+                />
+
+                <View
+                  style={[
+                    styles.scaleThumb,
+                    {
+                      left:
+                        scaleThumbLeft,
+                    },
+                  ]}
+                />
+              </View>
+            </View>
+
+            <Pressable
+              disabled={
+                busy
+              }
+              onPress={
+                () =>
+                  adjustScale(
+                    0.1
+                  )
+              }
+              style={[
+                styles.scaleStepButton,
+                busy &&
+                  styles.disabledButton,
+              ]}
+            >
+              <Text
+                style={
+                  styles.scaleStepText
+                }
+              >
+                +
+              </Text>
+            </Pressable>
+          </View>
+
+          <View
+            style={
+              styles.scaleLabels
+            }
+          >
+            <Text
+              style={
+                styles.scaleLabel
+              }
+            >
+              60%
+            </Text>
+
+            <Text
+              style={
+                styles.scaleLabel
+              }
+            >
+              160%
             </Text>
           </View>
         </View>
@@ -535,8 +1027,8 @@ export default function FloatingCharacterSettingsScreen() {
               styles.noticeText
             }
           >
-            이 기능은 Android의 시스템 오버레이와 포그라운드 서비스를 사용합니다.
-            알림 영역에 ROOT 실행 알림이 유지됩니다.
+            자동 이동과 크기 값은 Android 네이티브 설정에 저장됩니다.
+            ROOT를 닫거나 다른 앱을 사용해도 현재 설정을 유지합니다.
           </Text>
         </View>
       </ScrollView>
@@ -668,6 +1160,136 @@ const styles =
         '900',
       color:
         '#3D352F',
+    },
+    controlHeader: {
+      flexDirection:
+        'row',
+      alignItems:
+        'center',
+      gap: 14,
+    },
+    controlCopy: {
+      flex: 1,
+    },
+    controlDescription: {
+      fontSize: 11,
+      lineHeight: 16,
+      color:
+        '#796D64',
+    },
+    helperText: {
+      marginTop: 10,
+      paddingTop: 10,
+      borderTopWidth: 1,
+      borderTopColor:
+        '#F0EAE4',
+      fontSize: 10,
+      lineHeight: 15,
+      color:
+        '#8A7D73',
+    },
+    scaleHeader: {
+      flexDirection:
+        'row',
+      alignItems:
+        'flex-start',
+      justifyContent:
+        'space-between',
+      gap: 12,
+    },
+    scalePercent: {
+      fontSize: 18,
+      fontWeight:
+        '900',
+      color:
+        '#3D352F',
+    },
+    scaleControlRow: {
+      marginTop: 16,
+      flexDirection:
+        'row',
+      alignItems:
+        'center',
+      gap: 10,
+    },
+    scaleStepButton: {
+      width: 38,
+      height: 38,
+      alignItems:
+        'center',
+      justifyContent:
+        'center',
+      borderRadius:
+        12,
+      borderWidth: 1,
+      borderColor:
+        '#D8CEC5',
+      backgroundColor:
+        '#F9F6F2',
+    },
+    scaleStepText: {
+      fontSize: 22,
+      fontWeight:
+        '800',
+      color:
+        '#4D433B',
+    },
+    scaleTrackTouch: {
+      flex: 1,
+      height: 38,
+      justifyContent:
+        'center',
+    },
+    scaleTrack: {
+      height: 8,
+      borderRadius:
+        999,
+      backgroundColor:
+        '#E5DED6',
+      overflow:
+        'visible',
+    },
+    scaleTrackFill: {
+      position:
+        'absolute',
+      left: 0,
+      top: 0,
+      bottom: 0,
+      borderRadius:
+        999,
+      backgroundColor:
+        '#68594E',
+    },
+    scaleThumb: {
+      position:
+        'absolute',
+      top: -7,
+      width: 22,
+      height: 22,
+      marginLeft: -11,
+      borderRadius:
+        11,
+      backgroundColor:
+        '#403831',
+      borderWidth: 3,
+      borderColor:
+        '#FFFFFF',
+    },
+    scaleLabels: {
+      marginTop: 2,
+      marginHorizontal:
+        48,
+      flexDirection:
+        'row',
+      justifyContent:
+        'space-between',
+    },
+    scaleLabel: {
+      fontSize: 9,
+      fontWeight:
+        '700',
+      color:
+        '#9A8D83',
     },
     primaryButton: {
       alignItems:

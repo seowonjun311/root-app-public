@@ -10,6 +10,8 @@ export type RootFloatingCharacterStatus = {
   permissionGranted: boolean;
   running: boolean;
   characterId: string | null;
+  scale: number;
+  autoMoveEnabled: boolean;
 };
 
 type RootFloatingCharacterNativeModule = {
@@ -29,6 +31,14 @@ type RootFloatingCharacterNativeModule = {
     characterId: string
   ):
     Promise<void>;
+  setScale(
+    scale: number
+  ):
+    Promise<number>;
+  setAutoMoveEnabled(
+    enabled: boolean
+  ):
+    Promise<boolean>;
 };
 
 const nativeModule =
@@ -44,6 +54,7 @@ const nativeModule =
     : null;
 
 // CHARACTER_V101A_FLOATING_OVERLAY_JS_BRIDGE
+// CHARACTER_V101C_FLOATING_MOTION_SCALE_JS_BRIDGE
 export function isFloatingCharacterSupported():
   boolean {
   return (
@@ -93,6 +104,10 @@ export async function getFloatingCharacterStatus():
         false,
       characterId:
         null,
+      scale:
+        1,
+      autoMoveEnabled:
+        true,
     };
   }
 
@@ -138,5 +153,35 @@ export async function updateFloatingCharacter(
 
   await nativeModule.updateCharacter(
     characterId
+  );
+}
+
+export async function setFloatingCharacterScale(
+  scale: number
+): Promise<number> {
+  if (
+    nativeModule ===
+    null
+  ) {
+    return 1;
+  }
+
+  return nativeModule.setScale(
+    scale
+  );
+}
+
+export async function setFloatingCharacterAutoMoveEnabled(
+  enabled: boolean
+): Promise<boolean> {
+  if (
+    nativeModule ===
+    null
+  ) {
+    return false;
+  }
+
+  return nativeModule.setAutoMoveEnabled(
+    enabled
   );
 }

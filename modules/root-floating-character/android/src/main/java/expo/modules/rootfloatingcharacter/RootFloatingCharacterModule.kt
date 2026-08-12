@@ -8,6 +8,7 @@ import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
 // CHARACTER_V101A_ANDROID_OVERLAY_NATIVE_BRIDGE
+// CHARACTER_V101C_MOTION_SCALE_NATIVE_BRIDGE
 class RootFloatingCharacterModule : Module() {
   override fun definition() =
     ModuleDefinition {
@@ -77,7 +78,9 @@ class RootFloatingCharacterModule : Module() {
               "supported" to false,
               "permissionGranted" to false,
               "running" to false,
-              "characterId" to null
+              "characterId" to null,
+              "scale" to 1.0,
+              "autoMoveEnabled" to true
             )
 
         val permissionGranted =
@@ -102,6 +105,17 @@ class RootFloatingCharacterModule : Module() {
           "characterId" to
             RootFloatingCharacterService
               .readSelectedCharacter(
+                context
+              ),
+          "scale" to
+            RootFloatingCharacterService
+              .readScale(
+                context
+              )
+              .toDouble(),
+          "autoMoveEnabled" to
+            RootFloatingCharacterService
+              .readAutoMoveEnabled(
                 context
               )
         )
@@ -130,9 +144,7 @@ class RootFloatingCharacterModule : Module() {
             )
           }
 
-        if (
-          !permissionGranted
-        ) {
+        if (!permissionGranted) {
           return@AsyncFunction false
         }
 
@@ -175,6 +187,41 @@ class RootFloatingCharacterModule : Module() {
           )
 
         null
+      }
+
+      AsyncFunction(
+        "setScale"
+      ) {
+        scale:
+          Double ->
+
+        val context =
+          appContext.reactContext
+            ?: return@AsyncFunction 1.0
+
+        RootFloatingCharacterService
+          .setScale(
+            context,
+            scale.toFloat()
+          )
+          .toDouble()
+      }
+
+      AsyncFunction(
+        "setAutoMoveEnabled"
+      ) {
+        enabled:
+          Boolean ->
+
+        val context =
+          appContext.reactContext
+            ?: return@AsyncFunction false
+
+        RootFloatingCharacterService
+          .setAutoMoveEnabled(
+            context,
+            enabled
+          )
       }
     }
 }

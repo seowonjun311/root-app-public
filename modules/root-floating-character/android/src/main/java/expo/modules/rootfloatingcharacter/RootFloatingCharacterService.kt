@@ -35,6 +35,7 @@ import org.json.JSONObject
 // CHARACTER_V101D_WALK_STATE_ANIMATION
 // CHARACTER_V101E_GOAL_SPEECH_INTERACTION
 // CHARACTER_V101F_GOAL_COMPLETION_CELEBRATION
+// CHARACTER_V101G_LIFESTYLE_REACTION_TRAITS
 class RootFloatingCharacterService : Service() {
   private data class GoalCompletion(
     val id: String,
@@ -56,6 +57,7 @@ class RootFloatingCharacterService : Service() {
     private const val ACTION_SET_GOAL_SPEECH = "root.floating.SET_GOAL_SPEECH"
     private const val ACTION_SHOW_GOAL_SPEECH_NOW = "root.floating.SHOW_GOAL_SPEECH_NOW"
     private const val ACTION_SET_GOAL_COMPLETION_SNAPSHOT = "root.floating.SET_GOAL_COMPLETION_SNAPSHOT"
+    private const val ACTION_SET_LIFESTYLE_CONTEXT = "root.floating.SET_LIFESTYLE_CONTEXT"
 
     private const val EXTRA_CHARACTER_ID = "characterId"
     private const val EXTRA_SCALE = "scale"
@@ -63,6 +65,7 @@ class RootFloatingCharacterService : Service() {
     private const val EXTRA_GOALS_JSON = "goalsJson"
     private const val EXTRA_GOAL_SPEECH = "goalSpeechEnabled"
     private const val EXTRA_COMPLETIONS_JSON = "completionsJson"
+    private const val EXTRA_LIFESTYLE_JSON = "lifestyleJson"
 
     private const val PREFS = "root_floating_character_v1"
     private const val PREF_CHARACTER_ID = "characterId"
@@ -77,6 +80,10 @@ class RootFloatingCharacterService : Service() {
     private const val PREF_COMPLETIONS_JSON = "goalCompletionSnapshotJson"
     private const val PREF_COMPLETION_BASELINE_READY = "goalCompletionBaselineReady"
     private const val PREF_CELEBRATED_COMPLETION_KEYS = "celebratedGoalCompletionKeys"
+    private const val PREF_LIFESTYLE_CONTEXT_JSON = "lifestyleContextJson"
+    private const val PREF_LIFESTYLE_BASELINE_READY = "lifestyleBaselineReady"
+    private const val PREF_LIFESTYLE_REACTION_KEYS = "lifestyleReactionKeys"
+    private const val PREF_LAST_LIFESTYLE_REACTION_AT = "lastLifestyleReactionAt"
 
     private const val CHANNEL_ID = "root_floating_character"
     private const val NOTIFICATION_ID = 7101
@@ -105,6 +112,10 @@ class RootFloatingCharacterService : Service() {
     private const val COMPLETION_SPEECH_DISPLAY_MS = 5000L
     private const val COMPLETION_QUEUE_GAP_MS = 450L
     private const val COMPLETION_BUSY_RETRY_MS = 500L
+
+    private const val LIFESTYLE_REACTION_DISPLAY_MS = 5200L
+    private const val LIFESTYLE_REACTION_MIN_GAP_MS = 1200000L
+    private const val LIFESTYLE_REACTION_BUSY_RETRY_MS = 15000L
 
     private const val BASE_WIDTH_DP = 118
     private const val BASE_HEIGHT_DP = 176
@@ -683,6 +694,250 @@ class RootFloatingCharacterService : Service() {
       ).size
     }
 
+    // CHARACTER_V101G_LIFESTYLE_JSON_CONTRACT
+    private fun sanitizeLifestyleContextJson(
+      contextJson: String
+    ): String {
+      val source =
+        try {
+          JSONObject(
+            contextJson
+          )
+        }
+        catch (
+          ignored: Throwable
+        ) {
+          JSONObject()
+        }
+
+      val result =
+        JSONObject()
+
+      val dateKey =
+        source
+          .optString(
+            "dateKey"
+          )
+          .trim()
+          .take(
+            10
+          )
+
+      if (
+        dateKey.matches(
+          Regex(
+            "\\d{4}-\\d{2}-\\d{2}"
+          )
+        )
+      ) {
+        result.put(
+          "dateKey",
+          dateKey
+        )
+      }
+
+      fun copyCount(
+        key: String
+      ) {
+        if (!source.has(key)) {
+          return
+        }
+
+        result.put(
+          key,
+          source
+            .optInt(
+              key,
+              0
+            )
+            .coerceIn(
+              0,
+              999
+            )
+        )
+      }
+
+      fun copyMoney(
+        key: String
+      ) {
+        if (!source.has(key)) {
+          return
+        }
+
+        result.put(
+          key,
+          source
+            .optDouble(
+              key,
+              0.0
+            )
+            .coerceIn(
+              0.0,
+              1000000000000.0
+            )
+        )
+      }
+
+      copyCount(
+        "pendingGoalCount"
+      )
+      copyCount(
+        "completedGoalCount"
+      )
+      copyCount(
+        "dueGoalCount"
+      )
+
+      copyMoney(
+        "todayExpense"
+      )
+      copyMoney(
+        "dailyBudget"
+      )
+      copyMoney(
+        "monthExpense"
+      )
+      copyMoney(
+        "monthBudget"
+      )
+
+      return result.toString()
+    }
+
+    private fun mergeLifestyleContextJson(
+      existingJson: String,
+      incomingJson: String
+    ): String {
+      val existing =
+        try {
+          JSONObject(
+            existingJson
+          )
+        }
+        catch (
+          ignored: Throwable
+        ) {
+          JSONObject()
+        }
+
+      val incoming =
+        try {
+          JSONObject(
+            sanitizeLifestyleContextJson(
+              incomingJson
+            )
+          )
+        }
+        catch (
+          ignored: Throwable
+        ) {
+          JSONObject()
+        }
+
+      val existingDate =
+        existing
+          .optString(
+            "dateKey"
+          )
+          .trim()
+
+      val incomingDate =
+        incoming
+          .optString(
+            "dateKey"
+          )
+          .trim()
+
+      val merged =
+        if (
+          incomingDate.isNotEmpty() &&
+          existingDate.isNotEmpty() &&
+          incomingDate !=
+            existingDate
+        ) {
+          JSONObject()
+        }
+        else {
+          JSONObject(
+            existing.toString()
+          )
+        }
+
+      val keys =
+        incoming.keys()
+
+      while (
+        keys.hasNext()
+      ) {
+        val key =
+          keys.next()
+
+        merged.put(
+          key,
+          incoming.get(
+            key
+          )
+        )
+      }
+
+      return merged.toString()
+    }
+
+    fun setLifestyleContextSnapshot(
+      context: Context,
+      contextJson: String
+    ): Boolean {
+      val sharedPrefs =
+        prefs(
+          context
+        )
+
+      val currentJson =
+        sharedPrefs
+          .getString(
+            PREF_LIFESTYLE_CONTEXT_JSON,
+            "{}"
+          )
+          ?: "{}"
+
+      val mergedJson =
+        mergeLifestyleContextJson(
+          currentJson,
+          contextJson
+        )
+
+      if (isRunning) {
+        context.startService(
+          Intent(
+            context,
+            RootFloatingCharacterService::class.java
+          ).apply {
+            action =
+              ACTION_SET_LIFESTYLE_CONTEXT
+            putExtra(
+              EXTRA_LIFESTYLE_JSON,
+              contextJson
+            )
+          }
+        )
+      }
+      else {
+        sharedPrefs
+          .edit()
+          .putString(
+            PREF_LIFESTYLE_CONTEXT_JSON,
+            mergedJson
+          )
+          .putBoolean(
+            PREF_LIFESTYLE_BASELINE_READY,
+            true
+          )
+          .apply()
+      }
+
+      return true
+    }
+
     fun setGoalSpeechEnabled(
       context: Context,
       enabled: Boolean
@@ -1041,6 +1296,54 @@ class RootFloatingCharacterService : Service() {
         )
       }
       else if (
+        lifestyleReactionQueue.isNotEmpty()
+      ) {
+        speechHandler.postDelayed(
+          retryLifestyleReactionRunnable,
+          450L
+        )
+      }
+      else if (
+        goalSpeechEnabled &&
+        pendingGoals.isNotEmpty()
+      ) {
+        scheduleNextGoalSpeech(
+          initial = false
+        )
+      }
+    }
+
+
+  // CHARACTER_V101G_LIFESTYLE_REACTION_RUNTIME
+  private val lifestyleReactionQueue =
+    mutableListOf<
+      Pair<
+        String,
+        String
+      >
+    >()
+
+  private var lifestyleReactionActive =
+    false
+
+  private val retryLifestyleReactionRunnable =
+    Runnable {
+      playNextLifestyleReaction()
+    }
+
+  private val finishLifestyleReactionRunnable =
+    Runnable {
+      lifestyleReactionActive = false
+
+      if (
+        lifestyleReactionQueue.isNotEmpty()
+      ) {
+        speechHandler.postDelayed(
+          retryLifestyleReactionRunnable,
+          450L
+        )
+      }
+      else if (
         goalSpeechEnabled &&
         pendingGoals.isNotEmpty()
       ) {
@@ -1076,6 +1379,8 @@ class RootFloatingCharacterService : Service() {
           walkingAnimationActive ||
           completionReactionActive ||
           completionQueue.isNotEmpty() ||
+          lifestyleReactionActive ||
+          lifestyleReactionQueue.isNotEmpty() ||
           actionMenuView != null
         ) {
           speechHandler.postDelayed(
@@ -1209,6 +1514,16 @@ class RootFloatingCharacterService : Service() {
           )
             ?: "[]",
           persist = true
+        )
+        return START_STICKY
+      }
+
+      ACTION_SET_LIFESTYLE_CONTEXT -> {
+        applyLifestyleContextInternal(
+          intent.getStringExtra(
+            EXTRA_LIFESTYLE_JSON
+          )
+            ?: "{}"
         )
         return START_STICKY
       }
@@ -2099,13 +2414,11 @@ class RootFloatingCharacterService : Service() {
   }
 
   // CHARACTER_V101E_TAP_LONG_PRESS_MENU
+  // CHARACTER_V101G_CHARACTER_TAP_VOICE
   private fun showTapReaction() {
     val reactions =
-      arrayOf(
-        "응! 여기 있어 😊",
-        "오늘도 같이 가자!",
-        "불렀어?",
-        "조금씩 해도 좋아!"
+      tapReactionsForCharacter(
+        animatedCharacterId
       )
 
     setMovementAnimation(
@@ -2858,6 +3171,8 @@ class RootFloatingCharacterService : Service() {
         walkingAnimationActive ||
         completionReactionActive ||
         completionQueue.isNotEmpty() ||
+        lifestyleReactionActive ||
+        lifestyleReactionQueue.isNotEmpty() ||
         actionMenuView != null
       )
     ) {
@@ -2926,20 +3241,9 @@ class RootFloatingCharacterService : Service() {
       ]
 
     val message =
-      when (
-        Random.nextInt(
-          4
-        )
-      ) {
-        0 ->
-          "오늘 '${goal.second}' 아직 남아 있어!"
-        1 ->
-          "'${goal.second}'도 같이 해볼까?"
-        2 ->
-          "오늘 '${goal.second}' 잊지 않았지?"
-        else ->
-          "'${goal.second}' 조금만 해도 좋아!"
-      }
+      buildGoalReminderMessage(
+        goal.second
+      )
 
     prefs
       .edit()
@@ -2959,6 +3263,623 @@ class RootFloatingCharacterService : Service() {
     )
 
     return true
+  }
+
+  // CHARACTER_V101G_CHARACTER_COMMUNICATION_TRAITS
+  private fun pickMessage(
+    messages: Array<String>
+  ): String =
+    messages[
+      Random.nextInt(
+        messages.size
+      )
+    ]
+
+  private fun tapReactionsForCharacter(
+    characterId: String
+  ): Array<String> =
+    when (characterId) {
+      "moru" ->
+        arrayOf(
+          "불렀어? 지금 뭐부터 해볼까?",
+          "좋아, 하나씩 해보자!",
+          "여기 있어! 오늘도 움직여보자."
+        )
+      "mongsil" ->
+        arrayOf(
+          "응, 여기 있어.",
+          "천천히 해도 괜찮아.",
+          "조금 쉬었다가 같이 해도 좋아."
+        )
+      "dami" ->
+        arrayOf(
+          "응! 잘하고 있어 😊",
+          "오늘도 같이 해보자!",
+          "불렀어? 응원하러 왔어."
+        )
+      "pio" ->
+        arrayOf(
+          "응! 다음엔 어디 가볼까?",
+          "불렀어? 새로운 곳도 찾아보자!",
+          "오늘 할 일 끝내고 놀러 가자!"
+        )
+      "nuri" ->
+        arrayOf(
+          "좋아! 오늘도 하나 해내자!",
+          "불렀어? 재밌게 해보자!",
+          "조금만 더 하면 또 성장하겠는데?"
+        )
+      "tori" ->
+        arrayOf(
+          "응... 여기 있어.",
+          "천천히 같이 가자.",
+          "조금씩 해도 충분해."
+        )
+      else ->
+        arrayOf(
+          "응! 여기 있어 😊",
+          "오늘도 같이 가자!",
+          "불렀어?",
+          "조금씩 해도 좋아!"
+        )
+    }
+
+  private fun buildGoalReminderMessage(
+    goalTitle: String
+  ): String =
+    when (animatedCharacterId) {
+      "moru" ->
+        pickMessage(
+          arrayOf(
+            "'$goalTitle' 아직 남았어! 지금 조금만 해볼까?",
+            "'$goalTitle' 먼저 끝내고 쉬자!",
+            "좋아, 다음은 '$goalTitle' 해보자."
+          )
+        )
+      "mongsil" ->
+        pickMessage(
+          arrayOf(
+            "'$goalTitle' 남아 있네. 천천히 해도 괜찮아.",
+            "조금 힘들면 '$goalTitle'부터 아주 조금만 해볼까?",
+            "'$goalTitle' 잊지만 않으면 돼."
+          )
+        )
+      "dami" ->
+        pickMessage(
+          arrayOf(
+            "'$goalTitle'도 할 수 있어! 내가 응원할게.",
+            "오늘 '$goalTitle'까지 하면 정말 멋질 것 같아!",
+            "'$goalTitle' 같이 끝내보자 😊"
+          )
+        )
+      "pio" ->
+        pickMessage(
+          arrayOf(
+            "'$goalTitle' 끝내고 새로운 데 가볼까?",
+            "오늘 '$goalTitle' 남았어! 끝내고 놀러 가자.",
+            "'$goalTitle' 해두면 마음 편하게 돌아다닐 수 있겠는데?"
+          )
+        )
+      "nuri" ->
+        pickMessage(
+          arrayOf(
+            "'$goalTitle' 하나 더 깨볼까?",
+            "다음 미션은 '$goalTitle'!",
+            "'$goalTitle'까지 하면 오늘 성장치 꽤 높겠어!"
+          )
+        )
+      "tori" ->
+        pickMessage(
+          arrayOf(
+            "'$goalTitle' 아직 남아 있어... 천천히 해보자.",
+            "괜찮으면 '$goalTitle' 조금만 해볼까?",
+            "'$goalTitle' 잊지 않았으면 좋겠어."
+          )
+        )
+      else ->
+        pickMessage(
+          arrayOf(
+            "오늘 '$goalTitle' 아직 남아 있어!",
+            "'$goalTitle'도 같이 해볼까?",
+            "오늘 '$goalTitle' 잊지 않았지?",
+            "'$goalTitle' 조금만 해도 좋아!"
+          )
+        )
+    }
+
+  private fun buildCompletionMessage(
+    goalTitle: String
+  ): String =
+    when (animatedCharacterId) {
+      "moru" ->
+        pickMessage(
+          arrayOf(
+            "'$goalTitle' 끝냈네! 좋아, 다음 것도 가보자!",
+            "해냈다! '$goalTitle' 완료!",
+            "'$goalTitle' 클리어! 오늘 페이스 좋은데?"
+          )
+        )
+      "mongsil" ->
+        pickMessage(
+          arrayOf(
+            "'$goalTitle' 해냈네. 정말 수고했어.",
+            "잘했어. '$goalTitle' 끝냈으니 조금 쉬어도 돼.",
+            "'$goalTitle' 완료했구나. 천천히 해도 결국 해냈네."
+          )
+        )
+      "dami" ->
+        pickMessage(
+          arrayOf(
+            "'$goalTitle' 완료! 정말 잘했어 😊",
+            "와, '$goalTitle' 해냈네! 많이 칭찬해주고 싶어.",
+            "오늘 또 하나 해냈다! '$goalTitle' 최고야!"
+          )
+        )
+      "pio" ->
+        pickMessage(
+          arrayOf(
+            "'$goalTitle' 끝! 이제 어디 가볼까?",
+            "'$goalTitle' 해냈네! 다음엔 새로운 곳도 찾아보자.",
+            "좋아! '$goalTitle' 완료. 탐험할 준비 됐는데?"
+          )
+        )
+      "nuri" ->
+        pickMessage(
+          arrayOf(
+            "'$goalTitle' 미션 클리어!",
+            "좋아! '$goalTitle' 해냈다. 또 성장했어!",
+            "'$goalTitle' 완료! 오늘 성취감 좋은데?"
+          )
+        )
+      "tori" ->
+        pickMessage(
+          arrayOf(
+            "'$goalTitle' 해냈네... 정말 잘했어.",
+            "'$goalTitle' 완료했구나. 수고했어.",
+            "조용히 하나 더 해냈네. '$goalTitle' 잘했어."
+          )
+        )
+      else ->
+        pickMessage(
+          arrayOf(
+            "'$goalTitle' 완료했네! 수고했어!",
+            "오늘 목표 하나 더 끝냈다! '$goalTitle' 완료!",
+            "좋아! '$goalTitle' 해냈네!",
+            "완료! '$goalTitle' 정말 잘했어!"
+          )
+        )
+    }
+
+  private fun lifestyleReactionChancePercent(
+    signal: String
+  ): Int =
+    when (signal) {
+      "spend-praise" ->
+        when (animatedCharacterId) {
+          "dami" -> 100
+          "nuri" -> 95
+          "mongsil" -> 90
+          "tori" -> 85
+          "rooty" -> 85
+          "pio" -> 80
+          "moru" -> 75
+          else -> 85
+        }
+      "spend-nag" ->
+        when (animatedCharacterId) {
+          "moru" -> 100
+          "rooty" -> 80
+          "nuri" -> 70
+          "pio" -> 60
+          "dami" -> 55
+          "mongsil" -> 35
+          "tori" -> 30
+          else -> 80
+        }
+      "spend-nag-strong" ->
+        100
+      else ->
+        100
+    }
+
+  private fun shouldUseLifestyleReaction(
+    signal: String
+  ): Boolean {
+    val chance =
+      lifestyleReactionChancePercent(
+        signal
+      )
+
+    return (
+      chance >=
+        100 ||
+      Random.nextInt(
+        100
+      ) <
+        chance
+    )
+  }
+
+  private fun buildLifestyleReactionMessage(
+    signal: String
+  ): String =
+    when (signal) {
+      "spend-praise" ->
+        when (animatedCharacterId) {
+          "moru" ->
+            "오늘 지출 페이스 괜찮아! 이 흐름 유지해보자."
+          "mongsil" ->
+            "오늘은 돈도 무리하지 않고 잘 쓰고 있네."
+          "dami" ->
+            "오늘 지출 조절 정말 잘하고 있어! 잘했어 😊"
+          "pio" ->
+            "오늘 지출 괜찮아! 여행비도 잘 남겨두고 있네."
+          "nuri" ->
+            "지출 관리 미션도 잘하고 있는데? 좋아!"
+          "tori" ->
+            "오늘은 지출도 차분하게 잘 하고 있어."
+          else ->
+            "오늘 지출 흐름 좋아. 이대로 가보자!"
+        }
+      "spend-nag-strong" ->
+        when (animatedCharacterId) {
+          "moru" ->
+            "오늘 지출이 꽤 커졌어! 다음 결제는 꼭 한 번 더 생각하자."
+          "mongsil" ->
+            "오늘은 지출이 많이 커졌네. 남은 건 조금 천천히 써보자."
+          "dami" ->
+            "오늘 돈을 많이 썼어. 남은 예산도 한번 확인해보자!"
+          "pio" ->
+            "오늘 너무 많이 썼어! 놀러 갈 돈도 남겨둬야지."
+          "nuri" ->
+            "오늘 지출 게이지가 많이 넘었어! 이제는 절약 미션이다."
+          "tori" ->
+            "오늘 지출이 많이 늘었어... 남은 돈은 조금 아껴보자."
+          else ->
+            "오늘 지출이 꽤 커졌어! 남은 예산 한번 확인해보자."
+        }
+      else ->
+        when (animatedCharacterId) {
+          "moru" ->
+            "오늘 배정 예산을 넘었어! 다음 지출은 조금 줄여보자."
+          "mongsil" ->
+            "오늘 예산을 조금 넘었네. 다음엔 살짝 아껴보자."
+          "dami" ->
+            "오늘은 예산보다 조금 많이 썼어. 그래도 지금부터 조절하면 돼!"
+          "pio" ->
+            "오늘 예산 넘었어! 다음 여행비 생각해서 조금 아끼자."
+          "nuri" ->
+            "오늘 지출 게이지 초과! 이제 절약 쪽으로 가보자."
+          "tori" ->
+            "오늘 예산을 조금 넘었어... 남은 지출은 천천히 하자."
+          else ->
+            "오늘 배정 예산을 넘었어. 남은 지출은 조금 조심하자."
+        }
+    }
+
+  // CHARACTER_V101G_LIFESTYLE_REACTION_ENGINE
+  private fun applyLifestyleContextInternal(
+    incomingJson: String
+  ) {
+    val previousJson =
+      prefs.getString(
+        PREF_LIFESTYLE_CONTEXT_JSON,
+        "{}"
+      )
+        ?: "{}"
+
+    val mergedJson =
+      mergeLifestyleContextJson(
+        previousJson,
+        incomingJson
+      )
+
+    val previous =
+      try {
+        JSONObject(
+          previousJson
+        )
+      }
+      catch (
+        ignored: Throwable
+      ) {
+        JSONObject()
+      }
+
+    val current =
+      try {
+        JSONObject(
+          mergedJson
+        )
+      }
+      catch (
+        ignored: Throwable
+      ) {
+        JSONObject()
+      }
+
+    prefs
+      .edit()
+      .putString(
+        PREF_LIFESTYLE_CONTEXT_JSON,
+        mergedJson
+      )
+      .apply()
+
+    val baselineReady =
+      prefs.getBoolean(
+        PREF_LIFESTYLE_BASELINE_READY,
+        false
+      )
+
+    val previousDate =
+      previous
+        .optString(
+          "dateKey"
+        )
+        .trim()
+
+    val currentDate =
+      current
+        .optString(
+          "dateKey"
+        )
+        .trim()
+
+    if (
+      !baselineReady ||
+      currentDate.isEmpty() ||
+      (
+        previousDate.isNotEmpty() &&
+        previousDate !=
+          currentDate
+      )
+    ) {
+      prefs
+        .edit()
+        .putBoolean(
+          PREF_LIFESTYLE_BASELINE_READY,
+          true
+        )
+        .putStringSet(
+          PREF_LIFESTYLE_REACTION_KEYS,
+          emptySet()
+        )
+        .apply()
+
+      return
+    }
+
+    if (
+      !previous.has(
+        "todayExpense"
+      ) ||
+      !previous.has(
+        "dailyBudget"
+      )
+    ) {
+      return
+    }
+
+    val previousDailyBudget =
+      previous.optDouble(
+        "dailyBudget",
+        0.0
+      )
+
+    val currentDailyBudget =
+      current.optDouble(
+        "dailyBudget",
+        0.0
+      )
+
+    val previousTodayExpense =
+      previous.optDouble(
+        "todayExpense",
+        0.0
+      )
+
+    val currentTodayExpense =
+      current.optDouble(
+        "todayExpense",
+        0.0
+      )
+
+    if (
+      currentDailyBudget <=
+        0.0 ||
+      currentTodayExpense <=
+        previousTodayExpense
+    ) {
+      return
+    }
+
+    val previousRatio =
+      if (
+        previousDailyBudget >
+          0.0
+      ) {
+        previousTodayExpense /
+          previousDailyBudget
+      }
+      else {
+        0.0
+      }
+
+    val currentRatio =
+      currentTodayExpense /
+        currentDailyBudget
+
+    val signal =
+      when {
+        previousRatio <
+          1.50 &&
+        currentRatio >=
+          1.50 ->
+          "spend-nag-strong"
+
+        previousRatio <
+          1.00 &&
+        currentRatio >=
+          1.00 ->
+          "spend-nag"
+
+        previousRatio <
+          0.30 &&
+        currentRatio >=
+          0.30 &&
+        currentRatio <=
+          0.65 ->
+          "spend-praise"
+
+        else ->
+          null
+      }
+        ?: return
+
+    val reactionKey =
+      "$currentDate|$signal"
+
+    val usedKeys =
+      (
+        prefs.getStringSet(
+          PREF_LIFESTYLE_REACTION_KEYS,
+          emptySet()
+        )
+          ?: emptySet()
+      )
+        .toMutableSet()
+
+    if (
+      usedKeys.contains(
+        reactionKey
+      )
+    ) {
+      return
+    }
+
+    usedKeys.removeAll {
+      key ->
+      !key.startsWith(
+        "$currentDate|"
+      )
+    }
+
+    usedKeys.add(
+      reactionKey
+    )
+
+    prefs
+      .edit()
+      .putStringSet(
+        PREF_LIFESTYLE_REACTION_KEYS,
+        usedKeys
+      )
+      .apply()
+
+    if (
+      !shouldUseLifestyleReaction(
+        signal
+      )
+    ) {
+      return
+    }
+
+    val now =
+      System.currentTimeMillis()
+
+    val lastReactionAt =
+      prefs.getLong(
+        PREF_LAST_LIFESTYLE_REACTION_AT,
+        0L
+      )
+
+    val strong =
+      signal ==
+        "spend-nag-strong"
+
+    if (
+      !strong &&
+      now -
+        lastReactionAt <
+        LIFESTYLE_REACTION_MIN_GAP_MS
+    ) {
+      return
+    }
+
+    lifestyleReactionQueue.add(
+      signal to
+        buildLifestyleReactionMessage(
+          signal
+        )
+    )
+
+    playNextLifestyleReaction()
+  }
+
+  private fun playNextLifestyleReaction() {
+    if (
+      lifestyleReactionActive ||
+      lifestyleReactionQueue.isEmpty() ||
+      overlayView == null
+    ) {
+      return
+    }
+
+    if (
+      userInteracting ||
+      walkingAnimationActive ||
+      completionReactionActive ||
+      completionQueue.isNotEmpty() ||
+      actionMenuView != null
+    ) {
+      speechHandler.removeCallbacks(
+        retryLifestyleReactionRunnable
+      )
+      speechHandler.postDelayed(
+        retryLifestyleReactionRunnable,
+        LIFESTYLE_REACTION_BUSY_RETRY_MS
+      )
+      return
+    }
+
+    val reaction =
+      lifestyleReactionQueue.removeAt(
+        0
+      )
+
+    lifestyleReactionActive =
+      true
+
+    speechHandler.removeCallbacks(
+      goalSpeechRunnable
+    )
+    speechHandler.removeCallbacks(
+      finishLifestyleReactionRunnable
+    )
+
+    prefs
+      .edit()
+      .putLong(
+        PREF_LAST_LIFESTYLE_REACTION_AT,
+        System.currentTimeMillis()
+      )
+      .apply()
+
+    setMovementAnimation(
+      false
+    )
+
+    showSpeechBubble(
+      reaction.second,
+      LIFESTYLE_REACTION_DISPLAY_MS
+    )
+
+    speechHandler.postDelayed(
+      finishLifestyleReactionRunnable,
+      LIFESTYLE_REACTION_DISPLAY_MS +
+        120L
+    )
   }
 
   // CHARACTER_V101F_GOAL_COMPLETION_ENGINE
@@ -3115,6 +4036,14 @@ class RootFloatingCharacterService : Service() {
     autoTargetY = null
 
     speechHandler.removeCallbacks(
+      retryLifestyleReactionRunnable
+    )
+    speechHandler.removeCallbacks(
+      finishLifestyleReactionRunnable
+    )
+    lifestyleReactionActive = false
+
+    speechHandler.removeCallbacks(
       goalSpeechRunnable
     )
     speechHandler.removeCallbacks(
@@ -3124,20 +4053,9 @@ class RootFloatingCharacterService : Service() {
     hideSpeechBubble()
 
     val message =
-      when (
-        Random.nextInt(
-          4
-        )
-      ) {
-        0 ->
-          "'${completion.title}' 완료했네! 수고했어!"
-        1 ->
-          "오늘 목표 하나 더 끝냈다! '${completion.title}' 완료!"
-        2 ->
-          "좋아! '${completion.title}' 해냈네!"
-        else ->
-          "완료! '${completion.title}' 정말 잘했어!"
-      }
+      buildCompletionMessage(
+        completion.title
+      )
 
     showSpeechBubble(
       message,
@@ -3307,8 +4225,16 @@ class RootFloatingCharacterService : Service() {
     speechHandler.removeCallbacks(
       finishCompletionReactionRunnable
     )
+    speechHandler.removeCallbacks(
+      retryLifestyleReactionRunnable
+    )
+    speechHandler.removeCallbacks(
+      finishLifestyleReactionRunnable
+    )
     completionQueue.clear()
     completionReactionActive = false
+    lifestyleReactionQueue.clear()
+    lifestyleReactionActive = false
     speechHandler.removeCallbacksAndMessages(
       null
     )

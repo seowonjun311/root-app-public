@@ -49,6 +49,10 @@ type RootFloatingCharacterNativeModule = {
     completionsJson: string
   ):
     Promise<number>;
+  setLifestyleContextSnapshot(
+    contextJson: string
+  ):
+    Promise<boolean>;
   setGoalSpeechEnabled(
     enabled: boolean
   ):
@@ -73,6 +77,7 @@ const nativeModule =
 // CHARACTER_V101C_FLOATING_MOTION_SCALE_JS_BRIDGE
 // CHARACTER_V101E_GOAL_SPEECH_JS_BRIDGE
 // CHARACTER_V101F_GOAL_COMPLETION_JS_BRIDGE
+// CHARACTER_V101G_LIFESTYLE_JS_BRIDGE
 export function isFloatingCharacterSupported():
   boolean {
   return (
@@ -251,6 +256,37 @@ export async function setFloatingCharacterGoalCompletionSnapshot(
   return nativeModule.setGoalCompletionSnapshot(
     JSON.stringify(
       completions
+    )
+  );
+}
+
+export type FloatingCharacterLifestyleContextSnapshot = {
+  dateKey: string;
+  pendingGoalCount?: number;
+  completedGoalCount?: number;
+  dueGoalCount?: number;
+  todayExpense?: number;
+  dailyBudget?: number;
+  monthExpense?: number;
+  monthBudget?: number;
+};
+
+export async function setFloatingCharacterLifestyleContextSnapshot(
+  snapshot:
+    FloatingCharacterLifestyleContextSnapshot
+): Promise<boolean> {
+  if (
+    nativeModule ===
+      null ||
+    typeof nativeModule.setLifestyleContextSnapshot !==
+      'function'
+  ) {
+    return false;
+  }
+
+  return nativeModule.setLifestyleContextSnapshot(
+    JSON.stringify(
+      snapshot
     )
   );
 }

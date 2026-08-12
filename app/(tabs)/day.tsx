@@ -21,6 +21,9 @@ import {
   removeNativePendingCardNotification,
 } from '../../store/cardNotificationNative';
 import { syncDailyDataToServer } from '../../store/dailyCloud';
+import {
+  syncFloatingCharacterSpendingContext,
+} from '../../utils/floatingCharacterLifestyleSync';
 import type {
   LedgerItem
 } from '../../store/ledgerTypes';
@@ -7400,6 +7403,17 @@ useEffect(() => {
 }, [stepEnabled, todayKey]);
 
   // 비즈니스 로직 핸들러
+  // CHARACTER_V101G_DAY_LEDGER_CONTEXT_SYNC
+  useEffect(() => {
+    void syncFloatingCharacterSpendingContext(
+      ledgers,
+      ledgerBudgets
+    );
+  }, [
+    ledgers,
+    ledgerBudgets,
+  ]);
+
   const handleCellOpen = (hour: number, period: '낮' | '저녁', minute: '00' | '30') => {
     const key = `${period}_${hour}_${minute}`;
     setSelectedCell({ hour, period, minute, key });

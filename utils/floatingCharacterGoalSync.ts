@@ -1,12 +1,14 @@
 import {
   setFloatingCharacterGoalCompletionSnapshot,
   setFloatingCharacterGoalSnapshot,
+  setFloatingCharacterLifestyleContextSnapshot,
   type FloatingCharacterGoalCompletionSnapshotItem,
   type FloatingCharacterGoalSnapshotItem,
 } from '../modules/root-floating-character';
 
 // CHARACTER_V101E_FLOATING_GOAL_SNAPSHOT_SYNC
 // CHARACTER_V101F_FLOATING_GOAL_COMPLETION_SYNC
+// CHARACTER_V101G_GOAL_LIFESTYLE_CONTEXT_SYNC
 function getTodayIndex(
   date =
     new Date()
@@ -492,6 +494,19 @@ export async function syncFloatingCharacterGoals(
         setFloatingCharacterGoalCompletionSnapshot(
           completionSnapshot
         ),
+        setFloatingCharacterLifestyleContextSnapshot({
+          dateKey:
+            formatDateKey(
+              new Date()
+            ),
+          pendingGoalCount:
+            pendingSnapshot.length,
+          completedGoalCount:
+            completionSnapshot.length,
+          dueGoalCount:
+            pendingSnapshot.length +
+            completionSnapshot.length,
+        }),
       ]
     );
 

@@ -11,6 +11,7 @@ import expo.modules.kotlin.modules.ModuleDefinition
 // CHARACTER_V101C_MOTION_SCALE_NATIVE_BRIDGE
 // CHARACTER_V101E_GOAL_SPEECH_NATIVE_BRIDGE
 // CHARACTER_V101F_GOAL_COMPLETION_NATIVE_BRIDGE
+// CHARACTER_V101G_LIFESTYLE_NATIVE_BRIDGE
 class RootFloatingCharacterModule : Module() {
   override fun definition() =
     ModuleDefinition {
@@ -269,6 +270,23 @@ class RootFloatingCharacterModule : Module() {
           .setGoalCompletionSnapshot(
             context,
             completionsJson
+          )
+      }
+
+      AsyncFunction(
+        "setLifestyleContextSnapshot"
+      ) {
+        contextJson:
+          String ->
+
+        val context =
+          appContext.reactContext
+            ?: return@AsyncFunction false
+
+        RootFloatingCharacterService
+          .setLifestyleContextSnapshot(
+            context,
+            contextJson
           )
       }
 

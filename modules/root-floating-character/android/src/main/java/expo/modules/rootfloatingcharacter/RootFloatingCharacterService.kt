@@ -45,6 +45,7 @@ import org.json.JSONObject
 // CHARACTER_V101J_BEHAVIOR_ANIMATION_STATE_MACHINE
 // CHARACTER_V101K_SCREEN_EDGE_LIFE_AVOIDANCE
 // CHARACTER_V101L_FINAL_STABILITY_HARDENING
+// CHARACTER_V101M_BOOT_PACKAGE_RECOVERY
 class RootFloatingCharacterService : Service() {
   private data class GoalCompletion(
     val id: String,
@@ -85,6 +86,7 @@ class RootFloatingCharacterService : Service() {
 
     private const val PREFS = "root_floating_character_v1"
     private const val PREF_CHARACTER_ID = "characterId"
+    private const val PREF_USER_ENABLED = "userEnabled"
     private const val PREF_X = "x"
     private const val PREF_Y = "y"
     private const val PREF_DISPLAY_WIDTH_PX = "displayWidthPx"
@@ -769,6 +771,50 @@ class RootFloatingCharacterService : Service() {
         .apply()
     }
 
+    // CHARACTER_V101M_PERSISTED_USER_ENABLE_STATE
+    fun readUserEnabled(
+      context: Context
+    ): Boolean =
+      prefs(context)
+        .getBoolean(
+          PREF_USER_ENABLED,
+          false
+        )
+
+    fun restoreAfterSystemEvent(
+      context: Context
+    ): Boolean {
+      if (!readUserEnabled(context)) {
+        return false
+      }
+
+      val permissionGranted =
+        if (
+          Build.VERSION.SDK_INT <
+          Build.VERSION_CODES.M
+        ) {
+          true
+        }
+        else {
+          Settings.canDrawOverlays(
+            context
+          )
+        }
+
+      if (!permissionGranted) {
+        return false
+      }
+
+      start(
+        context,
+        readSelectedCharacter(
+          context
+        )
+      )
+
+      return true
+    }
+
     fun start(
       context: Context,
       characterId: String
@@ -783,6 +829,10 @@ class RootFloatingCharacterService : Service() {
         .putString(
           PREF_CHARACTER_ID,
           safeId
+        )
+        .putBoolean(
+          PREF_USER_ENABLED,
+          true
         )
         .apply()
 
@@ -814,6 +864,14 @@ class RootFloatingCharacterService : Service() {
     }
 
     fun stop(context: Context) {
+      prefs(context)
+        .edit()
+        .putBoolean(
+          PREF_USER_ENABLED,
+          false
+        )
+        .apply()
+
       context.startService(
         Intent(
           context,

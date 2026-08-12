@@ -34,18 +34,19 @@ class RootFloatingCharacterModule : Module() {
         )
       }
 
+      // CHARACTER_V101B_EAS_KOTLIN_NULL_RETURN_FIX
       AsyncFunction(
         "openOverlayPermissionSettings"
       ) {
         val context =
           appContext.reactContext
-            ?: return@AsyncFunction
+            ?: return@AsyncFunction null
 
         if (
           Build.VERSION.SDK_INT <
           Build.VERSION_CODES.M
         ) {
-          return@AsyncFunction
+          return@AsyncFunction null
         }
 
         val intent =
@@ -63,6 +64,8 @@ class RootFloatingCharacterModule : Module() {
         context.startActivity(
           intent
         )
+
+        null
       }
 
       AsyncFunction(
@@ -146,11 +149,13 @@ class RootFloatingCharacterModule : Module() {
       ) {
         val context =
           appContext.reactContext
-            ?: return@AsyncFunction
+            ?: return@AsyncFunction null
 
         RootFloatingCharacterService.stop(
           context
         )
+
+        null
       }
 
       AsyncFunction(
@@ -161,13 +166,15 @@ class RootFloatingCharacterModule : Module() {
 
         val context =
           appContext.reactContext
-            ?: return@AsyncFunction
+            ?: return@AsyncFunction null
 
         RootFloatingCharacterService
           .updateCharacter(
             context,
             characterId
           )
+
+        null
       }
     }
 }

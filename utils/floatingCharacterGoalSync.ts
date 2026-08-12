@@ -1,9 +1,12 @@
 import {
+  setFloatingCharacterGoalCompletionSnapshot,
   setFloatingCharacterGoalSnapshot,
+  type FloatingCharacterGoalCompletionSnapshotItem,
   type FloatingCharacterGoalSnapshotItem,
 } from '../modules/root-floating-character';
 
 // CHARACTER_V101E_FLOATING_GOAL_SNAPSHOT_SYNC
+// CHARACTER_V101F_FLOATING_GOAL_COMPLETION_SYNC
 function getTodayIndex(
   date =
     new Date()
@@ -362,17 +365,135 @@ export function buildFloatingCharacterGoalSnapshot(
     );
 }
 
+export function buildFloatingCharacterGoalCompletionSnapshot(
+  actionGoals:
+    any[]
+):
+  FloatingCharacterGoalCompletionSnapshotItem[] {
+  const now =
+    new Date();
+
+  const todayIndex =
+    getTodayIndex(
+      now
+    );
+
+  const todayKey =
+    formatDateKey(
+      now
+    );
+
+  const source =
+    Array.isArray(
+      actionGoals
+    )
+      ? actionGoals
+      : [];
+
+  return source
+    .filter(
+      (
+        goal:
+          any
+      ) => {
+        const id =
+          String(
+            goal?.id ??
+              ''
+          ).trim();
+
+        const title =
+          String(
+            goal?.title ??
+              ''
+          ).trim();
+
+        if (
+          !id ||
+          !title
+        ) {
+          return false;
+        }
+
+        return completedToday(
+          goal,
+          todayKey,
+          todayIndex
+        );
+      }
+    )
+    .map(
+      (
+        goal:
+          any
+      ) => ({
+        id:
+          String(
+            goal?.id ??
+              ''
+          )
+            .trim()
+            .slice(
+              0,
+              80
+            ),
+        title:
+          String(
+            goal?.title ??
+              ''
+          )
+            .trim()
+            .slice(
+              0,
+              60
+            ),
+        dateKey:
+          todayKey,
+      })
+    )
+    .filter(
+      (
+        completion
+      ) =>
+        completion.id.length >
+          0 &&
+        completion.title.length >
+          0
+    )
+    .slice(
+      0,
+      20
+    );
+}
+
 export async function syncFloatingCharacterGoals(
   actionGoals:
     any[]
 ):
   Promise<number> {
-  const snapshot =
+  const pendingSnapshot =
     buildFloatingCharacterGoalSnapshot(
       actionGoals
     );
 
-  return setFloatingCharacterGoalSnapshot(
-    snapshot
-  );
+  const completionSnapshot =
+    buildFloatingCharacterGoalCompletionSnapshot(
+      actionGoals
+    );
+
+  const [
+    pendingCount,
+  ] =
+    await Promise.all(
+      [
+        setFloatingCharacterGoalSnapshot(
+          pendingSnapshot
+        ),
+        setFloatingCharacterGoalCompletionSnapshot(
+          completionSnapshot
+        ),
+      ]
+    );
+
+  return pendingCount;
 }

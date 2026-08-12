@@ -45,6 +45,10 @@ type RootFloatingCharacterNativeModule = {
     goalsJson: string
   ):
     Promise<number>;
+  setGoalCompletionSnapshot(
+    completionsJson: string
+  ):
+    Promise<number>;
   setGoalSpeechEnabled(
     enabled: boolean
   ):
@@ -68,6 +72,7 @@ const nativeModule =
 // CHARACTER_V101A_FLOATING_OVERLAY_JS_BRIDGE
 // CHARACTER_V101C_FLOATING_MOTION_SCALE_JS_BRIDGE
 // CHARACTER_V101E_GOAL_SPEECH_JS_BRIDGE
+// CHARACTER_V101F_GOAL_COMPLETION_JS_BRIDGE
 export function isFloatingCharacterSupported():
   boolean {
   return (
@@ -222,6 +227,30 @@ export async function setFloatingCharacterGoalSnapshot(
   return nativeModule.setGoalSnapshot(
     JSON.stringify(
       goals
+    )
+  );
+}
+
+export type FloatingCharacterGoalCompletionSnapshotItem = {
+  id: string;
+  title: string;
+  dateKey: string;
+};
+
+export async function setFloatingCharacterGoalCompletionSnapshot(
+  completions:
+    FloatingCharacterGoalCompletionSnapshotItem[]
+): Promise<number> {
+  if (
+    nativeModule ===
+    null
+  ) {
+    return 0;
+  }
+
+  return nativeModule.setGoalCompletionSnapshot(
+    JSON.stringify(
+      completions
     )
   );
 }

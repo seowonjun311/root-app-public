@@ -34,7 +34,18 @@ import org.json.JSONObject
 // CHARACTER_V101C_FLOATING_MOTION_SCALE
 // CHARACTER_V101D_WALK_STATE_ANIMATION
 // CHARACTER_V101E_GOAL_SPEECH_INTERACTION
+// CHARACTER_V101F_GOAL_COMPLETION_CELEBRATION
 class RootFloatingCharacterService : Service() {
+  private data class GoalCompletion(
+    val id: String,
+    val title: String,
+    val dateKey: String
+  ) {
+    val key: String
+      get() =
+        "$dateKey|$id"
+  }
+
   companion object {
     private const val ACTION_START = "root.floating.START"
     private const val ACTION_STOP = "root.floating.STOP"
@@ -44,12 +55,14 @@ class RootFloatingCharacterService : Service() {
     private const val ACTION_SET_GOAL_SNAPSHOT = "root.floating.SET_GOAL_SNAPSHOT"
     private const val ACTION_SET_GOAL_SPEECH = "root.floating.SET_GOAL_SPEECH"
     private const val ACTION_SHOW_GOAL_SPEECH_NOW = "root.floating.SHOW_GOAL_SPEECH_NOW"
+    private const val ACTION_SET_GOAL_COMPLETION_SNAPSHOT = "root.floating.SET_GOAL_COMPLETION_SNAPSHOT"
 
     private const val EXTRA_CHARACTER_ID = "characterId"
     private const val EXTRA_SCALE = "scale"
     private const val EXTRA_AUTO_MOVE = "autoMoveEnabled"
     private const val EXTRA_GOALS_JSON = "goalsJson"
     private const val EXTRA_GOAL_SPEECH = "goalSpeechEnabled"
+    private const val EXTRA_COMPLETIONS_JSON = "completionsJson"
 
     private const val PREFS = "root_floating_character_v1"
     private const val PREF_CHARACTER_ID = "characterId"
@@ -61,6 +74,9 @@ class RootFloatingCharacterService : Service() {
     private const val PREF_GOAL_SPEECH = "goalSpeechEnabled"
     private const val PREF_LAST_GOAL_ID = "lastSpokenGoalId"
     private const val PREF_LAST_GOAL_AT = "lastSpokenGoalAt"
+    private const val PREF_COMPLETIONS_JSON = "goalCompletionSnapshotJson"
+    private const val PREF_COMPLETION_BASELINE_READY = "goalCompletionBaselineReady"
+    private const val PREF_CELEBRATED_COMPLETION_KEYS = "celebratedGoalCompletionKeys"
 
     private const val CHANNEL_ID = "root_floating_character"
     private const val NOTIFICATION_ID = 7101
@@ -84,6 +100,11 @@ class RootFloatingCharacterService : Service() {
     private const val GOAL_SPEECH_MAX_INTERVAL_MS = 1200000L
     private const val GOAL_SPEECH_BUSY_RETRY_MS = 15000L
     private const val SAME_GOAL_COOLDOWN_MS = 1800000L
+
+    private const val HAPPY_FRAME_DURATION_MS = 180L
+    private const val COMPLETION_SPEECH_DISPLAY_MS = 5000L
+    private const val COMPLETION_QUEUE_GAP_MS = 450L
+    private const val COMPLETION_BUSY_RETRY_MS = 500L
 
     private const val BASE_WIDTH_DP = 118
     private const val BASE_HEIGHT_DP = 176
@@ -251,6 +272,175 @@ class RootFloatingCharacterService : Service() {
         }
 
       return array.toString()
+    }
+
+
+    private fun parseGoalCompletionSnapshot(
+      completionsJson: String
+    ): List<GoalCompletion> {
+      val result =
+        mutableListOf<
+          GoalCompletion
+        >()
+
+      try {
+        val array =
+          JSONArray(
+            completionsJson
+          )
+
+        for (
+          index in
+          0 until
+          array.length()
+        ) {
+          val item =
+            array.optJSONObject(
+              index
+            )
+              ?: continue
+
+          val id =
+            item
+              .optString(
+                "id"
+              )
+              .trim()
+              .take(
+                80
+              )
+
+          val title =
+            item
+              .optString(
+                "title"
+              )
+              .trim()
+              .take(
+                60
+              )
+
+          val dateKey =
+            item
+              .optString(
+                "dateKey"
+              )
+              .trim()
+              .take(
+                10
+              )
+
+          if (
+            id.isNotEmpty() &&
+            title.isNotEmpty() &&
+            dateKey.matches(
+              Regex(
+                "\\d{4}-\\d{2}-\\d{2}"
+              )
+            )
+          ) {
+            result.add(
+              GoalCompletion(
+                id =
+                  id,
+                title =
+                  title,
+                dateKey =
+                  dateKey
+              )
+            )
+          }
+        }
+      }
+      catch (
+        ignored: Throwable
+      ) {
+      }
+
+      return result
+        .distinctBy {
+          completion ->
+          completion.key
+        }
+        .take(
+          20
+        )
+    }
+
+    private fun sanitizedGoalCompletionSnapshotJson(
+      completionsJson: String
+    ): String {
+      val array =
+        JSONArray()
+
+      parseGoalCompletionSnapshot(
+        completionsJson
+      )
+        .forEach {
+          completion ->
+          array.put(
+            JSONObject().apply {
+              put(
+                "id",
+                completion.id
+              )
+              put(
+                "title",
+                completion.title
+              )
+              put(
+                "dateKey",
+                completion.dateKey
+              )
+            }
+          )
+        }
+
+      return array.toString()
+    }
+
+    private fun markCompletionSnapshotSilently(
+      context: Context,
+      completionsJson: String
+    ) {
+      val completions =
+        parseGoalCompletionSnapshot(
+          completionsJson
+        )
+
+      val celebrated =
+        (
+          prefs(
+            context
+          )
+            .getStringSet(
+              PREF_CELEBRATED_COMPLETION_KEYS,
+              emptySet()
+            )
+            ?: emptySet()
+        )
+          .toMutableSet()
+
+      completions.forEach {
+        completion ->
+        celebrated.add(
+          completion.key
+        )
+      }
+
+      prefs(
+        context
+      )
+        .edit()
+        .putBoolean(
+          PREF_COMPLETION_BASELINE_READY,
+          true
+        )
+        .putStringSet(
+          PREF_CELEBRATED_COMPLETION_KEYS,
+          celebrated
+        )
+        .apply()
     }
 
     fun start(
@@ -447,6 +637,52 @@ class RootFloatingCharacterService : Service() {
       ).size
     }
 
+    fun setGoalCompletionSnapshot(
+      context: Context,
+      completionsJson: String
+    ): Int {
+      val safeJson =
+        sanitizedGoalCompletionSnapshotJson(
+          completionsJson
+        )
+
+      prefs(
+        context
+      )
+        .edit()
+        .putString(
+          PREF_COMPLETIONS_JSON,
+          safeJson
+        )
+        .apply()
+
+      if (isRunning) {
+        context.startService(
+          Intent(
+            context,
+            RootFloatingCharacterService::class.java
+          ).apply {
+            action =
+              ACTION_SET_GOAL_COMPLETION_SNAPSHOT
+            putExtra(
+              EXTRA_COMPLETIONS_JSON,
+              safeJson
+            )
+          }
+        )
+      }
+      else {
+        markCompletionSnapshotSilently(
+          context,
+          safeJson
+        )
+      }
+
+      return parseGoalCompletionSnapshot(
+        safeJson
+      ).size
+    }
+
     fun setGoalSpeechEnabled(
       context: Context,
       enabled: Boolean
@@ -514,12 +750,84 @@ class RootFloatingCharacterService : Service() {
   private var animationFrameIndex = 0
   private var walkingAnimationActive = false
 
+  // CHARACTER_V101F_HAPPY_ANIMATION_RUNTIME
+  private var happyAnimationActive = false
+  private var happyAnimationStep = 0
+  private val happyFrameSequence =
+    intArrayOf(
+      0,
+      1,
+      2,
+      1,
+      2,
+      1,
+      0
+    )
+
   private val animationRunnable =
     object : Runnable {
       override fun run() {
         val view =
           overlayView
             ?: return
+
+        if (happyAnimationActive) {
+          val happyFrames =
+            happyDrawableFramesForCharacter(
+              animatedCharacterId
+            )
+
+          if (
+            happyAnimationStep >=
+            happyFrameSequence.size
+          ) {
+            happyAnimationActive = false
+            happyAnimationStep = 0
+            walkingAnimationActive = false
+            animationFrameIndex = 0
+
+            val idleFrames =
+              drawableFramesForCharacter(
+                animatedCharacterId
+              )
+
+            view.setImageResource(
+              idleFrames[
+                0
+              ]
+            )
+
+            animationHandler.postDelayed(
+              this,
+              IDLE_FRAME_DURATION_MS
+            )
+            return
+          }
+
+          val frameIndex =
+            happyFrameSequence[
+              happyAnimationStep
+            ].coerceIn(
+              0,
+              happyFrames.size -
+                1
+            )
+
+          view.setImageResource(
+            happyFrames[
+              frameIndex
+            ]
+          )
+
+          happyAnimationStep +=
+            1
+
+          animationHandler.postDelayed(
+            this,
+            HAPPY_FRAME_DURATION_MS
+          )
+          return
+        }
 
         val frames =
           if (walkingAnimationActive) {
@@ -707,6 +1015,41 @@ class RootFloatingCharacterService : Service() {
   private var actionMenuView: LinearLayout? = null
   private var actionMenuParams: WindowManager.LayoutParams? = null
 
+
+  // CHARACTER_V101F_GOAL_COMPLETION_RUNTIME
+  private val completionQueue =
+    mutableListOf<
+      GoalCompletion
+    >()
+  private var completionReactionActive = false
+
+  private val retryCompletionReactionRunnable =
+    Runnable {
+      playNextGoalCompletionCelebration()
+    }
+
+  private val finishCompletionReactionRunnable =
+    Runnable {
+      completionReactionActive = false
+
+      if (
+        completionQueue.isNotEmpty()
+      ) {
+        speechHandler.postDelayed(
+          retryCompletionReactionRunnable,
+          COMPLETION_QUEUE_GAP_MS
+        )
+      }
+      else if (
+        goalSpeechEnabled &&
+        pendingGoals.isNotEmpty()
+      ) {
+        scheduleNextGoalSpeech(
+          initial = false
+        )
+      }
+    }
+
   private val hideSpeechRunnable =
     Runnable {
       hideSpeechBubble()
@@ -731,6 +1074,8 @@ class RootFloatingCharacterService : Service() {
         if (
           userInteracting ||
           walkingAnimationActive ||
+          completionReactionActive ||
+          completionQueue.isNotEmpty() ||
           actionMenuView != null
         ) {
           speechHandler.postDelayed(
@@ -850,6 +1195,17 @@ class RootFloatingCharacterService : Service() {
         applyGoalSnapshotInternal(
           intent.getStringExtra(
             EXTRA_GOALS_JSON
+          )
+            ?: "[]",
+          persist = true
+        )
+        return START_STICKY
+      }
+
+      ACTION_SET_GOAL_COMPLETION_SNAPSHOT -> {
+        applyGoalCompletionSnapshotInternal(
+          intent.getStringExtra(
+            EXTRA_COMPLETIONS_JSON
           )
             ?: "[]",
           persist = true
@@ -1429,9 +1785,19 @@ class RootFloatingCharacterService : Service() {
     userInteracting = true
     autoTargetX = null
     autoTargetY = null
-    setMovementAnimation(
-      false
-    )
+
+    if (happyAnimationActive) {
+      happyAnimationActive = false
+      happyAnimationStep = 0
+      startIdleAnimation(
+        animatedCharacterId
+      )
+    }
+    else {
+      setMovementAnimation(
+        false
+      )
+    }
   }
 
   private fun endUserInteraction() {
@@ -2490,6 +2856,8 @@ class RootFloatingCharacterService : Service() {
       (
         userInteracting ||
         walkingAnimationActive ||
+        completionReactionActive ||
+        completionQueue.isNotEmpty() ||
         actionMenuView != null
       )
     ) {
@@ -2593,6 +2961,219 @@ class RootFloatingCharacterService : Service() {
     return true
   }
 
+  // CHARACTER_V101F_GOAL_COMPLETION_ENGINE
+  private fun applyGoalCompletionSnapshotInternal(
+    completionsJson: String,
+    persist: Boolean
+  ) {
+    val safeJson =
+      sanitizedGoalCompletionSnapshotJson(
+        completionsJson
+      )
+
+    val completions =
+      parseGoalCompletionSnapshot(
+        safeJson
+      )
+
+    if (persist) {
+      prefs
+        .edit()
+        .putString(
+          PREF_COMPLETIONS_JSON,
+          safeJson
+        )
+        .apply()
+    }
+
+    val baselineReady =
+      prefs.getBoolean(
+        PREF_COMPLETION_BASELINE_READY,
+        false
+      )
+
+    val celebrated =
+      (
+        prefs.getStringSet(
+          PREF_CELEBRATED_COMPLETION_KEYS,
+          emptySet()
+        )
+          ?: emptySet()
+      )
+        .toMutableSet()
+
+    if (!baselineReady) {
+      completions.forEach {
+        completion ->
+        celebrated.add(
+          completion.key
+        )
+      }
+
+      prefs
+        .edit()
+        .putBoolean(
+          PREF_COMPLETION_BASELINE_READY,
+          true
+        )
+        .putStringSet(
+          PREF_CELEBRATED_COMPLETION_KEYS,
+          celebrated
+        )
+        .apply()
+
+      return
+    }
+
+    val unseen =
+      completions.filter {
+        completion ->
+        !celebrated.contains(
+          completion.key
+        )
+      }
+
+    if (unseen.isEmpty()) {
+      return
+    }
+
+    val newestDate =
+      unseen
+        .last()
+        .dateKey
+
+    celebrated.removeAll {
+      key ->
+      !key.startsWith(
+        "$newestDate|"
+      )
+    }
+
+    unseen.forEach {
+      completion ->
+      celebrated.add(
+        completion.key
+      )
+    }
+
+    prefs
+      .edit()
+      .putStringSet(
+        PREF_CELEBRATED_COMPLETION_KEYS,
+        celebrated
+      )
+      .apply()
+
+    unseen.forEach {
+      completion ->
+      if (
+        completionQueue.none {
+          queued ->
+          queued.key ==
+            completion.key
+        }
+      ) {
+        completionQueue.add(
+          completion
+        )
+      }
+    }
+
+    playNextGoalCompletionCelebration()
+  }
+
+  private fun playNextGoalCompletionCelebration() {
+    if (
+      completionReactionActive ||
+      completionQueue.isEmpty() ||
+      overlayView == null
+    ) {
+      return
+    }
+
+    if (
+      userInteracting ||
+      actionMenuView != null
+    ) {
+      speechHandler.removeCallbacks(
+        retryCompletionReactionRunnable
+      )
+      speechHandler.postDelayed(
+        retryCompletionReactionRunnable,
+        COMPLETION_BUSY_RETRY_MS
+      )
+      return
+    }
+
+    val completion =
+      completionQueue.removeAt(
+        0
+      )
+
+    completionReactionActive = true
+    autoTargetX = null
+    autoTargetY = null
+
+    speechHandler.removeCallbacks(
+      goalSpeechRunnable
+    )
+    speechHandler.removeCallbacks(
+      finishCompletionReactionRunnable
+    )
+    hideActionMenu()
+    hideSpeechBubble()
+
+    val message =
+      when (
+        Random.nextInt(
+          4
+        )
+      ) {
+        0 ->
+          "'${completion.title}' 완료했네! 수고했어!"
+        1 ->
+          "오늘 목표 하나 더 끝냈다! '${completion.title}' 완료!"
+        2 ->
+          "좋아! '${completion.title}' 해냈네!"
+        else ->
+          "완료! '${completion.title}' 정말 잘했어!"
+      }
+
+    showSpeechBubble(
+      message,
+      COMPLETION_SPEECH_DISPLAY_MS
+    )
+
+    startHappyAnimation(
+      animatedCharacterId
+    )
+
+    speechHandler.postDelayed(
+      finishCompletionReactionRunnable,
+      COMPLETION_SPEECH_DISPLAY_MS +
+        120L
+    )
+  }
+
+  private fun startHappyAnimation(
+    characterId: String
+  ) {
+    animationHandler.removeCallbacks(
+      animationRunnable
+    )
+
+    animatedCharacterId =
+      characterId
+    walkingAnimationActive = false
+    happyAnimationActive = true
+    happyAnimationStep = 0
+    animationFrameIndex = 0
+
+    animationHandler.post(
+      animationRunnable
+    )
+  }
+
   private fun openRootApp() {
     val intent =
       packageManager
@@ -2627,6 +3208,8 @@ class RootFloatingCharacterService : Service() {
 
     animatedCharacterId =
       characterId
+    happyAnimationActive = false
+    happyAnimationStep = 0
     walkingAnimationActive =
       walking
     animationFrameIndex = 0
@@ -2682,6 +3265,10 @@ class RootFloatingCharacterService : Service() {
   private fun setMovementAnimation(
     walking: Boolean
   ) {
+    if (happyAnimationActive) {
+      return
+    }
+
     if (
       walkingAnimationActive ==
       walking
@@ -2707,11 +3294,21 @@ class RootFloatingCharacterService : Service() {
     )
     animationFrameIndex = 0
     walkingAnimationActive = false
+    happyAnimationActive = false
+    happyAnimationStep = 0
   }
 
   private fun removeOverlay() {
     stopIdleAnimation()
     stopAutoMoveLoop()
+    speechHandler.removeCallbacks(
+      retryCompletionReactionRunnable
+    )
+    speechHandler.removeCallbacks(
+      finishCompletionReactionRunnable
+    )
+    completionQueue.clear()
+    completionReactionActive = false
     speechHandler.removeCallbacksAndMessages(
       null
     )
@@ -2854,6 +3451,56 @@ class RootFloatingCharacterService : Service() {
           R.drawable.root_character_rooty_walk_02,
           R.drawable.root_character_rooty_walk_03,
           R.drawable.root_character_rooty_walk_04
+        )
+    }
+
+
+  // CHARACTER_V101F_NATIVE_HAPPY_FRAMES
+  private fun happyDrawableFramesForCharacter(
+    characterId: String
+  ): IntArray =
+    when (characterId) {
+      "moru" ->
+        intArrayOf(
+          R.drawable.root_character_moru_happy_01,
+          R.drawable.root_character_moru_happy_02,
+          R.drawable.root_character_moru_happy_03
+        )
+      "mongsil" ->
+        intArrayOf(
+          R.drawable.root_character_mongsil_happy_01,
+          R.drawable.root_character_mongsil_happy_02,
+          R.drawable.root_character_mongsil_happy_03
+        )
+      "dami" ->
+        intArrayOf(
+          R.drawable.root_character_dami_happy_01,
+          R.drawable.root_character_dami_happy_02,
+          R.drawable.root_character_dami_happy_03
+        )
+      "pio" ->
+        intArrayOf(
+          R.drawable.root_character_pio_happy_01,
+          R.drawable.root_character_pio_happy_02,
+          R.drawable.root_character_pio_happy_03
+        )
+      "nuri" ->
+        intArrayOf(
+          R.drawable.root_character_nuri_happy_01,
+          R.drawable.root_character_nuri_happy_02,
+          R.drawable.root_character_nuri_happy_03
+        )
+      "tori" ->
+        intArrayOf(
+          R.drawable.root_character_tori_happy_01,
+          R.drawable.root_character_tori_happy_02,
+          R.drawable.root_character_tori_happy_03
+        )
+      else ->
+        intArrayOf(
+          R.drawable.root_character_rooty_happy_01,
+          R.drawable.root_character_rooty_happy_02,
+          R.drawable.root_character_rooty_happy_03
         )
     }
 

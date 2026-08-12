@@ -10,7 +10,9 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.graphics.PixelFormat
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.provider.Settings
 import android.view.Gravity
 import android.view.MotionEvent
@@ -51,6 +53,9 @@ class RootFloatingCharacterService :
 
     private const val NOTIFICATION_ID =
       7101
+
+    private const val IDLE_FRAME_DURATION_MS =
+      700L
 
     @Volatile
     var isRunning:
@@ -224,6 +229,53 @@ class RootFloatingCharacterService :
   private var overlayParams:
     WindowManager.LayoutParams? =
     null
+
+  // CHARACTER_V101B_NATIVE_IDLE_ANIMATION
+  private val animationHandler =
+    Handler(
+      Looper.getMainLooper()
+    )
+
+  private var animatedCharacterId:
+    String =
+    "rooty"
+
+  private var animationFrameIndex:
+    Int =
+    0
+
+  private val animationRunnable =
+    object :
+      Runnable {
+      override fun run() {
+        val view =
+          overlayView
+            ?: return
+
+        val frames =
+          drawableFramesForCharacter(
+            animatedCharacterId
+          )
+
+        animationFrameIndex =
+          (
+            animationFrameIndex +
+              1
+          ) %
+          frames.size
+
+        view.setImageResource(
+          frames[
+            animationFrameIndex
+          ]
+        )
+
+        animationHandler.postDelayed(
+          this,
+          IDLE_FRAME_DURATION_MS
+        )
+      }
+    }
 
   private val prefs by lazy {
     getSharedPreferences(
@@ -521,10 +573,8 @@ class RootFloatingCharacterService :
       existing !==
       null
     ) {
-      existing.setImageResource(
-        drawableForCharacter(
-          safeId
-        )
+      startIdleAnimation(
+        safeId
       )
 
       return
@@ -625,6 +675,10 @@ class RootFloatingCharacterService :
 
       overlayParams =
         params
+
+      startIdleAnimation(
+        safeId
+      )
     }
     catch (
       error:
@@ -772,7 +826,50 @@ class RootFloatingCharacterService :
     }
   }
 
+  private fun startIdleAnimation(
+    characterId:
+      String
+  ) {
+    animationHandler.removeCallbacks(
+      animationRunnable
+    )
+
+    animatedCharacterId =
+      characterId
+
+    animationFrameIndex =
+      0
+
+    val frames =
+      drawableFramesForCharacter(
+        characterId
+      )
+
+    overlayView
+      ?.setImageResource(
+        frames[
+          0
+        ]
+      )
+
+    animationHandler.postDelayed(
+      animationRunnable,
+      IDLE_FRAME_DURATION_MS
+    )
+  }
+
+  private fun stopIdleAnimation() {
+    animationHandler.removeCallbacks(
+      animationRunnable
+    )
+
+    animationFrameIndex =
+      0
+  }
+
   private fun removeOverlay() {
+    stopIdleAnimation()
+
     val view =
       overlayView
 
@@ -803,29 +900,75 @@ class RootFloatingCharacterService :
     characterId:
       String
   ): Int {
+    return drawableFramesForCharacter(
+      characterId
+    )[
+      0
+    ]
+  }
+
+  private fun drawableFramesForCharacter(
+    characterId:
+      String
+  ): IntArray {
     return when (
       characterId
     ) {
       "moru" ->
-        R.drawable.root_character_moru
+        intArrayOf(
+          R.drawable.root_character_moru,
+          R.drawable.root_character_moru_idle_02,
+          R.drawable.root_character_moru_idle_03,
+          R.drawable.root_character_moru_idle_04
+        )
 
       "mongsil" ->
-        R.drawable.root_character_mongsil
+        intArrayOf(
+          R.drawable.root_character_mongsil,
+          R.drawable.root_character_mongsil_idle_02,
+          R.drawable.root_character_mongsil_idle_03,
+          R.drawable.root_character_mongsil_idle_04
+        )
 
       "dami" ->
-        R.drawable.root_character_dami
+        intArrayOf(
+          R.drawable.root_character_dami,
+          R.drawable.root_character_dami_idle_02,
+          R.drawable.root_character_dami_idle_03,
+          R.drawable.root_character_dami_idle_04
+        )
 
       "pio" ->
-        R.drawable.root_character_pio
+        intArrayOf(
+          R.drawable.root_character_pio,
+          R.drawable.root_character_pio_idle_02,
+          R.drawable.root_character_pio_idle_03,
+          R.drawable.root_character_pio_idle_04
+        )
 
       "nuri" ->
-        R.drawable.root_character_nuri
+        intArrayOf(
+          R.drawable.root_character_nuri,
+          R.drawable.root_character_nuri_idle_02,
+          R.drawable.root_character_nuri_idle_03,
+          R.drawable.root_character_nuri_idle_04
+        )
 
       "tori" ->
-        R.drawable.root_character_tori
+        intArrayOf(
+          R.drawable.root_character_tori,
+          R.drawable.root_character_tori_idle_02,
+          R.drawable.root_character_tori_idle_03,
+          R.drawable.root_character_tori_idle_04
+        )
 
       else ->
-        R.drawable.root_character_rooty
+        intArrayOf(
+          R.drawable.root_character_rooty,
+          R.drawable.root_character_rooty_idle_02,
+          R.drawable.root_character_rooty_idle_03,
+          R.drawable.root_character_rooty_idle_04
+        )
     }
   }
 

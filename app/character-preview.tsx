@@ -409,6 +409,28 @@ useCharacterAcquisitionCelebration();
             </Pressable>
           </Link>
           {/* CHARACTER_V86_PREVIEW_TEXT_FIX */}
+          {/* CHARACTER_V101A_FLOATING_OVERLAY_ENTRY */}
+          <Link
+            href={
+              '/floating-character-settings' as never
+            }
+            asChild
+          >
+            <Pressable
+              style={
+                styles.diagnosticsButton
+              }
+            >
+              <Text
+                style={
+                  styles.diagnosticsButtonText
+                }
+              >
+                화면 위 캐릭터
+              </Text>
+            </Pressable>
+          </Link>
+
           {/* CHARACTER_V99E_DIALOGUE_DIAGNOSTICS_ENTRY */}
           <Link
             href={

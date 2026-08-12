@@ -39,6 +39,7 @@ import org.json.JSONObject
 // CHARACTER_V101H_TIME_STATE_CONTEXT_SPEECH
 // CHARACTER_V101I_QUIET_SLEEP_MODE
 // CHARACTER_V101J_BEHAVIOR_ANIMATION_STATE_MACHINE
+// CHARACTER_V101K_SCREEN_EDGE_LIFE_AVOIDANCE
 class RootFloatingCharacterService : Service() {
   private data class GoalCompletion(
     val id: String,
@@ -112,6 +113,19 @@ class RootFloatingCharacterService : Service() {
     private const val AUTO_MOVE_RESUME_AFTER_TOUCH_MS = 4000L
     private const val AUTO_MOVE_STEP_DP = 2
     private const val AUTO_MOVE_TARGET_RADIUS_DP = 130
+
+    private const val AUTO_MOVE_EDGE_INSET_DP = 18
+    private const val AUTO_MOVE_TOP_SAFE_DP = 72
+    private const val AUTO_MOVE_BOTTOM_SAFE_DP = 28
+    private const val AUTO_MOVE_KEYBOARD_GAP_DP = 18
+    private const val KEYBOARD_VISIBLE_MIN_DP = 140
+    private const val AUTO_MOVE_EDGE_PERCH_CHANCE_PERCENT = 22
+    private const val AUTO_MOVE_LOWER_BAND_CHANCE_PERCENT = 36
+    private const val AUTO_MOVE_TARGET_ATTEMPTS = 12
+    private const val USER_REJECT_DRAG_DISTANCE_DP = 52
+    private const val USER_AVOID_RADIUS_DP = 110
+    private const val USER_AVOID_MEMORY_MS = 480000L
+    private const val USER_AVOID_ZONE_LIMIT = 3
 
     private const val LONG_PRESS_MS = 650L
     private const val TAP_REACTION_DISPLAY_MS = 2600L
@@ -1666,6 +1680,8 @@ class RootFloatingCharacterService : Service() {
           scheduledQuietActive &&
           shouldSuppressAutoMoveForQuiet()
         ) {
+          nudgeQuietSleepAboveKeyboardIfNeeded()
+
           if (
             behaviorAnimationMode !=
               BehaviorAnimationMode.SLEEP ||
@@ -1768,6 +1784,18 @@ class RootFloatingCharacterService : Service() {
   private var autoTargetY: Int? = null
   private var currentScale = DEFAULT_SCALE
 
+  private data class UserAvoidZone(
+    val centerX: Int,
+    val centerY: Int,
+    val untilAt: Long
+  )
+
+  // CHARACTER_V101K_USER_REJECTED_AREA_MEMORY
+  private val userAvoidZones =
+    mutableListOf<
+      UserAvoidZone
+    >()
+
   private val motionRunnable =
     object : Runnable {
       override fun run() {
@@ -1794,7 +1822,26 @@ class RootFloatingCharacterService : Service() {
         if (
           userInteracting ||
           actionMenuView != null ||
-          now < autoMoveResumeAt ||
+          now < autoMoveResumeAt
+        ) {
+          setMovementAnimation(
+            false
+          )
+
+          motionHandler.postDelayed(
+            this,
+            AUTO_MOVE_TICK_MS
+          )
+          return
+        }
+
+        val dynamicRetargeted =
+          adjustAutoMoveTargetForDynamicAvoidance(
+            params
+          )
+
+        if (
+          !dynamicRetargeted &&
           now < autoMovePauseUntil
         ) {
           setMovementAnimation(
@@ -2798,6 +2845,26 @@ class RootFloatingCharacterService : Service() {
                 )
 
             if (
+              moved >=
+                dp(
+                  USER_REJECT_DRAG_DISTANCE_DP
+                )
+            ) {
+              rememberUserRejectedAreaAfterDrag(
+                startX =
+                  startX,
+                startY =
+                  startY,
+                endX =
+                  params.x,
+                endY =
+                  params.y,
+                params =
+                  params
+              )
+            }
+
+            if (
               moved <
               dp(
                 10
@@ -3091,23 +3158,31 @@ class RootFloatingCharacterService : Service() {
     }
   }
 
+  // CHARACTER_V101K_SAFE_TARGET_SELECTION
   private fun chooseAutoMoveTarget(
     params: WindowManager.LayoutParams
   ) {
+    val bounds =
+      autoMoveSafeBounds(
+        params
+      )
+
+    val minX =
+      bounds[
+        0
+      ]
     val maxX =
-      (
-        resources.displayMetrics.widthPixels -
-          params.width
-      ).coerceAtLeast(
-        0
-      )
+      bounds[
+        1
+      ]
+    val minY =
+      bounds[
+        2
+      ]
     val maxY =
-      (
-        resources.displayMetrics.heightPixels -
-          params.height
-      ).coerceAtLeast(
-        0
-      )
+      bounds[
+        3
+      ]
 
     val radius =
       dp(
@@ -3116,29 +3191,772 @@ class RootFloatingCharacterService : Service() {
         1
       )
 
-    autoTargetX =
-      (
-        params.x +
-          Random.nextInt(
-            -radius,
-            radius + 1
-          )
-      ).coerceIn(
-        0,
+    val currentX =
+      params.x.coerceIn(
+        minX,
         maxX
       )
 
-    autoTargetY =
-      (
-        params.y +
-          Random.nextInt(
-            -radius,
-            radius + 1
-          )
-      ).coerceIn(
-        0,
+    val currentY =
+      params.y.coerceIn(
+        minY,
         maxY
       )
+
+    val lowerStart =
+      (
+        minY +
+          (
+            (
+              maxY -
+                minY
+            ) *
+              58
+          ) /
+            100
+      ).coerceIn(
+        minY,
+        maxY
+      )
+
+    var fallbackX =
+      currentX
+    var fallbackY =
+      currentY
+
+    repeat(
+      AUTO_MOVE_TARGET_ATTEMPTS
+    ) {
+      attempt ->
+      val nearLeft =
+        params.x <=
+          minX +
+            dp(
+              8
+            )
+
+      val nearRight =
+        params.x >=
+          maxX -
+            dp(
+              8
+            )
+
+      val aboveSafeBand =
+        params.y <
+          minY
+
+      val candidateX: Int
+      val candidateY: Int
+
+      if (
+        attempt ==
+          0 &&
+        (
+          nearLeft ||
+          nearRight ||
+          aboveSafeBand
+        )
+      ) {
+        candidateX =
+          when {
+            nearLeft ->
+              (
+                minX +
+                  dp(
+                    52
+                  )
+              ).coerceAtMost(
+                maxX
+              )
+
+            nearRight ->
+              (
+                maxX -
+                  dp(
+                    52
+                  )
+              ).coerceAtLeast(
+                minX
+              )
+
+            else ->
+              currentX
+          }
+
+        candidateY =
+          currentY.coerceIn(
+            minY,
+            maxY
+          )
+      }
+      else {
+        val roll =
+          Random.nextInt(
+            100
+          )
+
+        if (
+          roll <
+            AUTO_MOVE_EDGE_PERCH_CHANCE_PERCENT
+        ) {
+          candidateX =
+            if (
+              Random.nextBoolean()
+            ) {
+              minX
+            }
+            else {
+              maxX
+            }
+
+          candidateY =
+            randomInclusive(
+              lowerStart,
+              maxY
+            )
+        }
+        else if (
+          roll <
+            AUTO_MOVE_EDGE_PERCH_CHANCE_PERCENT +
+              AUTO_MOVE_LOWER_BAND_CHANCE_PERCENT
+        ) {
+          candidateX =
+            (
+              params.x +
+                Random.nextInt(
+                  -radius,
+                  radius +
+                    1
+                )
+            ).coerceIn(
+              minX,
+              maxX
+            )
+
+          candidateY =
+            randomInclusive(
+              lowerStart,
+              maxY
+            )
+        }
+        else {
+          candidateX =
+            (
+              params.x +
+                Random.nextInt(
+                  -radius,
+                  radius +
+                    1
+                )
+            ).coerceIn(
+              minX,
+              maxX
+            )
+
+          candidateY =
+            (
+              params.y +
+                Random.nextInt(
+                  -radius,
+                  radius +
+                    1
+                )
+            ).coerceIn(
+              minY,
+              maxY
+            )
+        }
+      }
+
+      fallbackX =
+        candidateX
+      fallbackY =
+        candidateY
+
+      if (
+        !isUserAvoidedTarget(
+          candidateX,
+          candidateY,
+          params
+        )
+      ) {
+        autoTargetX =
+          candidateX
+        autoTargetY =
+          candidateY
+        return
+      }
+    }
+
+    autoTargetX =
+      fallbackX
+    autoTargetY =
+      fallbackY
+  }
+
+  private fun randomInclusive(
+    minValue: Int,
+    maxValue: Int
+  ): Int =
+    if (
+      maxValue <=
+        minValue
+    ) {
+      minValue
+    }
+    else {
+      Random.nextInt(
+        minValue,
+        maxValue +
+          1
+      )
+    }
+
+  // CHARACTER_V101K_KEYBOARD_BEST_EFFORT_AVOIDANCE
+  private fun detectedKeyboardTop():
+    Int? {
+    val screenHeight =
+      resources
+        .displayMetrics
+        .heightPixels
+
+    if (
+      Build.VERSION.SDK_INT >=
+        Build.VERSION_CODES.R
+    ) {
+      try {
+        val insets =
+          windowManager
+            .currentWindowMetrics
+            .windowInsets
+
+        if (
+          insets.isVisible(
+            android.view.WindowInsets
+              .Type
+              .ime()
+          )
+        ) {
+          val imeBottom =
+            insets
+              .getInsets(
+                android.view.WindowInsets
+                  .Type
+                  .ime()
+              )
+              .bottom
+
+          if (
+            imeBottom >=
+              dp(
+                KEYBOARD_VISIBLE_MIN_DP
+              )
+          ) {
+            return (
+              screenHeight -
+                imeBottom
+            ).coerceIn(
+              0,
+              screenHeight
+            )
+          }
+        }
+      }
+      catch (
+        ignored: Throwable
+      ) {
+      }
+    }
+
+    val view =
+      overlayView
+        ?: return null
+
+    return try {
+      val visibleFrame =
+        android.graphics.Rect()
+
+      view.getWindowVisibleDisplayFrame(
+        visibleFrame
+      )
+
+      val obscuredBottom =
+        screenHeight -
+          visibleFrame.bottom
+
+      if (
+        obscuredBottom >=
+          dp(
+            KEYBOARD_VISIBLE_MIN_DP
+          )
+      ) {
+        visibleFrame.bottom
+          .coerceIn(
+            0,
+            screenHeight
+          )
+      }
+      else {
+        null
+      }
+    }
+    catch (
+      ignored: Throwable
+    ) {
+      null
+    }
+  }
+
+  private fun autoMoveSafeBounds(
+    params: WindowManager.LayoutParams
+  ): IntArray {
+    val physicalMaxX =
+      (
+        resources.displayMetrics.widthPixels -
+          params.width
+      ).coerceAtLeast(
+        0
+      )
+
+    val physicalMaxY =
+      (
+        resources.displayMetrics.heightPixels -
+          params.height
+      ).coerceAtLeast(
+        0
+      )
+
+    val edgeInset =
+      dp(
+        AUTO_MOVE_EDGE_INSET_DP
+      ).coerceAtLeast(
+        0
+      )
+
+    val minX =
+      edgeInset.coerceAtMost(
+        physicalMaxX
+      )
+
+    val maxX =
+      (
+        physicalMaxX -
+          edgeInset
+      ).coerceAtLeast(
+        minX
+      )
+
+    val minY =
+      dp(
+        AUTO_MOVE_TOP_SAFE_DP
+      ).coerceIn(
+        0,
+        physicalMaxY
+      )
+
+    var maxY =
+      (
+        physicalMaxY -
+          dp(
+            AUTO_MOVE_BOTTOM_SAFE_DP
+          )
+      ).coerceAtLeast(
+        minY
+      )
+
+    val keyboardTop =
+      detectedKeyboardTop()
+
+    if (
+      keyboardTop !=
+        null
+    ) {
+      val keyboardSafeY =
+        (
+          keyboardTop -
+            params.height -
+            dp(
+              AUTO_MOVE_KEYBOARD_GAP_DP
+            )
+        ).coerceAtLeast(
+          minY
+        )
+
+      maxY =
+        minOf(
+          maxY,
+          keyboardSafeY
+        ).coerceAtLeast(
+          minY
+        )
+    }
+
+    return intArrayOf(
+      minX,
+      maxX,
+      minY,
+      maxY
+    )
+  }
+
+  private fun adjustAutoMoveTargetForDynamicAvoidance(
+    params: WindowManager.LayoutParams
+  ): Boolean {
+    val bounds =
+      autoMoveSafeBounds(
+        params
+      )
+
+    val safeX =
+      params.x.coerceIn(
+        bounds[
+          0
+        ],
+        bounds[
+          1
+        ]
+      )
+
+    val safeY =
+      params.y.coerceIn(
+        bounds[
+          2
+        ],
+        bounds[
+          3
+        ]
+      )
+
+    val currentOutsideSafeBounds =
+      safeX !=
+        params.x ||
+      safeY !=
+        params.y
+
+    if (
+      currentOutsideSafeBounds
+    ) {
+      autoTargetX =
+        safeX
+      autoTargetY =
+        safeY
+      autoMovePauseUntil =
+        0L
+      return true
+    }
+
+    val targetX =
+      autoTargetX
+    val targetY =
+      autoTargetY
+
+    if (
+      targetX !=
+        null &&
+      targetY !=
+        null
+    ) {
+      val clampedTargetX =
+        targetX.coerceIn(
+          bounds[
+            0
+          ],
+          bounds[
+            1
+          ]
+        )
+
+      val clampedTargetY =
+        targetY.coerceIn(
+          bounds[
+            2
+          ],
+          bounds[
+            3
+          ]
+        )
+
+      if (
+        clampedTargetX !=
+          targetX ||
+        clampedTargetY !=
+          targetY ||
+        isUserAvoidedTarget(
+          clampedTargetX,
+          clampedTargetY,
+          params
+        )
+      ) {
+        autoTargetX =
+          null
+        autoTargetY =
+          null
+        chooseAutoMoveTarget(
+          params
+        )
+        autoMovePauseUntil =
+          0L
+        return true
+      }
+    }
+
+    return false
+  }
+
+  private fun purgeExpiredUserAvoidZones() {
+    val now =
+      SystemClock.uptimeMillis()
+
+    userAvoidZones.removeAll {
+      zone ->
+      zone.untilAt <=
+        now
+    }
+  }
+
+  private fun isUserAvoidedTarget(
+    x: Int,
+    y: Int,
+    params: WindowManager.LayoutParams
+  ): Boolean {
+    purgeExpiredUserAvoidZones()
+
+    if (userAvoidZones.isEmpty()) {
+      return false
+    }
+
+    val centerX =
+      x +
+        params.width /
+          2
+
+    val centerY =
+      y +
+        params.height /
+          2
+
+    val radius =
+      dp(
+        USER_AVOID_RADIUS_DP
+      ).coerceAtLeast(
+        1
+      )
+
+    val radiusSquared =
+      radius.toLong() *
+        radius.toLong()
+
+    return userAvoidZones.any {
+      zone ->
+      val dx =
+        (
+          centerX -
+            zone.centerX
+        ).toLong()
+
+      val dy =
+        (
+          centerY -
+            zone.centerY
+        ).toLong()
+
+      dx *
+        dx +
+        dy *
+          dy <=
+        radiusSquared
+    }
+  }
+
+  private fun rememberUserRejectedAreaAfterDrag(
+    startX: Int,
+    startY: Int,
+    endX: Int,
+    endY: Int,
+    params: WindowManager.LayoutParams
+  ) {
+    val moved =
+      abs(
+        endX -
+          startX
+      ) +
+        abs(
+          endY -
+            startY
+        )
+
+    if (
+      moved <
+        dp(
+          USER_REJECT_DRAG_DISTANCE_DP
+        )
+    ) {
+      return
+    }
+
+    purgeExpiredUserAvoidZones()
+
+    val endCenterX =
+      endX +
+        params.width /
+          2
+
+    val endCenterY =
+      endY +
+        params.height /
+          2
+
+    val radius =
+      dp(
+        USER_AVOID_RADIUS_DP
+      ).coerceAtLeast(
+        1
+      )
+
+    val destinationZone =
+      userAvoidZones.firstOrNull {
+        zone ->
+        val dx =
+          (
+            endCenterX -
+              zone.centerX
+          ).toLong()
+
+        val dy =
+          (
+            endCenterY -
+              zone.centerY
+          ).toLong()
+
+        dx *
+          dx +
+          dy *
+            dy <=
+          radius.toLong() *
+            radius.toLong()
+      }
+
+    if (
+      destinationZone !=
+        null
+    ) {
+      userAvoidZones.remove(
+        destinationZone
+      )
+      return
+    }
+
+    val startCenterX =
+      startX +
+        params.width /
+          2
+
+    val startCenterY =
+      startY +
+        params.height /
+          2
+
+    val mergeRadius =
+      (
+        radius /
+          2
+      ).coerceAtLeast(
+        1
+      )
+
+    userAvoidZones.removeAll {
+      zone ->
+      abs(
+        zone.centerX -
+          startCenterX
+      ) <=
+        mergeRadius &&
+      abs(
+        zone.centerY -
+          startCenterY
+      ) <=
+        mergeRadius
+    }
+
+    userAvoidZones.add(
+      UserAvoidZone(
+        centerX =
+          startCenterX,
+        centerY =
+          startCenterY,
+        untilAt =
+          SystemClock.uptimeMillis() +
+            USER_AVOID_MEMORY_MS
+      )
+    )
+
+    while (
+      userAvoidZones.size >
+        USER_AVOID_ZONE_LIMIT
+    ) {
+      userAvoidZones.removeAt(
+        0
+      )
+    }
+
+    autoTargetX = null
+    autoTargetY = null
+  }
+
+  private fun nudgeQuietSleepAboveKeyboardIfNeeded() {
+    if (!autoMoveEnabled) {
+      return
+    }
+
+    val view =
+      overlayView
+        ?: return
+
+    val params =
+      overlayParams
+        ?: return
+
+    val keyboardTop =
+      detectedKeyboardTop()
+        ?: return
+
+    val safeY =
+      (
+        keyboardTop -
+          params.height -
+          dp(
+            AUTO_MOVE_KEYBOARD_GAP_DP
+          )
+      ).coerceAtLeast(
+        dp(
+          AUTO_MOVE_TOP_SAFE_DP
+        ).coerceAtMost(
+          (
+            resources.displayMetrics.heightPixels -
+              params.height
+          ).coerceAtLeast(
+            0
+          )
+        )
+      )
+
+    if (
+      params.y >
+        safeY
+    ) {
+      params.y =
+        safeY
+
+      clampOverlayPosition(
+        params
+      )
+
+      safelyUpdateOverlayLayout(
+        view,
+        params
+      )
+    }
   }
 
   private fun stepToward(

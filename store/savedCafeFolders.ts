@@ -7,6 +7,9 @@ import {
   getAuth,
 } from '@react-native-firebase/auth';
 import {
+  getRootCloudUidOrNull,
+} from './rootCloudSession';
+import {
   doc,
   getDoc,
   getFirestore,
@@ -713,11 +716,9 @@ export function mergeSavedCafeFolderStates(
 }
 
 function getCurrentScope(): SavedCafeFolderScope {
+  // ROOT_EXPLORE_V12D91_GUEST_LOCAL_ONLY_SCOPE
   const uid =
-    getAuth(
-      getApp(),
-    ).currentUser?.uid ??
-    null;
+    getRootCloudUidOrNull();
 
   return {
     uid,

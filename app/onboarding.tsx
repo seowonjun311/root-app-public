@@ -234,13 +234,33 @@ const toggleSelectedDay = (
     const previousData =
   getRootOnboardingData();
 
-const currentUser =
-  auth().currentUser;
+// ROOT_EXPLORE_V12D91_GUEST_ONBOARDING_LOCAL_ONLY
+const isGuestSession =
+  previousData?.loginType === 'guest' ||
+  previousData?.isGuest === true;
+
+const currentUser = auth().currentUser;
+const authenticatedUid =
+  currentUser?.uid ?? null;
 
 const uid =
-  currentUser?.uid ??
-  previousData?.uid ??
-  null;
+  isGuestSession
+    ? null
+    : (
+        authenticatedUid ??
+        previousData?.uid ??
+        null
+      );
+
+if (isGuestSession) {
+  console.log(
+    'NICKNAME DUPLICATE CHECK SKIPPED GUEST LOCAL ONLY',
+    {
+      guestId: previousData?.guestId ?? null,
+      staleAuthPresent: Boolean(authenticatedUid),
+    }
+  );
+}
 
    if (uid) {
   try {

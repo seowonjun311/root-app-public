@@ -11,6 +11,7 @@ import {
 import {
   doc,
   getFirestore,
+  onSnapshot,
   setDoc,
 } from '@react-native-firebase/firestore';
 
@@ -979,4 +980,502 @@ getRootPlaceCommunityErrorMessage(
   }
 
   return '제보를 저장하지 못했어요. 잠시 후 다시 시도해주세요.';
+}
+
+// ROOT_EXPLORE_V12B_OWN_PENDING_HYDRATION
+
+export type RootPlaceCommunityHighlight = {
+  id: string;
+  kind:
+    RootPlaceContributionKind;
+  label: string;
+  observedAt: string;
+  moderationStatus: 'pending';
+  mediaType?:
+    RootPlaceMediaKind;
+};
+
+export type RootPlaceCommunityPlaceSummary = {
+  placeId: string;
+  latestPhotoUrl: string;
+  photoCount: number;
+  mediaCount: number;
+  reportCount: number;
+  latestObservedAt: string;
+  highlights:
+    RootPlaceCommunityHighlight[];
+};
+
+export type RootPlaceCommunitySnapshot = {
+  ownerUserId: string | null;
+  contributionCount: number;
+  revision: string;
+  byPlaceId:
+    Record<
+      string,
+      RootPlaceCommunityPlaceSummary
+    >;
+};
+
+export function
+createEmptyRootPlaceCommunitySnapshot():
+  RootPlaceCommunitySnapshot {
+  return {
+    ownerUserId: null,
+    contributionCount: 0,
+    revision: '',
+    byPlaceId: {},
+  };
+}
+
+function getRecordTimestamp(
+  record:
+    RootPlaceCommunityRecord
+) {
+  const value =
+    Date.parse(
+      String(
+        record.observedAt ??
+          record.createdAt ??
+          ''
+      )
+    );
+
+  return Number.isFinite(
+    value
+  )
+    ? value
+    : 0;
+}
+
+function getRecordHighlightLabel(
+  record:
+    RootPlaceCommunityRecord
+) {
+  if (
+    record.media
+  ) {
+    return record
+      .media
+      .mediaType ===
+      'video'
+      ? '동영상을 추가했어요'
+      : '현장 사진을 추가했어요';
+  }
+
+  const explicit =
+    String(
+      record.valueLabel ??
+        ''
+    ).trim();
+
+  if (explicit) {
+    return explicit;
+  }
+
+  const fallback:
+    Partial<
+      Record<
+        RootPlaceContributionKind,
+        string
+      >
+    > = {
+      business_hours:
+        '영업시간을 제보했어요',
+      waiting:
+        '웨이팅을 제보했어요',
+      outdoor_status:
+        '야외석 운영을 제보했어요',
+      rain_status:
+        '우천 이용 정보를 제보했어요',
+      visit:
+        '방문을 인증했어요',
+      correction:
+        '정보 수정을 제안했어요',
+    };
+
+  return (
+    fallback[
+      record.kind
+    ] ??
+    '현장 정보를 제보했어요'
+  );
+}
+
+export function
+buildRootPlaceCommunitySnapshot(
+  raw: unknown,
+  ownerUserId:
+    string | null = null
+):
+  RootPlaceCommunitySnapshot {
+  const data =
+    (
+      raw &&
+      typeof raw ===
+        'object'
+    )
+      ? raw as
+          Record<
+            string,
+            any
+          >
+      : {};
+
+  const recordMap =
+    (
+      data
+        .contributionsById &&
+      typeof data
+        .contributionsById ===
+        'object'
+    )
+      ? data
+          .contributionsById as
+            Record<
+              string,
+              any
+            >
+      : {};
+
+  const records =
+    Object.values(
+      recordMap
+    )
+      .filter(
+        (
+          item
+        ): item is
+          RootPlaceCommunityRecord =>
+          Boolean(
+            item &&
+            typeof item ===
+              'object' &&
+            String(
+              item.placeId ??
+                ''
+            ).trim()
+          )
+      )
+      .sort(
+        (
+          first,
+          second
+        ) =>
+          getRecordTimestamp(
+            second
+          ) -
+          getRecordTimestamp(
+            first
+          )
+      );
+
+  const grouped =
+    new Map<
+      string,
+      RootPlaceCommunityRecord[]
+    >();
+
+  for (
+    const record of
+    records
+  ) {
+    const placeId =
+      String(
+        record.placeId
+      );
+
+    const existing =
+      grouped.get(
+        placeId
+      );
+
+    if (existing) {
+      existing.push(
+        record
+      );
+    } else {
+      grouped.set(
+        placeId,
+        [record]
+      );
+    }
+  }
+
+  const byPlaceId:
+    Record<
+      string,
+      RootPlaceCommunityPlaceSummary
+    > = {};
+
+  let newestTimestamp =
+    0;
+
+  for (
+    const [
+      placeId,
+      placeRecords,
+    ] of grouped
+  ) {
+    const photoRecords =
+      placeRecords.filter(
+        (record) =>
+          record
+            .media
+            ?.mediaType ===
+            'photo' &&
+          Boolean(
+            String(
+              record
+                .media
+                ?.downloadUrl ??
+                ''
+            ).trim()
+          )
+      );
+
+    const mediaRecords =
+      placeRecords.filter(
+        (record) =>
+          Boolean(
+            record.media
+          )
+      );
+
+    const reportRecords =
+      placeRecords.filter(
+        (record) =>
+          !record.media
+      );
+
+    const latestPhotoUrl =
+      String(
+        photoRecords[0]
+          ?.media
+          ?.downloadUrl ??
+          ''
+      ).trim();
+
+    const latestRecord =
+      placeRecords[0];
+
+    newestTimestamp =
+      Math.max(
+        newestTimestamp,
+        getRecordTimestamp(
+          latestRecord
+        )
+      );
+
+    const seenKinds =
+      new Set<string>();
+
+    const highlights:
+      RootPlaceCommunityHighlight[] =
+        [];
+
+    for (
+      const record of
+      placeRecords
+    ) {
+      const dedupeKey =
+        record.media
+          ? `media:${
+              record
+                .media
+                .mediaType
+            }`
+          : `report:${
+              record.kind
+            }`;
+
+      if (
+        seenKinds.has(
+          dedupeKey
+        )
+      ) {
+        continue;
+      }
+
+      seenKinds.add(
+        dedupeKey
+      );
+
+      highlights.push({
+        id:
+          String(
+            record.id
+          ),
+        kind:
+          record.kind,
+        label:
+          getRecordHighlightLabel(
+            record
+          ),
+        observedAt:
+          String(
+            record.observedAt ??
+              record.createdAt ??
+              ''
+          ),
+        moderationStatus:
+          'pending',
+        mediaType:
+          record
+            .media
+            ?.mediaType,
+      });
+
+      if (
+        highlights.length >=
+        3
+      ) {
+        break;
+      }
+    }
+
+    byPlaceId[
+      placeId
+    ] = {
+      placeId,
+      latestPhotoUrl,
+      photoCount:
+        photoRecords.length,
+      mediaCount:
+        mediaRecords.length,
+      reportCount:
+        reportRecords.length,
+      latestObservedAt:
+        String(
+          latestRecord
+            ?.observedAt ??
+            latestRecord
+              ?.createdAt ??
+            ''
+        ),
+      highlights,
+    };
+  }
+
+  return {
+    ownerUserId,
+    contributionCount:
+      records.length,
+    revision:
+      newestTimestamp >
+      0
+        ? String(
+            newestTimestamp
+          )
+        : String(
+            data.updatedAt ??
+              ''
+          ),
+    byPlaceId,
+  };
+}
+
+export function
+mergeRootPlaceCommunityIntoPlace(
+  place: any,
+  snapshot:
+    RootPlaceCommunitySnapshot
+) {
+  const placeId =
+    String(
+      place?.id ??
+        ''
+    );
+
+  const summary =
+    snapshot
+      .byPlaceId[
+        placeId
+      ];
+
+  if (!summary) {
+    return place;
+  }
+
+  return {
+    ...place,
+    latestUserPhotoUrl:
+      summary.latestPhotoUrl ||
+      undefined,
+    rootCommunityPhotoCount:
+      summary.photoCount,
+    rootCommunityMediaCount:
+      summary.mediaCount,
+    rootCommunityHighlights:
+      summary.highlights,
+    rootCommunityLastObservedAt:
+      summary
+        .latestObservedAt,
+  };
+}
+
+export function
+subscribeRootPlaceCommunitySnapshot({
+  onChange,
+  onError,
+}: {
+  onChange:
+    (
+      snapshot:
+        RootPlaceCommunitySnapshot
+    ) => void;
+  onError?:
+    (
+      error: unknown
+    ) => void;
+}) {
+  const user =
+    firebaseAuth.currentUser;
+
+  if (
+    !user?.uid
+  ) {
+    onChange(
+      createEmptyRootPlaceCommunitySnapshot()
+    );
+
+    return () => {};
+  }
+
+  const uid =
+    user.uid;
+
+  return onSnapshot(
+    doc(
+      firebaseDb,
+      'users',
+      uid
+    ),
+    (
+      snapshot
+    ) => {
+      const userData =
+        snapshot.data();
+
+      onChange(
+        buildRootPlaceCommunitySnapshot(
+          userData
+            ?.rootPlaceCommunityData,
+          uid
+        )
+      );
+    },
+    (
+      error
+    ) => {
+      console.log(
+        'ROOT PLACE COMMUNITY SNAPSHOT ERROR',
+        error
+      );
+
+      onError?.(
+        error
+      );
+    }
+  );
 }

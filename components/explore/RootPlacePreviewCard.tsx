@@ -84,7 +84,7 @@ export default function RootPlacePreviewCard({
         '📍'
     );
 
-  const photoCount =
+  const catalogPhotoCount =
     Math.max(
       0,
       Number(
@@ -93,6 +93,28 @@ export default function RootPlacePreviewCard({
           0
       ) || 0
     );
+
+  const rootCommunityPhotoCount =
+    Math.max(
+      0,
+      Number(
+        place?.rootCommunityPhotoCount ??
+          0
+      ) || 0
+    );
+
+  const photoCount =
+    catalogPhotoCount +
+    rootCommunityPhotoCount;
+
+  const communityHighlights =
+    Array.isArray(
+      place?.rootCommunityHighlights
+    )
+      ? place
+          .rootCommunityHighlights
+          .slice(0, 3)
+      : [];
 
   return (
     <View
@@ -538,6 +560,108 @@ export default function RootPlacePreviewCard({
         />
       </View>
 
+      {/* ROOT_EXPLORE_V12B_RECENT_PENDING_HIGHLIGHTS */}
+      {communityHighlights.length >
+      0 ? (
+        <View
+          style={[
+            styles.communityHighlightCard,
+            {
+              backgroundColor:
+                theme.background,
+              borderColor:
+                theme.line,
+              borderRadius:
+                isCityBlack
+                  ? 2
+                  : 14,
+            },
+          ]}
+        >
+          <View
+            style={
+              styles.communityHighlightHeader
+            }
+          >
+            <Text
+              style={[
+                styles.communityHighlightTitle,
+                {
+                  color:
+                    theme.text,
+                },
+              ]}
+            >
+              내 최근 현장 제보
+            </Text>
+
+            <Text
+              style={[
+                styles.communityPendingBadge,
+                {
+                  color:
+                    theme.subText,
+                },
+              ]}
+            >
+              검수 대기
+            </Text>
+          </View>
+
+          {communityHighlights.map(
+            (
+              highlight: any
+            ) => (
+              <View
+                key={
+                  String(
+                    highlight?.id ??
+                      highlight?.label
+                  )
+                }
+                style={
+                  styles.communityHighlightRow
+                }
+              >
+                <View
+                  style={
+                    styles.communityHighlightDot
+                  }
+                />
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    styles.communityHighlightLabel,
+                    {
+                      color:
+                        theme.text,
+                    },
+                  ]}
+                >
+                  {String(
+                    highlight?.label ??
+                      '현장 정보를 제보했어요'
+                  )}
+                </Text>
+                <Text
+                  style={[
+                    styles.communityHighlightTime,
+                    {
+                      color:
+                        theme.subText,
+                    },
+                  ]}
+                >
+                  {formatRootCommunityAgeLabel(
+                    highlight?.observedAt
+                  )}
+                </Text>
+              </View>
+            )
+          )}
+        </View>
+      ) : null}
+
       <Pressable
         onPress={
           onOpenDetail
@@ -593,6 +717,68 @@ export default function RootPlacePreviewCard({
       </Pressable>
     </View>
   );
+}
+
+function formatRootCommunityAgeLabel(
+  value: unknown
+) {
+  const timestamp =
+    Date.parse(
+      String(
+        value ?? ''
+      )
+    );
+
+  if (
+    !Number.isFinite(
+      timestamp
+    )
+  ) {
+    return '';
+  }
+
+  const diffMs =
+    Math.max(
+      0,
+      Date.now() -
+      timestamp
+    );
+
+  const minutes =
+    Math.floor(
+      diffMs /
+      60_000
+    );
+
+  if (
+    minutes < 1
+  ) {
+    return '방금';
+  }
+
+  if (
+    minutes < 60
+  ) {
+    return `${minutes}분 전`;
+  }
+
+  const hours =
+    Math.floor(
+      minutes / 60
+    );
+
+  if (
+    hours < 24
+  ) {
+    return `${hours}시간 전`;
+  }
+
+  const days =
+    Math.floor(
+      hours / 24
+    );
+
+  return `${days}일 전`;
 }
 
 function ActionButton({
@@ -994,6 +1180,64 @@ const styles =
       marginTop: 4,
       fontSize: 8,
       lineHeight: 11.5,
+      fontWeight: '600',
+    },
+
+    communityHighlightCard: {
+      marginTop: 12,
+      paddingHorizontal: 11,
+      paddingVertical: 10,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      gap: 7,
+    },
+
+    communityHighlightHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent:
+        'space-between',
+      gap: 8,
+    },
+
+    communityHighlightTitle: {
+      fontSize: 10.5,
+      lineHeight: 15,
+      fontWeight: '900',
+    },
+
+    communityPendingBadge: {
+      fontSize: 8.5,
+      lineHeight: 12,
+      fontWeight: '700',
+    },
+
+    communityHighlightRow: {
+      minHeight: 20,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+    },
+
+    communityHighlightDot: {
+      width: 5,
+      height: 5,
+      borderRadius: 2.5,
+      backgroundColor:
+        ROOT_EXPLORE_ACCENT,
+    },
+
+    communityHighlightLabel: {
+      flex: 1,
+      minWidth: 0,
+      fontSize: 9.2,
+      lineHeight: 13,
+      fontWeight: '700',
+    },
+
+    communityHighlightTime: {
+      fontSize: 8.3,
+      lineHeight: 12,
       fontWeight: '600',
     },
 

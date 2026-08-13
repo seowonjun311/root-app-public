@@ -67,12 +67,18 @@ import {
 import RootExploreMapMarker from '../../../components/explore/RootExploreMapMarker';
 import RootPlaceContributionModal from '../../../components/explore/RootPlaceContributionModal';
 import {
+  createEmptyRootPlaceCommunitySnapshot,
   getRootPlaceCommunityErrorMessage,
+  mergeRootPlaceCommunityIntoPlace,
   pickAndUploadRootPlaceMedia,
   saveRootPlaceReport,
+  subscribeRootPlaceCommunitySnapshot,
+  type RootPlaceCommunitySnapshot,
   type RootPlaceReportKind,
   type RootPlaceReportSelection,
 } from '../../../store/rootPlaceCommunity';
+
+// ROOT_EXPLORE_V12B_OWN_PENDING_DISTRICT_HYDRATION
 
 // ROOT_EXPLORE_V12A_COMMUNITY_INTEGRATION
 import {
@@ -918,6 +924,16 @@ export default function DistrictMapScreen() {
   ] = useState(false);
 
   const [
+    rootPlaceCommunitySnapshot,
+    setRootPlaceCommunitySnapshot,
+  ] = useState<
+    RootPlaceCommunitySnapshot
+  >(
+    () =>
+      createEmptyRootPlaceCommunitySnapshot()
+  );
+
+  const [
     selectedThemeFilter,
     setSelectedThemeFilter,
   ] = useState<RootExploreTheme>(
@@ -1003,6 +1019,48 @@ export default function DistrictMapScreen() {
     null
   );
 
+  useFocusEffect(
+    useCallback(
+      () => {
+        let active =
+          true;
+
+        const unsubscribe =
+          subscribeRootPlaceCommunitySnapshot({
+            onChange:
+              (
+                snapshot
+              ) => {
+                if (
+                  active
+                ) {
+                  setRootPlaceCommunitySnapshot(
+                    snapshot
+                  );
+                }
+              },
+            onError:
+              (
+                error
+              ) => {
+                console.log(
+                  'ROOT PLACE COMMUNITY HYDRATION ERROR',
+                  error
+                );
+              },
+          });
+
+        return () => {
+          active =
+            false;
+
+          unsubscribe();
+        };
+      },
+      []
+    )
+  );
+
   const district = useMemo(
     () =>
       getExplorationDistrict(
@@ -1025,6 +1083,22 @@ export default function DistrictMapScreen() {
         normalizedDistrictId ??
         '지역'
     ).trim() || '지역';
+
+  const communityPlaces =
+    useMemo(
+      () =>
+        places.map(
+          (place) =>
+            mergeRootPlaceCommunityIntoPlace(
+              place,
+              rootPlaceCommunitySnapshot
+            )
+        ),
+      [
+        places,
+        rootPlaceCommunitySnapshot,
+      ]
+    );
 
   const matchesCurrentRootPlaceFilters =
     useCallback(
@@ -1074,12 +1148,14 @@ export default function DistrictMapScreen() {
   const placesWithCoordinates =
     useMemo<PlaceWithCoordinate[]>(
       () =>
-        places.map((place) => ({
+        communityPlaces.map((place) => ({
           place,
           coordinate:
             getPlaceCoordinate(place),
         })),
-      [places]
+      [
+        communityPlaces,
+      ]
     );
 
   const markerItems = useMemo(
@@ -1247,12 +1323,12 @@ export default function DistrictMapScreen() {
   const filteredPlaces =
     useMemo(
       () =>
-        places.filter(
+        communityPlaces.filter(
           matchesCurrentRootPlaceFilters
         ),
       [
+        communityPlaces,
         matchesCurrentRootPlaceFilters,
-        places,
       ]
     );
 
@@ -1285,13 +1361,13 @@ export default function DistrictMapScreen() {
   const selectedPlace =
     useMemo(
       () =>
-        places.find(
+        communityPlaces.find(
           (place) =>
             String(place?.id ?? '') ===
             selectedPlaceId
         ) ?? null,
       [
-        places,
+        communityPlaces,
         selectedPlaceId,
       ]
     );
@@ -1894,6 +1970,8 @@ export default function DistrictMapScreen() {
     eventMarkerItems.length,
     facilityMarkerItems.length,
     rootExploreMarkerMode,
+    rootPlaceCommunitySnapshot
+      .revision,
   ]);
 
   const openRootPlaceDirections =

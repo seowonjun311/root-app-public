@@ -314,6 +314,8 @@ export function getRootExplorePlaceImageUrl(
 ) {
   const candidates =
     [
+      // ROOT_EXPLORE_V12B_USER_PHOTO_PRIORITY
+      place?.latestUserPhotoUrl,
       place?.thumbnailImageUrl,
       place?.representativeImageUrl,
       place?.mainImageUrl,

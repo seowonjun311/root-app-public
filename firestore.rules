@@ -291,13 +291,10 @@ service cloud.firestore {
     // V1.2E will move privileged public writes to Cloud Functions/Admin SDK.
     // Until then, moderator writes are protected by custom claims.
 
+    // ROOT_EXPLORE_V12D4_ROOT_MODERATOR_ONLY
     function isRootPlaceModerator() {
       return request.auth != null
-        && (
-          request.auth.token.rootModerator == true
-          || request.auth.token.moderator == true
-          || request.auth.token.admin == true
-        );
+        && request.auth.token.rootModerator == true;
     }
 
     match /rootPlaceModerationInbox/{contributionId} {

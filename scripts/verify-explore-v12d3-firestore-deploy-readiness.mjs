@@ -66,14 +66,22 @@ const dryRun =
     'scripts/run-explore-v12d3-firestore-dry-run.ps1'
   );
 
-if (
+const V12D4_HARDENED_SHA =
+  'fd74b90dd9fec2919ca9bb3868116a6a9c3294b23f511f0807fb25bbd5bb059a';
+
+const currentRulesSha =
   sha256(
     rules
-  ) !==
-  CANDIDATE_SHA
+  );
+
+if (
+  currentRulesSha !==
+  CANDIDATE_SHA &&
+  currentRulesSha !==
+  V12D4_HARDENED_SHA
 ) {
   throw new Error(
-    'firestore.rules does not match reviewed candidate SHA256'
+    `firestore.rules is neither V1.2D3 candidate nor V1.2D4 hardened SHA256: ${currentRulesSha}`
   );
 }
 

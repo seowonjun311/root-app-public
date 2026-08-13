@@ -103,9 +103,37 @@ export default function RootPlacePreviewCard({
       ) || 0
     );
 
+  const rootPublicCommunityPhotoCount =
+    Math.max(
+      0,
+      Number(
+        place?.rootPublicCommunityPhotoCount ??
+          0
+      ) || 0
+    );
+
   const photoCount =
     catalogPhotoCount +
+    rootPublicCommunityPhotoCount +
     rootCommunityPhotoCount;
+
+  const publicCommunityHighlights =
+    Array.isArray(
+      place?.rootPublicCommunityHighlights
+    )
+      ? place
+          .rootPublicCommunityHighlights
+          .slice(0, 3)
+      : [];
+
+  const publicApprovedReportCount =
+    Math.max(
+      0,
+      Number(
+        place?.rootPublicApprovedReportCount ??
+          0
+      ) || 0
+    );
 
   const communityHighlights =
     Array.isArray(
@@ -559,6 +587,129 @@ export default function RootPlacePreviewCard({
           }
         />
       </View>
+
+      {/* ROOT_EXPLORE_V12C_APPROVED_PUBLIC_HIGHLIGHTS */}
+      {publicCommunityHighlights.length >
+      0 ? (
+        <View
+          style={[
+            styles.publicCommunityCard,
+            {
+              backgroundColor:
+                theme.background,
+              borderColor:
+                theme.line,
+              borderRadius:
+                isCityBlack
+                  ? 2
+                  : 14,
+            },
+          ]}
+        >
+          <View
+            style={
+              styles.publicCommunityHeader
+            }
+          >
+            <Text
+              style={[
+                styles.publicCommunityTitle,
+                {
+                  color:
+                    theme.text,
+                },
+              ]}
+            >
+              ROOT 커뮤니티 현황
+            </Text>
+
+            <Text
+              style={[
+                styles.publicCommunityBadge,
+                {
+                  color:
+                    theme.subText,
+                },
+              ]}
+            >
+              승인 {publicApprovedReportCount}
+            </Text>
+          </View>
+
+          {publicCommunityHighlights.map(
+            (
+              highlight: any
+            ) => (
+              <View
+                key={
+                  String(
+                    highlight?.id ??
+                      highlight?.label
+                  )
+                }
+                style={
+                  styles.publicCommunityRow
+                }
+              >
+                <View
+                  style={
+                    styles.publicCommunityDot
+                  }
+                />
+
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    styles.publicCommunityLabel,
+                    {
+                      color:
+                        theme.text,
+                    },
+                  ]}
+                >
+                  {String(
+                    highlight?.label ??
+                      '승인된 현장 제보'
+                  )}
+                </Text>
+
+                {Number(
+                  highlight?.reportCount ??
+                    0
+                ) > 1 ? (
+                  <Text
+                    style={[
+                      styles.publicCommunityCount,
+                      {
+                        color:
+                          theme.subText,
+                      },
+                    ]}
+                  >
+                    {Number(
+                      highlight?.reportCount
+                    )}명
+                  </Text>
+                ) : null}
+
+                <Text
+                  style={[
+                    styles.publicCommunityTime,
+                    {
+                      color:
+                        theme.subText,
+                    },
+                  ]}
+                >
+                  {formatRootCommunityAgeLabel(
+                    highlight?.observedAt
+                  )}
+                </Text>
+              </View>
+            )
+          )}
+        </View>
+      ) : null}
 
       {/* ROOT_EXPLORE_V12B_RECENT_PENDING_HIGHLIGHTS */}
       {communityHighlights.length >
@@ -1180,6 +1331,70 @@ const styles =
       marginTop: 4,
       fontSize: 8,
       lineHeight: 11.5,
+      fontWeight: '600',
+    },
+
+    publicCommunityCard: {
+      marginTop: 12,
+      paddingHorizontal: 11,
+      paddingVertical: 10,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      gap: 7,
+    },
+
+    publicCommunityHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent:
+        'space-between',
+      gap: 8,
+    },
+
+    publicCommunityTitle: {
+      fontSize: 10.5,
+      lineHeight: 15,
+      fontWeight: '900',
+    },
+
+    publicCommunityBadge: {
+      fontSize: 8.5,
+      lineHeight: 12,
+      fontWeight: '800',
+    },
+
+    publicCommunityRow: {
+      minHeight: 20,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+    },
+
+    publicCommunityDot: {
+      width: 5,
+      height: 5,
+      borderRadius: 2.5,
+      backgroundColor:
+        '#3D9661',
+    },
+
+    publicCommunityLabel: {
+      flex: 1,
+      minWidth: 0,
+      fontSize: 9.2,
+      lineHeight: 13,
+      fontWeight: '700',
+    },
+
+    publicCommunityCount: {
+      fontSize: 8.3,
+      lineHeight: 12,
+      fontWeight: '700',
+    },
+
+    publicCommunityTime: {
+      fontSize: 8.3,
+      lineHeight: 12,
       fontWeight: '600',
     },
 

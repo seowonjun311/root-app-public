@@ -316,6 +316,8 @@ export function getRootExplorePlaceImageUrl(
     [
       // ROOT_EXPLORE_V12B_USER_PHOTO_PRIORITY
       place?.latestUserPhotoUrl,
+      // ROOT_EXPLORE_V12C_APPROVED_PUBLIC_PHOTO_PRIORITY
+      place?.approvedUserPhotoUrl,
       place?.thumbnailImageUrl,
       place?.representativeImageUrl,
       place?.mainImageUrl,

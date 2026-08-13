@@ -77,6 +77,14 @@ import {
   type RootPlaceReportKind,
   type RootPlaceReportSelection,
 } from '../../../store/rootPlaceCommunity';
+import {
+  createEmptyRootPlacePublicDistrictSnapshot,
+  mergeRootPlacePublicCommunityIntoPlace,
+  subscribeRootPlacePublicCommunityDistrict,
+  type RootPlacePublicDistrictSnapshot,
+} from '../../../store/rootPlacePublicCommunity';
+
+// ROOT_EXPLORE_V12C_PUBLIC_DISTRICT_HYDRATION
 
 // ROOT_EXPLORE_V12B_OWN_PENDING_DISTRICT_HYDRATION
 
@@ -934,6 +942,18 @@ export default function DistrictMapScreen() {
   );
 
   const [
+    rootPlacePublicSnapshot,
+    setRootPlacePublicSnapshot,
+  ] = useState<
+    RootPlacePublicDistrictSnapshot
+  >(
+    () =>
+      createEmptyRootPlacePublicDistrictSnapshot(
+        normalizedDistrictId
+      )
+  );
+
+  const [
     selectedThemeFilter,
     setSelectedThemeFilter,
   ] = useState<RootExploreTheme>(
@@ -1061,6 +1081,68 @@ export default function DistrictMapScreen() {
     )
   );
 
+  useFocusEffect(
+    useCallback(
+      () => {
+        let active =
+          true;
+
+        setRootPlacePublicSnapshot(
+          createEmptyRootPlacePublicDistrictSnapshot(
+            normalizedDistrictId
+          )
+        );
+
+        const unsubscribe =
+          subscribeRootPlacePublicCommunityDistrict({
+            districtId:
+              normalizedDistrictId,
+            onChange:
+              (
+                snapshot
+              ) => {
+                if (
+                  active
+                ) {
+                  setRootPlacePublicSnapshot(
+                    snapshot
+                  );
+                }
+              },
+            onError:
+              (
+                error
+              ) => {
+                console.log(
+                  'ROOT PUBLIC PLACE COMMUNITY HYDRATION ERROR',
+                  error
+                );
+
+                if (
+                  active
+                ) {
+                  setRootPlacePublicSnapshot(
+                    createEmptyRootPlacePublicDistrictSnapshot(
+                      normalizedDistrictId
+                    )
+                  );
+                }
+              },
+          });
+
+        return () => {
+          active =
+            false;
+
+          unsubscribe();
+        };
+      },
+      [
+        normalizedDistrictId,
+      ]
+    )
+  );
+
   const district = useMemo(
     () =>
       getExplorationDistrict(
@@ -1084,10 +1166,26 @@ export default function DistrictMapScreen() {
         '지역'
     ).trim() || '지역';
 
-  const communityPlaces =
+  const publicCommunityPlaces =
     useMemo(
       () =>
         places.map(
+          (place) =>
+            mergeRootPlacePublicCommunityIntoPlace(
+              place,
+              rootPlacePublicSnapshot
+            )
+        ),
+      [
+        places,
+        rootPlacePublicSnapshot,
+      ]
+    );
+
+  const communityPlaces =
+    useMemo(
+      () =>
+        publicCommunityPlaces.map(
           (place) =>
             mergeRootPlaceCommunityIntoPlace(
               place,
@@ -1095,7 +1193,7 @@ export default function DistrictMapScreen() {
             )
         ),
       [
-        places,
+        publicCommunityPlaces,
         rootPlaceCommunitySnapshot,
       ]
     );
@@ -1971,6 +2069,8 @@ export default function DistrictMapScreen() {
     facilityMarkerItems.length,
     rootExploreMarkerMode,
     rootPlaceCommunitySnapshot
+      .revision,
+    rootPlacePublicSnapshot
       .revision,
   ]);
 

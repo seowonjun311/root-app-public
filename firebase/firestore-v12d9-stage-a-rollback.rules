@@ -1,0 +1,380 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(uid) {
+      return signedIn()
+        && request.auth.uid == uid;
+    }
+
+    function isCrewOwner(crewId) {
+      return signedIn()
+        && crewId is string
+        && exists(
+          /databases/$(database)/documents/crews/$(crewId)
+        )
+        && get(
+          /databases/$(database)/documents/crews/$(crewId)
+        ).data.ownerId == request.auth.uid;
+    }
+
+    function onlyCrewMemberFieldsChanged() {
+      return request.resource.data
+        .diff(resource.data)
+        .affectedKeys()
+        .hasOnly([
+          'memberIds',
+          'members',
+          'updatedAt'
+        ]);
+    }
+
+    function isFreeCrewSelfJoin() {
+      return signedIn()
+        && onlyCrewMemberFieldsChanged()
+        && resource.data.joinType == 'free'
+        && !(request.auth.uid in resource.data.memberIds)
+        && request.auth.uid in request.resource.data.memberIds
+        && request.resource.data.memberIds
+          .hasAll(resource.data.memberIds)
+        && request.resource.data.memberIds.size()
+          == resource.data.memberIds.size() + 1
+        && request.resource.data.members
+          == resource.data.members + 1;
+    }
+
+    function isSelfLeaveCrew() {
+      return signedIn()
+        && onlyCrewMemberFieldsChanged()
+
+        // 크루장은 먼저 다른 멤버에게 크루장을 위임해야 함
+        && resource.data.ownerId != request.auth.uid
+
+        && request.auth.uid in resource.data.memberIds
+        && !(request.auth.uid in request.resource.data.memberIds)
+        && resource.data.memberIds
+          .hasAll(request.resource.data.memberIds)
+        && request.resource.data.memberIds.size()
+          == resource.data.memberIds.size() - 1
+        && request.resource.data.members
+          == resource.data.members - 1;
+    }
+
+    function isCrewOwnerUpdateWithoutTransfer() {
+      return signedIn()
+        && resource.data.ownerId == request.auth.uid
+
+        // 일반 크루 수정에서는 ownerId 변경 불가
+        && request.resource.data.ownerId
+          == resource.data.ownerId
+
+        // 크루장은 항상 멤버 목록에 남아 있어야 함
+        && request.auth.uid
+          in request.resource.data.memberIds
+
+        && request.resource.data.members
+          == request.resource.data.memberIds.size();
+    }
+
+    function isCrewOwnershipTransfer() {
+      return signedIn()
+        && resource.data.ownerId == request.auth.uid
+
+        && request.resource.data
+          .diff(resource.data)
+          .affectedKeys()
+          .hasOnly([
+            'ownerId',
+            'ownerNickname',
+            'deleteRequestedAt',
+            'updatedAt'
+          ])
+
+        && request.resource.data.ownerId
+          != resource.data.ownerId
+
+        // 새 크루장은 기존 멤버여야 함
+        && request.resource.data.ownerId
+          in resource.data.memberIds
+
+        // 위임할 때 멤버 구성은 변경하지 않음
+        && request.resource.data.memberIds
+          == resource.data.memberIds
+        && request.resource.data.members
+          == resource.data.members
+
+        && request.resource.data.ownerNickname is string
+
+        // 이전 크루장의 해체 대기 요청은 위임 시 취소
+        && request.resource.data.deleteRequestedAt == null;
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow create, update, delete: if isSelf(uid);
+    }
+
+    // ROOT_EXPLORE_V12D5_PUBLIC_USER_PROJECTION_STAGE_A
+    match /rootUserPublicProfiles/{uid} {
+      allow read: if signedIn();
+
+      allow create, update: if isSelf(uid)
+        && request.resource.data.keys().hasOnly([
+          'version',
+          'uid',
+          'displayName',
+          'nickname',
+          'photoURL',
+          'representativeBadgeId',
+          'updatedAt'
+        ])
+        && request.resource.data.keys().hasAll([
+          'version',
+          'uid',
+          'displayName',
+          'nickname',
+          'photoURL',
+          'representativeBadgeId',
+          'updatedAt'
+        ])
+        && request.resource.data.version == 1
+        && request.resource.data.uid == uid
+        && (
+          request.resource.data.displayName == null
+          || request.resource.data.displayName is string
+        )
+        && (
+          request.resource.data.nickname == null
+          || request.resource.data.nickname is string
+        )
+        && (
+          request.resource.data.photoURL == null
+          || request.resource.data.photoURL is string
+        )
+        && (
+          request.resource.data.representativeBadgeId == null
+          || request.resource.data.representativeBadgeId is string
+        )
+        && request.resource.data.updatedAt is string;
+
+      allow delete: if isSelf(uid);
+    }
+
+    match /crews/{crewId} {
+      allow read: if signedIn();
+
+      allow create: if signedIn()
+        && request.resource.data.ownerId == request.auth.uid
+        && request.auth.uid
+          in request.resource.data.memberIds
+        && request.resource.data.members
+          == request.resource.data.memberIds.size();
+
+      allow update: if signedIn()
+        && (
+          isCrewOwnerUpdateWithoutTransfer()
+          || isCrewOwnershipTransfer()
+          || isFreeCrewSelfJoin()
+          || isSelfLeaveCrew()
+        );
+
+      allow delete: if signedIn()
+        && resource.data.ownerId == request.auth.uid
+
+        // 다른 멤버가 남아 있으면 클라이언트에서 해체 불가
+        && resource.data.memberIds.size() == 1
+        && request.auth.uid in resource.data.memberIds
+
+        // 먼저 해체 요청이 저장되어 있어야 함
+        && resource.data.deleteRequestedAt != null;
+    }
+
+    match /crewPosts/{postId} {
+      allow read: if signedIn();
+
+      allow create: if signedIn()
+        && request.resource.data.userId == request.auth.uid;
+
+      allow update: if signedIn()
+        && (
+          (
+            resource.data.userId == request.auth.uid
+            && request.resource.data.userId
+              == resource.data.userId
+          )
+          ||
+          request.resource.data
+            .diff(resource.data)
+            .changedKeys()
+            .hasOnly([
+              'cheers',
+              'cheered',
+              'comments',
+              'updatedAt'
+            ])
+        );
+
+      allow delete: if signedIn()
+        && (
+          resource.data.userId == request.auth.uid
+          || isCrewOwner(resource.data.crewId)
+          || isCrewOwner(resource.data.sharedCrewId)
+        );
+    }
+
+    match /crewJoinRequests/{requestId} {
+      allow read: if signedIn();
+
+      allow create: if signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'pending';
+
+      allow update: if signedIn()
+        && (
+          (
+            resource.data.userId == request.auth.uid
+            && resource.data.status == 'pending'
+            && request.resource.data.status == 'cancelled'
+            && request.resource.data
+              .diff(resource.data)
+              .affectedKeys()
+              .hasOnly([
+                'status',
+                'updatedAt'
+              ])
+          )
+          ||
+          (
+            isCrewOwner(resource.data.crewId)
+            && resource.data.status == 'pending'
+            && (
+              request.resource.data.status == 'approved'
+              || request.resource.data.status == 'rejected'
+            )
+            && request.resource.data
+              .diff(resource.data)
+              .affectedKeys()
+              .hasOnly([
+                'status',
+                'updatedAt'
+              ])
+          )
+        );
+
+      allow delete: if signedIn()
+        && (
+          resource.data.userId == request.auth.uid
+          || isCrewOwner(resource.data.crewId)
+        );
+    }
+
+    match /crewReports/{reportId} {
+      allow read: if signedIn();
+
+      allow create: if signedIn()
+        && request.resource.data.reporterId == request.auth.uid;
+
+      allow update: if signedIn()
+        && isCrewOwner(resource.data.crewId)
+        && request.resource.data
+          .diff(resource.data)
+          .changedKeys()
+          .hasOnly([
+            'status',
+            'updatedAt'
+          ]);
+
+      allow delete: if signedIn()
+        && isCrewOwner(resource.data.crewId);
+    }
+
+    match /crewNotifications/{notificationId} {
+      allow read: if signedIn()
+        && resource.data.targetUserId == request.auth.uid;
+
+      allow create: if signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.targetUserId is string;
+
+      allow update: if signedIn()
+        && resource.data.targetUserId == request.auth.uid
+        && request.resource.data
+          .diff(resource.data)
+          .affectedKeys()
+          .hasOnly(['read']);
+
+      allow delete: if signedIn()
+        && (
+          resource.data.targetUserId == request.auth.uid
+
+          // 크루 해체 시 해당 크루 알림 정리
+          || isCrewOwner(resource.data.postId)
+        );
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ROOT_EXPLORE_V12D2_MERGED_MODERATION_RULES
+    // ROOT_EXPLORE_V12D1_MODERATION_RULES_FRAGMENT
+    //
+    // IMPORTANT:
+    // This is an INNER Firestore rules fragment.
+    // Do not deploy this file directly.
+    // Merge it inside:
+    // service cloud.firestore {
+    //   match /databases/{database}/documents {
+    //     ...HERE...
+    //   }
+    // }
+    //
+    // V1.2E will move privileged public writes to Cloud Functions/Admin SDK.
+    // Until then, moderator writes are protected by custom claims.
+
+    // ROOT_EXPLORE_V12D4_ROOT_MODERATOR_ONLY
+    function isRootPlaceModerator() {
+      return request.auth != null
+        && request.auth.token.rootModerator == true;
+    }
+
+    match /rootPlaceModerationInbox/{contributionId} {
+      allow create: if request.auth != null
+        && request.resource.data.contributorUid == request.auth.uid
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.moderationStatus == 'pending'
+        && request.resource.data.publicVisible == false;
+
+      allow read, update: if isRootPlaceModerator();
+      allow delete: if false;
+    }
+
+    match /rootPlaceApprovedCommunityRecords/{recordId} {
+      allow read, write: if isRootPlaceModerator();
+    }
+
+    match /rootPlacePublicCommunityDistricts/{districtId} {
+      allow read: if true;
+      allow write: if isRootPlaceModerator();
+    }
+
+    match /rootPlaceCommunityReports/{reportId} {
+      allow create: if request.auth != null
+        && request.resource.data.reporterUid == request.auth.uid
+        && request.resource.data.status == 'pending';
+
+      allow read, update: if isRootPlaceModerator();
+      allow delete: if false;
+    }
+
+    match /rootPlaceModerationAudit/{auditId} {
+      allow read, create: if isRootPlaceModerator();
+      allow update, delete: if false;
+    }
+}
+}

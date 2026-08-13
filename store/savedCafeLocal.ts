@@ -986,6 +986,27 @@ async function performSavedCafeSync(
   const expectedUid =
     scope.uid;
 
+  // ROOT_EXPLORE_V12D9_SAVED_CAFE_SELF_ONLY_PRE_READ_GUARD
+  const activeUidBeforePrivateUserRead =
+    getAuth(
+      getApp(),
+    ).currentUser?.uid ??
+    null;
+
+  if (
+    !activeUidBeforePrivateUserRead ||
+    String(
+      activeUidBeforePrivateUserRead,
+    ) !==
+      String(
+        expectedUid,
+      )
+  ) {
+    throw new Error(
+      'SAVED_CAFE_SELF_ONLY_UID_REQUIRED',
+    );
+  }
+
   const db =
     getFirestore(
       getApp(),

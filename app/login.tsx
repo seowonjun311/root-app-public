@@ -125,6 +125,31 @@ const loadServerData = async (
   uid: string,
   options: LoadServerDataOptions = {}
 ) => {
+
+  // ROOT_EXPLORE_V12D8_LOGIN_PRIVATE_USER_SELF_ONLY_GUARD
+  const activeAuthUid =
+    firebaseAuth.currentUser
+      ?.uid ??
+    null;
+
+  const requestedPrivateUid =
+    String(
+      uid ?? '',
+    ).trim();
+
+  if (
+    !activeAuthUid ||
+    !requestedPrivateUid ||
+    String(
+      activeAuthUid,
+    ) !==
+      requestedPrivateUid
+  ) {
+    throw new Error(
+      'LOGIN_PRIVATE_USER_SELF_ONLY_UID_REQUIRED',
+    );
+  }
+
   let timeoutId:
     | ReturnType<
         typeof setTimeout

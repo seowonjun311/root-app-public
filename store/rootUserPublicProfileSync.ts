@@ -239,6 +239,37 @@ export const syncOwnRootUserPublicProfileFromPrivateDocument = async (
       },
     );
 
+    // ROOT_EXPLORE_V12D8_POST_SYNC_DEVICE_DIAGNOSTIC
+    if (__DEV__) {
+      try {
+        const diagnostic =
+          await runRootUserSelfOnlyDeviceDiagnostic(
+            built.profile.uid,
+            'post-public-profile-sync',
+          );
+
+        console.log(
+          'ROOT USER SELF-ONLY DEVICE DIAGNOSTIC',
+          diagnostic,
+        );
+      }
+      catch (
+        diagnosticError
+      ) {
+        console.log(
+          'ROOT USER SELF-ONLY DEVICE DIAGNOSTIC ERROR',
+          {
+            message:
+              diagnosticError instanceof Error
+                ? diagnosticError.message
+                : String(
+                    diagnosticError,
+                  ),
+          },
+        );
+      }
+    }
+
     return built;
   }
   catch (
@@ -289,5 +320,170 @@ export const bestEffortSyncOwnRootUserPublicProfile = async (
 };
 
 // V1.2D6 activation target was V1.2D7_AFTER_STAGE_A_RELEASE.
+// ROOT_EXPLORE_V12D8_DEVICE_SELF_ONLY_DIAGNOSTICS
+export type RootUserSelfOnlyDeviceDiagnostic = {
+  ok: boolean;
+  reason: string;
+  authenticated: boolean;
+  authMatchesRequestedUid: boolean;
+  privateUserReadable: boolean;
+  publicProfileReadable: boolean;
+  publicProjectionMatchesPrivateSource: boolean;
+  unexpectedPublicFieldCount: number;
+};
+
+const ROOT_USER_PUBLIC_PROFILE_DIAGNOSTIC_FIELDS =
+  [
+    'version',
+    'uid',
+    'displayName',
+    'nickname',
+    'photoURL',
+    'representativeBadgeId',
+    'updatedAt',
+  ] as const;
+
+export const runRootUserSelfOnlyDeviceDiagnostic = async (
+  uid: string,
+  reason: string,
+): Promise<RootUserSelfOnlyDeviceDiagnostic> => {
+  const requestedUid =
+    String(
+      uid ?? '',
+    ).trim();
+
+  const authUid =
+    getAuth()
+      .currentUser
+      ?.uid ??
+    null;
+
+  if (!authUid) {
+    return {
+      ok: false,
+      reason,
+      authenticated: false,
+      authMatchesRequestedUid: false,
+      privateUserReadable: false,
+      publicProfileReadable: false,
+      publicProjectionMatchesPrivateSource: false,
+      unexpectedPublicFieldCount: 0,
+    };
+  }
+
+  if (
+    String(
+      authUid,
+    ) !==
+    requestedUid
+  ) {
+    return {
+      ok: false,
+      reason,
+      authenticated: true,
+      authMatchesRequestedUid: false,
+      privateUserReadable: false,
+      publicProfileReadable: false,
+      publicProjectionMatchesPrivateSource: false,
+      unexpectedPublicFieldCount: 0,
+    };
+  }
+
+  const privateSnapshot =
+    await getDoc(
+      doc(
+        getFirestore(),
+        'users',
+        requestedUid,
+      ),
+    );
+
+  const privateUserReadable =
+    privateSnapshot.exists();
+
+  const publicProfile =
+    await readRootUserPublicProfile(
+      requestedUid,
+    );
+
+  const publicProfileReadable =
+    Boolean(
+      publicProfile,
+    );
+
+  let publicProjectionMatchesPrivateSource =
+    false;
+
+  let unexpectedPublicFieldCount =
+    0;
+
+  if (
+    privateUserReadable &&
+    publicProfile
+  ) {
+    const expected =
+      buildRootUserPublicProfile(
+        requestedUid,
+        privateSnapshot.data() as
+          Record<
+            string,
+            unknown
+          >,
+        publicProfile.updatedAt,
+      );
+
+    publicProjectionMatchesPrivateSource =
+      expected.version ===
+        publicProfile.version &&
+      expected.uid ===
+        publicProfile.uid &&
+      expected.displayName ===
+        publicProfile.displayName &&
+      expected.nickname ===
+        publicProfile.nickname &&
+      expected.photoURL ===
+        publicProfile.photoURL &&
+      expected.representativeBadgeId ===
+        publicProfile.representativeBadgeId;
+
+    const allowed =
+      new Set<string>(
+        ROOT_USER_PUBLIC_PROFILE_DIAGNOSTIC_FIELDS,
+      );
+
+    unexpectedPublicFieldCount =
+      Object.keys(
+        publicProfile as
+          Record<
+            string,
+            unknown
+          >,
+      ).filter(
+        (
+          key,
+        ) =>
+          !allowed.has(
+            key,
+          ),
+      ).length;
+  }
+
+  return {
+    ok:
+      privateUserReadable &&
+      publicProfileReadable &&
+      publicProjectionMatchesPrivateSource &&
+      unexpectedPublicFieldCount ===
+        0,
+    reason,
+    authenticated: true,
+    authMatchesRequestedUid: true,
+    privateUserReadable,
+    publicProfileReadable,
+    publicProjectionMatchesPrivateSource,
+    unexpectedPublicFieldCount,
+  };
+};
+
 export const ROOT_USER_PUBLIC_PROFILE_SYNC_ACTIVATION =
   'V1.2D7_STAGE_A_LIVE' as const;

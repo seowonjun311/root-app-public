@@ -1,3 +1,7 @@
+import {
+  getAuth as getRootPlaceCommunityAuth,
+} from '@react-native-firebase/auth';
+
 // ROOT_EXPLORE_V12A_COMMUNITY_MEDIA_LIVE_REPORTS
 
 import {
@@ -28,6 +32,38 @@ import * as ImagePicker from 'expo-image-picker';
 import type {
   RootPlaceContributionKind,
 } from './rootExplorePlace';
+
+// ROOT_EXPLORE_V12D8_ROOT_PLACE_COMMUNITY_SELF_ONLY_GUARD
+const assertOwnRootPlaceCommunityUid = (
+  uid: unknown,
+): string => {
+  const requestedUid =
+    String(
+      uid ?? '',
+    ).trim();
+
+  const authUid =
+    getRootPlaceCommunityAuth()
+      .currentUser
+      ?.uid ??
+    null;
+
+  if (
+    !authUid ||
+    !requestedUid ||
+    String(
+      authUid,
+    ) !==
+      requestedUid
+  ) {
+    throw new Error(
+      'ROOT_PLACE_COMMUNITY_SELF_ONLY_UID_REQUIRED',
+    );
+  }
+
+  return requestedUid;
+};
+
 
 export type RootPlaceReportKind =
   Exclude<
@@ -502,9 +538,7 @@ async function persistUserContribution(
   const userDocument =
     doc(
       firebaseDb,
-      'users',
-      record.userId
-    );
+      'users', assertOwnRootPlaceCommunityUid(record.userId));
 
   const safePlaceId =
     sanitizeKey(
@@ -1521,9 +1555,7 @@ subscribeRootPlaceCommunitySnapshot({
   return onSnapshot(
     doc(
       firebaseDb,
-      'users',
-      uid
-    ),
+      'users', assertOwnRootPlaceCommunityUid(uid)),
     (
       snapshot
     ) => {

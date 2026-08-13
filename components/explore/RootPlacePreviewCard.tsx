@@ -500,6 +500,44 @@ export default function RootPlacePreviewCard({
         />
       </View>
 
+      {/* ROOT_EXPLORE_V12A_QUICK_LIVE_REPORTS */}
+      <View
+        style={
+          styles.contributionRow
+        }
+      >
+        <ContributionButton
+          icon="storefront-outline"
+          title="야외석 운영"
+          description="오늘 야장 운영 여부"
+          onPress={() =>
+            onContribution(
+              'outdoor_status'
+            )
+          }
+        />
+        <ContributionButton
+          icon="umbrella-outline"
+          title="우천 이용"
+          description="비 올 때 이용 가능 여부"
+          onPress={() =>
+            onContribution(
+              'rain_status'
+            )
+          }
+        />
+        <ContributionButton
+          icon="checkmark-circle-outline"
+          title="방문 인증"
+          description="지금 방문을 기록해요"
+          onPress={() =>
+            onContribution(
+              'visit'
+            )
+          }
+        />
+      </View>
+
       <Pressable
         onPress={
           onOpenDetail
@@ -636,7 +674,10 @@ function ContributionButton({
   icon:
     | 'camera-outline'
     | 'time-outline'
-    | 'people-outline';
+    | 'people-outline'
+    | 'storefront-outline'
+    | 'umbrella-outline'
+    | 'checkmark-circle-outline';
   title: string;
   description: string;
   onPress: () => void;

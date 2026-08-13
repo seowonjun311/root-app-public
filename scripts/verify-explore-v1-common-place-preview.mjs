@@ -62,7 +62,9 @@ for (
     '<RootPlacePreviewCard',
     'openRootPlaceDirections',
     'shareRootPlace',
-    'showRootPlaceFoundationNotice',
+    // EXPLORE_V12A_V1_VERIFIER_CONTRIBUTION_COMPAT
+    'showRootPlaceSaveFoundationNotice',
+    'handleRootPlaceContribution',
     '장소명 또는 #야장 #노포로 검색',
   ]
 ) {

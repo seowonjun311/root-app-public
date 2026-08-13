@@ -65,6 +65,16 @@ import {
   type RootPlaceContributionKind,
 } from '../../../store/rootExplorePlace';
 import RootExploreMapMarker from '../../../components/explore/RootExploreMapMarker';
+import RootPlaceContributionModal from '../../../components/explore/RootPlaceContributionModal';
+import {
+  getRootPlaceCommunityErrorMessage,
+  pickAndUploadRootPlaceMedia,
+  saveRootPlaceReport,
+  type RootPlaceReportKind,
+  type RootPlaceReportSelection,
+} from '../../../store/rootPlaceCommunity';
+
+// ROOT_EXPLORE_V12A_COMMUNITY_INTEGRATION
 import {
   buildRootExploreMapRenderItems,
   getRootExploreMapMarkerMode,
@@ -891,6 +901,22 @@ export default function DistrictMapScreen() {
   ] = useState<PlaceFilter>(
     'all'
   );
+  const [
+    rootPlaceReportDraft,
+    setRootPlaceReportDraft,
+  ] = useState<{
+    place: any;
+    kind:
+      RootPlaceReportKind;
+  } | null>(
+    null
+  );
+
+  const [
+    rootPlaceCommunityBusy,
+    setRootPlaceCommunityBusy,
+  ] = useState(false);
+
   const [
     selectedThemeFilter,
     setSelectedThemeFilter,
@@ -1944,36 +1970,162 @@ export default function DistrictMapScreen() {
       [districtName]
     );
 
-  const showRootPlaceFoundationNotice =
+  const showRootPlaceSaveFoundationNotice =
     useCallback(
-      (
-        kind:
-          RootPlaceContributionKind |
-          'save'
-      ) => {
-        const labels = {
-          save:
-            '장소 저장',
-          photo:
-            '사진 추가',
-          business_hours:
-            '영업시간 제보',
-          waiting:
-            '웨이팅 현황 제보',
-          outdoor_status:
-            '야외석 운영 제보',
-          visit:
-            '방문 인증',
-          correction:
-            '후기·정보 제보',
-        } as const;
-
+      () => {
         Alert.alert(
-          labels[kind],
-          'ROOT 공통 장소·사진·제보 기반을 먼저 연결했어요. 실제 저장/업로드는 다음 단계에서 Firestore와 연결합니다.'
+          '장소 저장',
+          '장소 저장은 기존 ROOT 저장 장소 시스템과 연결하는 단계에서 통합할 예정이에요.'
         );
       },
       []
+    );
+
+  const showRootPlaceCommunityError =
+    useCallback(
+      (
+        title: string,
+        error: unknown
+      ) => {
+        console.log(
+          'ROOT PLACE COMMUNITY ERROR',
+          error
+        );
+
+        Alert.alert(
+          title,
+          getRootPlaceCommunityErrorMessage(
+            error
+          )
+        );
+      },
+      []
+    );
+
+  const handleRootPlaceContribution =
+    useCallback(
+      async (
+        place: any,
+        kind:
+          RootPlaceContributionKind
+      ) => {
+        if (
+          rootPlaceCommunityBusy
+        ) {
+          return;
+        }
+
+        if (
+          kind ===
+          'photo'
+        ) {
+          try {
+            setRootPlaceCommunityBusy(
+              true
+            );
+
+            const result =
+              await pickAndUploadRootPlaceMedia(
+                place
+              );
+
+            if (
+              result.canceled
+            ) {
+              return;
+            }
+
+            const mediaType =
+              result
+                .record
+                .media
+                ?.mediaType;
+
+            Alert.alert(
+              mediaType ===
+                'video'
+                ? '동영상 업로드 완료'
+                : '사진 업로드 완료',
+              '검수 대기 상태로 저장했어요. V1.2B에서 최근 현장사진을 지도 마커와 장소 카드에 바로 반영합니다.'
+            );
+          } catch (error) {
+            showRootPlaceCommunityError(
+              '미디어 업로드 실패',
+              error
+            );
+          } finally {
+            setRootPlaceCommunityBusy(
+              false
+            );
+          }
+
+          return;
+        }
+
+        setRootPlaceReportDraft({
+          place,
+          kind,
+        });
+      },
+      [
+        rootPlaceCommunityBusy,
+        showRootPlaceCommunityError,
+      ]
+    );
+
+  const submitRootPlaceReport =
+    useCallback(
+      async (
+        selection:
+          RootPlaceReportSelection
+      ) => {
+        const draft =
+          rootPlaceReportDraft;
+
+        if (
+          !draft ||
+          rootPlaceCommunityBusy
+        ) {
+          return;
+        }
+
+        try {
+          setRootPlaceCommunityBusy(
+            true
+          );
+
+          await saveRootPlaceReport({
+            place:
+              draft.place,
+            kind:
+              draft.kind,
+            selection,
+          });
+
+          setRootPlaceReportDraft(
+            null
+          );
+
+          Alert.alert(
+            '제보 저장 완료',
+            '현장 정보를 검수 대기 상태로 저장했어요. 장소의 공식 정보는 즉시 덮어쓰지 않습니다.'
+          );
+        } catch (error) {
+          showRootPlaceCommunityError(
+            '제보 저장 실패',
+            error
+          );
+        } finally {
+          setRootPlaceCommunityBusy(
+            false
+          );
+        }
+      },
+      [
+        rootPlaceCommunityBusy,
+        rootPlaceReportDraft,
+        showRootPlaceCommunityError,
+      ]
     );
 
   const focusPlace =
@@ -3093,10 +3245,8 @@ export default function DistrictMapScreen() {
                 )
               )
             }
-            onSave={() =>
-              showRootPlaceFoundationNotice(
-                'save'
-              )
+            onSave={
+              showRootPlaceSaveFoundationNotice
             }
             onDirections={() =>
               void openRootPlaceDirections(
@@ -3111,12 +3261,52 @@ export default function DistrictMapScreen() {
             onContribution={(
               kind
             ) =>
-              showRootPlaceFoundationNotice(
+              void handleRootPlaceContribution(
+                selectedPlace,
                 kind
               )
             }
           />
         ) : null}
+
+        <RootPlaceContributionModal
+          visible={
+            rootPlaceReportDraft !==
+            null
+          }
+          placeName={
+            String(
+              rootPlaceReportDraft
+                ?.place
+                ?.name ??
+                'ROOT 탐험 장소'
+            )
+          }
+          kind={
+            rootPlaceReportDraft
+              ?.kind ??
+            'correction'
+          }
+          submitting={
+            rootPlaceCommunityBusy
+          }
+          onClose={() => {
+            if (
+              !rootPlaceCommunityBusy
+            ) {
+              setRootPlaceReportDraft(
+                null
+              );
+            }
+          }}
+          onSubmit={(
+            selection
+          ) =>
+            void submitRootPlaceReport(
+              selection
+            )
+          }
+        />
 
         {contentMode ===
           'events' &&

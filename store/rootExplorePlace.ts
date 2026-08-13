@@ -13,6 +13,8 @@ export type RootPlaceContributionKind =
   | 'business_hours'
   | 'waiting'
   | 'outdoor_status'
+  // ROOT_EXPLORE_V12A_RAIN_STATUS_KIND
+  | 'rain_status'
   | 'visit'
   | 'correction';
 

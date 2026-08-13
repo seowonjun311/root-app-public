@@ -18,6 +18,8 @@ import {
   ActivityIndicator,
   Alert,
   Linking,
+  Share,
+  TextInput,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -53,6 +55,17 @@ import {
     type SeoulCultureContentType,
     type SeoulCultureEvent,
 } from '../../../store/seoulCultureEvents';
+
+import RootPlacePreviewCard from '../../../components/explore/RootPlacePreviewCard';
+import {
+  ROOT_EXPLORE_THEME_OPTIONS,
+  matchesRootExploreQuery,
+  matchesRootExploreTheme,
+  type RootExploreTheme,
+  type RootPlaceContributionKind,
+} from '../../../store/rootExplorePlace';
+
+// ROOT_EXPLORE_V1_COMMON_PLACE_DISTRICT_INTEGRATION
 
 type PlaceFilter =
   | 'all'
@@ -872,6 +885,18 @@ export default function DistrictMapScreen() {
   ] = useState<PlaceFilter>(
     'all'
   );
+  const [
+    selectedThemeFilter,
+    setSelectedThemeFilter,
+  ] = useState<RootExploreTheme>(
+    'all'
+  );
+
+  const [
+    placeSearchQuery,
+    setPlaceSearchQuery,
+  ] = useState('');
+
 
   const [
     eventTypeFilter,
@@ -962,6 +987,51 @@ export default function DistrictMapScreen() {
         '지역'
     ).trim() || '지역';
 
+  const matchesCurrentRootPlaceFilters =
+    useCallback(
+      (place: any) => {
+        const completed =
+          completedPlaceIds.includes(
+            String(
+              place?.id ?? ''
+            )
+          );
+
+        if (
+          selectedFilter ===
+          'visited' &&
+          !completed
+        ) {
+          return false;
+        }
+
+        if (
+          selectedFilter ===
+          'unvisited' &&
+          completed
+        ) {
+          return false;
+        }
+
+        return (
+          matchesRootExploreQuery(
+            place,
+            placeSearchQuery
+          ) &&
+          matchesRootExploreTheme(
+            place,
+            selectedThemeFilter
+          )
+        );
+      },
+      [
+        completedPlaceIds,
+        placeSearchQuery,
+        selectedFilter,
+        selectedThemeFilter,
+      ]
+    );
+
   const placesWithCoordinates =
     useMemo<PlaceWithCoordinate[]>(
       () =>
@@ -975,16 +1045,25 @@ export default function DistrictMapScreen() {
 
   const markerItems = useMemo(
     () =>
-      placesWithCoordinates.filter(
-        (
-          item
-        ): item is {
-          place: any;
-          coordinate: LatLng;
-        } =>
-          item.coordinate !== null
-      ),
-    [placesWithCoordinates]
+      placesWithCoordinates
+        .filter(
+          (
+            item
+          ): item is {
+            place: any;
+            coordinate: LatLng;
+          } =>
+            item.coordinate !== null
+        )
+        .filter(({ place }) =>
+          matchesCurrentRootPlaceFilters(
+            place
+          )
+        ),
+    [
+      matchesCurrentRootPlaceFilters,
+      placesWithCoordinates,
+    ]
   );
 
   const districtEvents = useMemo(
@@ -1129,32 +1208,12 @@ export default function DistrictMapScreen() {
   const filteredPlaces =
     useMemo(
       () =>
-        places.filter((place) => {
-          const completed =
-            completedPlaceIds.includes(
-              String(place?.id ?? '')
-            );
-
-          if (
-            selectedFilter ===
-            'visited'
-          ) {
-            return completed;
-          }
-
-          if (
-            selectedFilter ===
-            'unvisited'
-          ) {
-            return !completed;
-          }
-
-          return true;
-        }),
+        places.filter(
+          matchesCurrentRootPlaceFilters
+        ),
       [
-        completedPlaceIds,
+        matchesCurrentRootPlaceFilters,
         places,
-        selectedFilter,
       ]
     );
 
@@ -1723,6 +1782,112 @@ export default function DistrictMapScreen() {
     eventMarkerItems.length,
     facilityMarkerItems.length,
   ]);
+
+  const openRootPlaceDirections =
+    useCallback(
+      async (place: any) => {
+        const coordinate =
+          getPlaceCoordinate(
+            place
+          );
+
+        if (!coordinate) {
+          Alert.alert(
+            '길찾기',
+            '아직 이 장소의 지도 좌표가 준비되지 않았어요.'
+          );
+          return;
+        }
+
+        const url =
+          'https://www.google.com/maps/search/?api=1&query=' +
+          coordinate.latitude +
+          ',' +
+          coordinate.longitude;
+
+        try {
+          await Linking.openURL(
+            url
+          );
+        } catch (error) {
+          console.log(
+            'ROOT PLACE DIRECTIONS OPEN ERROR',
+            error
+          );
+
+          Alert.alert(
+            '길찾기',
+            '지도 앱을 열지 못했어요.'
+          );
+        }
+      },
+      []
+    );
+
+  const shareRootPlace =
+    useCallback(
+      async (place: any) => {
+        const name =
+          String(
+            place?.name ??
+              'ROOT 탐험 장소'
+          ).trim();
+
+        const location =
+          getPlaceLocationText(
+            place,
+            districtName
+          );
+
+        try {
+          await Share.share({
+            message:
+              name +
+              '\n' +
+              location +
+              '\nROOT에서 발견한 탐험 장소예요.',
+          });
+        } catch (error) {
+          console.log(
+            'ROOT PLACE SHARE ERROR',
+            error
+          );
+        }
+      },
+      [districtName]
+    );
+
+  const showRootPlaceFoundationNotice =
+    useCallback(
+      (
+        kind:
+          RootPlaceContributionKind |
+          'save'
+      ) => {
+        const labels = {
+          save:
+            '장소 저장',
+          photo:
+            '사진 추가',
+          business_hours:
+            '영업시간 제보',
+          waiting:
+            '웨이팅 현황 제보',
+          outdoor_status:
+            '야외석 운영 제보',
+          visit:
+            '방문 인증',
+          correction:
+            '후기·정보 제보',
+        } as const;
+
+        Alert.alert(
+          labels[kind],
+          'ROOT 공통 장소·사진·제보 기반을 먼저 연결했어요. 실제 저장/업로드는 다음 단계에서 Firestore와 연결합니다.'
+        );
+      },
+      []
+    );
 
   const focusPlace =
     useCallback(
@@ -2813,8 +2978,14 @@ export default function DistrictMapScreen() {
         {contentMode ===
           'places' &&
         selectedPlace ? (
-          <Pressable
-            onPress={() =>
+          <RootPlacePreviewCard
+            place={
+              selectedPlace
+            }
+            districtName={
+              districtName
+            }
+            onOpenDetail={() =>
               openPlaceDetail(
                 String(
                   selectedPlace?.id ??
@@ -2822,98 +2993,29 @@ export default function DistrictMapScreen() {
                 )
               )
             }
-            style={({ pressed }) => [
-              styles.selectedItemCard,
-              {
-                backgroundColor:
-                  theme.card,
-                borderColor:
-                  theme.strongLine ??
-                  theme.line,
-                borderRadius:
-                  isCityBlack
-                    ? 3
-                    : 14,
-                opacity: pressed
-                  ? 0.65
-                  : 1,
-              },
-            ]}
-          >
-            <View
-              style={[
-                styles.selectedItemIconBox,
-                {
-                  backgroundColor:
-                    theme.background,
-                  borderRadius:
-                    isCityBlack
-                      ? 2
-                      : 10,
-                },
-              ]}
-            >
-              <Text
-                style={
-                  styles.selectedItemIcon
-                }
-              >
-                {String(
-                  selectedPlace?.icon ??
-                    '📍'
-                )}
-              </Text>
-            </View>
-
-            <View
-              style={
-                styles.selectedItemContent
-              }
-            >
-              <Text
-                numberOfLines={1}
-                style={[
-                  styles.selectedItemName,
-                  {
-                    color:
-                      theme.text,
-                  },
-                ]}
-              >
-                {String(
-                  selectedPlace?.name ??
-                    '탐험 장소'
-                )}
-              </Text>
-
-              <Text
-                numberOfLines={1}
-                style={[
-                  styles.selectedItemMeta,
-                  {
-                    color:
-                      theme.subText,
-                  },
-                ]}
-              >
-                {getPlaceMetaText(
-                  selectedPlace
-                ) ||
-                  getPlaceLocationText(
-                    selectedPlace,
-                    districtName
-                  )}
-              </Text>
-            </View>
-
-            <Ionicons
-              name="chevron-forward"
-              size={18}
-              color={
-                theme.subText
-              }
-            />
-          </Pressable>
+            onSave={() =>
+              showRootPlaceFoundationNotice(
+                'save'
+              )
+            }
+            onDirections={() =>
+              void openRootPlaceDirections(
+                selectedPlace
+              )
+            }
+            onShare={() =>
+              void shareRootPlace(
+                selectedPlace
+              )
+            }
+            onContribution={(
+              kind
+            ) =>
+              showRootPlaceFoundationNotice(
+                kind
+              )
+            }
+          />
         ) : null}
 
         {contentMode ===
@@ -3108,6 +3210,172 @@ export default function DistrictMapScreen() {
         {contentMode ===
         'places' ? (
           <>
+            <View
+              style={[
+                styles.rootPlaceSearchBar,
+                {
+                  backgroundColor:
+                    theme.card,
+                  borderColor:
+                    theme.line,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 14,
+                },
+              ]}
+            >
+              <Ionicons
+                name="search-outline"
+                size={17}
+                color={
+                  theme.subText
+                }
+              />
+              <TextInput
+                value={
+                  placeSearchQuery
+                }
+                onChangeText={(
+                  value
+                ) => {
+                  setPlaceSearchQuery(
+                    value
+                  );
+                  setSelectedPlaceId(
+                    null
+                  );
+                }}
+                placeholder="장소명 또는 #야장 #노포로 검색"
+                placeholderTextColor={
+                  theme.subText
+                }
+                autoCorrect={false}
+                autoCapitalize="none"
+                returnKeyType="search"
+                style={[
+                  styles.rootPlaceSearchInput,
+                  {
+                    color:
+                      theme.text,
+                  },
+                ]}
+              />
+              {placeSearchQuery ? (
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="장소 검색어 지우기"
+                  onPress={() => {
+                    setPlaceSearchQuery(
+                      ''
+                    );
+                    setSelectedPlaceId(
+                      null
+                    );
+                  }}
+                  hitSlop={8}
+                  style={({
+                    pressed,
+                  }) => ({
+                    opacity:
+                      pressed
+                        ? 0.55
+                        : 1,
+                  })}
+                >
+                  <Ionicons
+                    name="close-circle"
+                    size={18}
+                    color={
+                      theme.subText
+                    }
+                  />
+                </Pressable>
+              ) : null}
+            </View>
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={
+                false
+              }
+              contentContainerStyle={
+                styles.rootThemeFilterRow
+              }
+            >
+              {ROOT_EXPLORE_THEME_OPTIONS.map(
+                (option) => {
+                  const selected =
+                    selectedThemeFilter ===
+                    option.id;
+
+                  return (
+                    <Pressable
+                      key={
+                        option.id
+                      }
+                      onPress={() => {
+                        setSelectedThemeFilter(
+                          option.id
+                        );
+                        setSelectedPlaceId(
+                          null
+                        );
+                      }}
+                      style={({ pressed }) => [
+                        styles.rootThemeFilterChip,
+                        {
+                          backgroundColor:
+                            selected
+                              ? '#A96813'
+                              : theme.card,
+                          borderColor:
+                            selected
+                              ? '#A96813'
+                              : theme.line,
+                          borderRadius:
+                            isCityBlack
+                              ? 2
+                              : 999,
+                          opacity:
+                            pressed
+                              ? 0.62
+                              : 1,
+                        },
+                      ]}
+                    >
+                      <Ionicons
+                        name={
+                          option.icon
+                        }
+                        size={14}
+                        color={
+                          selected
+                            ? '#FFFFFF'
+                            : theme.text
+                        }
+                      />
+                      <Text
+                        style={[
+                          styles.rootThemeFilterChipText,
+                          {
+                            color:
+                              selected
+                                ? '#FFFFFF'
+                                : theme.text,
+                          },
+                        ]}
+                      >
+                        {
+                          option.label
+                        }
+                      </Text>
+                    </Pressable>
+                  );
+                }
+              )}
+            </ScrollView>
+
             <View
               style={
                 styles.filterRow
@@ -4791,6 +5059,48 @@ const styles =
     selectedItemMeta: {
       marginTop: 4,
       fontSize: 10,
+    },
+
+    rootPlaceSearchBar: {
+      marginTop: 12,
+      minHeight: 44,
+      paddingHorizontal: 12,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
+
+    rootPlaceSearchInput: {
+      flex: 1,
+      minWidth: 0,
+      paddingVertical: 0,
+      fontSize: 11,
+      fontWeight: '700',
+    },
+
+    rootThemeFilterRow: {
+      marginTop: 9,
+      paddingRight: 8,
+      gap: 7,
+      alignItems: 'center',
+    },
+
+    rootThemeFilterChip: {
+      minHeight: 34,
+      paddingHorizontal: 11,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 5,
+    },
+
+    rootThemeFilterChipText: {
+      fontSize: 9.5,
+      fontWeight: '900',
     },
 
     filterRow: {

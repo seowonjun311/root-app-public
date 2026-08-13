@@ -215,6 +215,33 @@ import {
   emitCharacterMicroDialogue,
 } from '../../store/characterMicroDialogue';
 
+import {
+  getRootCloudUidOrNull,
+} from '../../store/rootCloudSession';
+
+// ROOT_EXPLORE_V12D91A_HOME_EFFECTIVE_FIREBASE_USER_BOUNDARY
+function getRootEffectiveHomeFirebaseUser() {
+  const cloudUid =
+    getRootCloudUidOrNull();
+
+  if (!cloudUid) {
+    return null;
+  }
+
+  const firebaseUser =
+    firebaseAuth.currentUser;
+
+  if (
+    !firebaseUser?.uid ||
+    firebaseUser.uid !==
+      cloudUid
+  ) {
+    return null;
+  }
+
+  return firebaseUser;
+}
+
 const firebaseApp =
   getApp();
 
@@ -4295,7 +4322,7 @@ useFocusEffect(
             {};
 
           const currentUser =
-           firebaseAuth.currentUser;
+           getRootEffectiveHomeFirebaseUser();
 
           const nextRootData = {
             ...currentRootData,
@@ -4357,13 +4384,13 @@ useFocusEffect(
           | null
       ) => {
         const currentUser =
-          firebaseAuth.currentUser;
+          getRootEffectiveHomeFirebaseUser();
 
         if (
           !currentUser?.uid
         ) {
           console.log(
-            'HOME EXPLORATION MAIN BADGE SERVER SKIPPED: NO USER'
+            'HOME EXPLORATION MAIN BADGE SERVER SKIPPED: ROOT GUEST OR NO CLOUD USER'
           );
 
           return;
@@ -6534,7 +6561,7 @@ const isExerciseGoal =
     {};
 
   const currentUser =
-    firebaseAuth.currentUser;
+    getRootEffectiveHomeFirebaseUser();
 
   const currentActionGoals =
     currentData?.actionGoals ??
@@ -8236,7 +8263,7 @@ const saveRootData = async (
   next: any
 ) => {
   const currentUser =
-    firebaseAuth.currentUser;
+    getRootEffectiveHomeFirebaseUser();
 
   /*
    * 탐험 탭에서 선택한 대표 뱃지를
@@ -9846,7 +9873,7 @@ top:
         pathname: '/friend-village',
         params: {
           userId:
-            firebaseAuth.currentUser?.uid ?? '',
+            getRootEffectiveHomeFirebaseUser()?.uid ?? '',
           nickname:
             onboardingData?.nickname ?? '루트워커',
           profileEmoji: '🦊',

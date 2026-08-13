@@ -69,6 +69,9 @@ import {
   migrateGuestCharacterBundleToAuthenticatedUserIfEmpty,
 } from '../store/characterCloudSync';
 
+import {
+  getAuthenticatedCharacterAccountScopeSnapshot,
+} from '../store/characterAccountScope';
 const firebaseApp =
   getApp();
 
@@ -2136,8 +2139,11 @@ const result =
         guestCharacterScopeBeforeGoogleLogin
       ) {
         try {
+          // ROOT_EXPLORE_V12D91A_EXPLICIT_AUTHENTICATED_HANDOFF_SCOPE
           const authenticatedCharacterScope =
-            refreshCharacterAccountScope();
+            getAuthenticatedCharacterAccountScopeSnapshot(
+              user.uid
+            );
 
           const migratedCharacterState =
             await migrateGuestCharacterBundleToAuthenticatedUserIfEmpty(

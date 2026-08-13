@@ -1,7 +1,3 @@
-import {
-  getAuth as getRootPlaceCommunityAuth,
-} from '@react-native-firebase/auth';
-
 // ROOT_EXPLORE_V12A_COMMUNITY_MEDIA_LIVE_REPORTS
 
 import {
@@ -33,6 +29,33 @@ import type {
   RootPlaceContributionKind,
 } from './rootExplorePlace';
 
+import {
+  getRootCloudUidOrNull,
+} from './rootCloudSession';
+
+// ROOT_EXPLORE_V12D91A_PLACE_COMMUNITY_EFFECTIVE_FIREBASE_USER_BOUNDARY
+function getRootEffectivePlaceCommunityFirebaseUser() {
+  const cloudUid =
+    getRootCloudUidOrNull();
+
+  if (!cloudUid) {
+    return null;
+  }
+
+  const firebaseUser =
+    firebaseAuth.currentUser;
+
+  if (
+    !firebaseUser?.uid ||
+    firebaseUser.uid !==
+      cloudUid
+  ) {
+    return null;
+  }
+
+  return firebaseUser;
+}
+
 // ROOT_EXPLORE_V12D8_ROOT_PLACE_COMMUNITY_SELF_ONLY_GUARD
 const assertOwnRootPlaceCommunityUid = (
   uid: unknown,
@@ -42,11 +65,9 @@ const assertOwnRootPlaceCommunityUid = (
       uid ?? '',
     ).trim();
 
+  // ROOT_EXPLORE_V12D91A_PLACE_COMMUNITY_GUEST_CLOUD_BOUNDARY
   const authUid =
-    getRootPlaceCommunityAuth()
-      .currentUser
-      ?.uid ??
-    null;
+    getRootCloudUidOrNull();
 
   if (
     !authUid ||
@@ -171,7 +192,7 @@ function sanitizeKey(
 
 function getRequiredUser() {
   const user =
-    firebaseAuth.currentUser;
+    getRootEffectivePlaceCommunityFirebaseUser();
 
   if (!user?.uid) {
     const error =
@@ -1537,7 +1558,7 @@ subscribeRootPlaceCommunitySnapshot({
     ) => void;
 }) {
   const user =
-    firebaseAuth.currentUser;
+    getRootEffectivePlaceCommunityFirebaseUser();
 
   if (
     !user?.uid

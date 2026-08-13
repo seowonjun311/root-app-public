@@ -48,8 +48,44 @@ function normalizeIdentityPart(
 }
 
 // CHARACTER_V98A_ACCOUNT_SCOPE_IDENTITY
+// CHARACTER_V98A_ACCOUNT_SCOPE_IDENTITY
+// ROOT_EXPLORE_V12D91A_CHARACTER_GUEST_PRECEDENCE
 export function getCharacterAccountScopeSnapshot():
   CharacterAccountScopeSnapshot {
+  const rootData =
+    getRootOnboardingData();
+
+  const rootIsGuest =
+    rootData?.loginType ===
+      'guest' ||
+    rootData?.isGuest ===
+      true;
+
+  if (rootIsGuest) {
+    const guestId =
+      normalizeIdentityPart(
+        rootData?.guestId
+      ) ??
+      'legacy_guest';
+
+    const scopeId =
+      'guest_' +
+      guestId;
+
+    return {
+      kind:
+        'guest',
+      scopeId,
+      storagePrefix:
+        STORAGE_NAMESPACE +
+        ':' +
+        scopeId,
+      cloudUid:
+        null,
+      guestId,
+    };
+  }
+
   const firebaseUid =
     normalizeIdentityPart(
       auth()
@@ -80,13 +116,9 @@ export function getCharacterAccountScopeSnapshot():
     };
   }
 
-  const rootData =
-    getRootOnboardingData();
-
   const guestId =
     normalizeIdentityPart(
-      rootData
-        ?.guestId
+      rootData?.guestId
     ) ??
     'legacy_guest';
 
@@ -105,6 +137,60 @@ export function getCharacterAccountScopeSnapshot():
     cloudUid:
       null,
     guestId,
+  };
+}
+
+// ROOT_EXPLORE_V12D91A_EXPLICIT_AUTHENTICATED_CHARACTER_SCOPE
+export function getAuthenticatedCharacterAccountScopeSnapshot(
+  expectedUid?:
+    string |
+    null
+): CharacterAccountScopeSnapshot {
+  const activeUid =
+    normalizeIdentityPart(
+      auth()
+        .currentUser
+        ?.uid
+    );
+
+  const requestedUid =
+    normalizeIdentityPart(
+      expectedUid
+    );
+
+  const uid =
+    requestedUid ??
+    activeUid;
+
+  if (
+    uid ===
+      null ||
+    activeUid ===
+      null ||
+    uid !==
+      activeUid
+  ) {
+    throw new Error(
+      'CHARACTER_AUTHENTICATED_SCOPE_UID_MISMATCH'
+    );
+  }
+
+  const scopeId =
+    'uid_' +
+    uid;
+
+  return {
+    kind:
+      'user',
+    scopeId,
+    storagePrefix:
+      STORAGE_NAMESPACE +
+      ':' +
+      scopeId,
+    cloudUid:
+      uid,
+    guestId:
+      null,
   };
 }
 

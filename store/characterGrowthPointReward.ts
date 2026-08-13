@@ -12,6 +12,33 @@ import {
   type CharacterGrowthLevel,
 } from '../constants/characterProgression';
 
+import {
+  getRootCloudUidOrNull,
+} from './rootCloudSession';
+
+// ROOT_EXPLORE_V12D91A_CHARACTER_GROWTH_EFFECTIVE_FIREBASE_USER_BOUNDARY
+function getRootEffectiveCharacterGrowthFirebaseUser() {
+  const cloudUid =
+    getRootCloudUidOrNull();
+
+  if (!cloudUid) {
+    return null;
+  }
+
+  const firebaseUser =
+    auth().currentUser;
+
+  if (
+    !firebaseUser?.uid ||
+    firebaseUser.uid !==
+      cloudUid
+  ) {
+    return null;
+  }
+
+  return firebaseUser;
+}
+
 const REWARD_LEDGER_FIELD =
   'characterGrowthRewardGrantIds';
 
@@ -188,8 +215,7 @@ async function grantInternal(
     );
 
   const currentUser =
-    auth()
-      .currentUser;
+    getRootEffectiveCharacterGrowthFirebaseUser();
 
   // Guest users use the same rootData.testPoints adjustment as Home shop
   // purchase/refund logic, with a persistent local idempotency ledger.

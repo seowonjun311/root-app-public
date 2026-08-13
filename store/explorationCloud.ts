@@ -27,6 +27,33 @@ import {
   type ExplorationRewardDefinition,
 } from './explorationCatalog';
 
+import {
+  getRootCloudUidOrNull,
+} from './rootCloudSession';
+
+// ROOT_EXPLORE_V12D91A_EXPLORATION_EFFECTIVE_FIREBASE_USER_BOUNDARY
+function getRootEffectiveExplorationFirebaseUser() {
+  const cloudUid =
+    getRootCloudUidOrNull();
+
+  if (!cloudUid) {
+    return null;
+  }
+
+  const firebaseUser =
+    firebaseAuth.currentUser;
+
+  if (
+    !firebaseUser?.uid ||
+    firebaseUser.uid !==
+      cloudUid
+  ) {
+    return null;
+  }
+
+  return firebaseUser;
+}
+
 const firebaseApp =
   getApp();
 
@@ -898,7 +925,7 @@ const persistLocalExplorationData = async (
   await readCurrentRootData();
 
 const currentUser =
-  firebaseAuth.currentUser;
+  getRootEffectiveExplorationFirebaseUser();
 
   await saveRootOnboardingData({
     ...currentRootData,
@@ -1001,7 +1028,7 @@ export const loadLocalExplorationData = async (): Promise<
     });
 
   const currentUid =
-    firebaseAuth.currentUser?.uid ??
+    getRootEffectiveExplorationFirebaseUser()?.uid ??
     null;
 
   const canUseFastPath =
@@ -1083,8 +1110,7 @@ const checkAuthUid =
       null
   ) => {
     const currentUid =
-      firebaseAuth
-        .currentUser
+      getRootEffectiveExplorationFirebaseUser()
         ?.uid ??
       null;
 
@@ -1207,7 +1233,7 @@ const getExplorationRestDocumentUrl = (
 
 const getExplorationRestIdToken = async () => {
   const currentUser =
-    firebaseAuth.currentUser;
+    getRootEffectiveExplorationFirebaseUser();
 
   if (!currentUser?.uid) {
     throw createExplorationError(
@@ -2197,11 +2223,11 @@ export const syncExplorationDataConfirmed = async (): Promise<
   await loadLocalExplorationData();
 
 const currentUser =
-  firebaseAuth.currentUser;
+  getRootEffectiveExplorationFirebaseUser();
 
   if (!currentUser?.uid) {
     console.log(
-      'EXPLORATION SYNC LOCAL ONLY: NO GOOGLE USER'
+      'EXPLORATION SYNC LOCAL ONLY: ROOT GUEST OR NO CLOUD USER'
     );
     return localData;
   }
@@ -2525,10 +2551,10 @@ const confirmJournalMutation = async (
   label: string
 ) => {
   const currentUser =
-  firebaseAuth.currentUser;
+  getRootEffectiveExplorationFirebaseUser();
 
   if (!currentUser?.uid) {
-    console.log(`${label} SERVER SKIPPED: LOCAL USER`);
+    console.log(`${label} SERVER SKIPPED: ROOT GUEST OR NO CLOUD USER`);
     return saved;
   }
 

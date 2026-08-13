@@ -25,6 +25,33 @@ import {
 } from '../store/rootMemory';
 import { useRootTheme } from '../store/rootTheme';
 
+import {
+  getRootCloudUidOrNull,
+} from '../store/rootCloudSession';
+
+// ROOT_EXPLORE_V12D91A_ACTION_GOAL_EFFECTIVE_FIREBASE_USER_BOUNDARY
+function getRootEffectiveActionGoalFirebaseUser() {
+  const cloudUid =
+    getRootCloudUidOrNull();
+
+  if (!cloudUid) {
+    return null;
+  }
+
+  const firebaseUser =
+    auth().currentUser;
+
+  if (
+    !firebaseUser?.uid ||
+    firebaseUser.uid !==
+      cloudUid
+  ) {
+    return null;
+  }
+
+  return firebaseUser;
+}
+
 type CategoryId =
   | 'exercise'
   | 'study'
@@ -507,7 +534,7 @@ const safeNextData = JSON.parse(
 );
 
 const uid =
-auth().currentUser?.uid ??
+getRootEffectiveActionGoalFirebaseUser()?.uid ??
   previousData?.uid;
 
 const shouldSaveToServer =

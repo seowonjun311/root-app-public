@@ -19,6 +19,33 @@ import {
 
 import { getRootOnboardingData } from './rootMemory';
 
+import {
+  getRootCloudUidOrNull,
+} from './rootCloudSession';
+
+// ROOT_EXPLORE_V12D91A_DAILY_EFFECTIVE_FIREBASE_USER_BOUNDARY
+function getRootEffectiveDailyFirebaseUser() {
+  const cloudUid =
+    getRootCloudUidOrNull();
+
+  if (!cloudUid) {
+    return null;
+  }
+
+  const firebaseUser =
+    getAuth(getApp()).currentUser;
+
+  if (
+    !firebaseUser?.uid ||
+    firebaseUser.uid !==
+      cloudUid
+  ) {
+    return null;
+  }
+
+  return firebaseUser;
+}
+
 const DAILY_STORAGE_KEYS = {
   timeRecords:
     'daily_time_records_v1',
@@ -328,9 +355,7 @@ async function writeDailyDataWithRest({
     string;
 }) {
   const currentUser =
-  getAuth(
-    getApp()
-  ).currentUser;
+  getRootEffectiveDailyFirebaseUser();
 
   if (
     !currentUser?.uid
@@ -647,9 +672,7 @@ async function performDailySync(): Promise<
   );
 
   const currentUser =
-  getAuth(
-    getApp()
-  ).currentUser;
+  getRootEffectiveDailyFirebaseUser();
 
   const rootData =
     getRootOnboardingData();

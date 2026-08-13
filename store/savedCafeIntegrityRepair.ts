@@ -37,6 +37,33 @@ import {
   type SavedCafeVisitState,
 } from './savedCafeVisits';
 
+import {
+  getRootCloudUidOrNull,
+} from './rootCloudSession';
+
+// ROOT_EXPLORE_V12D91A_SAVED_CAFE_INTEGRITY_EFFECTIVE_FIREBASE_USER_BOUNDARY
+function getRootEffectiveSavedCafeIntegrityFirebaseUser() {
+  const cloudUid =
+    getRootCloudUidOrNull();
+
+  if (!cloudUid) {
+    return null;
+  }
+
+  const firebaseUser =
+    getAuth(getApp()).currentUser;
+
+  if (
+    !firebaseUser?.uid ||
+    firebaseUser.uid !==
+      cloudUid
+  ) {
+    return null;
+  }
+
+  return firebaseUser;
+}
+
 // SAVED_CAFE_V52_INTEGRITY_REPAIR
 
 const BACKUP_VERSION = 1;
@@ -141,9 +168,7 @@ function nowIso() {
 
 function getBackupScopeKey() {
   const uid =
-    getAuth(
-      getApp(),
-    ).currentUser?.uid ??
+    getRootEffectiveSavedCafeIntegrityFirebaseUser()?.uid ??
     null;
 
   return `${BACKUP_KEY_PREFIX}${

@@ -125,8 +125,23 @@ let persistedEarnedBadgeOwnerId:
   | null = null;
 let persistedEarnedBadgeIds: string[] = [];
 
+// ROOT_EXPLORE_V12D91A_ROOT_MEMORY_GUEST_CLOUD_BOUNDARY
+function getRootEffectiveCloudUser() {
+  const rootIsGuest =
+    onboardingData?.loginType ===
+      'guest' ||
+    onboardingData?.isGuest ===
+      true;
+
+  if (rootIsGuest) {
+    return null;
+  }
+
+  return firebaseAuth.currentUser;
+}
+
 function getCurrentBadgeOwnerId(): string | null {
-  const authUid = firebaseAuth.currentUser?.uid;
+  const authUid = getRootEffectiveCloudUser()?.uid;
 
   if (authUid) {
     return String(authUid);
@@ -483,7 +498,7 @@ async function writeFirestoreRestDocument({
     string[];
 }) {
   const currentUser =
-    firebaseAuth.currentUser;
+    getRootEffectiveCloudUser();
 
   if (
     !currentUser?.uid
@@ -651,7 +666,7 @@ async function hasFirestoreRestDocumentByStringField({
   value: string;
 }) {
   const currentUser =
-    firebaseAuth.currentUser;
+    getRootEffectiveCloudUser();
 
   if (!currentUser?.uid) {
     throw new Error(
@@ -773,7 +788,7 @@ async function deleteFirestoreRestDocument({
   documentId: string;
 }) {
   const currentUser =
-    firebaseAuth.currentUser;
+    getRootEffectiveCloudUser();
 
   if (!currentUser?.uid) {
     throw new Error(
@@ -929,7 +944,7 @@ export function getRootNotifications() {
 export async function setRootNotifications(
   notifications: RootNotification[]
 ) {
-  const currentUser = firebaseAuth.currentUser;
+  const currentUser = getRootEffectiveCloudUser();
 
   onboardingData = {
     ...(onboardingData ?? {}),
@@ -986,7 +1001,7 @@ export function setRootActionLogs(actionLogs: any[]) {
 export async function addRootActionLog(log: any) {
   console.log('ADD LOG CALLED', log);
 
-  const currentUser = firebaseAuth.currentUser;
+  const currentUser = getRootEffectiveCloudUser();
 
   const ownerId =
     currentUser?.uid
@@ -1126,7 +1141,7 @@ export function formatSleepMinutes(minutes: number) {
 }
 
 export async function addRootPoints(points: number) {
-  const currentUser = firebaseAuth.currentUser;
+  const currentUser = getRootEffectiveCloudUser();
 
   onboardingData = {
     ...(onboardingData ?? {}),
@@ -1714,8 +1729,7 @@ export const addRootCrew =
       getRootOnboardingData();
 
     const authUid =
-      firebaseAuth
-        .currentUser
+      getRootEffectiveCloudUser()
         ?.uid ??
       null;
 
@@ -1899,8 +1913,7 @@ export const addRootCrew =
             crew
               ?.ownerNickname ??
               data?.nickname ??
-              firebaseAuth
-                .currentUser
+              getRootEffectiveCloudUser()
                 ?.displayName ??
               '루트유저'
           ).trim() ||
@@ -2942,8 +2955,7 @@ export const leaveRootCrew =
     const leavingNickname =
       onboardingData
         ?.nickname ??
-      firebaseAuth
-        .currentUser
+      getRootEffectiveCloudUser()
         ?.displayName ??
       '크루원';
 
@@ -3231,8 +3243,7 @@ export const transferRootCrewOwnership =
 
     const currentUserId =
       String(
-        firebaseAuth
-          .currentUser
+        getRootEffectiveCloudUser()
           ?.uid ??
           onboardingData
             ?.uid ??
@@ -3448,7 +3459,7 @@ export const kickRootCrewMember = async (
   memberId: string
 ) => {
   const currentUserId =
-    firebaseAuth.currentUser?.uid ??
+    getRootEffectiveCloudUser()?.uid ??
     onboardingData?.uid ??
     onboardingData?.guestId ??
     '';
@@ -3987,7 +3998,7 @@ export const toggleRootCrewJoinType =
 
 export const deleteRootCrew = async (crewId: string) => {
   const currentUserId =
-    firebaseAuth.currentUser?.uid ??
+    getRootEffectiveCloudUser()?.uid ??
     onboardingData?.uid ??
     onboardingData?.guestId ??
     '';
@@ -5212,7 +5223,7 @@ const mergeCrewPostsWithLocal = (
   serverPosts: RootCrewPost[]
 ) => {
   const currentUid =
-    firebaseAuth.currentUser?.uid ??
+    getRootEffectiveCloudUser()?.uid ??
     null;
 
   const serverPostIds = new Set(
@@ -5552,7 +5563,7 @@ export const addRootCrewPost =
     post: RootCrewPost
   ) => {
     const currentUser =
-      firebaseAuth.currentUser;
+      getRootEffectiveCloudUser();
 
     if (!currentUser?.uid) {
       throw new Error(
@@ -6456,7 +6467,7 @@ export const setRootMainBadgeId = async (
   }
 
   const currentUser =
-    firebaseAuth.currentUser;
+    getRootEffectiveCloudUser();
 
   onboardingData = {
     ...(onboardingData ?? {}),
@@ -6565,7 +6576,7 @@ export const loadRootMainBadgeId =
       | null = null;
 
     const currentUser =
-      firebaseAuth.currentUser;
+      getRootEffectiveCloudUser();
 
     if (
       currentUser?.uid &&
@@ -7277,7 +7288,7 @@ async function saveEarnedBadgeIdsForOwner(
   ]);
 
   const currentUser =
-    firebaseAuth.currentUser;
+    getRootEffectiveCloudUser();
 
   if (
     currentUser?.uid &&
@@ -7358,7 +7369,7 @@ export const loadRootEarnedBadges =
     }
 
     const currentUser =
-      firebaseAuth.currentUser;
+      getRootEffectiveCloudUser();
 
     if (
   currentUser?.uid &&
@@ -7597,7 +7608,7 @@ async function saveSeenBadgeIdsForOwner(
   }
 
   const currentUser =
-    firebaseAuth.currentUser;
+    getRootEffectiveCloudUser();
 
   onboardingData = {
     ...(onboardingData ?? {}),
@@ -7699,7 +7710,7 @@ export const getSeenBadgeIds =
     }
 
     const currentUser =
-      firebaseAuth.currentUser;
+      getRootEffectiveCloudUser();
 
     if (
       currentUser?.uid &&

@@ -15,6 +15,33 @@ import {
     setRootOnboardingData,
 } from './rootMemory';
 
+import {
+  getRootCloudUidOrNull,
+} from './rootCloudSession';
+
+// ROOT_EXPLORE_V12D91A_MEDIA_BACKUP_EFFECTIVE_FIREBASE_USER_BOUNDARY
+function getRootEffectiveMediaBackupFirebaseUser() {
+  const cloudUid =
+    getRootCloudUidOrNull();
+
+  if (!cloudUid) {
+    return null;
+  }
+
+  const firebaseUser =
+    auth().currentUser;
+
+  if (
+    !firebaseUser?.uid ||
+    firebaseUser.uid !==
+      cloudUid
+  ) {
+    return null;
+  }
+
+  return firebaseUser;
+}
+
 const DAILY_MEALS_KEY =
   'daily_meals_v1';
 
@@ -612,8 +639,7 @@ const getMediaBackupIdToken =
     expectedUid: string
   ) => {
     const currentUser =
-      auth()
-        .currentUser;
+      getRootEffectiveMediaBackupFirebaseUser();
 
     if (
       !currentUser?.uid ||
@@ -2025,8 +2051,7 @@ export const backupLocalMediaToCloud =
     MediaBackupResult
   > => {
     const currentUser =
-      auth()
-        .currentUser;
+      getRootEffectiveMediaBackupFirebaseUser();
 
     if (
       !currentUser?.uid

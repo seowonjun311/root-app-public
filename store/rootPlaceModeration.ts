@@ -34,6 +34,10 @@ import type {
   RootPlaceCommunitySafetyReport,
 } from './rootPlaceCommunitySafety';
 
+import type {
+  RootPlaceMedia,
+} from './rootPlaceDomain';
+
 const firebaseApp =
   getApp();
 
@@ -55,6 +59,10 @@ export type RootPlaceModerationDecision =
 export type RootPlaceSafetyModerationDecision =
   | 'dismiss'
   | 'hide_public';
+
+export type RootPlaceMediaModerationDecision =
+  | 'approve'
+  | 'hide';
 
 export type RootPlaceModerationInboxItem =
   Omit<
@@ -457,6 +465,170 @@ subscribeRootPlaceCommunitySafetyReports({
       );
     }
   );
+}
+
+export function
+subscribeRootPlaceMediaModerationInbox({
+  onChange,
+  onError,
+}: {
+  onChange:
+    (
+      items:
+        RootPlaceMedia[]
+    ) => void;
+  onError?:
+    (
+      error: unknown
+    ) => void;
+}) {
+  const mediaQuery =
+    query(
+      collection(
+        firebaseDb,
+        'rootPlaceMedia'
+      ),
+      where(
+        'status',
+        '==',
+        'pending'
+      ),
+      limit(
+        100
+      )
+    );
+
+  return onSnapshot(
+    mediaQuery,
+    (
+      snapshot
+    ) => {
+      const items =
+        snapshot.docs
+          .map(
+            (
+              item
+            ) => ({
+              ...(item.data() as
+                RootPlaceMedia),
+              mediaId:
+                String(
+                  item.id
+                ),
+            })
+          )
+          .filter(
+            (
+              item
+            ) =>
+              Boolean(
+                item.placeId &&
+                item.downloadUrl
+              )
+          )
+          .sort(
+            (
+              first,
+              second
+            ) =>
+              getTimestamp(
+                second.createdAt
+              ) -
+              getTimestamp(
+                first.createdAt
+              )
+          );
+
+      onChange(
+        items
+      );
+    },
+    (
+      error
+    ) => {
+      onError?.(
+        error
+      );
+    }
+  );
+}
+
+export async function
+moderateRootPlaceMedia({
+  media,
+  decision,
+}: {
+  media: RootPlaceMedia;
+  decision:
+    RootPlaceMediaModerationDecision;
+}) {
+  const moderatorUid =
+    await requireModerator();
+
+  const moderatedAt =
+    new Date()
+      .toISOString();
+
+  const auditId =
+    `${media.mediaId}_` +
+    `${Date.now()}`;
+
+  const batch =
+    writeBatch(
+      firebaseDb
+    );
+
+  batch.set(
+    doc(
+      firebaseDb,
+      'rootPlaceMedia',
+      media.mediaId
+    ),
+    {
+      status:
+        decision ===
+        'approve'
+          ? 'visible'
+          : 'hidden',
+      updatedAt:
+        moderatedAt,
+    },
+    {
+      merge: true,
+    }
+  );
+
+  batch.set(
+    doc(
+      firebaseDb,
+      'rootPlaceModerationAudit',
+      auditId
+    ),
+    {
+      id:
+        auditId,
+      targetType:
+        'media',
+      targetId:
+        media.mediaId,
+      placeId:
+        media.placeId,
+      action:
+        decision,
+      moderatorUid,
+      moderatedAt,
+    },
+    {
+      merge: false,
+    }
+  );
+
+  await batch.commit();
+
+  return {
+    decision,
+    moderatedAt,
+  };
 }
 
 function toApprovedPublicRecord(

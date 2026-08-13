@@ -27,6 +27,7 @@ type Props = {
   place: any;
   districtName: string;
   onOpenDetail: () => void;
+  onOpenMedia: () => void;
   onSave: () => void;
   onDirections: () => void;
   onShare: () => void;
@@ -44,12 +45,16 @@ type Props = {
     ) => void;
   showModeratorEntry?: boolean;
   onOpenModerator?: () => void;
+  canonicalMediaCount?: number;
+  canonicalRepresentativeUrl?:
+    string | null;
 };
 
 export default function RootPlacePreviewCard({
   place,
   districtName,
   onOpenDetail,
+  onOpenMedia,
   onSave,
   onDirections,
   onShare,
@@ -57,6 +62,8 @@ export default function RootPlacePreviewCard({
   onCommunitySafety,
   showModeratorEntry = false,
   onOpenModerator,
+  canonicalMediaCount = 0,
+  canonicalRepresentativeUrl = null,
 }: Props) {
   const {
     theme,
@@ -81,6 +88,10 @@ export default function RootPlacePreviewCard({
     districtName;
 
   const imageUrl =
+    String(
+      canonicalRepresentativeUrl ??
+        ''
+    ).trim() ||
     getRootExplorePlaceImageUrl(
       place
     );
@@ -127,7 +138,11 @@ export default function RootPlacePreviewCard({
   const photoCount =
     catalogPhotoCount +
     rootPublicCommunityPhotoCount +
-    rootCommunityPhotoCount;
+    rootCommunityPhotoCount +
+    Math.max(
+      0,
+      canonicalMediaCount
+    );
 
   const publicCommunityHighlights =
     Array.isArray(
@@ -201,9 +216,7 @@ export default function RootPlacePreviewCard({
         }
       >
         <Pressable
-          onPress={
-            onOpenDetail
-          }
+          onPress={onOpenMedia}
           style={({ pressed }) => [
             styles.imageBox,
             {
@@ -480,11 +493,7 @@ export default function RootPlacePreviewCard({
         </Pressable>
 
         <Pressable
-          onPress={() =>
-            onContribution(
-              'photo'
-            )
-          }
+          onPress={onOpenMedia}
           style={
             styles.tabButton
           }

@@ -90,6 +90,24 @@ export type RootPlaceMediaUploadResult =
       media: null;
     };
 
+export type RootPlaceMediaFeed = {
+  visible: RootPlaceMedia[];
+  own: RootPlaceMedia[];
+  guestDrafts: RootPlaceMediaDraft[];
+  items: RootPlaceMedia[];
+  representative: RootPlaceMedia | null;
+};
+
+export function createEmptyRootPlaceMediaFeed(): RootPlaceMediaFeed {
+  return {
+    visible: [],
+    own: [],
+    guestDrafts: [],
+    items: [],
+    representative: null,
+  };
+}
+
 const clean = (
   value: unknown,
 ) =>
@@ -551,6 +569,10 @@ export async function listVisibleRootPlaceMedia(
   placeId: string,
   maxResults = 100,
 ): Promise<RootPlaceMedia[]> {
+  if (!getRootCloudUidOrNull()) {
+    return [];
+  }
+
   const safePlaceId = clean(placeId);
 
   if (!safePlaceId) {
@@ -642,6 +664,82 @@ export async function listOwnRootPlaceMedia(
     .sort(sortNewest);
 }
 
+export async function loadRootPlaceMediaFeed(
+  placeId: string,
+  maxResults = 100,
+): Promise<RootPlaceMediaFeed> {
+  const safePlaceId = clean(placeId);
+
+  if (!safePlaceId) {
+    return createEmptyRootPlaceMediaFeed();
+  }
+
+  const [
+    visible,
+    own,
+    guestDrafts,
+  ] = await Promise.all([
+    listVisibleRootPlaceMedia(
+      safePlaceId,
+      maxResults,
+    ),
+    listOwnRootPlaceMedia(
+      safePlaceId,
+      maxResults,
+    ),
+    loadGuestRootPlaceMediaDrafts(),
+  ]);
+
+  const byId =
+    new Map<
+      string,
+      RootPlaceMedia
+    >();
+
+  for (
+    const item of [
+      ...visible,
+      ...own,
+    ]
+  ) {
+    byId.set(
+      item.mediaId,
+      item,
+    );
+  }
+
+  const items =
+    Array.from(
+      byId.values(),
+    ).sort(sortNewest);
+
+  return {
+    visible,
+    own,
+    guestDrafts:
+      guestDrafts
+        .filter(
+          (draft) =>
+            draft.placeId ===
+            safePlaceId,
+        )
+        .sort(
+          (first, second) =>
+            new Date(
+              second.createdAt,
+            ).getTime() -
+            new Date(
+              first.createdAt,
+            ).getTime(),
+        ),
+    items,
+    representative:
+      pickRootPlaceRepresentativeMedia(
+        visible,
+      ),
+  };
+}
+
 export async function deleteOwnRootPlaceMedia(
   media: RootPlaceMedia,
 ) {
@@ -698,4 +796,55 @@ export function pickRootPlaceRepresentativeMedia(
     ) ??
     null
   );
+}
+
+export function getRootPlaceMediaErrorMessage(
+  error: unknown,
+) {
+  const code = clean(
+    (error as any)?.code ??
+      (error as any)?.message,
+  );
+
+  if (
+    code.includes(
+      'ROOT_PLACE_MEDIA_PERMISSION_REQUIRED',
+    )
+  ) {
+    return '사진과 동영상을 선택할 수 있도록 미디어 접근 권한을 허용해주세요.';
+  }
+
+  if (
+    code.includes(
+      'ROOT_PLACE_PHOTO_TOO_LARGE',
+    )
+  ) {
+    return '사진은 20MB 이하로 선택해주세요.';
+  }
+
+  if (
+    code.includes(
+      'ROOT_PLACE_VIDEO_TOO_LARGE',
+    )
+  ) {
+    return '동영상은 200MB 이하로 선택해주세요.';
+  }
+
+  if (
+    code.includes(
+      'ROOT_PLACE_MEDIA_SELF_ONLY_REQUIRED',
+    )
+  ) {
+    return '본인이 올린 미디어만 삭제할 수 있어요.';
+  }
+
+  if (
+    code.includes(
+      'permission-denied',
+    )
+  ) {
+    return '미디어를 읽거나 저장할 권한이 없어요. 로그인 상태를 확인해주세요.';
+  }
+
+  return '장소 미디어 작업을 완료하지 못했어요. 잠시 후 다시 시도해주세요.';
 }

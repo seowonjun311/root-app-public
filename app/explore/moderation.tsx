@@ -10,6 +10,11 @@ import {
 } from 'expo-router';
 
 import {
+  VideoView,
+  useVideoPlayer,
+} from 'expo-video';
+
+import {
   useCallback,
   useState,
 } from 'react';
@@ -17,6 +22,7 @@ import {
 import {
   ActivityIndicator,
   Alert,
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -35,14 +41,21 @@ import {
 import {
   getRootPlaceModerationErrorMessage,
   getRootPlaceModeratorAccess,
+  moderateRootPlaceMedia,
   moderateRootPlaceContribution,
   moderateRootPlaceSafetyReport,
   subscribeRootPlaceCommunitySafetyReports,
+  subscribeRootPlaceMediaModerationInbox,
   subscribeRootPlaceModerationInbox,
   type RootPlaceModerationDecision,
   type RootPlaceModerationInboxItem,
+  type RootPlaceMediaModerationDecision,
   type RootPlaceSafetyModerationDecision,
 } from '../../store/rootPlaceModeration';
+
+import type {
+  RootPlaceMedia,
+} from '../../store/rootPlaceDomain';
 
 import type {
   RootPlaceCommunitySafetyReport,
@@ -83,6 +96,13 @@ RootPlaceModerationScreen() {
   >([]);
 
   const [
+    mediaItems,
+    setMediaItems,
+  ] = useState<
+    RootPlaceMedia[]
+  >([]);
+
+  const [
     busyId,
     setBusyId,
   ] = useState<
@@ -106,6 +126,9 @@ RootPlaceModerationScreen() {
           () => {};
 
         let stopReports =
+          () => {};
+
+        let stopMedia =
           () => {};
 
         void (
@@ -193,6 +216,36 @@ RootPlaceModerationScreen() {
                       }
                     },
                 });
+
+              stopMedia =
+                subscribeRootPlaceMediaModerationInbox({
+                  onChange:
+                    (
+                      nextItems
+                    ) => {
+                      if (
+                        active
+                      ) {
+                        setMediaItems(
+                          nextItems
+                        );
+                      }
+                    },
+                  onError:
+                    (
+                      error
+                    ) => {
+                      if (
+                        active
+                      ) {
+                        setLoadError(
+                          getRootPlaceModerationErrorMessage(
+                            error
+                          )
+                        );
+                      }
+                    },
+                });
             } catch (error) {
               if (
                 active
@@ -224,6 +277,7 @@ RootPlaceModerationScreen() {
 
           stopInbox();
           stopReports();
+          stopMedia();
         };
       },
       []
@@ -329,6 +383,51 @@ RootPlaceModerationScreen() {
       [
         busyId,
       ]
+    );
+
+  const runMediaDecision =
+    useCallback(
+      async (
+        media:
+          RootPlaceMedia,
+        decision:
+          RootPlaceMediaModerationDecision
+      ) => {
+        if (busyId) {
+          return;
+        }
+
+        try {
+          setBusyId(
+            media.mediaId
+          );
+
+          await moderateRootPlaceMedia({
+            media,
+            decision,
+          });
+
+          Alert.alert(
+            '미디어 검수 완료',
+            decision ===
+              'approve'
+              ? '장소 공개 피드와 대표 이미지 후보에 반영했어요.'
+              : '해당 미디어를 숨김 처리했어요.'
+          );
+        } catch (error) {
+          Alert.alert(
+            '미디어 검수 실패',
+            getRootPlaceModerationErrorMessage(
+              error
+            )
+          );
+        } finally {
+          setBusyId(
+            null
+          );
+        }
+      },
+      [busyId]
     );
 
   return (
@@ -638,6 +737,118 @@ RootPlaceModerationScreen() {
               },
             ]}
           >
+            미디어 승인 대기 {mediaItems.length}
+          </Text>
+
+          {mediaItems.length ===
+          0 ? (
+            <EmptyCard
+              text="승인 대기 사진·동영상이 없어요."
+            />
+          ) : (
+            mediaItems.map(
+              (
+                media
+              ) => (
+                <View
+                  key={
+                    media.mediaId
+                  }
+                  style={[
+                    styles.card,
+                    {
+                      backgroundColor:
+                        theme.card,
+                      borderColor:
+                        theme.line,
+                      borderRadius:
+                        isCityBlack
+                          ? 3
+                          : 16,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.cardTitle,
+                      {
+                        color:
+                          theme.text,
+                      },
+                    ]}
+                  >
+                    장소 {media.placeId}
+                  </Text>
+
+                  <Text
+                    style={[
+                      styles.meta,
+                      {
+                        color:
+                          theme.subText,
+                      },
+                    ]}
+                  >
+                    {media.kind ===
+                    'video'
+                      ? '동영상'
+                      : '사진'} · 검수 대기
+                  </Text>
+
+                  <ModerationMediaPreview
+                    media={media}
+                  />
+
+                  <View
+                    style={
+                      styles.actionRow
+                    }
+                  >
+                    <ModerationButton
+                      label="공개 승인"
+                      disabled={
+                        busyId ===
+                        media.mediaId
+                      }
+                      primary
+                      onPress={() =>
+                        void runMediaDecision(
+                          media,
+                          'approve'
+                        )
+                      }
+                    />
+
+                    <ModerationButton
+                      label="숨김"
+                      disabled={
+                        busyId ===
+                        media.mediaId
+                      }
+                      destructive
+                      onPress={() =>
+                        void runMediaDecision(
+                          media,
+                          'hide'
+                        )
+                      }
+                    />
+                  </View>
+                </View>
+              )
+            )
+          )}
+
+          <Text
+            style={[
+              styles.sectionTitle,
+              styles.reportTitle,
+              {
+                color:
+                  theme.text,
+              },
+            ]}
+          >
             사용자 신고 {reports.length}
           </Text>
 
@@ -841,6 +1052,65 @@ RootPlaceModerationScreen() {
   }
 }
 
+function ModerationMediaPreview({
+  media,
+}: {
+  media: RootPlaceMedia;
+}) {
+  if (
+    media.kind ===
+    'video'
+  ) {
+    return (
+      <ModerationVideo
+        uri={
+          media.downloadUrl
+        }
+      />
+    );
+  }
+
+  return (
+    <Image
+      source={{
+        uri:
+          media.downloadUrl,
+      }}
+      resizeMode="cover"
+      style={
+        styles.mediaPreview
+      }
+    />
+  );
+}
+
+function ModerationVideo({
+  uri,
+}: {
+  uri: string;
+}) {
+  const player =
+    useVideoPlayer(
+      uri,
+      (instance) => {
+        instance.loop =
+          false;
+      }
+    );
+
+  return (
+    <VideoView
+      player={player}
+      nativeControls
+      contentFit="cover"
+      surfaceType="textureView"
+      style={
+        styles.mediaPreview
+      }
+    />
+  );
+}
+
 const styles =
   StyleSheet.create({
     safe: {
@@ -950,6 +1220,15 @@ const styles =
       fontSize: 10,
       lineHeight: 15,
       fontWeight: '700',
+    },
+
+    mediaPreview: {
+      width: '100%',
+      height: 220,
+      marginTop: 9,
+      borderRadius: 10,
+      backgroundColor:
+        '#1B1B1B',
     },
 
     actionRow: {

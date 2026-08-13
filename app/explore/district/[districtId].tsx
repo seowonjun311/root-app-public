@@ -67,11 +67,11 @@ import {
 import RootExploreMapMarker from '../../../components/explore/RootExploreMapMarker';
 import RootPlaceContributionModal from '../../../components/explore/RootPlaceContributionModal';
 import RootPlaceCommunitySafetyModal from '../../../components/explore/RootPlaceCommunitySafetyModal';
+import RootPlaceMediaModal from '../../../components/explore/RootPlaceMediaModal';
 import {
   createEmptyRootPlaceCommunitySnapshot,
   getRootPlaceCommunityErrorMessage,
   mergeRootPlaceCommunityIntoPlace,
-  pickAndUploadRootPlaceMedia,
   saveRootPlaceReport,
   subscribeRootPlaceCommunitySnapshot,
   type RootPlaceCommunitySnapshot,
@@ -98,6 +98,19 @@ import {
 import {
   getRootPlaceModeratorAccess,
 } from '../../../store/rootPlaceModeration';
+import {
+  clearGuestRootPlaceMediaDraft,
+  createEmptyRootPlaceMediaFeed,
+  deleteOwnRootPlaceMedia,
+  getRootPlaceMediaErrorMessage,
+  loadRootPlaceMediaFeed,
+  pickAndUploadRootCanonicalPlaceMedia,
+  type RootPlaceMediaDraft,
+  type RootPlaceMediaFeed,
+} from '../../../store/rootPlaceMedia';
+import type {
+  RootPlaceMedia,
+} from '../../../store/rootPlaceDomain';
 
 // ROOT_EXPLORE_V12D_MODERATION_SAFETY_INTEGRATION
 
@@ -949,6 +962,31 @@ export default function DistrictMapScreen() {
   ] = useState(false);
 
   const [
+    rootPlaceMediaVisible,
+    setRootPlaceMediaVisible,
+  ] = useState(false);
+
+  const [
+    rootPlaceMediaLoading,
+    setRootPlaceMediaLoading,
+  ] = useState(false);
+
+  const [
+    rootPlaceMediaBusy,
+    setRootPlaceMediaBusy,
+  ] = useState(false);
+
+  const [
+    rootPlaceMediaFeed,
+    setRootPlaceMediaFeed,
+  ] = useState<
+    RootPlaceMediaFeed
+  >(
+    () =>
+      createEmptyRootPlaceMediaFeed()
+  );
+
+  const [
     rootPlaceSafetyDraft,
     setRootPlaceSafetyDraft,
   ] = useState<{
@@ -1596,6 +1634,85 @@ export default function DistrictMapScreen() {
         selectedPlaceId,
       ]
     );
+
+  const refreshRootPlaceMedia =
+    useCallback(
+      async (
+        showLoading = true,
+        showError = false
+      ) => {
+        const placeId =
+          String(
+            selectedPlace?.id ??
+              ''
+          ).trim();
+
+        if (!placeId) {
+          setRootPlaceMediaFeed(
+            createEmptyRootPlaceMediaFeed()
+          );
+          return;
+        }
+
+        try {
+          if (showLoading) {
+            setRootPlaceMediaLoading(
+              true
+            );
+          }
+
+          const feed =
+            await loadRootPlaceMediaFeed(
+              placeId
+            );
+
+          setRootPlaceMediaFeed(
+            feed
+          );
+        } catch (error) {
+          console.log(
+            'ROOT PLACE CANONICAL MEDIA LOAD ERROR',
+            error
+          );
+
+          if (showError) {
+            Alert.alert(
+              '미디어 불러오기 실패',
+              getRootPlaceMediaErrorMessage(
+                error
+              )
+            );
+          }
+        } finally {
+          if (showLoading) {
+            setRootPlaceMediaLoading(
+              false
+            );
+          }
+        }
+      },
+      [
+        selectedPlace,
+      ]
+    );
+
+  useEffect(
+    () => {
+      setRootPlaceMediaVisible(
+        false
+      );
+      setRootPlaceMediaFeed(
+        createEmptyRootPlaceMediaFeed()
+      );
+      void refreshRootPlaceMedia(
+        false
+      );
+    },
+    [
+      selectedPlaceId,
+      refreshRootPlaceMedia,
+    ]
+  );
 
   const selectedEvent =
     useMemo(
@@ -2307,6 +2424,210 @@ export default function DistrictMapScreen() {
       []
     );
 
+  const openRootPlaceMedia =
+    useCallback(
+      () => {
+        if (!selectedPlace) {
+          return;
+        }
+
+        setRootPlaceMediaVisible(
+          true
+        );
+        void refreshRootPlaceMedia(
+          true,
+          true
+        );
+      },
+      [
+        refreshRootPlaceMedia,
+        selectedPlace,
+      ]
+    );
+
+  const uploadRootPlaceCanonicalMedia =
+    useCallback(
+      async (
+        place: any =
+          selectedPlace
+      ) => {
+        if (
+          rootPlaceMediaBusy
+        ) {
+          return;
+        }
+
+        const placeId =
+          String(
+            place?.id ??
+              place?.placeId ??
+              ''
+          ).trim();
+
+        if (!placeId) {
+          return;
+        }
+
+        try {
+          setRootPlaceMediaBusy(
+            true
+          );
+
+          const result =
+            await pickAndUploadRootCanonicalPlaceMedia(
+              placeId
+            );
+
+          if (result.canceled) {
+            return;
+          }
+
+          setRootPlaceMediaVisible(
+            true
+          );
+
+          await refreshRootPlaceMedia(
+            false
+          );
+
+          if (
+            result.mode ===
+            'guest-local'
+          ) {
+            Alert.alert(
+              '기기에 임시저장했어요',
+              '게스트 미디어는 서버에 올리지 않습니다. 로그인 후 다시 추가하면 검수 대기로 등록돼요.'
+            );
+          } else {
+            Alert.alert(
+              result.media.kind ===
+                'video'
+                ? '동영상 업로드 완료'
+                : '사진 업로드 완료',
+              '검수 대기 상태로 저장했어요. 승인되면 이 장소의 공개 피드와 대표 이미지에 반영됩니다.'
+            );
+          }
+        } catch (error) {
+          console.log(
+            'ROOT PLACE CANONICAL MEDIA UPLOAD ERROR',
+            error
+          );
+
+          Alert.alert(
+            '미디어 업로드 실패',
+            getRootPlaceMediaErrorMessage(
+              error
+            )
+          );
+        } finally {
+          setRootPlaceMediaBusy(
+            false
+          );
+        }
+      },
+      [
+        refreshRootPlaceMedia,
+        rootPlaceMediaBusy,
+        selectedPlace,
+      ]
+    );
+
+  const deleteRootPlaceCanonicalMedia =
+    useCallback(
+      (
+        media: RootPlaceMedia
+      ) => {
+        Alert.alert(
+          '내 미디어 삭제',
+          'Storage 파일과 장소 미디어 기록을 함께 삭제할까요?',
+          [
+            {
+              text: '취소',
+              style: 'cancel',
+            },
+            {
+              text: '삭제',
+              style: 'destructive',
+              onPress: () => {
+                void (
+                  async () => {
+                    try {
+                      setRootPlaceMediaBusy(
+                        true
+                      );
+                      await deleteOwnRootPlaceMedia(
+                        media
+                      );
+                      await refreshRootPlaceMedia(
+                        false
+                      );
+                    } catch (error) {
+                      Alert.alert(
+                        '삭제 실패',
+                        getRootPlaceMediaErrorMessage(
+                          error
+                        )
+                      );
+                    } finally {
+                      setRootPlaceMediaBusy(
+                        false
+                      );
+                    }
+                  }
+                )();
+              },
+            },
+          ]
+        );
+      },
+      [refreshRootPlaceMedia]
+    );
+
+  const deleteRootPlaceGuestMediaDraft =
+    useCallback(
+      (
+        draft:
+          RootPlaceMediaDraft
+      ) => {
+        Alert.alert(
+          '임시 미디어 삭제',
+          '이 기기에 저장된 임시 기록을 삭제할까요?',
+          [
+            {
+              text: '취소',
+              style: 'cancel',
+            },
+            {
+              text: '삭제',
+              style: 'destructive',
+              onPress: () => {
+                void (
+                  async () => {
+                    try {
+                      setRootPlaceMediaBusy(
+                        true
+                      );
+                      await clearGuestRootPlaceMediaDraft(
+                        draft.draftId
+                      );
+                      await refreshRootPlaceMedia(
+                        false
+                      );
+                    } finally {
+                      setRootPlaceMediaBusy(
+                        false
+                      );
+                    }
+                  }
+                )();
+              },
+            },
+          ]
+        );
+      },
+      [refreshRootPlaceMedia]
+    );
+
   const handleRootPlaceContribution =
     useCallback(
       async (
@@ -2330,46 +2651,9 @@ export default function DistrictMapScreen() {
           kind ===
           'photo'
         ) {
-          try {
-            setRootPlaceCommunityBusy(
-              true
-            );
-
-            const result =
-              await pickAndUploadRootPlaceMedia(
-                contributionPlace
-              );
-
-            if (
-              result.canceled
-            ) {
-              return;
-            }
-
-            const mediaType =
-              result
-                .record
-                .media
-                ?.mediaType;
-
-            Alert.alert(
-              mediaType ===
-                'video'
-                ? '동영상 업로드 완료'
-                : '사진 업로드 완료',
-              '검수 대기 상태로 저장했어요. V1.2B에서 최근 현장사진을 지도 마커와 장소 카드에 바로 반영합니다.'
-            );
-          } catch (error) {
-            showRootPlaceCommunityError(
-              '미디어 업로드 실패',
-              error
-            );
-          } finally {
-            setRootPlaceCommunityBusy(
-              false
-            );
-          }
-
+          await uploadRootPlaceCanonicalMedia(
+            contributionPlace
+          );
           return;
         }
 
@@ -2382,7 +2666,7 @@ export default function DistrictMapScreen() {
       [
         normalizedDistrictId,
         rootPlaceCommunityBusy,
-        showRootPlaceCommunityError,
+        uploadRootPlaceCanonicalMedia,
       ]
     );
 
@@ -3711,6 +3995,9 @@ export default function DistrictMapScreen() {
                 )
               )
             }
+            onOpenMedia={
+              openRootPlaceMedia
+            }
             onSave={
               showRootPlaceSaveFoundationNotice
             }
@@ -3746,8 +4033,66 @@ export default function DistrictMapScreen() {
             onOpenModerator={
               openRootPlaceModeration
             }
+            canonicalMediaCount={
+              rootPlaceMediaFeed
+                .items.length +
+              rootPlaceMediaFeed
+                .guestDrafts.length
+            }
+            canonicalRepresentativeUrl={
+              rootPlaceMediaFeed
+                .representative
+                ?.downloadUrl ??
+              null
+            }
           />
         ) : null}
+
+        <RootPlaceMediaModal
+          visible={
+            rootPlaceMediaVisible &&
+            selectedPlace !== null
+          }
+          placeName={
+            String(
+              selectedPlace?.name ??
+                'ROOT 탐험 장소'
+            )
+          }
+          loading={
+            rootPlaceMediaLoading
+          }
+          busy={
+            rootPlaceMediaBusy
+          }
+          feed={
+            rootPlaceMediaFeed
+          }
+          onClose={() => {
+            if (
+              !rootPlaceMediaBusy
+            ) {
+              setRootPlaceMediaVisible(
+                false
+              );
+            }
+          }}
+          onRefresh={() =>
+            void refreshRootPlaceMedia(
+              true,
+              true
+            )
+          }
+          onUpload={() =>
+            void uploadRootPlaceCanonicalMedia()
+          }
+          onDeleteMedia={
+            deleteRootPlaceCanonicalMedia
+          }
+          onDeleteDraft={
+            deleteRootPlaceGuestMediaDraft
+          }
+        />
 
         <RootPlaceCommunitySafetyModal
           visible={

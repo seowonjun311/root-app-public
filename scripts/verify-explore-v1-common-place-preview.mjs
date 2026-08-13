@@ -135,7 +135,8 @@ for (
     "'events'",
     "'facilities'",
     'openPlaceDetail(',
-    'visiblePlaceMarkerItems.map(',
+    // EXPLORE_V11_V1_VERIFIER_RENDERER_COMPAT
+    'visiblePlaceMarkerItems',
     'PLACE_FILTER_OPTIONS.map(',
   ]
 ) {

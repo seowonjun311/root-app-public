@@ -64,8 +64,14 @@ import {
   type RootExploreTheme,
   type RootPlaceContributionKind,
 } from '../../../store/rootExplorePlace';
+import RootExploreMapMarker from '../../../components/explore/RootExploreMapMarker';
+import {
+  buildRootExploreMapRenderItems,
+  getRootExploreMapMarkerMode,
+} from '../../../store/rootExploreMapCluster';
 
 // ROOT_EXPLORE_V1_COMMON_PLACE_DISTRICT_INTEGRATION
+// ROOT_EXPLORE_V11_CLUSTER_PHOTO_MARKER_INTEGRATION
 
 type PlaceFilter =
   | 'all'
@@ -919,6 +925,13 @@ export default function DistrictMapScreen() {
   ] = useState(false);
 
   const [
+    mapRegion,
+    setMapRegion,
+  ] = useState<Region | null>(
+    null
+  );
+
+  const [
     districtMapMounted,
     setDistrictMapMounted,
   ] = useState(false);
@@ -1347,6 +1360,72 @@ export default function DistrictMapScreen() {
       ]
     );
 
+  const rootExploreMapRegion =
+    mapRegion ??
+    initialRegion;
+
+  const rootExploreMarkerMode =
+    getRootExploreMapMarkerMode(
+      rootExploreMapRegion
+    );
+
+  const rootExploreMapRenderItems =
+    useMemo(
+      () =>
+        buildRootExploreMapRenderItems(
+          rootExploreMarkerMode ===
+          'cluster'
+            ? markerItems
+            : visiblePlaceMarkerItems,
+          rootExploreMapRegion
+        ),
+      [
+        markerItems,
+        rootExploreMapRegion,
+        rootExploreMarkerMode,
+        visiblePlaceMarkerItems,
+      ]
+    );
+
+  const zoomIntoRootExploreCluster =
+    useCallback(
+      (coordinate: LatLng) => {
+        const currentRegion =
+          mapRegion ??
+          initialRegion;
+
+        const latitudeDelta =
+          Math.max(
+            currentRegion.latitudeDelta *
+              0.42,
+            0.012
+          );
+
+        const longitudeDelta =
+          Math.max(
+            currentRegion.longitudeDelta *
+              0.42,
+            0.012
+          );
+
+        mapRef.current?.animateToRegion(
+          {
+            latitude:
+              coordinate.latitude,
+            longitude:
+              coordinate.longitude,
+            latitudeDelta,
+            longitudeDelta,
+          },
+          260
+        );
+      },
+      [
+        initialRegion,
+        mapRegion,
+      ]
+    );
+
   const applyExplorationData =
     useCallback(
       (data: any) => {
@@ -1508,6 +1587,7 @@ export default function DistrictMapScreen() {
 
     setDistrictMapMounted(false);
     setMapReady(false);
+    setMapRegion(null);
     setPlaceMarkerRenderCount(0);
 
     setPlaceListRenderCount(
@@ -1766,7 +1846,13 @@ export default function DistrictMapScreen() {
     const timeoutId =
       setTimeout(() => {
         setTrackMarkerChanges(false);
-      }, 300);
+      },
+      contentMode === 'places' &&
+      rootExploreMarkerMode ===
+        'photo'
+        ? 1_200
+        : 300
+      );
 
     return () => {
       clearTimeout(timeoutId);
@@ -1781,6 +1867,7 @@ export default function DistrictMapScreen() {
     markerItems.length,
     eventMarkerItems.length,
     facilityMarkerItems.length,
+    rootExploreMarkerMode,
   ]);
 
   const openRootPlaceDirections =
@@ -2509,6 +2596,13 @@ export default function DistrictMapScreen() {
 
               setMapReady(true);
             }}
+            onRegionChangeComplete={(
+              region
+            ) => {
+              setMapRegion(
+                region
+              );
+            }}
             showsUserLocation
             showsMyLocationButton
             showsCompass
@@ -2517,11 +2611,49 @@ export default function DistrictMapScreen() {
           >
             {contentMode ===
             'places'
-              ? visiblePlaceMarkerItems.map(
-                  ({
-                    place,
-                    coordinate,
-                  }) => {
+              ? rootExploreMapRenderItems.map(
+                  (item) => {
+                    if (
+                      item.kind ===
+                      'cluster'
+                    ) {
+                      return (
+                        <Marker
+                          key={
+                            item.id
+                          }
+                          coordinate={
+                            item.coordinate
+                          }
+                          anchor={{
+                            x: 0.5,
+                            y: 0.5,
+                          }}
+                          tracksViewChanges={
+                            trackMarkerChanges
+                          }
+                          onPress={() =>
+                            zoomIntoRootExploreCluster(
+                              item.coordinate
+                            )
+                          }
+                        >
+                          <RootExploreMapMarker
+                            kind="cluster"
+                            count={
+                              item.count
+                            }
+                          />
+                        </Marker>
+                      );
+                    }
+
+                    const place =
+                      item.place;
+
+                    const coordinate =
+                      item.coordinate;
+
                     const placeId =
                       String(
                         place?.id ?? ''
@@ -2538,7 +2670,9 @@ export default function DistrictMapScreen() {
 
                     return (
                       <Marker
-                        key={placeId}
+                        key={
+                          item.id
+                        }
                         coordinate={
                           coordinate
                         }
@@ -2573,52 +2707,18 @@ export default function DistrictMapScreen() {
                           )
                         }
                       >
-                        <View
-                          collapsable={
-                            false
+                        <RootExploreMapMarker
+                          kind="place"
+                          place={
+                            place
                           }
-                          renderToHardwareTextureAndroid
-                          style={[
-                            styles.rootMapMarker,
+                          selected={
                             selected
-                              ? styles.rootMapMarkerSelected
-                              : null,
+                          }
+                          completed={
                             completed
-                              ? styles.rootMapMarkerCompleted
-                              : null,
-                          ]}
-                        >
-                          <Text
-                            style={[
-                              styles.rootMapMarkerIcon,
-                              selected
-                                ? styles.rootMapMarkerIconSelected
-                                : null,
-                            ]}
-                          >
-                            {String(
-                              place?.icon ??
-                                '📍'
-                            )}
-                          </Text>
-
-                          {completed ? (
-                            <View
-                              collapsable={
-                                false
-                              }
-                              style={
-                                styles.rootMapMarkerCheck
-                              }
-                            >
-                              <Ionicons
-                                name="checkmark"
-                                size={10}
-                                color="#FFFFFF"
-                              />
-                            </View>
-                          ) : null}
-                        </View>
+                          }
+                        />
                       </Marker>
                     );
                   }

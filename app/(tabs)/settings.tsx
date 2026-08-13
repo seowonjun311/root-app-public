@@ -44,6 +44,13 @@ import auth from '@react-native-firebase/auth';
 import {
   GoogleSignin,
 } from '@react-native-google-signin/google-signin';
+import {
+  commitRootNicknameForUid,
+  getRootNicknameClaimDocumentId,
+} from '../../store/rootNicknameRegistry';
+import {
+  getRootCloudUidOrNull,
+} from '../../store/rootCloudSession';
 GoogleSignin.configure({
   webClientId: '914235938891-8f8h890fnb4phoijtcilvui995quuud3.apps.googleusercontent.com',
 });
@@ -869,29 +876,143 @@ router.replace('/(tabs)');
   }
 };
 
-  const saveNickname = () => {
-    const trimmed = nickname.trim();
+  // ROOT_EXPLORE_V12D92_NICKNAME_REGISTRY_SETTINGS
+  const saveNickname = async () => {
+    let safeNickname:
+      string;
 
-    if (!trimmed) {
-      Alert.alert('닉네임 입력', '닉네임을 입력해 주세요.');
-      return;
+    try {
+      safeNickname =
+        getRootNicknameClaimDocumentId(
+          nickname
+        );
     }
-
-    if (trimmed.length > 12) {
-      Alert.alert('닉네임 제한', '닉네임은 최대 12자까지 가능해요.');
+    catch {
+      Alert.alert(
+        '닉네임 제한',
+        '닉네임은 2~12자의 한글, 영문, 숫자, 밑줄(_)만 사용할 수 있어요.'
+      );
       return;
     }
 
     const next = {
-  ...data,
-  nickname: trimmed,
-  profileEmoji: selectedEmoji,
-  nickname_changed_at: new Date().toISOString(),
-};
+      ...data,
+      nickname:
+        safeNickname,
+      nickname_changed_at:
+        new Date()
+          .toISOString(),
+    };
 
-    setRootOnboardingData(next);
-    setData(next);
-    setNicknameModal(false);
+    const rootGuest =
+      data?.loginType ===
+        'guest' ||
+      data?.isGuest ===
+        true;
+
+    if (rootGuest) {
+      setRootOnboardingData(
+        next
+      );
+      setData(
+        next
+      );
+      setNicknameModal(
+        false
+      );
+
+      console.log(
+        'ROOT NICKNAME SETTINGS LOCAL ONLY: GUEST'
+      );
+      return;
+    }
+
+    const cloudUid =
+      getRootCloudUidOrNull();
+
+    if (!cloudUid) {
+      Alert.alert(
+        '닉네임 변경 실패',
+        '로그인 상태를 확인한 뒤 다시 시도해 주세요.'
+      );
+      return;
+    }
+
+    try {
+      await commitRootNicknameForUid({
+        uid:
+          cloudUid,
+        nickname:
+          safeNickname,
+        previousNickname:
+          data?.nickname ??
+          null,
+        rootData:
+          next,
+      });
+
+      /*
+       * Settings already owns the synchronous ROOT memory setter.
+       * The server-side nickname/user/public-profile write has completed
+       * atomically above; now mirror the committed state into local ROOT
+       * memory using the same setter this screen already uses elsewhere.
+       */
+      setRootOnboardingData(
+        next
+      );
+
+      setData(
+        next
+      );
+      setNicknameModal(
+        false
+      );
+
+      console.log(
+        'ROOT NICKNAME SETTINGS REGISTRY COMMIT SUCCESS',
+        {
+          uid:
+            cloudUid,
+          nickname:
+            safeNickname,
+        }
+      );
+    }
+    catch (error: any) {
+      const message =
+        String(
+          error?.message ??
+          error ??
+          ''
+        );
+
+      if (
+        message.includes(
+          'ROOT_NICKNAME_TAKEN'
+        )
+      ) {
+        Alert.alert(
+          '닉네임 중복',
+          `"${safeNickname}"은 이미 사용 중이에요. 다른 닉네임을 입력해 주세요.`
+        );
+        return;
+      }
+
+      console.log(
+        'ROOT NICKNAME SETTINGS REGISTRY COMMIT ERROR',
+        {
+          code:
+            error?.code ??
+            null,
+          message,
+        }
+      );
+
+      Alert.alert(
+        '닉네임 변경 실패',
+        '닉네임을 서버에 안전하게 저장하지 못했어요. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.'
+      );
+    }
   };
 
   const logout = async (keepAsGuest = false) => {

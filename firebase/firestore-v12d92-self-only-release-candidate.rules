@@ -114,12 +114,13 @@ service cloud.firestore {
         && request.resource.data.deleteRequestedAt == null;
     }
 
+    // ROOT_EXPLORE_V12D5_PRIVATE_USER_SELF_ONLY_TARGET
     match /users/{uid} {
-      allow read: if signedIn();
+      allow read: if isSelf(uid);
       allow create, update, delete: if isSelf(uid);
     }
 
-    // ROOT_EXPLORE_V12D5_PUBLIC_USER_PROJECTION_STAGE_A
+    // ROOT_EXPLORE_V12D5_PUBLIC_USER_PROJECTION_TARGET
     match /rootUserPublicProfiles/{uid} {
       allow read: if signedIn();
 

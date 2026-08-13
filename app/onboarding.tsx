@@ -25,6 +25,10 @@ import {
 import { useRootTheme } from '../store/rootTheme';
 import { validateText } from '../utils/textGuard';
 
+import {
+  commitRootNicknameForUid,
+  getRootNicknameClaimDocumentId,
+} from '../store/rootNicknameRegistry';
 const TOTAL_STEPS = 7;
 
 const CATEGORIES = [
@@ -230,7 +234,22 @@ const toggleSelectedDay = (
       return;
     }
 
-    const nicknameValue = nickname.trim();
+    let nicknameValue:
+  string;
+
+try {
+  nicknameValue =
+    getRootNicknameClaimDocumentId(
+      nickname
+    );
+}
+catch {
+  openNotice(
+    '닉네임 확인',
+    '닉네임은 2~12자의 한글, 영문, 숫자, 밑줄(_)만 사용할 수 있어요.'
+  );
+  return;
+}
     const previousData =
   getRootOnboardingData();
 
@@ -262,122 +281,11 @@ if (isGuestSession) {
   );
 }
 
-   if (uid) {
-  try {
-    console.log(
-      'NICKNAME DUPLICATE CHECK START',
-      {
-        uid,
-        nickname:
-          nicknameValue,
-      }
-    );
+   // ROOT_EXPLORE_V12D92_PRIVATE_USERS_LIST_QUERY_REMOVED
+// Authenticated nickname uniqueness is committed atomically after nextData is built.
+// Guest nickname remains local-only through the D9.1 boundary.
 
-    const nicknameQuery =
-      firestore()
-        .collection('users')
-        .where(
-          'rootData.nickname',
-          '==',
-          nicknameValue
-        )
-        .limit(5)
-        .get();
-
-    const sameNicknameUsers =
-      await Promise.race([
-        nicknameQuery,
-
-        new Promise<never>(
-          (_resolve, reject) => {
-            setTimeout(() => {
-              reject(
-                new Error(
-                  'NICKNAME_CHECK_TIMEOUT'
-                )
-              );
-            }, 7000);
-          }
-        ),
-      ]);
-
-    const duplicatedByAnotherUser =
-      sameNicknameUsers.docs.some(
-        (document) =>
-          String(
-            document.id
-          ) !==
-          String(uid)
-      );
-
-    if (
-      duplicatedByAnotherUser
-    ) {
-      console.log(
-        'NICKNAME DUPLICATE FOUND',
-        {
-          uid,
-          nickname:
-            nicknameValue,
-        }
-      );
-
-      openNotice(
-        '닉네임 중복',
-        `"${nicknameValue}"은 이미 사용 중이에요.\n다른 닉네임을 입력해 주세요.`
-      );
-
-      /*
-       * 중복이면 아래 온보딩 저장을
-       * 실행하지 않습니다.
-       */
-      return;
-    }
-
-    console.log(
-      'NICKNAME AVAILABLE',
-      {
-        uid,
-        nickname:
-          nicknameValue,
-      }
-    );
-  } catch (error: any) {
-    console.log(
-      'NICKNAME DUPLICATE CHECK ERROR',
-      {
-        uid,
-
-        nickname:
-          nicknameValue,
-
-        code:
-          error?.code ??
-          null,
-
-        message:
-          error?.message ??
-          String(error),
-      }
-    );
-
-    /*
-     * 중복 확인에 실패한 상태에서 저장하면
-     * 중복 닉네임이 생길 수 있으므로 중단합니다.
-     */
-    openNotice(
-      '닉네임 확인 실패',
-      error?.message ===
-        'NICKNAME_CHECK_TIMEOUT'
-        ? '닉네임 확인 시간이 오래 걸리고 있어요.\n인터넷 연결을 확인한 뒤 다시 눌러 주세요.'
-        : '닉네임 중복 여부를 확인하지 못했어요.\n인터넷 연결을 확인한 뒤 다시 눌러 주세요.'
-    );
-
-    return;
-  }
-}
-
-    const selectedExercise =
+const selectedExercise =
       EXERCISE_TYPES.find(
         (item) =>
           item.label === exerciseType
@@ -541,6 +449,70 @@ const nextData = {
 const safeNextData = JSON.parse(
   JSON.stringify(nextData)
 );
+
+// ROOT_EXPLORE_V12D92_NICKNAME_REGISTRY_ONBOARDING
+if (uid) {
+  try {
+    await commitRootNicknameForUid({
+      uid:
+        String(uid),
+      nickname:
+        nicknameValue,
+      previousNickname:
+        previousData?.nickname ??
+        null,
+      rootData:
+        safeNextData,
+    });
+
+    console.log(
+      'ROOT NICKNAME REGISTRY ONBOARDING COMMIT SUCCESS',
+      {
+        uid,
+        nickname:
+          nicknameValue,
+      }
+    );
+  }
+  catch (error: any) {
+    const message =
+      String(
+        error?.message ??
+        error ??
+        ''
+      );
+
+    console.log(
+      'ROOT NICKNAME REGISTRY ONBOARDING COMMIT ERROR',
+      {
+        uid,
+        code:
+          error?.code ??
+          null,
+        message,
+      }
+    );
+
+    if (
+      message.includes(
+        'ROOT_NICKNAME_TAKEN'
+      )
+    ) {
+      openNotice(
+        '닉네임 중복',
+        `"${nicknameValue}"은 이미 사용 중이에요.\n다른 닉네임을 입력해 주세요.`
+      );
+    }
+    else {
+      openNotice(
+        '닉네임 확인 실패',
+        '닉네임을 서버에 안전하게 예약하지 못했어요. 인터넷 연결을 확인한 뒤 다시 눌러 주세요.'
+      );
+    }
+
+    return;
+  }
+}
 
 try {
   /*

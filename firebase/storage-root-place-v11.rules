@@ -1,0 +1,103 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn()
+        && request.auth.uid == uid;
+    }
+
+    function isValidImage() {
+      return request.resource.size
+          <= 10 * 1024 * 1024
+        && request.resource.contentType
+          .matches('image/.*');
+    }
+
+    /*
+     * 기록 사진 공유
+     *
+     * 저장 위치:
+     * shared-posts/{uid}/{postId}
+     */
+    match /shared-posts/{uid}/{postId} {
+
+      /*
+       * 로그인한 사용자만
+       * 공유 이미지를 볼 수 있습니다.
+       */
+      allow read: if signedIn();
+
+      /*
+       * 자기 UID 폴더에만 업로드하거나
+       * 기존 이미지를 덮어쓸 수 있습니다.
+       */
+      allow create, update:
+        if isOwner(uid)
+        && isValidImage();
+
+      /*
+       * 자기 이미지만 삭제할 수 있습니다.
+       */
+      allow delete:
+        if isOwner(uid);
+    }
+
+    /*
+     * 오늘의 성장 카드
+     *
+     * 저장 위치:
+     * growth-cards/{uid}/{postId}
+     */
+    match /growth-cards/{uid}/{postId} {
+
+      allow read:
+        if signedIn();
+
+      allow create, update:
+        if isOwner(uid)
+        && isValidImage();
+
+      allow delete:
+        if isOwner(uid);
+    }
+
+    /*
+     * 위에서 허용하지 않은
+     * 나머지 모든 경로 차단
+     */
+    match /{allPaths=**} {
+      allow read, write:
+        if false;
+    }
+  
+    // ROOT_PLACE_V11_STORAGE_MEDIA
+    match /root-places/{uid}/{placeId}/{fileName} {
+      allow read: if request.auth != null;
+
+      allow write: if request.auth != null
+        && request.auth.uid == uid
+        && (
+          request.resource == null
+          || (
+            request.resource.contentType != null
+            && (
+              (
+                request.resource.contentType.matches('image/.*')
+                && request.resource.size <= 20 * 1024 * 1024
+              )
+              || (
+                request.resource.contentType.matches('video/.*')
+                && request.resource.size <= 200 * 1024 * 1024
+              )
+            )
+          )
+        );
+    }
+  }
+}

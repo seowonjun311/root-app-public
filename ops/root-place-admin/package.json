@@ -1,0 +1,15 @@
+{
+  "name": "root-place-admin-ops",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "claim:set": "node ./set-moderator-claim.mjs",
+    "claim:verify": "node ./verify-moderator-claim.mjs"
+  },
+  "dependencies": {
+    "firebase-admin": "14.2.0"
+  }
+}

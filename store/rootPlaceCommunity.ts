@@ -48,6 +48,7 @@ export type RootPlaceCommunityRecord = {
   id: string;
   placeId: string;
   placeName: string;
+  districtId: string;
   userId: string;
   kind:
     RootPlaceContributionKind;
@@ -343,9 +344,19 @@ function getPlaceIdentity(
     ).trim() ||
     'ROOT 탐험 장소';
 
+  const districtId =
+    String(
+      place
+        ?.rootModerationDistrictId ??
+        place?.districtId ??
+        place?.district ??
+        ''
+    ).trim();
+
   return {
     placeId,
     placeName,
+    districtId,
   };
 }
 
@@ -521,6 +532,64 @@ async function persistUserContribution(
       merge: true,
     }
   );
+
+  // ROOT_EXPLORE_V12D_MODERATION_INTAKE
+  if (
+    record.districtId
+  ) {
+    void setDoc(
+      doc(
+        firebaseDb,
+        'rootPlaceModerationInbox',
+        record.id
+      ),
+      {
+        ...record,
+        contributorUid:
+          record.userId,
+        moderationStatus:
+          'pending',
+        publicVisible:
+          false,
+        submittedAt:
+          record.createdAt,
+      },
+      {
+        merge: false,
+      }
+    ).then(
+      () => {
+        console.log(
+          'ROOT PLACE MODERATION INTAKE DONE',
+          {
+            contributionId:
+              record.id,
+            placeId:
+              record.placeId,
+            districtId:
+              record.districtId,
+          }
+        );
+      }
+    ).catch(
+      (
+        error
+      ) => {
+        /*
+         * 신규 moderation 규칙이 아직 배포되지 않았어도
+         * users/{uid} 원본 제보 저장은 실패시키지 않는다.
+         */
+        console.log(
+          'ROOT PLACE MODERATION INTAKE DEFERRED',
+          {
+            contributionId:
+              record.id,
+            error,
+          }
+        );
+      }
+    );
+  }
 }
 
 function validatePickedAsset(
@@ -614,6 +683,7 @@ pickAndUploadRootPlaceMedia(
   const {
     placeId,
     placeName,
+    districtId,
   } =
     getPlaceIdentity(
       place
@@ -752,6 +822,7 @@ pickAndUploadRootPlaceMedia(
         contributionId,
       placeId,
       placeName,
+      districtId,
       userId:
         user.uid,
       kind: 'photo',
@@ -853,6 +924,7 @@ saveRootPlaceReport({
   const {
     placeId,
     placeName,
+    districtId,
   } =
     getPlaceIdentity(
       place
@@ -872,6 +944,7 @@ saveRootPlaceReport({
         ),
       placeId,
       placeName,
+      districtId,
       userId:
         user.uid,
       kind,

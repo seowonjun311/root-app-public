@@ -66,6 +66,7 @@ import {
 } from '../../../store/rootExplorePlace';
 import RootExploreMapMarker from '../../../components/explore/RootExploreMapMarker';
 import RootPlaceContributionModal from '../../../components/explore/RootPlaceContributionModal';
+import RootPlaceCommunitySafetyModal from '../../../components/explore/RootPlaceCommunitySafetyModal';
 import {
   createEmptyRootPlaceCommunitySnapshot,
   getRootPlaceCommunityErrorMessage,
@@ -83,6 +84,22 @@ import {
   subscribeRootPlacePublicCommunityDistrict,
   type RootPlacePublicDistrictSnapshot,
 } from '../../../store/rootPlacePublicCommunity';
+
+import {
+  applyRootPlacePublicCommunitySafety,
+  getRootPlaceCommunitySafetyErrorMessage,
+  hideRootPlacePublicCommunity,
+  loadRootPlaceHiddenPublicCommunityIds,
+  reportRootPlacePublicCommunity,
+  unhideRootPlacePublicCommunity,
+  type RootPlaceCommunityReportReason,
+  type RootPlaceCommunitySafetyAction,
+} from '../../../store/rootPlaceCommunitySafety';
+import {
+  getRootPlaceModeratorAccess,
+} from '../../../store/rootPlaceModeration';
+
+// ROOT_EXPLORE_V12D_MODERATION_SAFETY_INTEGRATION
 
 // ROOT_EXPLORE_V12C_PUBLIC_DISTRICT_HYDRATION
 
@@ -932,6 +949,32 @@ export default function DistrictMapScreen() {
   ] = useState(false);
 
   const [
+    rootPlaceSafetyDraft,
+    setRootPlaceSafetyDraft,
+  ] = useState<{
+    place: any;
+  } | null>(
+    null
+  );
+
+  const [
+    rootPlaceSafetyBusy,
+    setRootPlaceSafetyBusy,
+  ] = useState(false);
+
+  const [
+    rootPlaceHiddenPublicIds,
+    setRootPlaceHiddenPublicIds,
+  ] = useState<string[]>(
+    []
+  );
+
+  const [
+    rootPlaceModeratorAllowed,
+    setRootPlaceModeratorAllowed,
+  ] = useState(false);
+
+  const [
     rootPlaceCommunitySnapshot,
     setRootPlaceCommunitySnapshot,
   ] = useState<
@@ -1037,6 +1080,74 @@ export default function DistrictMapScreen() {
     setEventError,
   ] = useState<string | null>(
     null
+  );
+
+  useFocusEffect(
+    useCallback(
+      () => {
+        let active =
+          true;
+
+        void loadRootPlaceHiddenPublicCommunityIds()
+          .then(
+            (
+              ids
+            ) => {
+              if (
+                active
+              ) {
+                setRootPlaceHiddenPublicIds(
+                  ids
+                );
+              }
+            }
+          )
+          .catch(
+            (
+              error
+            ) => {
+              console.log(
+                'ROOT PLACE COMMUNITY HIDDEN LOAD ERROR',
+                error
+              );
+            }
+          );
+
+        void getRootPlaceModeratorAccess(
+          false
+        )
+          .then(
+            (
+              access
+            ) => {
+              if (
+                active
+              ) {
+                setRootPlaceModeratorAllowed(
+                  access.allowed
+                );
+              }
+            }
+          )
+          .catch(
+            () => {
+              if (
+                active
+              ) {
+                setRootPlaceModeratorAllowed(
+                  false
+                );
+              }
+            }
+          );
+
+        return () => {
+          active =
+            false;
+        };
+      },
+      []
+    )
   );
 
   useFocusEffect(
@@ -1182,10 +1293,26 @@ export default function DistrictMapScreen() {
       ]
     );
 
-  const communityPlaces =
+  const safePublicCommunityPlaces =
     useMemo(
       () =>
         publicCommunityPlaces.map(
+          (place) =>
+            applyRootPlacePublicCommunitySafety(
+              place,
+              rootPlaceHiddenPublicIds
+            )
+        ),
+      [
+        publicCommunityPlaces,
+        rootPlaceHiddenPublicIds,
+      ]
+    );
+
+  const communityPlaces =
+    useMemo(
+      () =>
+        safePublicCommunityPlaces.map(
           (place) =>
             mergeRootPlaceCommunityIntoPlace(
               place,
@@ -1193,7 +1320,7 @@ export default function DistrictMapScreen() {
             )
         ),
       [
-        publicCommunityPlaces,
+        safePublicCommunityPlaces,
         rootPlaceCommunitySnapshot,
       ]
     );
@@ -2193,6 +2320,12 @@ export default function DistrictMapScreen() {
           return;
         }
 
+        const contributionPlace = {
+          ...place,
+          rootModerationDistrictId:
+            normalizedDistrictId,
+        };
+
         if (
           kind ===
           'photo'
@@ -2204,7 +2337,7 @@ export default function DistrictMapScreen() {
 
             const result =
               await pickAndUploadRootPlaceMedia(
-                place
+                contributionPlace
               );
 
             if (
@@ -2241,11 +2374,13 @@ export default function DistrictMapScreen() {
         }
 
         setRootPlaceReportDraft({
-          place,
+          place:
+            contributionPlace,
           kind,
         });
       },
       [
+        normalizedDistrictId,
         rootPlaceCommunityBusy,
         showRootPlaceCommunityError,
       ]
@@ -2304,6 +2439,159 @@ export default function DistrictMapScreen() {
         rootPlaceReportDraft,
         showRootPlaceCommunityError,
       ]
+    );
+
+  const handleRootPlaceCommunitySafety =
+    useCallback(
+      async (
+        place: any,
+        action:
+          RootPlaceCommunitySafetyAction
+      ) => {
+        const placeId =
+          String(
+            place?.id ??
+              ''
+          );
+
+        if (!placeId) {
+          return;
+        }
+
+        if (
+          action ===
+          'report'
+        ) {
+          setRootPlaceSafetyDraft({
+            place,
+          });
+          return;
+        }
+
+        try {
+          const nextIds =
+            action ===
+            'hide'
+              ? await hideRootPlacePublicCommunity(
+                  placeId
+                )
+              : await unhideRootPlacePublicCommunity(
+                  placeId
+                );
+
+          setRootPlaceHiddenPublicIds(
+            nextIds
+          );
+
+          Alert.alert(
+            action ===
+              'hide'
+              ? '커뮤니티 숨김'
+              : '커뮤니티 다시 표시',
+            action ===
+              'hide'
+              ? '이 장소의 승인된 ROOT 커뮤니티 사진과 현황을 내 화면에서 숨겼어요.'
+              : '이 장소의 승인된 ROOT 커뮤니티 정보를 다시 표시해요.'
+          );
+        } catch (error) {
+          Alert.alert(
+            '커뮤니티 설정 실패',
+            getRootPlaceCommunitySafetyErrorMessage(
+              error
+            )
+          );
+        }
+      },
+      []
+    );
+
+  const submitRootPlaceCommunitySafetyReport =
+    useCallback(
+      async (
+        reason:
+          RootPlaceCommunityReportReason,
+        hideAfter:
+          boolean
+      ) => {
+        const draft =
+          rootPlaceSafetyDraft;
+
+        if (
+          !draft ||
+          rootPlaceSafetyBusy
+        ) {
+          return;
+        }
+
+        try {
+          setRootPlaceSafetyBusy(
+            true
+          );
+
+          await reportRootPlacePublicCommunity({
+            place:
+              draft.place,
+            districtId:
+              normalizedDistrictId,
+            reason,
+          });
+
+          if (
+            hideAfter
+          ) {
+            const nextIds =
+              await hideRootPlacePublicCommunity(
+                String(
+                  draft
+                    .place
+                    ?.id ??
+                    ''
+                )
+              );
+
+            setRootPlaceHiddenPublicIds(
+              nextIds
+            );
+          }
+
+          setRootPlaceSafetyDraft(
+            null
+          );
+
+          Alert.alert(
+            '신고 저장 완료',
+            hideAfter
+              ? '관리자 검수 대상으로 저장했고 이 장소의 공개 커뮤니티 정보도 내 화면에서 숨겼어요.'
+              : '관리자 검수 대상으로 저장했어요.'
+          );
+        } catch (error) {
+          Alert.alert(
+            '신고 저장 실패',
+            getRootPlaceCommunitySafetyErrorMessage(
+              error
+            )
+          );
+        } finally {
+          setRootPlaceSafetyBusy(
+            false
+          );
+        }
+      },
+      [
+        normalizedDistrictId,
+        rootPlaceSafetyBusy,
+        rootPlaceSafetyDraft,
+      ]
+    );
+
+  const openRootPlaceModeration =
+    useCallback(
+      () => {
+        router.push(
+          '/explore/moderation' as any
+        );
+      },
+      []
     );
 
   const focusPlace =
@@ -3444,8 +3732,58 @@ export default function DistrictMapScreen() {
                 kind
               )
             }
+            onCommunitySafety={(
+              action
+            ) =>
+              void handleRootPlaceCommunitySafety(
+                selectedPlace,
+                action
+              )
+            }
+            showModeratorEntry={
+              rootPlaceModeratorAllowed
+            }
+            onOpenModerator={
+              openRootPlaceModeration
+            }
           />
         ) : null}
+
+        <RootPlaceCommunitySafetyModal
+          visible={
+            rootPlaceSafetyDraft !==
+            null
+          }
+          placeName={
+            String(
+              rootPlaceSafetyDraft
+                ?.place
+                ?.name ??
+                'ROOT 탐험 장소'
+            )
+          }
+          submitting={
+            rootPlaceSafetyBusy
+          }
+          onClose={() => {
+            if (
+              !rootPlaceSafetyBusy
+            ) {
+              setRootPlaceSafetyDraft(
+                null
+              );
+            }
+          }}
+          onSubmit={(
+            reason,
+            hideAfter
+          ) =>
+            void submitRootPlaceCommunitySafetyReport(
+              reason,
+              hideAfter
+            )
+          }
+        />
 
         <RootPlaceContributionModal
           visible={

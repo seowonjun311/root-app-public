@@ -35,6 +35,15 @@ type Props = {
       kind:
         RootPlaceContributionKind
     ) => void;
+  onCommunitySafety:
+    (
+      action:
+        | 'report'
+        | 'hide'
+        | 'unhide'
+    ) => void;
+  showModeratorEntry?: boolean;
+  onOpenModerator?: () => void;
 };
 
 export default function RootPlacePreviewCard({
@@ -45,6 +54,9 @@ export default function RootPlacePreviewCard({
   onDirections,
   onShare,
   onContribution,
+  onCommunitySafety,
+  showModeratorEntry = false,
+  onOpenModerator,
 }: Props) {
   const {
     theme,
@@ -143,6 +155,19 @@ export default function RootPlacePreviewCard({
           .rootCommunityHighlights
           .slice(0, 3)
       : [];
+
+  const publicCommunityHidden =
+    place?.rootPublicCommunityHidden ===
+    true;
+
+  const hasPublicCommunity =
+    publicCommunityHidden ||
+    rootPublicCommunityPhotoCount >
+      0 ||
+    publicApprovedReportCount >
+      0 ||
+    publicCommunityHighlights.length >
+      0;
 
   return (
     <View
@@ -813,6 +838,185 @@ export default function RootPlacePreviewCard({
         </View>
       ) : null}
 
+      {/* ROOT_EXPLORE_V12D_COMMUNITY_SAFETY_ACTIONS */}
+      {hasPublicCommunity ? (
+        <View
+          style={[
+            styles.communitySafetyRow,
+            {
+              borderColor:
+                theme.line,
+            },
+          ]}
+        >
+          {publicCommunityHidden ? (
+            <>
+              <View
+                style={
+                  styles.communitySafetyLabelWrap
+                }
+              >
+                <Ionicons
+                  name="eye-off-outline"
+                  size={14}
+                  color={
+                    theme.subText
+                  }
+                />
+                <Text
+                  style={[
+                    styles.communitySafetyLabel,
+                    {
+                      color:
+                        theme.subText,
+                    },
+                  ]}
+                >
+                  ROOT 커뮤니티 숨김 중
+                </Text>
+              </View>
+
+              <Pressable
+                onPress={() =>
+                  onCommunitySafety(
+                    'unhide'
+                  )
+                }
+                style={({ pressed }) => ({
+                  opacity:
+                    pressed
+                      ? 0.55
+                      : 1,
+                })}
+              >
+                <Text
+                  style={[
+                    styles.communitySafetyActionText,
+                    {
+                      color:
+                        theme.text,
+                    },
+                  ]}
+                >
+                  다시 보기
+                </Text>
+              </Pressable>
+            </>
+          ) : (
+            <>
+              <Pressable
+                onPress={() =>
+                  onCommunitySafety(
+                    'report'
+                  )
+                }
+                style={
+                  styles.communitySafetyAction
+                }
+              >
+                <Ionicons
+                  name="alert-circle-outline"
+                  size={13}
+                  color={
+                    theme.subText
+                  }
+                />
+                <Text
+                  style={[
+                    styles.communitySafetyActionText,
+                    {
+                      color:
+                        theme.subText,
+                    },
+                  ]}
+                >
+                  신고
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={() =>
+                  onCommunitySafety(
+                    'hide'
+                  )
+                }
+                style={
+                  styles.communitySafetyAction
+                }
+              >
+                <Ionicons
+                  name="eye-off-outline"
+                  size={13}
+                  color={
+                    theme.subText
+                  }
+                />
+                <Text
+                  style={[
+                    styles.communitySafetyActionText,
+                    {
+                      color:
+                        theme.subText,
+                    },
+                  ]}
+                >
+                  숨기기
+                </Text>
+              </Pressable>
+            </>
+          )}
+        </View>
+      ) : null}
+
+      {showModeratorEntry &&
+      onOpenModerator ? (
+        <Pressable
+          onPress={
+            onOpenModerator
+          }
+          style={[
+            styles.moderatorEntry,
+            {
+              borderColor:
+                theme.line,
+            },
+          ]}
+        >
+          <View
+            style={
+              styles.moderatorEntryLabel
+            }
+          >
+            <Ionicons
+              name="shield-checkmark-outline"
+              size={14}
+              color={
+                ROOT_EXPLORE_ACCENT
+              }
+            />
+            <Text
+              style={[
+                styles.moderatorEntryText,
+                {
+                  color:
+                    theme.text,
+                },
+              ]}
+            >
+              관리자 장소 검수
+            </Text>
+          </View>
+
+          <Ionicons
+            name="chevron-forward"
+            size={14}
+            color={
+              theme.subText
+            }
+          />
+        </Pressable>
+      ) : null}
+
       <Pressable
         onPress={
           onOpenDetail
@@ -1454,6 +1658,71 @@ const styles =
       fontSize: 8.3,
       lineHeight: 12,
       fontWeight: '600',
+    },
+
+    communitySafetyRow: {
+      marginTop: 10,
+      minHeight: 34,
+      paddingHorizontal: 8,
+      borderTopWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent:
+        'flex-end',
+      gap: 14,
+    },
+
+    communitySafetyLabelWrap: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 5,
+    },
+
+    communitySafetyLabel: {
+      fontSize: 8.8,
+      lineHeight: 12,
+      fontWeight: '700',
+    },
+
+    communitySafetyAction: {
+      minHeight: 30,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+    },
+
+    communitySafetyActionText: {
+      fontSize: 8.8,
+      lineHeight: 12,
+      fontWeight: '800',
+    },
+
+    moderatorEntry: {
+      marginTop: 8,
+      minHeight: 36,
+      paddingHorizontal: 9,
+      borderTopWidth:
+        StyleSheet.hairlineWidth,
+      borderBottomWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent:
+        'space-between',
+    },
+
+    moderatorEntryLabel: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+    },
+
+    moderatorEntryText: {
+      fontSize: 9,
+      lineHeight: 13,
+      fontWeight: '800',
     },
 
     moreRow: {

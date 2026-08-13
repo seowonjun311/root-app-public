@@ -7,7 +7,9 @@
   },
   "scripts": {
     "claim:set": "node ./set-moderator-claim.mjs",
-    "claim:verify": "node ./verify-moderator-claim.mjs"
+    "claim:verify": "node ./verify-moderator-claim.mjs",
+    "rules:export": "node ./export-current-firestore-rules.mjs",
+    "rules:prepare": "node ./prepare-firestore-rules-candidate.mjs"
   },
   "dependencies": {
     "firebase-admin": "14.2.0"

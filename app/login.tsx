@@ -56,6 +56,9 @@ import {
   loadRootOnboardingData,
   saveRootOnboardingData
 } from '../store/rootMemory';
+import {
+  bestEffortSyncOwnRootUserPublicProfile,
+} from '../store/rootUserPublicProfileSync';
 import { useRootTheme } from '../store/rootTheme';
 import {
   getCharacterAccountScopeSnapshot,
@@ -930,6 +933,24 @@ const saveMergedRootDataToServer =
     merge: true,
   }
 );
+
+    // ROOT_EXPLORE_V12D7_LOGIN_PROFILE_SYNC
+    const publicProfileSync =
+      await bestEffortSyncOwnRootUserPublicProfile(
+        uid,
+      );
+
+    if (
+      !publicProfileSync.ok
+    ) {
+      console.log(
+        'LOGIN PUBLIC PROFILE BEST-EFFORT SYNC RESULT',
+        {
+          reason:
+            publicProfileSync.reason,
+        },
+      );
+    }
 
     console.log(
       'LOGIN MERGED ROOT SERVER SAVE DONE',

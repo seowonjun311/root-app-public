@@ -1,4 +1,5 @@
 // ROOT_EXPLORE_V12D5_PUBLIC_USER_PROJECTION_FOUNDATION
+// ROOT_EXPLORE_V12D7_PUBLIC_PROFILE_SOURCE_NORMALIZATION
 
 export const ROOT_USER_PUBLIC_PROFILE_COLLECTION =
   'rootUserPublicProfiles' as const;
@@ -22,6 +23,24 @@ type UnknownRecord =
     unknown
   >;
 
+const asRecord = (
+  value: unknown,
+): UnknownRecord => {
+  if (
+    !value ||
+    typeof value !==
+      'object' ||
+    Array.isArray(
+      value,
+    )
+  ) {
+    return {};
+  }
+
+  return value as
+    UnknownRecord;
+};
+
 const asNullableTrimmedString = (
   value: unknown,
 ): string | null => {
@@ -41,22 +60,27 @@ const asNullableTrimmedString = (
 };
 
 const pickFirstNullableString = (
-  source: UnknownRecord,
+  sources: readonly UnknownRecord[],
   keys: readonly string[],
 ): string | null => {
   for (
-    const key of
-    keys
+    const source of
+    sources
   ) {
-    const value =
-      asNullableTrimmedString(
-        source[key],
-      );
-
-    if (
-      value
+    for (
+      const key of
+      keys
     ) {
-      return value;
+      const value =
+        asNullableTrimmedString(
+          source[key],
+        );
+
+      if (
+        value
+      ) {
+        return value;
+      }
     }
   }
 
@@ -94,6 +118,17 @@ export const buildRootUserPublicProfile = (
     );
   }
 
+  const rootData =
+    asRecord(
+      source.rootData,
+    );
+
+  const sources =
+    [
+      source,
+      rootData,
+    ] as const;
+
   return {
     version:
       ROOT_USER_PUBLIC_PROFILE_VERSION,
@@ -101,7 +136,7 @@ export const buildRootUserPublicProfile = (
       normalizedUid,
     displayName:
       pickFirstNullableString(
-        source,
+        sources,
         [
           'displayName',
           'name',
@@ -109,7 +144,7 @@ export const buildRootUserPublicProfile = (
       ),
     nickname:
       pickFirstNullableString(
-        source,
+        sources,
         [
           'nickname',
           'nickName',
@@ -117,7 +152,7 @@ export const buildRootUserPublicProfile = (
       ),
     photoURL:
       pickFirstNullableString(
-        source,
+        sources,
         [
           'photoURL',
           'photoUrl',
@@ -127,11 +162,12 @@ export const buildRootUserPublicProfile = (
       ),
     representativeBadgeId:
       pickFirstNullableString(
-        source,
+        sources,
         [
           'representativeBadgeId',
           'selectedBadgeId',
           'mainBadgeId',
+          'badgeMainBadgeId',
         ],
       ),
     updatedAt:

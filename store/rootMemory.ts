@@ -23,6 +23,11 @@ import firestore, {
   where,
   writeBatch,
 } from '@react-native-firebase/firestore';
+import {
+  bestEffortSyncOwnRootUserPublicProfile,
+  shouldSyncRootUserPublicProfileFromMerge,
+} from './rootUserPublicProfileSync';
+
 
 const firebaseApp =
   getApp();
@@ -67,6 +72,30 @@ const mergeUserDocument =
           true,
       }
     );
+    // ROOT_EXPLORE_V12D7_ROOT_MEMORY_PROFILE_SYNC
+    if (
+      shouldSyncRootUserPublicProfileFromMerge(
+        data,
+      )
+    ) {
+      const profileSync =
+        await bestEffortSyncOwnRootUserPublicProfile(
+          uid,
+        );
+
+      if (
+        !profileSync.ok
+      ) {
+        console.log(
+          'ROOT PUBLIC PROFILE BEST-EFFORT SYNC RESULT',
+          {
+            reason:
+              profileSync.reason,
+          },
+        );
+      }
+    }
+
   };
 
 let onboardingData: any = null;

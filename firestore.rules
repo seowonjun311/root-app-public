@@ -119,6 +119,52 @@ service cloud.firestore {
       allow create, update, delete: if isSelf(uid);
     }
 
+    // ROOT_EXPLORE_V12D5_PUBLIC_USER_PROJECTION_STAGE_A
+    match /rootUserPublicProfiles/{uid} {
+      allow read: if signedIn();
+
+      allow create, update: if isSelf(uid)
+        && request.resource.data.keys().hasOnly([
+          'version',
+          'uid',
+          'displayName',
+          'nickname',
+          'photoURL',
+          'representativeBadgeId',
+          'updatedAt'
+        ])
+        && request.resource.data.keys().hasAll([
+          'version',
+          'uid',
+          'displayName',
+          'nickname',
+          'photoURL',
+          'representativeBadgeId',
+          'updatedAt'
+        ])
+        && request.resource.data.version == 1
+        && request.resource.data.uid == uid
+        && (
+          request.resource.data.displayName == null
+          || request.resource.data.displayName is string
+        )
+        && (
+          request.resource.data.nickname == null
+          || request.resource.data.nickname is string
+        )
+        && (
+          request.resource.data.photoURL == null
+          || request.resource.data.photoURL is string
+        )
+        && (
+          request.resource.data.representativeBadgeId == null
+          || request.resource.data.representativeBadgeId is string
+        )
+        && request.resource.data.updatedAt is string;
+
+      allow delete: if isSelf(uid);
+    }
+
     match /crews/{crewId} {
       allow read: if signedIn();
 

@@ -1,9 +1,5 @@
 // ROOT_EXPLORE_V12D6_PUBLIC_PROFILE_SYNC_ADAPTER
-//
-// Migration-safe adapter only.
-// This file is intentionally NOT imported by existing runtime flows in V1.2D6.
-// Stage A Security Rules are not deployed yet, so wiring client writes before
-// Stage A release would create permission-denied traffic.
+// ROOT_EXPLORE_V12D7_STAGE_A_LIVE_DUAL_WRITE
 
 import {
   getAuth,
@@ -31,6 +27,71 @@ export type RootUserPublicProfileSyncResult = {
     | 'write_denied_or_failed';
   profile?: RootUserPublicProfile;
   errorMessage?: string;
+};
+
+const PUBLIC_PROFILE_SOURCE_KEYS =
+  new Set([
+    'displayName',
+    'name',
+    'nickname',
+    'nickName',
+    'photoURL',
+    'photoUrl',
+    'profileImageUrl',
+    'profileImageURL',
+    'representativeBadgeId',
+    'selectedBadgeId',
+    'mainBadgeId',
+    'badgeMainBadgeId',
+  ]);
+
+const isRecord = (
+  value: unknown,
+): value is Record<string, unknown> =>
+  Boolean(
+    value,
+  ) &&
+  typeof value ===
+    'object' &&
+  !Array.isArray(
+    value,
+  );
+
+const hasPublicProfileSourceKey = (
+  source: Record<string, unknown>,
+): boolean =>
+  Object.keys(
+    source,
+  ).some(
+    (
+      key,
+    ) =>
+      PUBLIC_PROFILE_SOURCE_KEYS.has(
+        key,
+      ),
+  );
+
+export const shouldSyncRootUserPublicProfileFromMerge = (
+  data: Record<string, unknown>,
+): boolean => {
+  if (
+    hasPublicProfileSourceKey(
+      data,
+    )
+  ) {
+    return true;
+  }
+
+  const rootData =
+    data.rootData;
+
+  return isRecord(
+    rootData,
+  )
+    ? hasPublicProfileSourceKey(
+        rootData,
+      )
+    : false;
 };
 
 const getCurrentUid = (): string | null =>
@@ -227,5 +288,6 @@ export const bestEffortSyncOwnRootUserPublicProfile = async (
   }
 };
 
+// V1.2D6 activation target was V1.2D7_AFTER_STAGE_A_RELEASE.
 export const ROOT_USER_PUBLIC_PROFILE_SYNC_ACTIVATION =
-  'V1.2D7_AFTER_STAGE_A_RELEASE' as const;
+  'V1.2D7_STAGE_A_LIVE' as const;

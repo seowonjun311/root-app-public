@@ -1,5 +1,7 @@
 // ROOT_EXPLORE_V12D6_PUBLIC_PROFILE_BACKFILL_ADMIN
+// ROOT_EXPLORE_V12D7_ATOMIC_CONFIRMED_BACKFILL
 
+import fs from 'node:fs';
 import {
   applicationDefault,
   getApps,
@@ -18,6 +20,9 @@ const COLLECTION =
 
 const VERSION =
   1;
+
+const MAX_ATOMIC_USERS =
+  200;
 
 const args =
   process.argv.slice(
@@ -68,17 +73,10 @@ const confirm =
     '--confirm',
   );
 
-const maxDocsRaw =
+const reportPath =
   valueAfter(
-    '--max-docs',
+    '--report',
   );
-
-const maxDocs =
-  maxDocsRaw
-    ? Number(
-        maxDocsRaw,
-      )
-    : 10000;
 
 if (
   !projectId
@@ -98,18 +96,6 @@ if (
 }
 
 if (
-  !Number.isInteger(
-    maxDocs,
-  ) ||
-  maxDocs <=
-    0
-) {
-  throw new Error(
-    '--max-docs must be a positive integer.',
-  );
-}
-
-if (
   write
 ) {
   const expectedConfirm =
@@ -124,6 +110,19 @@ if (
     );
   }
 }
+
+const asRecord =
+  (
+    value,
+  ) =>
+    value &&
+    typeof value ===
+      'object' &&
+    !Array.isArray(
+      value,
+    )
+      ? value
+      : {};
 
 const asNullableString =
   (
@@ -146,24 +145,29 @@ const asNullableString =
 
 const firstString =
   (
-    source,
+    sources,
     keys,
   ) => {
     for (
-      const key of
-      keys
+      const source of
+      sources
     ) {
-      const value =
-        asNullableString(
-          source[
-            key
-          ],
-        );
-
-      if (
-        value
+      for (
+        const key of
+        keys
       ) {
-        return value;
+        const value =
+          asNullableString(
+            source[
+              key
+            ],
+          );
+
+        if (
+          value
+        ) {
+          return value;
+        }
       }
     }
 
@@ -175,47 +179,61 @@ const projectPublicProfile =
     uid,
     source,
     updatedAt,
-  ) => ({
-    version:
-      VERSION,
-    uid,
-    displayName:
-      firstString(
+  ) => {
+    const rootData =
+      asRecord(
+        source.rootData,
+      );
+
+    const sources =
+      [
         source,
-        [
-          'displayName',
-          'name',
-        ],
-      ),
-    nickname:
-      firstString(
-        source,
-        [
-          'nickname',
-          'nickName',
-        ],
-      ),
-    photoURL:
-      firstString(
-        source,
-        [
-          'photoURL',
-          'photoUrl',
-          'profileImageUrl',
-          'profileImageURL',
-        ],
-      ),
-    representativeBadgeId:
-      firstString(
-        source,
-        [
-          'representativeBadgeId',
-          'selectedBadgeId',
-          'mainBadgeId',
-        ],
-      ),
-    updatedAt,
-  });
+        rootData,
+      ];
+
+    return {
+      version:
+        VERSION,
+      uid,
+      displayName:
+        firstString(
+          sources,
+          [
+            'displayName',
+            'name',
+          ],
+        ),
+      nickname:
+        firstString(
+          sources,
+          [
+            'nickname',
+            'nickName',
+          ],
+        ),
+      photoURL:
+        firstString(
+          sources,
+          [
+            'photoURL',
+            'photoUrl',
+            'profileImageUrl',
+            'profileImageURL',
+          ],
+        ),
+      representativeBadgeId:
+        firstString(
+          sources,
+          [
+            'representativeBadgeId',
+            'selectedBadgeId',
+            'mainBadgeId',
+            'badgeMainBadgeId',
+          ],
+        ),
+      updatedAt,
+    };
+  };
 
 if (
   getApps().length ===
@@ -231,172 +249,138 @@ if (
 const db =
   getFirestore();
 
-let scanned =
-  0;
+const userSnapshot =
+  await db
+    .collection(
+      'users',
+    )
+    .orderBy(
+      FieldPath.documentId(),
+    )
+    .limit(
+      MAX_ATOMIC_USERS +
+        1,
+    )
+    .get();
 
-let projected =
-  0;
+if (
+  userSnapshot.size >
+  MAX_ATOMIC_USERS
+) {
+  throw new Error(
+    `Atomic V1.2D7 backfill supports at most ${MAX_ATOMIC_USERS} users. Found more than that; no writes performed.`,
+  );
+}
 
-let writable =
-  0;
+const existingProjectionSnapshot =
+  await db
+    .collection(
+      COLLECTION,
+    )
+    .limit(
+      1,
+    )
+    .get();
 
-let batches =
-  0;
+if (
+  write &&
+  !existingProjectionSnapshot.empty
+) {
+  throw new Error(
+    'Confirmed V1.2D7 backfill requires an empty rootUserPublicProfiles collection to avoid overwriting pre-existing projection data.',
+  );
+}
 
-let lastId =
-  null;
-
-const pageSize =
-  250;
-
-const startedAt =
+const activatedAt =
   new Date()
     .toISOString();
 
-while (
-  scanned <
-  maxDocs
-) {
-  let query =
-    db
-      .collection(
-        'users',
-      )
-      .orderBy(
-        FieldPath.documentId(),
-      )
-      .limit(
-        Math.min(
-          pageSize,
-          maxDocs -
-            scanned,
+const projected =
+  userSnapshot.docs.map(
+    (
+      userDoc,
+    ) => ({
+      id:
+        userDoc.id,
+      profile:
+        projectPublicProfile(
+          userDoc.id,
+          userDoc.data(),
+          activatedAt,
         ),
-      );
+    }),
+  );
 
-  if (
-    lastId
-  ) {
-    query =
-      query.startAfter(
-        lastId,
-      );
-  }
-
-  const snapshot =
-    await query.get();
-
-  if (
-    snapshot.empty
-  ) {
-    break;
-  }
-
-  batches +=
-    1;
-
-  const pendingWrites = [];
+if (
+  write &&
+  projected.length >
+    0
+) {
+  const batch =
+    db.batch();
 
   for (
-    const userDoc of
-    snapshot.docs
+    const item of
+    projected
   ) {
-    scanned +=
-      1;
-
-    lastId =
-      userDoc.id;
-
-    const profile =
-      projectPublicProfile(
-        userDoc.id,
-        userDoc.data(),
-        startedAt,
-      );
-
-    projected +=
-      1;
-
-    if (
-      write
-    ) {
-      pendingWrites.push(
-        {
-          id:
-            userDoc.id,
-          profile,
-        },
-      );
-    }
+    batch.create(
+      db
+        .collection(
+          COLLECTION,
+        )
+        .doc(
+          item.id,
+        ),
+      item.profile,
+    );
   }
 
-  if (
-    write &&
-    pendingWrites.length >
-      0
-  ) {
-    const batch =
-      db.batch();
+  await batch.commit();
+}
 
-    for (
-      const item of
-      pendingWrites
-    ) {
-      batch.set(
-        db
-          .collection(
-            COLLECTION,
-          )
-          .doc(
-            item.id,
-          ),
-        item.profile,
-        {
-          merge: false,
-        },
-      );
+const report = {
+  projectId,
+  mode:
+    write
+      ? 'WRITE'
+      : 'DRY_RUN',
+  collection:
+    COLLECTION,
+  sourceUsers:
+    userSnapshot.size,
+  projectedProfiles:
+    projected.length,
+  writesCommitted:
+    write
+      ? projected.length
+      : 0,
+  existingProjectionCollectionWasEmpty:
+    existingProjectionSnapshot.empty,
+  atomicSingleBatch:
+    true,
+  maxAtomicUsers:
+    MAX_ATOMIC_USERS,
+  sensitiveFieldValuesPrinted:
+    false,
+};
 
-      writable +=
-        1;
-    }
-
-    await batch.commit();
-  }
-
-  if (
-    snapshot.size <
-    pageSize
-  ) {
-    break;
-  }
+if (
+  reportPath
+) {
+  fs.writeFileSync(
+    reportPath,
+    JSON.stringify(
+      report,
+      null,
+      2,
+    ) + '\n',
+    'utf8',
+  );
 }
 
 console.log(
   JSON.stringify(
-    {
-      projectId,
-      mode:
-        write
-          ? 'WRITE'
-          : 'DRY_RUN',
-      collection:
-        COLLECTION,
-      scannedUsers:
-        scanned,
-      projectedProfiles:
-        projected,
-      writesCommitted:
-        write
-          ? writable
-          : 0,
-      pages:
-        batches,
-      maxDocs,
-      truncated:
-        scanned >=
-        maxDocs,
-      sensitiveFieldValuesPrinted:
-        false,
-    },
+    report,
     null,
     2,
   ),
@@ -406,7 +390,7 @@ if (
   write
 ) {
   console.log(
-    'PASS - confirmed Admin SDK projection backfill write completed.',
+    'PASS - confirmed Admin SDK public-profile backfill committed atomically.',
   );
 }
 else {

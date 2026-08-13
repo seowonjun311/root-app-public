@@ -6,6 +6,9 @@ import fs from 'node:fs';
 const EXPECTED_HARDENED_SHA =
   'fd74b90dd9fec2919ca9bb3868116a6a9c3294b23f511f0807fb25bbd5bb059a';
 
+const EXPECTED_STAGE_A_SHA =
+  '5b8666f3ddfa1f3be438f1be26cf9e7fd57f30596d9b6a7a011f7c2623768732';
+
 function read(
   file
 ) {
@@ -51,14 +54,19 @@ const rules =
     'firestore.rules'
   );
 
-if (
+const rulesSha =
   sha256(
     rules
-  ) !==
-  EXPECTED_HARDENED_SHA
+  );
+
+if (
+  rulesSha !==
+    EXPECTED_HARDENED_SHA &&
+  rulesSha !==
+    EXPECTED_STAGE_A_SHA
 ) {
   throw new Error(
-    'firestore.rules does not match the reviewed V1.2D4 hardened SHA256'
+    'firestore.rules does not match the V1.2D4 hardened baseline or V1.2D7 Stage A successor SHA256'
   );
 }
 
@@ -194,7 +202,7 @@ if (
 }
 
 console.log(
-  'PASS - firestore.rules matches reviewed V1.2D4 hardened hash'
+  'PASS - firestore.rules matches V1.2D4 hardened baseline or V1.2D7 Stage A successor hash'
 );
 console.log(
   'PASS - moderation Security Rules authorize rootModerator only'

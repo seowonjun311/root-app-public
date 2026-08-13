@@ -93,13 +93,18 @@ const activeRules =
     'utf8',
   );
 
-if (
+const stageAActive =
   activeRules.includes(
     'ROOT_EXPLORE_V12D5_PUBLIC_USER_PROJECTION_STAGE_A',
+  );
+
+if (
+  !activeRules.includes(
+    'ROOT_EXPLORE_V12D4_ROOT_MODERATOR_ONLY',
   )
 ) {
   throw new Error(
-    'Active firestore.rules unexpectedly contains Stage A; V1.2D6 must not deploy or activate it.',
+    'Active firestore.rules lost the rootModerator-only moderation boundary.',
   );
 }
 
@@ -120,7 +125,7 @@ if (
 }
 
 console.log(
-  'PASS - projection sync adapter exists but remains activation-gated',
+  'PASS - projection sync adapter exists; V1.2D7 successor may activate it after Stage A release',
 );
 console.log(
   'PASS - Admin backfill defaults to dry-run and requires explicit confirmation for writes',
@@ -129,7 +134,9 @@ console.log(
   'PASS - cross-user user-document migration audit exists',
 );
 console.log(
-  'PASS - active firestore.rules remains pre-Stage-A',
+  stageAActive
+    ? 'PASS - active firestore.rules is V1.2D7 Stage A successor'
+    : 'PASS - active firestore.rules remains pre-Stage-A',
 );
 console.log(
   'PASS - EXPLORE V1.2D6 MIGRATION READINESS',

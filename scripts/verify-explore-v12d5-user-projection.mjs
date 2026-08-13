@@ -79,14 +79,19 @@ const target =
     'firebase/firestore-v12d5-self-only-target.rules',
   );
 
-if (
+const currentRulesSha =
   sha(
     currentRules,
-  ) !==
-  HARDENED_SHA
+  );
+
+if (
+  currentRulesSha !==
+    HARDENED_SHA &&
+  currentRulesSha !==
+    STAGE_A_SHA
 ) {
   throw new Error(
-    'Current firestore.rules must remain the V1.2D4 hardened baseline.',
+    'Current firestore.rules must match the V1.2D4 hardened baseline or V1.2D7 Stage A successor.',
   );
 }
 
@@ -259,7 +264,7 @@ if (
 }
 
 console.log(
-  'PASS - current firestore.rules remains V1.2D4 hardened baseline',
+  'PASS - current firestore.rules is V1.2D4 hardened baseline or V1.2D7 Stage A successor',
 );
 console.log(
   'PASS - Stage A public-user projection candidate verified',
@@ -274,7 +279,7 @@ console.log(
   'PASS - rootModerator-only moderation boundary preserved',
 );
 console.log(
-  'PASS - runtime projection foundation is side-effect free and not wired into existing flows',
+  'PASS - runtime projection foundation is retained; V1.2D7 successor may wire the sync adapter',
 );
 console.log(
   'PASS - EXPLORE V1.2D5 USER PROJECTION VERIFIER',

@@ -1,4 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  getAuth,
+} from '@react-native-firebase/auth';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -13,6 +16,11 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import {
+  countUnreadRootCrewChatMessages,
+  getRootCrewChatLastReadAt,
+  subscribeRootCrewChatMessages,
+} from '../store/rootCrewChat';
 import {
   addRootCrewNotification,
   addRootCrewPostComment,
@@ -668,6 +676,7 @@ const [showReportManageModal, setShowReportManageModal] = useState(false);
 const [showJoinRequestManageModal, setShowJoinRequestManageModal] =  useState(false);
 const [crewNotifications, setCrewNotifications] = useState<any[]>([]);
 const [showNotificationModal, setShowNotificationModal] = useState(false);
+const [unreadChatCount, setUnreadChatCount] = useState(0);
 const [deleteNotificationTarget, setDeleteNotificationTarget] =
   useState<any>(null);
 
@@ -826,6 +835,86 @@ setCrewNotifications(getRootCrewNotifications());
   unsubscribeNotifications?.();
   };
 }, [id]);
+
+useEffect(() => {
+  const crewId =
+    String(
+      id ?? ''
+    );
+  const authUid =
+    getAuth().currentUser?.uid ?? '';
+  const memberIds =
+    selectedCrew?.memberIds ?? [];
+  const canReadChat =
+    Boolean(
+      crewId &&
+      authUid &&
+      memberIds.some(
+        (
+          memberId: unknown
+        ) =>
+          String(
+            memberId
+          ) === authUid
+      )
+    );
+
+  if (
+    !canReadChat
+  ) {
+    setUnreadChatCount(0);
+    return;
+  }
+
+  let disposed =
+    false;
+  let unsubscribe:
+    (() => void) |
+    undefined;
+
+  void getRootCrewChatLastReadAt(
+    authUid,
+    crewId
+  ).then(
+    (
+      lastReadAt
+    ) => {
+      if (
+        disposed
+      ) {
+        return;
+      }
+
+      unsubscribe =
+        subscribeRootCrewChatMessages(
+          crewId,
+          (
+            messages
+          ) => {
+            setUnreadChatCount(
+              countUnreadRootCrewChatMessages(
+                messages,
+                authUid,
+                lastReadAt
+              )
+            );
+          },
+          () => {
+            setUnreadChatCount(0);
+          }
+        );
+    }
+  );
+
+  return () => {
+    disposed =
+      true;
+    unsubscribe?.();
+  };
+}, [
+  id,
+  selectedCrew?.memberIds,
+]);
 
 if (crewLoading) {
   return (
@@ -1340,6 +1429,7 @@ const isMyProfile =
       S.crewMemberButton
     }
     onPress={() => {
+      setUnreadChatCount(0);
       router.push({
         pathname:
           '/crew-members',
@@ -1361,7 +1451,38 @@ const isMyProfile =
   </Pressable>
 </View>
 
-  <View
+{isMember ? (
+  <Pressable
+    style={S.crewChatButton}
+    onPress={() => {
+      router.push({
+        pathname:
+          '/crew-chat' as any,
+        params: {
+          id:
+            selectedCrewId,
+        },
+      });
+    }}
+  >
+    <View style={S.crewChatButtonCopy}>
+      <Text style={S.crewChatButtonTitle}>
+        💬 크루 대화
+        {unreadChatCount > 0
+          ? ` · 새 메시지 ${Math.min(unreadChatCount, 99)}`
+          : ''}
+      </Text>
+      <Text style={S.crewChatButtonDescription}>
+        멤버들과 목표와 탐험 이야기를 나눠보세요
+      </Text>
+    </View>
+    <Text style={S.crewChatButtonArrow}>
+      ›
+    </Text>
+  </Pressable>
+) : null}
+
+	  <View
     style={
       S.crewCompactDivider
     }
@@ -4788,6 +4909,41 @@ crewMemberLinkText: {
 
   color:
     '#5f3b1b',
+},
+
+crewChatButton: {
+  minHeight: 58,
+  marginTop: 13,
+  flexDirection: 'row',
+  alignItems: 'center',
+  paddingHorizontal: 14,
+  paddingVertical: 10,
+  borderRadius: 14,
+  borderWidth: 1,
+  borderColor: '#dfc28e',
+  backgroundColor: '#fff3cf',
+},
+crewChatButtonCopy: {
+  flex: 1,
+},
+crewChatButtonTitle: {
+  fontSize: 15,
+  fontWeight: '900',
+  color: '#3d2515',
+},
+crewChatButtonDescription: {
+  marginTop: 3,
+  fontSize: 11,
+  lineHeight: 16,
+  fontWeight: '700',
+  color: '#8a6a3a',
+},
+crewChatButtonArrow: {
+  marginLeft: 10,
+  fontSize: 28,
+  lineHeight: 30,
+  fontWeight: '500',
+  color: '#8a5a24',
 },
 
   crewCompactDivider: {

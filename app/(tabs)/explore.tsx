@@ -13,6 +13,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 import {
@@ -76,6 +77,13 @@ type HeavyExploreComponent =
   ComponentType<
     HeavyExploreProps
   >;
+
+const ROOT_EXPLORE_QUICK_SEARCHES = [
+  '이번 주말 뭐 하지?',
+  '카공하기 좋은 카페',
+  '비 오는 날 실내 데이트',
+  '가볍게 떠나는 바다',
+] as const;
 
 
 type QuickShapeMapProps<
@@ -562,6 +570,11 @@ export default function ExploreShellScreen() {
     '전국 탐험 데이터를 준비하고 있어요.'
   );
 
+  const [
+    searchQuery,
+    setSearchQuery,
+  ] = useState('');
+
   const heavyLoadStartedRef =
     useRef(false);
 
@@ -844,6 +857,41 @@ export default function ExploreShellScreen() {
       );
     }, []);
 
+  const openSearchResults =
+    useCallback(
+      (
+        requestedQuery?:
+          string
+      ) => {
+        const query = String(
+          requestedQuery ??
+            searchQuery
+        ).trim();
+
+        if (!query) {
+          return;
+        }
+
+        router.push({
+          pathname:
+            '/explore/search-results',
+          params: {
+            source:
+              'search',
+            q: query,
+          },
+        } as any);
+      },
+      [searchQuery]
+    );
+
+  const openRecommendation =
+    useCallback(() => {
+      router.push(
+        '/explore/recommend' as any
+      );
+    }, []);
+
   const goBackToKorea =
     useCallback(() => {
       requestedRegionRef.current =
@@ -898,6 +946,325 @@ export default function ExploreShellScreen() {
           styles.header
         }
       >
+        <View
+          style={
+            styles.discoveryIntro
+          }
+        >
+          <Text
+            style={[
+              styles.discoveryEyebrow,
+              {
+                color:
+                  theme.subText,
+              },
+            ]}
+          >
+            어디로 갈지 정하지 못해도 괜찮아요
+          </Text>
+
+          <Text
+            style={[
+              styles.discoveryTitle,
+              {
+                color:
+                  theme.text,
+              },
+            ]}
+          >
+            이번에는 어디로 떠나볼까요?
+          </Text>
+        </View>
+
+        <View
+          style={[
+            styles.searchCard,
+            {
+              backgroundColor:
+                theme.card,
+              borderColor:
+                theme.line,
+              borderRadius:
+                isCityBlack
+                  ? 3
+                  : 18,
+            },
+          ]}
+        >
+          <Text
+            style={[
+              styles.searchCardTitle,
+              {
+                color:
+                  theme.text,
+              },
+            ]}
+          >
+            원하는 곳이 있어요
+          </Text>
+
+          <Text
+            style={[
+              styles.searchCardDescription,
+              {
+                color:
+                  theme.subText,
+              },
+            ]}
+          >
+            장소 이름뿐 아니라 목적과 분위기로 찾아보세요.
+          </Text>
+
+          <View
+            style={[
+              styles.searchInputRow,
+              {
+                backgroundColor:
+                  theme.background,
+                borderColor:
+                  theme.line,
+                borderRadius:
+                  isCityBlack
+                    ? 2
+                    : 12,
+              },
+            ]}
+          >
+            <Ionicons
+              name="search-outline"
+              size={19}
+              color={
+                theme.subText
+              }
+            />
+
+            <TextInput
+              value={
+                searchQuery
+              }
+              onChangeText={
+                setSearchQuery
+              }
+              onSubmitEditing={() =>
+                openSearchResults()
+              }
+              returnKeyType="search"
+              placeholder="예: 카공 카페, 야장, 계곡"
+              placeholderTextColor={
+                theme.subText
+              }
+              style={[
+                styles.searchInput,
+                {
+                  color:
+                    theme.text,
+                },
+              ]}
+            />
+
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="탐험 검색"
+              disabled={
+                !searchQuery.trim()
+              }
+              onPress={() =>
+                openSearchResults()
+              }
+              style={({
+                pressed,
+              }) => [
+                styles.searchSubmitButton,
+                {
+                  backgroundColor:
+                    theme.button,
+                  borderRadius:
+                    isCityBlack
+                      ? 2
+                      : 9,
+                  opacity:
+                    !searchQuery.trim()
+                      ? 0.35
+                      : pressed
+                        ? 0.7
+                        : 1,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.searchSubmitText,
+                  {
+                    color:
+                      theme.buttonText,
+                  },
+                ]}
+              >
+                찾기
+              </Text>
+            </Pressable>
+          </View>
+
+          <View
+            style={
+              styles.quickSearchRow
+            }
+          >
+            {
+              ROOT_EXPLORE_QUICK_SEARCHES.map(
+                (item) => (
+                  <Pressable
+                    key={
+                      item
+                    }
+                    onPress={() =>
+                      openSearchResults(
+                        item
+                      )
+                    }
+                    style={({
+                      pressed,
+                    }) => [
+                      styles.quickSearchChip,
+                      {
+                        borderColor:
+                          theme.line,
+                        borderRadius:
+                          isCityBlack
+                            ? 2
+                            : 999,
+                        opacity:
+                          pressed
+                            ? 0.55
+                            : 1,
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.quickSearchText,
+                        {
+                          color:
+                            theme.text,
+                        },
+                      ]}
+                    >
+                      {item}
+                    </Text>
+                  </Pressable>
+                )
+              )
+            }
+          </View>
+        </View>
+
+        <Pressable
+          onPress={
+            openRecommendation
+          }
+          style={({
+            pressed,
+          }) => [
+            styles.recommendCard,
+            {
+              backgroundColor:
+                theme.button,
+              borderColor:
+                theme.strongLine,
+              borderRadius:
+                isCityBlack
+                  ? 3
+                  : 18,
+              opacity:
+                pressed
+                  ? 0.76
+                  : 1,
+            },
+          ]}
+        >
+          <View
+            style={
+              styles.recommendIcon
+            }
+          >
+            <Text
+              style={
+                styles.recommendIconText
+              }
+            >
+              🧭
+            </Text>
+          </View>
+
+          <View
+            style={
+              styles.recommendText
+            }
+          >
+            <Text
+              style={[
+                styles.recommendTitle,
+                {
+                  color:
+                    theme.buttonText,
+                },
+              ]}
+            >
+              아직 어디 갈지 모르겠어요
+            </Text>
+
+            <Text
+              style={[
+                styles.recommendDescription,
+                {
+                  color:
+                    theme.buttonText,
+                },
+              ]}
+            >
+              언제·누구와·원하는 분위기만 고르면 ROOT가 골라드려요.
+            </Text>
+          </View>
+
+          <Ionicons
+            name="chevron-forward"
+            size={21}
+            color={
+              theme.buttonText
+            }
+          />
+        </Pressable>
+
+        <View
+          style={
+            styles.mapSectionHeader
+          }
+        >
+          <Text
+            style={[
+              styles.mapSectionTitle,
+              {
+                color:
+                  theme.text,
+              },
+            ]}
+          >
+            지역부터 둘러보기
+          </Text>
+
+          <Text
+            style={[
+              styles.mapSectionDescription,
+              {
+                color:
+                  theme.subText,
+              },
+            ]}
+          >
+            기존 전국·자치구 탐험 지도
+          </Text>
+        </View>
+
         <View
           style={
             styles.headerLeft
@@ -2472,6 +2839,158 @@ const styles =
     content: {
       paddingHorizontal: 14,
       gap: 11,
+    },
+
+    discoveryIntro: {
+      paddingHorizontal: 2,
+      paddingTop: 2,
+    },
+
+    discoveryEyebrow: {
+      fontSize: 10.5,
+      fontWeight: '800',
+      lineHeight: 15,
+    },
+
+    discoveryTitle: {
+      marginTop: 4,
+      fontSize: 22,
+      fontWeight: '900',
+      letterSpacing: -0.7,
+    },
+
+    searchCard: {
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      padding: 14,
+    },
+
+    searchCardTitle: {
+      fontSize: 14,
+      fontWeight: '900',
+    },
+
+    searchCardDescription: {
+      marginTop: 4,
+      fontSize: 10,
+      fontWeight: '700',
+      lineHeight: 15,
+    },
+
+    searchInputRow: {
+      minHeight: 48,
+      marginTop: 12,
+      paddingLeft: 12,
+      paddingRight: 5,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
+
+    searchInput: {
+      flex: 1,
+      minWidth: 0,
+      paddingVertical: 10,
+      fontSize: 13,
+      fontWeight: '700',
+    },
+
+    searchSubmitButton: {
+      minWidth: 52,
+      height: 38,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    searchSubmitText: {
+      fontSize: 11,
+      fontWeight: '900',
+    },
+
+    quickSearchRow: {
+      marginTop: 10,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 6,
+    },
+
+    quickSearchChip: {
+      minHeight: 31,
+      paddingHorizontal: 10,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    quickSearchText: {
+      fontSize: 9.5,
+      fontWeight: '800',
+    },
+
+    recommendCard: {
+      minHeight: 88,
+      paddingHorizontal: 14,
+      paddingVertical: 13,
+      borderWidth:
+        StyleSheet.hairlineWidth,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 11,
+    },
+
+    recommendIcon: {
+      width: 43,
+      height: 43,
+      borderRadius: 22,
+      backgroundColor:
+        'rgba(255,255,255,0.22)',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
+    recommendIconText: {
+      fontSize: 23,
+    },
+
+    recommendText: {
+      flex: 1,
+      minWidth: 0,
+    },
+
+    recommendTitle: {
+      fontSize: 13,
+      fontWeight: '900',
+    },
+
+    recommendDescription: {
+      marginTop: 4,
+      fontSize: 9.5,
+      fontWeight: '700',
+      lineHeight: 14,
+      opacity: 0.9,
+    },
+
+    mapSectionHeader: {
+      marginTop: 5,
+      paddingHorizontal: 2,
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      justifyContent:
+        'space-between',
+      gap: 10,
+    },
+
+    mapSectionTitle: {
+      fontSize: 14,
+      fontWeight: '900',
+    },
+
+    mapSectionDescription: {
+      fontSize: 9.5,
+      fontWeight: '700',
     },
 
     mapCard: {

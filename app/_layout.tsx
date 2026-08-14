@@ -7,7 +7,8 @@ import {
   onAuthStateChanged,
   signOut,
 } from '@react-native-firebase/auth';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
+import * as Notifications from 'expo-notifications';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import {
@@ -27,6 +28,15 @@ import {
   useRootTheme,
 } from '../store/rootTheme';
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
+
 export default function RootLayout() {
   const {
     themeMode,
@@ -35,6 +45,23 @@ export default function RootLayout() {
 
   const isCityBlack =
     themeMode === 'cityBlack';
+
+  useEffect(() => {
+    const openCrewChat = (notification: Notifications.Notification) => {
+      const url = notification.request.content.data?.url;
+      if (typeof url === 'string' && url.startsWith('/crew-chat?id=')) {
+        router.push(url as never);
+      }
+    };
+    const initialResponse = Notifications.getLastNotificationResponse();
+    if (initialResponse?.notification) {
+      openCrewChat(initialResponse.notification);
+    }
+    const subscription = Notifications.addNotificationResponseReceivedListener(
+      (response) => openCrewChat(response.notification)
+    );
+    return () => subscription.remove();
+  }, []);
 
   /*
    * RootLayout에서는
@@ -332,6 +359,10 @@ const unsubscribe =
 
         <Stack.Screen
           name="crew-members"
+        />
+
+        <Stack.Screen
+          name="crew-chat-moderation"
         />
 
         <Stack.Screen

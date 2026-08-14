@@ -36,6 +36,8 @@ import {
   type RootCrewChatReaction,
   type RootCrewChatReportReason,
 } from '../store/rootCrewChat';
+import { getRootPlaceModeratorAccess } from '../store/rootPlaceModeration';
+import { registerRootCrewChatPushToken } from '../store/rootCrewPushNotifications';
 import {
   getRootCrews,
   getRootOnboardingData,
@@ -85,6 +87,8 @@ export default function CrewChatScreen() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [initialUnreadCount, setInitialUnreadCount] = useState(0);
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
+  const [isRootModerator, setIsRootModerator] = useState(false);
   const didReadInitialSnapshotRef = useRef(false);
 
   const isMember = useMemo(
@@ -115,6 +119,16 @@ export default function CrewChatScreen() {
     });
     return () => unsubscribe?.();
   }, [crewId]);
+
+  useEffect(() => {
+    if (!uid) return;
+    void getRootPlaceModeratorAccess(false)
+      .then((access) => setIsRootModerator(access.allowed))
+      .catch(() => setIsRootModerator(false));
+    void registerRootCrewChatPushToken().catch(() => {
+      // 채팅 자체는 푸시 등록 실패와 독립적으로 계속 사용할 수 있어요.
+    });
+  }, [uid]);
 
   useEffect(() => {
     if (!crewId || !uid || !isMember) {
@@ -287,6 +301,15 @@ export default function CrewChatScreen() {
               멤버 {crew?.memberIds?.length ?? 0}명 · 사진은 멤버만 열람
             </Text>
           </View>
+          {isRootModerator ? (
+            <Pressable
+              style={styles.moderationButton}
+              onPress={() => router.push('/crew-chat-moderation' as never)}
+            >
+              <Ionicons name="shield-checkmark-outline" size={19} color="#6d421f" />
+              <Text style={styles.moderationButtonText}>신고</Text>
+            </Pressable>
+          ) : null}
         </View>
 
         {crew?.notice?.trim() ? (
@@ -348,11 +371,16 @@ export default function CrewChatScreen() {
                       </View>
                     ) : null}
                     {item.image?.downloadUrl ? (
-                      <Image
-                        source={{ uri: item.image.downloadUrl }}
-                        style={styles.messageImage}
-                        resizeMode="cover"
-                      />
+                      <Pressable onPress={() => setSelectedImageUrl(item.image?.downloadUrl ?? null)}>
+                        <Image
+                          source={{ uri: item.image.downloadUrl }}
+                          style={styles.messageImage}
+                          resizeMode="cover"
+                        />
+                        <View style={styles.expandBadge}>
+                          <Ionicons name="expand-outline" size={15} color="#fff" />
+                        </View>
+                      </Pressable>
                     ) : null}
                     {item.text ? <Text style={styles.messageText}>{item.text}</Text> : null}
                   </View>
@@ -495,6 +523,30 @@ export default function CrewChatScreen() {
           </View>
         </Pressable>
       </Modal>
+
+      <Modal
+        visible={Boolean(selectedImageUrl)}
+        animationType="fade"
+        onRequestClose={() => setSelectedImageUrl(null)}
+      >
+        <View style={styles.fullscreenViewer}>
+          <Pressable
+            accessibilityLabel="사진 닫기"
+            style={styles.fullscreenClose}
+            onPress={() => setSelectedImageUrl(null)}
+          >
+            <Ionicons name="close" size={28} color="#fff" />
+          </Pressable>
+          {selectedImageUrl ? (
+            <Image
+              source={{ uri: selectedImageUrl }}
+              style={styles.fullscreenImage}
+              resizeMode="contain"
+            />
+          ) : null}
+          <Text style={styles.fullscreenHint}>화면에 맞춰 원본 비율로 표시돼요.</Text>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -512,6 +564,8 @@ const styles = StyleSheet.create({
   },
   headerBack: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center' },
   headerCopy: { flex: 1, paddingRight: 42, alignItems: 'center' },
+  moderationButton: { position: 'absolute', right: 9, minWidth: 46, height: 46, alignItems: 'center', justifyContent: 'center' },
+  moderationButtonText: { marginTop: 1, fontSize: 9, fontWeight: '900', color: '#6d421f' },
   title: { maxWidth: '100%', fontSize: 18, fontWeight: '900', color: '#3d2515' },
   memberCount: { marginTop: 2, fontSize: 12, fontWeight: '700', color: '#8a6a3a' },
   notice: {
@@ -541,6 +595,7 @@ const styles = StyleSheet.create({
   myBubble: { alignSelf: 'flex-end', borderTopRightRadius: 5, backgroundColor: '#f4cc79' },
   messageText: { fontSize: 15, lineHeight: 21, color: '#3f2b1d' },
   messageImage: { width: 220, height: 160, borderRadius: 12, marginBottom: 7, backgroundColor: '#eadbc5' },
+  expandBadge: { position: 'absolute', right: 7, top: 7, width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(20, 14, 10, 0.62)' },
   replyQuote: { borderLeftWidth: 3, borderLeftColor: '#b98745', paddingLeft: 8, marginBottom: 8 },
   replyAuthor: { fontSize: 11, fontWeight: '900', color: '#6f4626' },
   replyText: { marginTop: 2, fontSize: 11, color: '#765b42' },
@@ -575,4 +630,8 @@ const styles = StyleSheet.create({
   sheetButtonText: { fontSize: 14, fontWeight: '800', color: '#4e3522', textAlign: 'center' },
   reportButtonText: { fontSize: 14, fontWeight: '800', color: '#9b6424', textAlign: 'center' },
   deleteButtonText: { fontSize: 14, fontWeight: '800', color: '#b14235', textAlign: 'center' },
+  fullscreenViewer: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#090705' },
+  fullscreenImage: { width: '100%', height: '100%' },
+  fullscreenClose: { position: 'absolute', zIndex: 2, top: 48, right: 18, width: 46, height: 46, borderRadius: 23, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.58)' },
+  fullscreenHint: { position: 'absolute', bottom: 36, color: '#fff', fontSize: 12, opacity: 0.82 },
 });

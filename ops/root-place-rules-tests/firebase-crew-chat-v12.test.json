@@ -1,0 +1,19 @@
+{
+  "firestore": {
+    "rules": "../../firebase/firestore-crew-chat-v12.rules"
+  },
+  "storage": {
+    "rules": "../../firebase/storage-crew-chat-v12.rules"
+  },
+  "emulators": {
+    "firestore": {
+      "port": 8088
+    },
+    "storage": {
+      "port": 9198
+    },
+    "ui": {
+      "enabled": false
+    }
+  }
+}

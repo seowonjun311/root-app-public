@@ -91,6 +91,42 @@ GoogleSignin.configure({
     '914235938891-8f8h890fnb4phoijtcilvui995quuud3.apps.googleusercontent.com',
 });
 
+// ROOT_AUTH_V10_LOGIN_RESILIENCE
+const ROOT_AUTH_SERVER_TIMEOUT_MS =
+  15000;
+
+const ROOT_AUTH_SERVER_RETRY_DELAYS_MS = [
+  2000,
+  5000,
+  10000,
+] as const;
+
+const waitForRootAuthRetry =
+  (delayMs: number) =>
+    new Promise<void>((resolve) => {
+      setTimeout(resolve, delayMs);
+    });
+
+const isTransientRootAuthServerError =
+  (error: any) => {
+    const code = String(
+      error?.code ?? '',
+    ).toLowerCase();
+
+    return [
+      'aborted',
+      'cancelled',
+      'deadline-exceeded',
+      'internal',
+      'network-request-failed',
+      'resource-exhausted',
+      'unavailable',
+      'unknown',
+    ].some((candidate) =>
+      code.includes(candidate)
+    );
+  };
+
 type LoadServerDataOptions = {
   onTimeout?: () => void;
 
@@ -159,7 +195,11 @@ const loadServerData = async (
       >
     | null = null;
 
-  let timedOut = false;
+  let lateRecoveryEnabled = false;
+
+  let lateDataDelivered = false;
+
+  let retryStarted = false;
 
   console.log(
     'LOGIN SERVER USER LOAD START',
@@ -269,63 +309,42 @@ const loadServerData = async (
         }
       );
 
-  /*
-   * 3초 뒤 로컬 데이터로
-   * 앱에 먼저 들어갑니다.
-   */
-  const timeoutPromise =
-    new Promise<null>(
-      (
-        resolve
-      ) => {
-        timeoutId =
-          setTimeout(
-            () => {
-              timedOut =
-                true;
-
-              console.log(
-                'LOGIN SERVER USER LOAD TIMEOUT: LOCAL DATA USED',
-                {
-                  uid,
-                }
-              );
-
-              try {
-                options
-                  .onTimeout?.();
-              } catch (
-                callbackError
-              ) {
-                console.log(
-                  'LOGIN SERVER TIMEOUT CALLBACK ERROR',
-                  callbackError
-                );
-              }
-
-              resolve(
-                null
-              );
-            },
-            3000
-          );
-      }
-    );
-
-  /*
-   * 서버가 3초보다 늦게 응답해도
-   * 응답을 버리지 않고 후속 병합을 진행합니다.
-   */
-  void serverPromise.then(
+  const deliverLateServerResult =
     async (
-      result
+      result: ServerFetchResult
     ) => {
       if (
-        !timedOut ||
+        !lateRecoveryEnabled ||
+        lateDataDelivered ||
         !result.ok
       ) {
         return;
       }
+
+      const activeRetryAuthUid =
+        firebaseAuth.currentUser
+          ?.uid ??
+        null;
+
+      if (
+        !activeRetryAuthUid ||
+        String(activeRetryAuthUid) !==
+          requestedPrivateUid
+      ) {
+        console.log(
+          'LOGIN SERVER LATE RESULT SKIPPED: AUTH CHANGED',
+          {
+            expectedUid:
+              requestedPrivateUid,
+            activeAuthUid:
+              activeRetryAuthUid,
+          }
+        );
+
+        return;
+      }
+
+      lateDataDelivered = true;
 
       console.log(
         'LOGIN SERVER USER LATE RESULT',
@@ -361,6 +380,166 @@ const loadServerData = async (
           }
         );
       }
+    };
+
+  const startBackgroundRetries =
+    () => {
+      if (retryStarted) {
+        return;
+      }
+
+      retryStarted = true;
+      lateRecoveryEnabled = true;
+
+      void (async () => {
+        for (
+          const delayMs of
+            ROOT_AUTH_SERVER_RETRY_DELAYS_MS
+        ) {
+          await waitForRootAuthRetry(
+            delayMs
+          );
+
+          if (
+            lateDataDelivered ||
+            firebaseAuth.currentUser
+              ?.uid !==
+              requestedPrivateUid
+          ) {
+            return;
+          }
+
+          console.log(
+            'LOGIN SERVER USER BACKGROUND RETRY',
+            {
+              uid,
+              delayMs,
+            }
+          );
+
+          try {
+            const retrySnapshot =
+              await getDoc(
+                doc(
+                  firebaseDb,
+                  'users',
+                  uid
+                )
+              );
+
+            const retryExists =
+              typeof (
+                retrySnapshot as any
+              ).exists ===
+                'function'
+                ? (
+                    retrySnapshot as any
+                  ).exists()
+                : Boolean(
+                    (
+                      retrySnapshot as any
+                    ).exists
+                  );
+
+            await deliverLateServerResult({
+              ok: true,
+              exists:
+                retryExists,
+              data:
+                retryExists
+                  ? retrySnapshot.data() ??
+                    null
+                  : null,
+            });
+
+            if (lateDataDelivered) {
+              return;
+            }
+          } catch (
+            retryError: any
+          ) {
+            console.log(
+              'LOGIN SERVER USER BACKGROUND RETRY ERROR',
+              {
+                uid,
+                delayMs,
+                code:
+                  retryError?.code ??
+                  null,
+                message:
+                  retryError?.message ??
+                  String(retryError),
+              }
+            );
+
+            if (
+              !isTransientRootAuthServerError(
+                retryError
+              )
+            ) {
+              return;
+            }
+          }
+        }
+      })();
+    };
+
+  /*
+   * 15초 뒤 로컬 데이터로
+   * 앱에 먼저 들어갑니다.
+   */
+  const timeoutPromise =
+    new Promise<null>(
+      (
+        resolve
+      ) => {
+        timeoutId =
+          setTimeout(
+            () => {
+              lateRecoveryEnabled =
+                true;
+
+              startBackgroundRetries();
+
+              console.log(
+                'LOGIN SERVER USER LOAD TIMEOUT: LOCAL DATA USED',
+                {
+                  uid,
+                }
+              );
+
+              try {
+                options
+                  .onTimeout?.();
+              } catch (
+                callbackError
+              ) {
+                console.log(
+                  'LOGIN SERVER TIMEOUT CALLBACK ERROR',
+                  callbackError
+                );
+              }
+
+              resolve(
+                null
+              );
+            },
+            ROOT_AUTH_SERVER_TIMEOUT_MS
+          );
+      }
+    );
+
+  /*
+   * 서버가 15초보다 늦게 응답해도
+   * 응답을 버리지 않고 후속 병합을 진행합니다.
+   */
+  void serverPromise.then(
+    async (
+      result
+    ) => {
+      await deliverLateServerResult(
+        result
+      );
     }
   );
 
@@ -375,7 +554,7 @@ const loadServerData = async (
       ]);
 
     /*
-     * 3초 타임아웃입니다.
+     * 15초 타임아웃입니다.
      */
     if (!result) {
       return null;
@@ -385,6 +564,14 @@ const loadServerData = async (
      * Firestore 오류입니다.
      */
     if (!result.ok) {
+      if (
+        isTransientRootAuthServerError(
+          result.error
+        )
+      ) {
+        startBackgroundRetries();
+      }
+
       return null;
     }
 
@@ -1428,7 +1615,7 @@ export default function LoginScreen() {
     false;
 
   /*
-   * 3초 뒤 서버 응답이 늦게 도착하면
+   * 15초 뒤 서버 응답이 늦게 도착하면
    * 그 시점의 최신 로컬 데이터와
    * 서버 데이터를 다시 병합합니다.
    */
@@ -1587,7 +1774,7 @@ await reconcileDailyDataAfterServerRead({
     );
 
   /*
-   * 3초 안에 서버 데이터가 도착했을 때만
+   * 15초 안에 서버 데이터가 도착했을 때만
    * 하루 데이터를 즉시 복원합니다.
    *
    * 홈에 들어간 뒤 늦게 도착한 하루 데이터가
@@ -2134,6 +2321,41 @@ const result =
       const user =
         result.user;
 
+      try {
+        await user.getIdToken(
+          true
+        );
+
+        console.log(
+          'ROOT AUTH V1.0 ID TOKEN FORCE REFRESH SUCCESS',
+          {
+            uid:
+              user.uid,
+          }
+        );
+      } catch (
+        tokenRefreshError: any
+      ) {
+        /*
+         * 토큰 갱신 지연은 로그인 자체를 취소하지 않습니다.
+         * Firestore가 기존 유효 토큰으로 먼저 연결되고,
+         * 이후 SDK의 자동 갱신을 계속 사용할 수 있습니다.
+         */
+        console.log(
+          'ROOT AUTH V1.0 ID TOKEN FORCE REFRESH DEFERRED',
+          {
+            uid:
+              user.uid,
+            code:
+              tokenRefreshError?.code ??
+              null,
+            message:
+              tokenRefreshError?.message ??
+              String(tokenRefreshError),
+          }
+        );
+      }
+
       // CHARACTER_V98D_GUEST_TO_GOOGLE_CHARACTER_HANDOFF
       if (
         guestCharacterScopeBeforeGoogleLogin
@@ -2240,12 +2462,11 @@ const result =
         null;
 
       /*
-       * 서버가 3초보다 늦게 도착했을 때
-       * 같은 UID의 로컬 데이터만
-       * 후속 병합할 수 있습니다.
+       * 서버가 15초보다 늦게 도착하면
+       * 같은 UID 로컬 데이터는 안전하게 후속 병합합니다.
        *
-       * 게스트 전환은 서버에 기존 계정이 있는지
-       * 확인하지 못한 상태에서 자동 병합하지 않습니다.
+       * 로컬 fallback이 없는 경우에도 인증을 유지한 채
+       * 서버 존재 여부가 확인된 이 시점에만 로그인을 완료합니다.
        */
       const canUseLocalFallback =
         previousBelongsToUser;
@@ -2255,24 +2476,6 @@ const result =
           lateServerData:
             any | null
         ) => {
-          if (
-            !canUseLocalFallback
-          ) {
-            console.log(
-              'GOOGLE LOGIN LATE SERVER DATA SKIPPED: LOCAL FALLBACK NOT SAFE',
-              {
-                uid:
-                  user.uid,
-
-                wasGuestBeforeLogin,
-
-                previousBelongsToUser,
-              }
-            );
-
-            return;
-          }
-
           const activeAuthUid =
   firebaseAuth
     .currentUser
@@ -2306,15 +2509,22 @@ const result =
            * 로그인 시작 시점의 데이터가 아니라
            * 현재 최신 로컬 데이터를 다시 불러옵니다.
            */
-          const latestLocalData =
+          const latestDeviceData =
             await loadRootOnboardingData() ??
             safeLocalRoot;
+
+          const latestLocalData =
+            canUseLocalFallback ||
+            wasGuestBeforeLogin
+              ? latestDeviceData
+              : {};
 
           const lateSourceData =
             mergeRootData(
               latestLocalData,
               lateServerData,
-              user.uid
+              user.uid,
+              wasGuestBeforeLogin
             );
 
           const normalizedLateSource =
@@ -2345,7 +2555,8 @@ const result =
                 'manual-google-late-reconcile',
 
               allowDeviceLocalExploration:
-                true,
+                canUseLocalFallback ||
+                wasGuestBeforeLogin,
             });
 
           /*
@@ -2377,7 +2588,9 @@ await reconcileDailyDataAfterServerRead({
     'manual-google-late-reconcile',
 
   allowServerRestore:
-    false,
+    !canUseLocalFallback &&
+    !wasGuestBeforeLogin &&
+    Boolean(lateServerData),
 });
 
           
@@ -2397,24 +2610,42 @@ await reconcileDailyDataAfterServerRead({
                 user.uid,
 
               actionGoalCount:
-                lateFinalData
+                lateFinalDataWithExploration
                   ?.actionGoals
                   ?.length ??
                 0,
 
               actionLogCount:
-                lateFinalData
+                lateFinalDataWithExploration
                   ?.actionLogs
                   ?.length ??
                 0,
 
               archivedGoalCount:
-                lateFinalData
+                lateFinalDataWithExploration
                   ?.archivedActionGoals
                   ?.length ??
                 0,
             }
           );
+
+          if (
+            !canUseLocalFallback
+          ) {
+            console.log(
+              'ROOT AUTH V1.0 DEFERRED LOGIN COMPLETED',
+              {
+                uid:
+                  user.uid,
+                serverDocumentExists:
+                  Boolean(lateServerData),
+              }
+            );
+
+            moveAfterGoogleLogin(
+              lateFinalDataWithExploration
+            );
+          }
         };
 
       const serverData:
@@ -2655,7 +2886,7 @@ await reconcileDailyDataAfterServerRead({
       }
 
       /*
-       * 2. 서버가 3초 안에 응답하지 않은 경우
+       * 2. 서버가 15초 안에 응답하지 않은 경우
        *
        * 현재 로그인한 Google UID와 같은 로컬 데이터가
        * 있을 때만 로컬로 먼저 들어갑니다.
@@ -2790,11 +3021,13 @@ await reconcileDailyDataAfterServerRead({
        * 4. 서버 상태를 확인하지 못했고,
        * 같은 UID의 안전한 로컬 데이터도 없는 경우
        *
-       * 신규 계정으로 추정하거나 게스트 데이터를
-       * 기존 서버 계정에 덮어쓰지 않고 로그인을 중단합니다.
+       * 인증은 유지하고 기존 로컬 상태도 보존합니다.
+       * 진행 중인 원래 요청과 2초·5초·10초 재시도가
+       * 서버 상태를 확인하면 applyLateServerData에서
+       * 안전하게 로그인을 완료합니다.
        */
       console.log(
-        'GOOGLE LOGIN ABORTED: SERVER STATUS UNVERIFIED',
+        'ROOT AUTH V1.0 LOGIN DEFERRED: SERVER STATUS UNVERIFIED',
         {
           uid:
             user.uid,
@@ -2811,66 +3044,9 @@ await reconcileDailyDataAfterServerRead({
         }
       );
 
-      try {
-        await signOut(
-  firebaseAuth
-);
-
-        console.log(
-          'GOOGLE LOGIN ROLLBACK FIREBASE SIGN OUT DONE'
-        );
-      } catch (
-        signOutError: any
-      ) {
-        console.log(
-          'GOOGLE LOGIN ROLLBACK FIREBASE SIGN OUT ERROR',
-          {
-            code:
-              signOutError
-                ?.code ??
-              null,
-
-            message:
-              signOutError
-                ?.message ??
-              String(
-                signOutError
-              ),
-          }
-        );
-      }
-
-      try {
-        await GoogleSignin
-          .signOut();
-
-        console.log(
-          'GOOGLE LOGIN ROLLBACK GOOGLE SIGN OUT DONE'
-        );
-      } catch (
-        googleSignOutError:
-          any
-      ) {
-        console.log(
-          'GOOGLE LOGIN ROLLBACK GOOGLE SIGN OUT ERROR',
-          {
-            code:
-              googleSignOutError
-                ?.code ??
-              null,
-
-            message:
-              googleSignOutError
-                ?.message ??
-              String(
-                googleSignOutError
-              ),
-          }
-        );
-      }
-
       /*
-       * 로그인 전 게스트 또는 기존 로컬 상태를 복원합니다.
+       * 로그인 전 게스트 또는 기존 로컬 상태는 보존하되,
+       * Firebase·Google 인증 세션은 유지합니다.
        */
       if (
         previousRoot
@@ -2880,11 +3056,22 @@ await reconcileDailyDataAfterServerRead({
         );
       }
 
+      const serverRetryScheduled =
+        serverTimedOut ||
+        isTransientRootAuthServerError(
+          serverReadError
+        );
+
       Alert.alert(
-        '서버 확인 실패',
-        serverTimedOut
-          ? '계정 데이터를 확인하는 데 시간이 오래 걸리고 있어요. 앱을 완전히 종료한 뒤 다시 로그인해 주세요.'
-          : '계정 데이터를 확인하지 못했어요. 인터넷 연결을 확인한 뒤 다시 로그인해 주세요.'
+        serverRetryScheduled
+          ? '로그인 연결 재시도 중'
+          : '계정 데이터 확인 필요',
+        serverRetryScheduled
+          ? 'Google 로그인은 유지했어요. 계정 데이터를 백그라운드에서 다시 확인하고 있으며 연결되면 자동으로 계속 진행합니다.'
+          : `Google 로그인은 유지했지만 ${
+              serverReadError?.code ??
+              '서버 오류'
+            } 때문에 계정 데이터를 읽지 못했어요. 네트워크와 계정 권한을 확인한 뒤 다시 시도해 주세요.`,
       );
     } catch (
       error: any

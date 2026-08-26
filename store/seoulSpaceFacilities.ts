@@ -46,7 +46,7 @@ export type SeoulSpaceFacility = {
 };
 
 export const SEOUL_SPACE_RESERVATION_COUNT =
-  506;
+  508;
 
 export const SEOUL_SPACE_FACILITY_COUNT =
   283;
@@ -6638,7 +6638,7 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "other",
     "longitude": null,
     "latitude": null,
-    "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540028/20210310/1615306942991NXZLBXJ4ABFCLL5KATPIIWASB.jpg",
+    "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540028/20210310/1615306958094G1GA5PIEMY41YT48VJNQW4LRM.jpg",
     "officialUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do#rest9",
     "reservationCount": 2,
     "reservations": [
@@ -8517,11 +8517,11 @@ export const SEOUL_SPACE_FACILITIES:
     "latitude": 37.54908,
     "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1778227539340SE7V6JQKWS4Z0WOH4PCCBBJDO",
     "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260508170539798720",
-    "reservationCount": 11,
+    "reservationCount": 13,
     "reservations": [
       {
         "serviceId": "S260806115050437472",
-        "title": "(대관 주말) 개인연습실1",
+        "title": "[수시대관 주말]개인연습실1",
         "statusText": "안내중",
         "majorCategory": "공간시설",
         "category": "다목적실",
@@ -8538,7 +8538,7 @@ export const SEOUL_SPACE_FACILITIES:
       },
       {
         "serviceId": "S260806135726859011",
-        "title": "(대관 주말) 개인연습실2",
+        "title": "[수시대관 주말]개인연습실2",
         "statusText": "안내중",
         "majorCategory": "공간시설",
         "category": "다목적실",
@@ -8555,14 +8555,14 @@ export const SEOUL_SPACE_FACILITIES:
       },
       {
         "serviceId": "S260806095830949546",
-        "title": "(대관 주말) 모둠연습실1",
+        "title": "[수시대관 주말]모둠연습실1",
         "statusText": "안내중",
         "majorCategory": "공간시설",
         "category": "다목적실",
         "paidType": "무료",
         "targetText": "제한없음",
-        "receptionStartAt": "2026-09-01T09:00:00",
-        "receptionEndAt": "2026-09-30T20:00:00",
+        "receptionStartAt": "2026-10-01T09:00:00",
+        "receptionEndAt": "2026-10-31T20:00:00",
         "useStartAt": "2026-08-20T00:00:00",
         "useEndAt": "2026-12-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260806095830949546",
@@ -8572,7 +8572,7 @@ export const SEOUL_SPACE_FACILITIES:
       },
       {
         "serviceId": "S260806101844420527",
-        "title": "(대관 주말) 모둠연습실2",
+        "title": "[수시대관 주말]모둠연습실2",
         "statusText": "안내중",
         "majorCategory": "공간시설",
         "category": "다목적실",
@@ -8589,7 +8589,7 @@ export const SEOUL_SPACE_FACILITIES:
       },
       {
         "serviceId": "S260811091215950366",
-        "title": "(대관 주말) 미디어창작실",
+        "title": "[수시대관 주말]미디어창작실",
         "statusText": "안내중",
         "majorCategory": "공간시설",
         "category": "다목적실",
@@ -8606,7 +8606,7 @@ export const SEOUL_SPACE_FACILITIES:
       },
       {
         "serviceId": "S260810115201443502",
-        "title": "(대관 주말) 회의실",
+        "title": "[수시대관 주말]회의실",
         "statusText": "안내중",
         "majorCategory": "공간시설",
         "category": "다목적실",
@@ -8623,7 +8623,7 @@ export const SEOUL_SPACE_FACILITIES:
       },
       {
         "serviceId": "S260806112708865022",
-        "title": "(대관 평일) 개인연습실1",
+        "title": "[수시대관 평일]개인연습실1",
         "statusText": "안내중",
         "majorCategory": "공간시설",
         "category": "다목적실",
@@ -8640,7 +8640,7 @@ export const SEOUL_SPACE_FACILITIES:
       },
       {
         "serviceId": "S260806114002899920",
-        "title": "(대관 평일) 개인연습실2",
+        "title": "[수시대관 평일]개인연습실2",
         "statusText": "안내중",
         "majorCategory": "공간시설",
         "category": "다목적실",
@@ -8657,14 +8657,14 @@ export const SEOUL_SPACE_FACILITIES:
       },
       {
         "serviceId": "S260508170539798720",
-        "title": "(대관 평일) 모둠연습실1",
+        "title": "[수시대관 평일]모둠연습실1",
         "statusText": "안내중",
         "majorCategory": "공간시설",
         "category": "다목적실",
         "paidType": "무료",
         "targetText": "제한없음",
-        "receptionStartAt": "2026-09-01T09:00:00",
-        "receptionEndAt": "2026-12-31T20:00:00",
+        "receptionStartAt": "2026-10-01T09:00:00",
+        "receptionEndAt": "2026-10-31T20:00:00",
         "useStartAt": "2026-08-20T00:00:00",
         "useEndAt": "2026-12-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260508170539798720",
@@ -8674,7 +8674,7 @@ export const SEOUL_SPACE_FACILITIES:
       },
       {
         "serviceId": "S260811093014923267",
-        "title": "(대관 평일) 미디어창작실",
+        "title": "[수시대관 평일]미디어창작실",
         "statusText": "안내중",
         "majorCategory": "공간시설",
         "category": "다목적실",
@@ -8691,7 +8691,7 @@ export const SEOUL_SPACE_FACILITIES:
       },
       {
         "serviceId": "S260810114552500017",
-        "title": "(대관 평일) 회의실",
+        "title": "[수시대관 평일]회의실",
         "statusText": "안내중",
         "majorCategory": "공간시설",
         "category": "다목적실",
@@ -8705,6 +8705,40 @@ export const SEOUL_SPACE_FACILITIES:
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1786330026380H3JZG831EAC6G28B69CPY5DO0",
         "telephone": "02-2204-7554",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용서울숲 생활문화센터 회의실 대관 안내(테스트)4. 주의사항서울숲 생활문화센터 회의실 대관 안내(테스트)"
+      },
+      {
+        "serviceId": "S260826104919549762",
+        "title": "[정기대관 평일]모둠연습실1",
+        "statusText": "안내중",
+        "majorCategory": "공간시설",
+        "category": "다목적실",
+        "paidType": "무료",
+        "targetText": "제한없음",
+        "receptionStartAt": "2026-09-01T09:00:00",
+        "receptionEndAt": "2026-09-14T20:00:00",
+        "useStartAt": "2026-08-26T00:00:00",
+        "useEndAt": "2026-12-31T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260826104919549762",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17877089590570TJGLNXDS5PBUKAXX9SAUF61V",
+        "telephone": "02-2204-7554",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용서울숲 생활문화센터 정기대관(테스트) 모둠연습실14. 주의사항서울숲 생활문화센터 정기대관(테스트) 모둠연습실1"
+      },
+      {
+        "serviceId": "S260826114654729034",
+        "title": "[정기대관 평일]모둠연습실2",
+        "statusText": "안내중",
+        "majorCategory": "공간시설",
+        "category": "다목적실",
+        "paidType": "무료",
+        "targetText": "제한없음",
+        "receptionStartAt": "2026-09-01T09:00:00",
+        "receptionEndAt": "2026-09-14T20:00:00",
+        "useStartAt": "2026-08-26T00:00:00",
+        "useEndAt": "2026-12-31T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260826114654729034",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=178771243278328S0L99JVE3N3Q5HKB974YHCO",
+        "telephone": "02-2204-7554",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용서울숲 생활문화센터 정기대관(테스트) 모둠연습실14. 주의사항서울숲 생활문화센터 정기대관(테스트) 모둠연습실1"
       }
     ]
   },
@@ -8832,7 +8866,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S250529213953796420",
         "title": "[서울청년센터성북] 4층 멀티룸",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "청년공간",
         "paidType": "무료",
@@ -8868,7 +8902,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260712093325464220",
         "title": "문화실험공간 호수 [8월 우리끼리 식당] 송파구 석촌호수 문화실험공간 호수",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "주민공유공간",
         "paidType": "유료",
@@ -8885,7 +8919,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260821090649954475",
         "title": "문화실험공간 호수 [9월 우리끼리 식당] 송파구 석촌호수 문화실험공간 호수",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "주민공유공간",
         "paidType": "유료",

@@ -532,21 +532,6 @@ export const SEOUL_CAMPING_FACILITIES:
     "reservationCount": 8,
     "reservations": [
       {
-        "serviceId": "S260725184147062573",
-        "title": "마포 반려동물 캠핑장(26. 8월)-중소형견데크(마포구)",
-        "statusText": "접수중",
-        "paidType": "유료(요금안내문의)",
-        "targetText": "제한없음",
-        "receptionStartAt": "2026-07-26T11:00:00",
-        "receptionEndAt": "2026-08-29T16:00:00",
-        "useStartAt": "2026-07-26T00:00:00",
-        "useEndAt": "2026-08-31T00:00:00",
-        "reservationUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260725184147062573",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17849725580007BY02I5NWY84QR6EOKXEVOIZR",
-        "telephone": "",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\n\n4. 주의사항"
-      },
-      {
         "serviceId": "S260827113351628572",
         "title": "마포 반려동물 캠핑장(26. 9월)-대형견데크(마포구)",
         "statusText": "접수중",
@@ -609,7 +594,7 @@ export const SEOUL_CAMPING_FACILITIES:
       {
         "serviceId": "S260725181745441497",
         "title": "마포 반려동물 캠핑장(26. 8월)-대형견데크(마포구)",
-        "statusText": "예약마감",
+        "statusText": "접수종료",
         "paidType": "유료(요금안내문의)",
         "targetText": "제한없음",
         "receptionStartAt": "2026-07-26T11:00:00",
@@ -624,7 +609,7 @@ export const SEOUL_CAMPING_FACILITIES:
       {
         "serviceId": "S260725180721103075",
         "title": "마포 반려동물 캠핑장(26. 8월)-대형견데크(전지역)",
-        "statusText": "예약마감",
+        "statusText": "접수종료",
         "paidType": "유료(요금안내문의)",
         "targetText": "제한없음",
         "receptionStartAt": "2026-07-26T11:00:00",
@@ -637,9 +622,24 @@ export const SEOUL_CAMPING_FACILITIES:
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\n\n4. 주의사항"
       },
       {
+        "serviceId": "S260725184147062573",
+        "title": "마포 반려동물 캠핑장(26. 8월)-중소형견데크(마포구)",
+        "statusText": "접수종료",
+        "paidType": "유료(요금안내문의)",
+        "targetText": "제한없음",
+        "receptionStartAt": "2026-07-26T11:00:00",
+        "receptionEndAt": "2026-08-29T16:00:00",
+        "useStartAt": "2026-07-26T00:00:00",
+        "useEndAt": "2026-08-31T00:00:00",
+        "reservationUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260725184147062573",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17849725580007BY02I5NWY84QR6EOKXEVOIZR",
+        "telephone": "",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\n\n4. 주의사항"
+      },
+      {
         "serviceId": "S260725183802855130",
         "title": "마포 반려동물 캠핑장(26. 8월)-중소형견데크(전지역)",
-        "statusText": "예약마감",
+        "statusText": "접수종료",
         "paidType": "유료(요금안내문의)",
         "targetText": "제한없음",
         "receptionStartAt": "2026-07-26T11:00:00",

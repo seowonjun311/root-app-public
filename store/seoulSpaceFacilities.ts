@@ -46,10 +46,10 @@ export type SeoulSpaceFacility = {
 };
 
 export const SEOUL_SPACE_RESERVATION_COUNT =
-  524;
+  523;
 
 export const SEOUL_SPACE_FACILITY_COUNT =
-  293;
+  292;
 
 export const SEOUL_SPACE_FACILITIES:
   readonly SeoulSpaceFacility[] =
@@ -1902,42 +1902,6 @@ export const SEOUL_SPACE_FACILITIES:
     ]
   },
   {
-    "id": "seoul-space-75714cf",
-    "name": "소강당",
-    "fullPlaceName": "서울시민대학 다시가는캠퍼스>1층>소강당",
-    "district": "관악구",
-    "locationLabel": "서울 관악구",
-    "primaryCategory": "강당",
-    "categoryNames": [
-      "강당"
-    ],
-    "spaceKind": "hall",
-    "longitude": 126.95819,
-    "latitude": 37.47218,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17881529638307XRK75EMVVRYEA09BKPPTN9AW",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260831135928603406",
-    "reservationCount": 1,
-    "reservations": [
-      {
-        "serviceId": "S260831135928603406",
-        "title": "[서울시민대학 다시가는캠퍼스]  1층 소강당",
-        "statusText": "접수중",
-        "majorCategory": "공간시설",
-        "category": "강당",
-        "paidType": "유료(요금안내문의)",
-        "targetText": "제한없음",
-        "receptionStartAt": "2026-09-01T00:00:00",
-        "receptionEndAt": "2026-10-31T23:59:00",
-        "useStartAt": "2026-09-01T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260831135928603406",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17881529638307XRK75EMVVRYEA09BKPPTN9AW",
-        "telephone": "02-889-6431",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n원활한 대관 운영을 위해 신청 전 아래 내용을 반드시 확인해주시기 바랍니다. 안내사항 미숙지로 발생하는 불이익은 대관 신청자에게 있습니다.\r\n\r\n[대관절차]\r\n○ 대관신청 : 대관희망일 1개월 전부터 대관일 15일 전까지, 서울시 공공서비스예약 시스템을 통해 신청해 주시기 바랍니다. 신청 시 첨부된 대관 신청서를 작성하여 함께 업로드 해야합니다.\r\n○ 대관심의 : 신청서 접수 후 최종 승인여부 결정까지는 3일 정도의 기간이 소요됩니다.\r\n○ 승인통보 : 대관 승인 여부는 신청시 작성한 이메일로 개별 안내드립니다.\r\n○ 대관료 납부 : 대관 승인 안내를 받은 후, 대관 확정일로부터 2일 이내로 지정 계좌로 대관료를 납부해주시기 바랍니다. 기간 내 입금하지 않을 경우 대관 신청이 취소됩니다.\r\n○ 공간사용 : 행사 당일 사전 입장 및 사전 준비는 어려울 수 있으므로, 반드시 승인된 대관 시간을 준수해 주시기 바랍니다.\r\n○ 신청 취소 및 환불기준 : 신청취소는 대관 사용일 3일 전까지 가능합니다. 단, 업무시간인 09:00~18:00 내 접수된 취소 신청을 기준으로 합니다.\r\n 대관 사용일 3일 전까지 취소 : 대관료 전액 환불\r\n 대관 사용일 2일 전까지 취소 : 대관료 90% 환불\r\n 대관 사용일 1일 전까지 취소 : 대관료 80% 환불\r\n 대관 사용일 당일 취소 : 환불 불가\r\n○ 대관문의 : 02-889-6431 (월~금 09:30~16:30, 점심시간 12:00~13:00)\r\n\r\n[시설정보]\r\n○ 공간명 : 서울시민대학 다시가는 캠퍼스 대강당 (면적 : / 수용인원 : 50명)\r\n○ 주  소 : 서울특별시 관악구 낙성대로 70\r\n○ 대관운영시간 : 평일 09:00~21:00 / 토요일 09:00~17:00\r\n○ 사용인원 : 최대 50명\r\n○ 대관료 : 2시간 기준 4만원(초과 1시간 당 2만원)\r\n○ 장비현황 : 컴퓨터, 빔 프로젝터\r\n\r\n[유의사항]\r\n○ 대관 신청 단체 및 개인은 대중교통 이용을 원칙으로 합니다. 단, 행사 진행에 반드시 필요한 차량은 담당자와 사전 협의 후 주차가 가능합니다.\r\n○ 모든 공간은 정치적, 종교적, 영리적 목적의 활동으로 사용할 수 없습니다.\r\n○ 대관 신청자의 장비 반입, 현수막 설치, 기타 장비사용 등은 담당자와 사전에 협의해야 합니다.\r\n○ 대관 신청 단체 또는 개인에게 아래 사항이 3회 이상 발생한 경우, 서울시평생교육진흥원은 해당 단체 또는 개인의 대관 신청을 최대 6개월 간 제한할 수 있습니다.\r\n 대관 신청 후 사전 연락 없이 대관을 취소한 경우\r\n 대관 확정 후 대관료를 납부하지 않는 경우\r\n 대관 신청한 내용과 실제 사용 내용이 다른 경우 (예 : 사용자, 행사 내용, 사용 목적 등)\r\n 무단 퇴실하거나 사용 후 정리 상태가 미흡한 경우\r\n\r\n\r\n4. 주의사항"
-      }
-    ]
-  },
-  {
     "id": "seoul-space-11048326",
     "name": "커뮤니티1",
     "fullPlaceName": "서울시민대학 다시가는캠퍼스>M층>커뮤니티1",
@@ -3106,8 +3070,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "multipurpose",
     "longitude": 126.88405,
     "latitude": 37.48416,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1767578550239MNO3TBQFZ61Y013AZ1BTI0X6U",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260105110157825778",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1767578395318T54O7NLKDDIDN61M1OW0X0RAN",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260105105453512463",
     "reservationCount": 2,
     "reservations": [
       {
@@ -9273,7 +9237,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S250529213953796420",
         "title": "[서울청년센터성북] 4층 멀티룸",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "청년공간",
         "paidType": "무료",
@@ -9309,7 +9273,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260821090649954475",
         "title": "문화실험공간 호수 [9월 우리끼리 식당] 송파구 석촌호수 문화실험공간 호수",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "주민공유공간",
         "paidType": "유료",
@@ -11522,9 +11486,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료(요금안내문의)",
         "targetText": "청년",
         "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-10-31T00:00:00",
+        "receptionEndAt": "2026-11-30T00:00:00",
         "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
+        "useEndAt": "2026-11-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240201153828421138",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17067696277485GZWM7H2FSML890Q32YTYEUPH",
         "telephone": "02-6358-0607",
@@ -11539,9 +11503,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료(요금안내문의)",
         "targetText": "청년",
         "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-10-31T00:00:00",
+        "receptionEndAt": "2026-11-30T00:00:00",
         "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
+        "useEndAt": "2026-11-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240129152832507143",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706509980380LX6ZAN6GL4H31ONX5TFNVL44X",
         "telephone": "02-6358-0607",
@@ -11556,9 +11520,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료(요금안내문의)",
         "targetText": "청년",
         "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-10-31T00:00:00",
+        "receptionEndAt": "2026-11-30T00:00:00",
         "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
+        "useEndAt": "2026-11-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240201152217571294",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706768642089TR7OQ2FUQBJETPLWXVEA7KK5V",
         "telephone": "02-6358-0607",
@@ -11573,9 +11537,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료(요금안내문의)",
         "targetText": "청년",
         "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-10-31T00:00:00",
+        "receptionEndAt": "2026-11-30T00:00:00",
         "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
+        "useEndAt": "2026-11-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240201153148280157",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706769193211DKZ6F7IK1U30XCJCPJ20DODI5",
         "telephone": "02-6358-0607",
@@ -11590,9 +11554,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료(요금안내문의)",
         "targetText": "청년",
         "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-10-31T00:00:00",
+        "receptionEndAt": "2026-11-30T00:00:00",
         "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
+        "useEndAt": "2026-11-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240201163539334445",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706773047524QE8F1NEQBRX6KG036UOJGMQQM",
         "telephone": "02-6358-0607",
@@ -11607,9 +11571,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료(요금안내문의)",
         "targetText": "청년",
         "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-10-31T00:00:00",
+        "receptionEndAt": "2026-11-30T00:00:00",
         "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
+        "useEndAt": "2026-11-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240201163812272233",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706773316100BVDOSIRFVHFOWPTX2HWW5SHN9",
         "telephone": "02-6358-0607",
@@ -11624,9 +11588,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료(요금안내문의)",
         "targetText": "청년",
         "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-10-31T00:00:00",
+        "receptionEndAt": "2026-11-30T00:00:00",
         "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
+        "useEndAt": "2026-11-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240202094231456682",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706834636162ODQU2RUZFPJFQXEGEEV2WZK0M",
         "telephone": "02-6358-0607",
@@ -11641,9 +11605,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료(요금안내문의)",
         "targetText": "청년",
         "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-10-31T00:00:00",
+        "receptionEndAt": "2026-11-30T00:00:00",
         "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
+        "useEndAt": "2026-11-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260211135817886950",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17707864447256CQUXMGKMOAC900EAFX4GB8X9",
         "telephone": "02-6358-0605",
@@ -12952,8 +12916,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "hall",
     "longitude": 127.0058,
     "latitude": 37.56899,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1699518123368UFG53OIINNOBCPMBFD4AJ7T2Z",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S231109172203803596",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1699517601572HY815G689YI2WVW3JCYJVPK99",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S231109171321739195",
     "reservationCount": 2,
     "reservations": [
       {

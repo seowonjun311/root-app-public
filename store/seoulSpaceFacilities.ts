@@ -46,7 +46,7 @@ export type SeoulSpaceFacility = {
 };
 
 export const SEOUL_SPACE_RESERVATION_COUNT =
-  523;
+  522;
 
 export const SEOUL_SPACE_FACILITY_COUNT =
   292;
@@ -637,8 +637,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 127.03609,
     "latitude": 37.62512,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17402023279296BZLQ5OWAJOLZU8OSGUG91QY0",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250222142900323973",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1740460982331BY3PRH56LY62Z20H6B08EFDFE",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250225135811325469",
     "reservationCount": 6,
     "reservations": [
       {
@@ -6224,7 +6224,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S251224140058520854",
         "title": "2026년 문화비축기지 야외 촬영",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "녹화장소",
         "paidType": "유료",
@@ -7644,9 +7644,9 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "multipurpose",
     "longitude": 127.06886,
     "latitude": 37.45573,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1786586609693AOPVPQU2SBRWH2RQ5RQKSQ03V",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260813103846025146",
-    "reservationCount": 2,
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=178666880177391RWSEKWV2NZAUEBDVBDNA11E",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260814095103949677",
+    "reservationCount": 1,
     "reservations": [
       {
         "serviceId": "S260814095103949677",
@@ -7662,23 +7662,6 @@ export const SEOUL_SPACE_FACILITIES:
         "useEndAt": "2026-09-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260814095103949677",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=178666880177391RWSEKWV2NZAUEBDVBDNA11E",
-        "telephone": "02-570-8359",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용서울특별시 어린이병원 임상교육훈련센터\r\n* 이용대상 : 서울특별시 어린이병원 의료진\r\n (대상이 아닐경우 직권 취소함)\r\n4. 주의사항"
-      },
-      {
-        "serviceId": "S260813103846025146",
-        "title": "서울특별시 어린이병원 임상교육훈련센터(2026년 하반기 교육평가)",
-        "statusText": "예약마감",
-        "majorCategory": "공간시설",
-        "category": "다목적실",
-        "paidType": "무료",
-        "targetText": "성인(서울특별시 어린이병원 의료진)",
-        "receptionStartAt": "2026-08-13T00:00:00",
-        "receptionEndAt": "2026-09-03T23:00:00",
-        "useStartAt": "2026-08-13T00:00:00",
-        "useEndAt": "2026-09-03T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260813103846025146",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1786586609693AOPVPQU2SBRWH2RQ5RQKSQ03V",
         "telephone": "02-570-8359",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용서울특별시 어린이병원 임상교육훈련센터\r\n* 이용대상 : 서울특별시 어린이병원 의료진\r\n (대상이 아닐경우 직권 취소함)\r\n4. 주의사항"
       }
@@ -8117,13 +8100,13 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260224101320527222",
         "title": "서초구립반포도서관 다목적실 대관",
-        "statusText": "접수종료",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "다목적실",
         "paidType": "유료(요금안내문의)",
         "targetText": "성인",
-        "receptionStartAt": "2026-08-01T09:00:00",
-        "receptionEndAt": "2026-08-15T21:00:00",
+        "receptionStartAt": "2026-09-01T09:00:00",
+        "receptionEndAt": "2026-09-15T21:00:00",
         "useStartAt": "2026-02-24T00:00:00",
         "useEndAt": "2026-12-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260224101320527222",
@@ -8134,13 +8117,13 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260224143526198619",
         "title": "서초구립반포도서관 세미나실1 대관",
-        "statusText": "접수종료",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "강의실",
         "paidType": "유료(요금안내문의)",
         "targetText": "성인",
-        "receptionStartAt": "2026-08-01T09:00:00",
-        "receptionEndAt": "2026-08-15T22:00:00",
+        "receptionStartAt": "2026-09-01T09:00:00",
+        "receptionEndAt": "2026-09-15T21:00:00",
         "useStartAt": "2026-02-24T00:00:00",
         "useEndAt": "2026-12-29T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260224143526198619",

@@ -8699,8 +8699,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "multipurpose",
     "longitude": 127.04153,
     "latitude": 37.54908,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1778227539340SE7V6JQKWS4Z0WOH4PCCBBJDO",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260508170539798720",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1785983267613J76J071QAHWVFO41UF9TBJONC",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260806112708865022",
     "reservationCount": 24,
     "reservations": [
       {

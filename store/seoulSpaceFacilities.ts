@@ -46,10 +46,10 @@ export type SeoulSpaceFacility = {
 };
 
 export const SEOUL_SPACE_RESERVATION_COUNT =
-  530;
+  529;
 
 export const SEOUL_SPACE_FACILITY_COUNT =
-  293;
+  291;
 
 export const SEOUL_SPACE_FACILITIES:
   readonly SeoulSpaceFacility[] =
@@ -637,8 +637,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 127.03609,
     "latitude": 37.62512,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17402023279296BZLQ5OWAJOLZU8OSGUG91QY0",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250222142900323973",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1740460982331BY3PRH56LY62Z20H6B08EFDFE",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250225135811325469",
     "reservationCount": 6,
     "reservations": [
       {
@@ -2859,7 +2859,7 @@ export const SEOUL_SPACE_FACILITIES:
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260820104011807154",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17871903610877BFC1T9I0R04YHBKITK5SRQQ1",
         "telephone": "02-2620-7307",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n❍ 시설 개요\r\n\r\n\r\n\r\n- 개방장소명 : 구로2동 주민센터 3층 다목적실\r\n\r\n\r\n\r\n- 위치 : 서울시 구로구 구로동로 141, 주민센터 건물 3층\r\n\r\n\r\n\r\n- 면적: 160㎡\r\n\r\n\r\n\r\n- 수용인원: 20명\r\n\r\n\r\n\r\n- 부대시설: 탁자, 의자 등\r\n\r\n\r\n❍ 개방시간 및 사용료\r\n\r\n- 개방시간 : 월,화,수 15:30~18:00, 금 13:00~18:00\r\n\r\n※ 단, 먼저 예약된 행사가 있을 경우 사용 불가\r\n(꼭 전화로 먼저 문의 부탁드립니다.) 담당자 ☏02-2620-7307\r\n\r\n ※ 장기적 독점 사용 불가합니다\r\n\r\n\r\n\r\n❍ 사용료\r\n\r\n - 무료 \r\n\r\n\r\n\r\n\r\n\r\n❍ 이용 가능 행사\r\n\r\n\r\n\r\n- 모임, 회의, 강연, 교육 등 \r\n\r\n\r\n\r\n\r\n\r\n❍ 사용 자격\r\n\r\n\r\n\r\n- 시에 주민등록이 되어 있는 개인 및 주소지가 되어 있는 단체\r\n\r\n\r\n\r\n- 시에 주소지를 두고 있는 직장학교 등에 재직 또는 재학 중인 자\r\n\r\n\r\n\r\n※ 사용당일 자격서류 확인(주민등록지, 사업장소재지, 재학여부 등)\r\n\r\n\r\n\r\n\r\n\r\n❍ 예약신청\r\n\r\n\r\n\r\n- 사용일 5일 전까지\r\n\r\n\r\n\r\n❍ 선정방법 :심사(사용목적 등 제한사항 검토)\r\n\r\n\r\n\r\n- 개인과 개인 경합시 : 선착순\r\n\r\n\r\n\r\n- 개인과 단체 경합시 : 단체 우선\r\n\r\n\r\n\r\n- 단체와 단체 경합시 : 선착순\r\n\r\n\r\n\r\n\r\n\r\n❍ 이용허가 : 심사(사용목적 등 제한사항 검토)\r\n\r\n\r\n\r\n- 신청일로부터 3일 이내 통보\r\n\r\n\r\n\r\n※ 이용당일 서약서 제출 후 이용\r\n\r\n\r\n\r\n\r\n\r\n❍ 예약 취소\r\n\r\n\r\n\r\n- 취소기간 : 사용(예정)일로부터 3일전까지 \r\n\r\n\r\n\r\n4. 주의사항\r\n※다목적실 출입문을 비밀번호로 열어야 되므로, 담당자에게 사전에 반드시 연락주시기 바랍니다.\r\n\r\n❍ 사용허가 제외 및 취소대상\r\n\r\n\r\n\r\n- 시설 및 설비 등을 훼손할 우려가 있는 행사\r\n\r\n\r\n\r\n- 정치적인 행위 또는 종교 활동을 목적으로 하는 경우\r\n\r\n\r\n\r\n- 영리를 목적으로 하는 경우\r\n\r\n\r\n\r\n- 기타 공공질서와 선량한 풍속을 해할 우려가 있다고 인정되는 경우\r\n\r\n\r\n\r\n- 사용 목적을 위반하는 경우\r\n\r\n\r\n\r\n- 다른 시민의 안전유지를 위해 사용을 제한할 필요가 있다고 인정할 경우\r\n\r\n\r\n\r\n- 행위의 제한\r\n\r\n\r\n\r\n 흡연, 음주 또는 취식 행위\r\n\r\n\r\n\r\n 관리자의 허가 없는 촬영 행위\r\n\r\n\r\n\r\n 고성 및 난무 등 다른 시민에게 지장을 주는 행위"
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용※ 02-2620-7307로 사전 연락 부탁드립니다.\r\n❍ 시설 개요\r\n\r\n\r\n\r\n- 개방장소명 : 구로2동 주민센터 3층 다목적실\r\n\r\n\r\n\r\n- 위치 : 서울시 구로구 구로동로 141, 주민센터 건물 3층\r\n\r\n\r\n\r\n- 면적: 160㎡\r\n\r\n\r\n\r\n- 수용인원: 20명\r\n\r\n\r\n\r\n- 부대시설: 탁자, 의자 등\r\n\r\n\r\n❍ 개방시간 및 사용료\r\n\r\n- 개방시간 : 월,화,수 16:00~18:00, 금 13:00~18:00\r\n\r\n※ 단, 먼저 예약된 행사가 있을 경우 사용 불가\r\n(꼭 전화로 먼저 문의 부탁드립니다.) 담당자 ☏02-2620-7307\r\n\r\n ※ 장기적 독점 사용 불가합니다\r\n\r\n\r\n\r\n❍ 사용료\r\n\r\n - 무료 \r\n\r\n❍ 이용 가능 행사\r\n\r\n- 모임, 회의, 강연, 교육 등 \r\n\r\n❍ 사용 자격\r\n- 시 에 주민등록이 되어 있는 개인 및 주소지가 되어 있는 단체\r\n- 시에 주소지를 두고 있는 직장학교 등에 재직 또는 재학 중인 자\r\n\r\n※ 사용당일 자격서류 확인(주민등록지, 사업장소재지, 재학여부 등)\r\n\r\n\r\n\r\n\r\n\r\n❍ 예약신청\r\n\r\n- 사용일 5일 전까지\r\n\r\n❍ 선정방법 :심사(사용목적 등 제한사항 검토)\r\n\r\n- 개인과 개인 경합시 : 선착순\r\n\r\n- 개인과 단체 경합시 : 단체 우선\r\n\r\n- 단체와 단체 경합시 : 선착순\r\n\r\n\r\n\r\n❍ 이용허가 : 심사(사용목적 등 제한사항 검토)\r\n\r\n- 신청일로부터 3일 이내 통보\r\n\r\n※ 이용당일 서약서 제출 후 이용\r\n\r\n\r\n\r\n\r\n\r\n❍ 예약 취소\r\n\r\n- 취소기간 : 사용(예정)일로부터 3일전까지 \r\n\r\n\r\n\r\n4. 주의사항\r\n※다목적실 출입문을 비밀번호로 열어야 되므로, 담당자에게 사전에 반드시 연락주시기 바랍니다.\r\n\r\n❍ 사용허가 제외 및 취소대상\r\n\r\n\r\n\r\n- 시설 및 설비 등을 훼손할 우려가 있는 행사\r\n\r\n\r\n\r\n- 정치적인 행위 또는 종교 활동을 목적으로 하는 경우\r\n\r\n\r\n\r\n- 영리를 목적으로 하는 경우\r\n\r\n\r\n\r\n- 기타 공공질서와 선량한 풍속을 해할 우려가 있다고 인정되는 경우\r\n\r\n\r\n\r\n- 사용 목적을 위반하는 경우\r\n\r\n\r\n\r\n- 다른 시민의 안전유지를 위해 사용을 제한할 필요가 있다고 인정할 경우\r\n\r\n\r\n\r\n- 행위의 제한\r\n\r\n\r\n\r\n 흡연, 음주 또는 취식 행위\r\n\r\n\r\n\r\n 관리자의 허가 없는 촬영 행위\r\n\r\n\r\n\r\n 고성 및 난무 등 다른 시민에게 지장을 주는 행위"
       },
       {
         "serviceId": "S260820101412317723",
@@ -3111,6 +3111,42 @@ export const SEOUL_SPACE_FACILITIES:
     ]
   },
   {
+    "id": "seoul-space-deff658c",
+    "name": "서울아트책보고",
+    "fullPlaceName": "서울아트책보고",
+    "district": "구로구",
+    "locationLabel": "서울 구로구",
+    "primaryCategory": "강의실",
+    "categoryNames": [
+      "강의실"
+    ],
+    "spaceKind": "lectureRoom",
+    "longitude": 126.86727086827104,
+    "latitude": 37.49826975985675,
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=178909929499029VROYC8XXRNRXH6EO745DCC3",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260911130136525920",
+    "reservationCount": 1,
+    "reservations": [
+      {
+        "serviceId": "S260911130136525920",
+        "title": "[서울아트책보고 워크숍룸] 9월 공간 지원",
+        "statusText": "접수중",
+        "majorCategory": "공간시설",
+        "category": "강의실",
+        "paidType": "무료",
+        "targetText": "제한없음",
+        "receptionStartAt": "2026-09-11T00:00:00",
+        "receptionEndAt": "2026-09-28T23:00:00",
+        "useStartAt": "2026-09-11T00:00:00",
+        "useEndAt": "2026-09-30T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260911130136525920",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=178909929499029VROYC8XXRNRXH6EO745DCC3",
+        "telephone": "02-2066-4833",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n서울아트책보고 홈페이지를 통해 신청 가능합니다.\r\n자세한 사항은 서울아트책보고 공지사항을 확인해주세요.\r\n\r\n공지사항 바로가기(클릭)\r\n\r\n\r\n\r\n서울아트책보고 워크숍룸 공간을 빌려드립니다.\r\n\r\n9월 중 워크숍룸 이용을 희망하는 단체에게 공간을 빌려드립니다.\r\n다음의 이용 가능 날짜를 확인 후 이용 신청서를 작성하여 제출하시면 검토 후 배정해 드립니다.\r\n\r\n이용희망일 3일 전까지 신청서를 제출해 주셔야 검토가 가능합니다.\r\n\r\n신청 제한\r\n- 서울아트책보고 사용자에게 방해가 되거나 시설 운영에 지장을 줄 우려가 있는 행사\r\n- 공공질서유지 및 미풍양속을 해칠 우려가 있는 행사\r\n- 정치적 목적 및 종교 단체의 행사\r\n- 과외수업, 특정 제품 홍보 및 판매 등 영리를 목적으로 하는 행사\r\n- 수익이 발생하는 유료 프로그램 및 강좌\r\n- 서울아트책보고 운영 방향 및 부합 여부 등을 검토 후 적합하지 않다고 판단되는 행사\r\n- 그 밖에 사용자 준수사항을 위반하거나 공익상 사용을 제한할 필요가 있다고 인정되는 경우\r\n\r\n지원 기준\r\n- 기본 2시간(준비와 정리시간 포함)\r\n- 테이블 15개, 의자 30개\r\n- 프로젝터 이용 가능(프로젝터 이용 시 HDMI케이블 연결 가능한 노트북 지참 필수)\r\n- 마이크 2대 사용 가능(유선1, 무선1)\r\n- 외부 음식 반입 금지 / 북카페 음료만 반입 가능\r\n- 포스터, 배너 등 홍보물 설치 불가\r\n- 이용 후 책상, 의자 및 쓰레기 정리 필수※ 기물 파손 시 실비 청구\r\n- 제출한 신청서와 다른 용도로 사용 시 즉시 퇴실 조치\r\n\r\n시간기준\r\n(신청자 1팀 당 2시간만 신청 가능합니다. 연속 사용을 희망하는 경우 별도 문의바랍니다.)\r\n\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t구분\r\n\t\t\t이용 시간\r\n\t\t\r\n\t\r\n\t\r\n\t\t\r\n\t\t\t오전\r\n\t\t\t10:00~12:00\r\n\t\t\r\n\t\t\r\n\t\t\t오후 A\r\n\t\t\t13:30~15:30\r\n\t\t\r\n\t\t\r\n\t\t\t오후 B\r\n\t\t\t16:00~18:00\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n이용가능일\r\n(서울아트책보고 운영 상황에 따라 이용이 불가한 날이 생길 수 있습니다. 신청서 제출 후 꼭 확인을 부탁드립니다.)\r\n\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t일자\r\n\t\t\t이용 가능 시간\r\n\t\t\r\n\t\t\r\n\t\t\t9월 17일 목요일\r\n\t\t\t오전, 오후A, 오후B\r\n\t\t\r\n\t\t\r\n\t\t\t9월 18일 금요일\r\n\t\t\t오전, 오후A, 오후B\r\n\t\t\r\n\t\t\r\n\t\t\t9월 19일 토요일\r\n\t\t\t오전\r\n\t\t\r\n\t\t\r\n\t\t\t9월 20일 일요일\r\n\t\t\t오전\r\n\t\t\r\n\t\t\r\n\t\t\t9월 23일 수요일\r\n\t\t\t오전\r\n\t\t\r\n\t\t\r\n\t\t\t9월 27일 일요일\r\n\t\t\t오전, 오후A, 오후B\r\n\t\t\r\n\t\t\r\n\t\t\t9월 30일 수요일\r\n\t\t\t오전\r\n\t\t\r\n\t\r\n\r\n4. 주의사항서울아트책보고 홈페이지 내 공지사항을 확인 후 신청서를 작성하여 제출하여주시기 바랍니다."
+      }
+    ]
+  },
+  {
     "id": "seoul-space-99646269",
     "name": "신도림동주민센터 문화교실",
     "fullPlaceName": "신도림동 주민센터  >신도림동주민센터 문화교실",
@@ -3161,8 +3197,25 @@ export const SEOUL_SPACE_FACILITIES:
     "latitude": 37.50762752739021,
     "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1786355292010IG10ZZ8TICQYM8MUVKEX6JQOD",
     "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260810184713315786",
-    "reservationCount": 1,
+    "reservationCount": 2,
     "reservations": [
+      {
+        "serviceId": "S260911135836228169",
+        "title": "오금교 다리밑 야외공연장",
+        "statusText": "안내중",
+        "majorCategory": "공간시설",
+        "category": "공연장",
+        "paidType": "무료",
+        "targetText": "제한없음(구로구 내에서 활동하는 문화예술 공연단체나 개인)",
+        "receptionStartAt": "2026-09-21T09:00:00",
+        "receptionEndAt": "2026-09-25T18:00:00",
+        "useStartAt": "2026-09-21T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260911135836228169",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1789103173495XK7GBYNQ6JSLC95UTESX1KD36",
+        "telephone": "02-860-3416",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용○ 운영시간 : 평일 09:00 ~ 21:00 / 주말 및 공휴일 09:00 ~ 18:00\r\n○ 평일(4시간) : 1회(09~13)/2회(13~17)/3회(17~21)\r\n○ 주말(3시간) : 1회(09~12)/2회(12~15)/3회(15~18)\r\n○ 대관시간은 행사준비 및 정리 포함한 최대【4시간】(주말, 공휴일 3시간)을 기준으로 합니다.\r\n○ 보다 많은 신청인의 이용을 위해【월 3회(주말, 휴일 2회한), 연속 예약 불가】를 기준으로 합니다.\r\n○ 사용료 : 무료\r\n\r\n※ 신청일시 : 매월 넷째 주 월요일 09:00 ~ 금요일 18:00\r\n※ 2026년 10월 신청(11월 이용분) 시작일시 : 10/19 월요일 09:00\r\n※ 2026년 11월 신청(12월 이용분) 시작일시 : 11/23 월요일 09:004. 주의사항○ 이용수칙 반복 위반 확인될 경우, 이용 불가 조치\r\n○ 공영주차장 이외 공연장 (볼라드 통제구역) 내 차량 출입 불가\r\n○ 동일 단체가 이용자 이름을 달리하여 중복 예약 불가\r\n○ 야외공연장 배전반 고장으로 배전반 이용이 불가하오니 충전형 앰프 또는 휴대용 발전기를 지참하시어 공연하시기 바랍니다.\r\n○ 영리행위공익목적에 반하는 등 문화공연 이외에 다른 목적으로 사용 불가합니다.\r\n○ 음주 및 지나친 소음 등 공연장 질서유지에 반하는 행동은 불가합니다.\r\n○ 사용기간 중 시설 및 비품파손(임의사용금지) 또는 분실 시 원상복구 변상조치 하여야 합니다.\r\n○ 공연장 이용 시 작성한 공연 취지 및 내용에 맞게 행사를 추진하여야 합니다.\r\n○ 공연 장비 설치 및 철거는 반드시 정해진 공연 시간 내에 시작완료 하시기 바랍니다.\r\n○ 공연 후 주변정리 및 청소하여야 합니다.\r\n○ 청소가 완료된 무대 사진을 ***@**.**로 전송해야합니다.\r\n○ 소음 등 민원 발생 시 즉시 사용 중지 및 민원해결시까지 제약을 받을 수 있습니다.\r\n○ 우천 시 배전반 사용에 유의하시고, 공연 물품(앰프, 마이크) 외 배전반 사용은 불가합니다.\r\n\r\n\r\n ※ 위의 사용조건을 위배할 경우 향후 야외무대 사용을 제한합니다."
+      },
       {
         "serviceId": "S260810184713315786",
         "title": "오금교 다리밑 야외공연장",
@@ -3947,42 +4000,6 @@ export const SEOUL_SPACE_FACILITIES:
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1785325104936SK4RE49UX2LDBPX0GW1K488XW",
         "telephone": "02-2116-2884",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n1. 주소 : 서울시 노원구 동일로 지하1530-1\r\n\r\n2. 이용료 : 무료\r\n\r\n3. 예약관련 주의사항\r\n- 이용대상 : 상계8동 거주 만 10세~ 만18세 청소년 또는 상계8동 소재 학교에 재학 중인 초등학교 5학년 ~ 고등학교 3학년 학생\r\n- 이용 예정일로부터 30일 전 9시부터 ~ 7일전 9시까지 예약이 가능합니다.\r\n- 예약 취소는 이용일 7일 전 9시까지 가능합니다.\r\n- 예약은 1회당 2시간으로 합니다.\r\n\r\n4. 수용규모 : 최소1명 ~ 최대 15명\r\n\r\n5. 이용가능시간\r\n- 평일(월~금요일) : 10시 ~ 21시\r\n- 주말(토,일요일) : 9시 ~ 17시\r\n\r\n6. 이용예정시간에 마들역 지하1층 상계8동 주민자치회 사무실에서 이용대장 작성 후 이용 가능\r\n4. 주의사항1. 이용규칙을 위반하거나 다른 이용자의 안전과 공간운영에 중대한 지장을 줄 경우, 해당 이용자에 대하여 주의, 경고, 퇴실조치, 이용제한 등을 할 수 있습니다.\r\n2. 음식물은 음료수나 냄새가 나지 않는 간단한 간식(과자, 빵류)은 반입 가능. 단, 국물이 있거나 냄새가 심한 음식(컵라면, 떡볶이, 햄버거 등)은 반입을 제한합니다.\r\n3. 사용한 물품은 꼭 제자리에 돌려놓고 쓰레기는 분리수거함에 버리고 간식 쓰레기는 꼭 본인이 가지고 갑니다.\r\n4. 퇴실 시 냉난방기, 조명을 끄고 사무실에 퇴실을 알립니다.\r\n5. 술, 담배, 라이터, 칼 등 유해물품은 절대 가지고 들어갈 수 없습니다.\r\n6. 무단출입, 폭력, 흡연, 음주 등 청소년 위법행위 및 이용규칙과 맞지 않은 행위를 금지합니다.\r\n7. 화재 등 비상 상황 발생 시에는 즉시 관리자에게 알리고 안내에 따라 안전하게 대피합니다.\r\n8. 공간 내에 있는 모든 물품은 상계8동주민센터의 자산으로, 고의로 물품을 훼손하거나 외부로 가져나갈 경우 변상조치할 수 있습니다."
-      }
-    ]
-  },
-  {
-    "id": "seoul-space-bae1310f",
-    "name": "서울시립 북서울미술관",
-    "fullPlaceName": "서울시립 북서울미술관",
-    "district": "노원구",
-    "locationLabel": "서울 노원구",
-    "primaryCategory": "공연장",
-    "categoryNames": [
-      "공연장"
-    ],
-    "spaceKind": "multipurpose",
-    "longitude": null,
-    "latitude": null,
-    "imageUrl": "https://sema.seoul.go.kr/common/imageView?FILE_PATH=/nj/VEN01/2018/&FILE_NM=20180514153059_7d2e7bba0bc04a40938c3a15cb2533b3_0c95d7e21e9e40e89844e3c3af7631ad",
-    "officialUrl": "https://sema.seoul.go.kr/kr/sema/rental/info",
-    "reservationCount": 1,
-    "reservations": [
-      {
-        "serviceId": "XML-209095",
-        "title": "다목적홀",
-        "statusText": "접수중",
-        "majorCategory": "공간시설",
-        "category": "공연장",
-        "paidType": "유료",
-        "targetText": "제한없음",
-        "receptionStartAt": "2026-02-27T00:00:00",
-        "receptionEndAt": "2026-12-31T00:00:00",
-        "useStartAt": "2026-02-27T00:00:00",
-        "useEndAt": "2026-12-31T00:00:00",
-        "serviceUrl": "https://sema.seoul.go.kr/kr/sema/rental/info",
-        "imageUrl": "https://sema.seoul.go.kr/common/imageView?FILE_PATH=/nj/VEN01/2018/&FILE_NM=20180514153059_7d2e7bba0bc04a40938c3a15cb2533b3_0c95d7e21e9e40e89844e3c3af7631ad",
-        "telephone": "02-2124-5216",
-        "detailText": ""
       }
     ]
   },
@@ -5091,8 +5108,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "hall",
     "longitude": 127.04382,
     "latitude": 37.64838,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17684322517224ZG7HDTOWA8Z08NKQPU3INMU3",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260115081052244393",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1768434457269WP4VGXS23YYP9UYP8A8IQ0VOT",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260115084737505471",
     "reservationCount": 3,
     "reservations": [
       {
@@ -5719,8 +5736,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 126.93847,
     "latitude": 37.5546,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1766394051432ZWBHPXAHC07II9B68PZ3HNZ1F",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251222175254894962",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1766394427503HVUF3TKYK58PBTZKHNF75JUEG",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251222180551890400",
     "reservationCount": 2,
     "reservations": [
       {
@@ -6963,7 +6980,7 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "other",
     "longitude": null,
     "latitude": null,
-    "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540028/20210310/1615306958094G1GA5PIEMY41YT48VJNQW4LRM.jpg",
+    "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540028/20210310/1615306942991NXZLBXJ4ABFCLL5KATPIIWASB.jpg",
     "officialUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do#rest9",
     "reservationCount": 2,
     "reservations": [
@@ -12346,42 +12363,6 @@ export const SEOUL_SPACE_FACILITIES:
     ]
   },
   {
-    "id": "seoul-space-fc065e91",
-    "name": "서울시립 미술아카이브",
-    "fullPlaceName": "서울시립 미술아카이브",
-    "district": "종로구",
-    "locationLabel": "서울 종로구",
-    "primaryCategory": "공연장",
-    "categoryNames": [
-      "공연장"
-    ],
-    "spaceKind": "multipurpose",
-    "longitude": null,
-    "latitude": null,
-    "imageUrl": "https://sema.seoul.go.kr/common/imageView?FILE_PATH=/nj/VEN01/2023/&FILE_NM=20230331155530_e1d3e17751974a37a5f0e7fc286af435_6be2f5e531334cc9b574d1697123515f",
-    "officialUrl": "https://sema.seoul.go.kr/kr/sema/rental/info",
-    "reservationCount": 1,
-    "reservations": [
-      {
-        "serviceId": "XML-1158342",
-        "title": "다목적홀",
-        "statusText": "접수중",
-        "majorCategory": "공간시설",
-        "category": "공연장",
-        "paidType": "유료",
-        "targetText": "제한없음",
-        "receptionStartAt": "2026-01-21T00:00:00",
-        "receptionEndAt": "2026-12-31T00:00:00",
-        "useStartAt": "2026-01-21T00:00:00",
-        "useEndAt": "2026-12-31T00:00:00",
-        "serviceUrl": "https://sema.seoul.go.kr/kr/sema/rental/info",
-        "imageUrl": "https://sema.seoul.go.kr/common/imageView?FILE_PATH=/nj/VEN01/2023/&FILE_NM=20230331155530_e1d3e17751974a37a5f0e7fc286af435_6be2f5e531334cc9b574d1697123515f",
-        "telephone": "02-2124-7402",
-        "detailText": ""
-      }
-    ]
-  },
-  {
     "id": "seoul-space-2ad283c8",
     "name": "서울역사박물관",
     "fullPlaceName": "서울역사박물관",
@@ -13186,42 +13167,6 @@ export const SEOUL_SPACE_FACILITIES:
     ]
   },
   {
-    "id": "seoul-space-242d1ee1",
-    "name": "서울시립미술관 서소문본관",
-    "fullPlaceName": "서울시립미술관 서소문본관",
-    "district": "중구",
-    "locationLabel": "서울 중구",
-    "primaryCategory": "강의실",
-    "categoryNames": [
-      "강의실"
-    ],
-    "spaceKind": "lectureRoom",
-    "longitude": null,
-    "latitude": null,
-    "imageUrl": "https://sema.seoul.go.kr/common/imageView?FILE_PATH=/nj/VEN01/2018/&FILE_NM=20180501164929_1d153226cfb8403ebe964ad770c9a005_c004599dd17a47cb883737e10afe664a",
-    "officialUrl": "https://sema.seoul.go.kr/kr/sema/rental/info",
-    "reservationCount": 1,
-    "reservations": [
-      {
-        "serviceId": "XML-172861",
-        "title": "강당 세마홀",
-        "statusText": "접수중",
-        "majorCategory": "공간시설",
-        "category": "강의실",
-        "paidType": "유료",
-        "targetText": "제한없음",
-        "receptionStartAt": "2026-01-21T00:00:00",
-        "receptionEndAt": "2026-12-31T00:00:00",
-        "useStartAt": "2026-01-21T00:00:00",
-        "useEndAt": "2026-12-31T00:00:00",
-        "serviceUrl": "https://sema.seoul.go.kr/kr/sema/rental/info",
-        "imageUrl": "https://sema.seoul.go.kr/common/imageView?FILE_PATH=/nj/VEN01/2018/&FILE_NM=20180501164929_1d153226cfb8403ebe964ad770c9a005_c004599dd17a47cb883737e10afe664a",
-        "telephone": "02-2124-8822",
-        "detailText": ""
-      }
-    ]
-  },
-  {
     "id": "seoul-space-4580935c",
     "name": "서울시청 본관 직원식당",
     "fullPlaceName": "서울시청 본관 직원식당",
@@ -13819,7 +13764,7 @@ export const SEOUL_SPACE_FACILITIES:
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260107143047355033",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1767764078022S4SA6X47AP7MYRIMOXJPZVJR9",
         "telephone": "02-3396-4977",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용📢 중구영상제작지원센터 이용방법 변경 안내\r\n\r\n\r\n○ 장소 : 중구영상제작지원센터 스튜디오\r\n○ 위치 : 서울시 중구 퇴계로 325-9, 코스모타워 9층\r\n※ 동대문역사문화공원역(2호선, 4호선, 5호선) 4번 출구 도보 3~5분\r\n○ 운영시간 : 평일 10시~17시 [1일 최대 2시간 이내 사용 가능, 12:00 ~ 13:00 점심시간으로 이용불가]\r\n※ 주말공휴일은 휴관, 센터사정에 따라 변동될 수 있음\r\n○ 이용대상 : 중구 및 타 지역 미디어 시설 이용 희망자 / 중구민 및 중구 생활권자(중구 소재 학생, 직장인, 소상공인) 등 /팀당 1인~최대 6인까지 이용 가능\r\n         ※ 공공행사 촬영 등 공익 목적 이용 시 우선 지원\r\n○ 대 관 료 : 유료\r\n\r\n\t\r\n\t\t\r\n\t\t\t시 설 명\r\n\t\t\t기 준\r\n\t\t\t사용료(원)\r\n\t\t\tVAT포함\r\n\t\t\t비 고\r\n\t\t\r\n\t\t\r\n\t\t\t스튜디오\r\n\t\t\t1시간\r\n\t\t\t5,000\r\n\t\t\t천장형 조명, 영사용 스크린 포함\r\n\t\t\r\n\t\t\r\n\t\t\t스튜디오장비\r\n\t\t\t1시간\r\n\t\t\t10,000\r\n\t\t\t캠코더, 무선마이크, 삼각대, 스탠드 조명 등 일체로, 대여 품목 및 수량과 무관하게 동일\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n※ 감면 대상자는 별지1 서식 작성(증빙서류 포함)하여 신청시 첨부 또는 메일(***@**.**) 또는 사전 방문 제출 후, 메일 송부 시 담당자 번호(02-3396-4977)로 확인 전화 필수.\r\n\r\n○ 사용가능장비 : 캠코더(SONY PXW-Z90V, 3대), 삼각대(3대), 무선마이크(3대), 조명(2대), 화이트 스크린(1대), 크로마키 스크린(1대) 등\r\n  ※ 장비 이용은 스튜디오 이용시에만 가능(외부반출 불가), 장비 이용이 가능한 자 또는 이용이 가능한 자를 동반하는 경우에만 이용 가능\r\n\r\n○ 이용 절차(15순으로 진행)\r\n1. 예약 신청 : 사용예정일 2일 전 17시까지\r\n ※ 신청 전 사전 전화문의 바랍니다. (중구청 홍보담당관 ☎ 02-3396-4977)\r\n2. 사용허가(신청일로부터 2일 이내 통보) ※ 선착순이나, 동시간대 신청 시 공공기관중구민중구생활권자 순으로 우선 배정\r\n3. 사용료 납부 : ***(우리은행), 예금주 : 서울특별시 중구청\r\n★ 사용허가일 포함 3일 이내 미납 시 자동 취소\r\n4. 사용 확정 승인(담당자 입금 확인 후 승인 통보)\r\n5. 스튜디오 이용\r\n○ 준수사항\r\n1. 대관 취소 및 변경은사용예정일 전날 17시 까지 가능(☎ 02-3396-4977) 하며, 반환기준(별지4 참고)에 따라 반환료 차등 반환\r\n반환 방법 : 유선으로 취소 요청 후, 별지4 서식 작성하여 메일(***@**.**) 또는 방문 제출\r\n★ 반드시 사전에 유선으로 취소 요청 바랍니다!!(02-3396-4977)\r\n※주의※ 사용예정일 당일 취소 시 사용료 미반환\r\n\r\n2. 대관 승인 조건\r\n- 카메라 등 촬영에 필요한 일체 장비는 사용자가 준비함을 원칙으로 함. 단, 촬영장비가 없는 경우 촬영장비 포함하여 대관 가능(신청시 장비이용 여부 작성)\r\n ※ 장비 이용은 스튜디오 이용시에만 가능(외부반출 불가), 장비 이용이 가능한 자 또는 이용이 가능한 자를 동반하는 경우에만 이용 가능\r\n- 19세 미만 미성년자가 보호자 동반 없이 오는 경우 시설,장비 사용 보호자 동의서 및 보호자 증명 서류 필수 제출(첨부파일 사용신청서(2페이지 부분) 작성하여 첨부)\r\n- 주차장 미제공, 대중교통 이용 권장\r\n- 준비 및 마무리 시간을 포함하여 사용시간 준수\r\n- 취사 및 취식 금지\r\n- 시설 또는 장비 훼손 시 즉시 원상복구 또는 변상\r\n\r\n○ 문의 : 중구청 홍보담당관(☎ 02-3396-4977)\r\n\r\n4. 주의사항다음의 어느 하나에 해당하는 경우 시설 사용을 제한하거나 퇴장을 명할 수 있음\r\n- 공공질서와 선량한 풍속을 해칠 우려가 있는 경우\r\n- 특정 종교활동 및 정치적인 행위를 하는 경우\r\n- 감염병의 예방 및 관리에 관한 법률에 의거 감염병 환자 및 감염병 의심자에 해당하는 경우\r\n- 그 밖의 공공의 안전과 시설물 유지관리상 제한할 필요가 있다고 인정되는 경우"
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용📢 중구영상제작지원센터 이용방법 변경 안내\r\n\r\n\r\n○ 장소 : 중구영상제작지원센터 스튜디오\r\n○ 위치 : 서울시 중구 퇴계로 325-9, 코스모타워 9층\r\n※ 동대문역사문화공원역(2호선, 4호선, 5호선) 4번 출구 도보 3~5분\r\n○ 운영시간 : 평일 10시~17시 [1일 최대 2시간 이내 사용 가능, 12:00 ~ 13:00 점심시간으로 이용불가]\r\n※ 주말공휴일은 휴관, 센터사정에 따라 변동될 수 있음\r\n○ 이용대상 : 중구 및 타 지역 미디어 시설 이용 희망자 / 중구민 및 중구 생활권자(중구 소재 학생, 직장인, 소상공인) 등 /팀당 1인~최대 6인까지 이용 가능\r\n         ※ 공공행사 촬영 등 공익 목적 이용 시 우선 지원\r\n○ 대 관 료 : 유료\r\n\r\n\t\r\n\t\t\r\n\t\t\t시 설 명\r\n\t\t\t기 준\r\n\t\t\t사용료(원)\r\n\t\t\tVAT포함\r\n\t\t\t비 고\r\n\t\t\r\n\t\t\r\n\t\t\t스튜디오\r\n\t\t\t1시간\r\n\t\t\t5,000\r\n\t\t\t천장형 조명, 영상용 스크린 포함\r\n\t\t\r\n\t\t\r\n\t\t\t스튜디오장비\r\n\t\t\t1시간\r\n\t\t\t10,000\r\n\t\t\t캠코더, 무선마이크, 삼각대, 스탠드 조명 등 일체로, 대여 품목 및 수량과 무관하게 동일\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n※ 감면 대상자는 별지1 서식 작성(증빙서류 포함)하여 신청시 첨부 또는 메일(***@**.**) 또는 사전 방문 제출 후, 메일 송부 시 담당자 번호(02-3396-4977)로 확인 전화 필수.\r\n\r\n○ 사용가능장비 : 캠코더(SONY PXW-Z90V, 3대), 삼각대(3대), 무선마이크(3대), 조명(2대), 화이트 스크린(1대), 크로마키 스크린(1대) 등\r\n  ※ 장비 이용은 스튜디오 이용시에만 가능(외부반출 불가), 장비 이용이 가능한 자 또는 이용이 가능한 자를 동반하는 경우에만 이용 가능\r\n\r\n○ 이용 절차(15순으로 진행)\r\n1. 예약 신청 : 사용예정일 2일 전 17시까지\r\n ※ 신청 전 사전 전화문의 바랍니다. (중구청 홍보담당관 ☎ 02-3396-4977)\r\n2. 사용허가(신청일로부터 2일 이내 통보) ※ 선착순이나, 동시간대 신청 시 공공기관중구민중구생활권자 순으로 우선 배정\r\n3. 사용료 납부 : ***(우리은행), 예금주 : 서울특별시 중구청\r\n★ 사용허가일 포함 3일 이내 미납 시 자동 취소\r\n4. 사용 확정 승인(담당자 입금 확인 후 승인 통보)\r\n5. 스튜디오 이용\r\n○ 준수사항\r\n1. 대관 취소 및 변경은사용예정일 전날 17시 까지 가능(☎ 02-3396-4977) 하며, 반환기준(별지4 참고)에 따라 반환료 차등 반환\r\n반환 방법 : 유선으로 취소 요청 후, 별지4 서식 작성하여 메일(***@**.**) 또는 방문 제출\r\n★ 반드시 사전에 유선으로 취소 요청 바랍니다!!(02-3396-4977)\r\n※주의※ 사용예정일 당일 취소 시 사용료 미반환\r\n\r\n2. 대관 승인 조건\r\n- 카메라 등 촬영에 필요한 일체 장비는 사용자가 준비함을 원칙으로 함. 단, 촬영장비가 없는 경우 촬영장비 포함하여 대관 가능(신청시 장비이용 여부 작성)\r\n ※ 장비 이용은 스튜디오 이용시에만 가능(외부반출 불가), 장비 이용이 가능한 자 또는 이용이 가능한 자를 동반하는 경우에만 이용 가능\r\n- 19세 미만 미성년자가 보호자 동반 없이 오는 경우 시설,장비 사용 보호자 동의서 및 보호자 증명 서류 필수 제출(첨부파일 사용신청서(2페이지 부분) 작성하여 첨부)\r\n- 주차장 미제공, 대중교통 이용 권장\r\n- 준비 및 마무리 시간을 포함하여 사용시간 준수\r\n- 취사 및 취식 금지\r\n- 시설 또는 장비 훼손 시 즉시 원상복구 또는 변상\r\n\r\n○ 문의 : 중구청 홍보담당관(☎ 02-3396-4977)\r\n\r\n4. 주의사항다음의 어느 하나에 해당하는 경우 시설 사용을 제한하거나 퇴장을 명할 수 있음\r\n- 공공질서와 선량한 풍속을 해칠 우려가 있는 경우\r\n- 특정 종교활동 및 정치적인 행위를 하는 경우\r\n- 감염병의 예방 및 관리에 관한 법률에 의거 감염병 환자 및 감염병 의심자에 해당하는 경우\r\n- 그 밖의 공공의 안전과 시설물 유지관리상 제한할 필요가 있다고 인정되는 경우"
       },
       {
         "serviceId": "S260107151554834632",

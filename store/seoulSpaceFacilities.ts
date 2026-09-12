@@ -46,10 +46,10 @@ export type SeoulSpaceFacility = {
 };
 
 export const SEOUL_SPACE_RESERVATION_COUNT =
-  529;
+  532;
 
 export const SEOUL_SPACE_FACILITY_COUNT =
-  291;
+  294;
 
 export const SEOUL_SPACE_FACILITIES:
   readonly SeoulSpaceFacility[] =
@@ -4004,6 +4004,42 @@ export const SEOUL_SPACE_FACILITIES:
     ]
   },
   {
+    "id": "seoul-space-bae1310f",
+    "name": "서울시립 북서울미술관",
+    "fullPlaceName": "서울시립 북서울미술관",
+    "district": "노원구",
+    "locationLabel": "서울 노원구",
+    "primaryCategory": "공연장",
+    "categoryNames": [
+      "공연장"
+    ],
+    "spaceKind": "multipurpose",
+    "longitude": null,
+    "latitude": null,
+    "imageUrl": "https://sema.seoul.go.kr/common/imageView?FILE_PATH=/nj/VEN01/2018/&FILE_NM=20180514153059_7d2e7bba0bc04a40938c3a15cb2533b3_0c95d7e21e9e40e89844e3c3af7631ad",
+    "officialUrl": "https://sema.seoul.go.kr/kr/sema/rental/info",
+    "reservationCount": 1,
+    "reservations": [
+      {
+        "serviceId": "XML-209095",
+        "title": "다목적홀",
+        "statusText": "접수중",
+        "majorCategory": "공간시설",
+        "category": "공연장",
+        "paidType": "유료",
+        "targetText": "제한없음",
+        "receptionStartAt": "2026-02-27T00:00:00",
+        "receptionEndAt": "2026-12-31T00:00:00",
+        "useStartAt": "2026-02-27T00:00:00",
+        "useEndAt": "2026-12-31T00:00:00",
+        "serviceUrl": "https://sema.seoul.go.kr/kr/sema/rental/info",
+        "imageUrl": "https://sema.seoul.go.kr/common/imageView?FILE_PATH=/nj/VEN01/2018/&FILE_NM=20180514153059_7d2e7bba0bc04a40938c3a15cb2533b3_0c95d7e21e9e40e89844e3c3af7631ad",
+        "telephone": "02-2124-5216",
+        "detailText": ""
+      }
+    ]
+  },
+  {
     "id": "seoul-space-27664b24",
     "name": "서울청년센터 노원",
     "fullPlaceName": "서울청년센터 노원",
@@ -5108,8 +5144,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "hall",
     "longitude": 127.04382,
     "latitude": 37.64838,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1768434457269WP4VGXS23YYP9UYP8A8IQ0VOT",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260115084737505471",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17684322517224ZG7HDTOWA8Z08NKQPU3INMU3",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260115081052244393",
     "reservationCount": 3,
     "reservations": [
       {
@@ -5736,8 +5772,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 126.93847,
     "latitude": 37.5546,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1766394427503HVUF3TKYK58PBTZKHNF75JUEG",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251222180551890400",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1766394051432ZWBHPXAHC07II9B68PZ3HNZ1F",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251222175254894962",
     "reservationCount": 2,
     "reservations": [
       {
@@ -12363,6 +12399,42 @@ export const SEOUL_SPACE_FACILITIES:
     ]
   },
   {
+    "id": "seoul-space-fc065e91",
+    "name": "서울시립 미술아카이브",
+    "fullPlaceName": "서울시립 미술아카이브",
+    "district": "종로구",
+    "locationLabel": "서울 종로구",
+    "primaryCategory": "공연장",
+    "categoryNames": [
+      "공연장"
+    ],
+    "spaceKind": "multipurpose",
+    "longitude": null,
+    "latitude": null,
+    "imageUrl": "https://sema.seoul.go.kr/common/imageView?FILE_PATH=/nj/VEN01/2023/&FILE_NM=20230331155530_e1d3e17751974a37a5f0e7fc286af435_6be2f5e531334cc9b574d1697123515f",
+    "officialUrl": "https://sema.seoul.go.kr/kr/sema/rental/info",
+    "reservationCount": 1,
+    "reservations": [
+      {
+        "serviceId": "XML-1158342",
+        "title": "다목적홀",
+        "statusText": "접수중",
+        "majorCategory": "공간시설",
+        "category": "공연장",
+        "paidType": "유료",
+        "targetText": "제한없음",
+        "receptionStartAt": "2026-01-21T00:00:00",
+        "receptionEndAt": "2026-12-31T00:00:00",
+        "useStartAt": "2026-01-21T00:00:00",
+        "useEndAt": "2026-12-31T00:00:00",
+        "serviceUrl": "https://sema.seoul.go.kr/kr/sema/rental/info",
+        "imageUrl": "https://sema.seoul.go.kr/common/imageView?FILE_PATH=/nj/VEN01/2023/&FILE_NM=20230331155530_e1d3e17751974a37a5f0e7fc286af435_6be2f5e531334cc9b574d1697123515f",
+        "telephone": "02-2124-7402",
+        "detailText": ""
+      }
+    ]
+  },
+  {
     "id": "seoul-space-2ad283c8",
     "name": "서울역사박물관",
     "fullPlaceName": "서울역사박물관",
@@ -13163,6 +13235,42 @@ export const SEOUL_SPACE_FACILITIES:
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1769997687885OFMQBWYPWI6TMJ1JGOUBHRYEZ",
         "telephone": "02-6324-1413",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용※ 대관 신청 전 확인 부탁드립니다. ※\r\n서울갤러리는 시민 모두가 이용하는 공간입니다. 원활한 대관 운영을 위해 신청 전 첨부된 [서울갤러리 대관 운영 규정]과 아래 안내사항을 확인해 주시기 바랍니다.\r\n규정 미숙지로 인해 발생할 수 있는 불이익에 대한 책임은 대관 신청자에게 있습니다.\r\n\r\n[시설 정보]\r\n○ 공간명: 내 친구 서울 서울갤러리 회의실2\r\n○ 주소: 서울특별시 세종대로 110 지하 2층 내 친구 서울 서울갤러리 회의실2\r\n○ 대관운영시간:10:00~18:00 / 법정공휴일 10:00~17:00\r\n○ 사용인원: 최대 26명\r\n○ 대관료: 시간당 5,400원(부가가치세 별도)\r\n\r\n\r\n[시설 및 장비현황]\r\n○ 면적: 67㎡\r\n○ 부대시설: 무선마이크 2대, 프로젝터, 2인 책상 13개, 의자 26개\r\n○ 공간 내 전용 PC가 구비되어 있지 않으니, 행사용 노트북을 필수로 지참해 주시기 바랍니다.\r\n○ 현수막 설치 불가합니다.\r\n\r\n\r\n[공간 답사 안내]\r\n○ 원활한 답사를 위해 답사 희망일 최소 2일 전까지 담당자에게 전화로 사전 문의 및 일정을 협의해 주시기 바랍니다.\r\n○ 답사 가능 시간: 평일 10:00~17:00(행사 진행 중인 경우 답사가 어려울 수 있는 점 양해 부탁드립니다.)\r\n\r\n\r\n[예약 및 취소 안내]\r\n○ 신청 기간: 사용 예정일 기준 90일 전부터 10일 전까지 신청가능\r\n○ 예약 변경: 대관일 및 시간 변경 희망 시 대관일 기준 최소 15일 전까지 담당자에게 문의 후 변경 바랍니다. 이후 변경 시에는 아래 규정에 따라 수수료가 발생할 수 있는 점 양해 부탁드립니다.\r\n○ 취소 시 환불 규정\r\n * 천재지변, 기타 불가항력에 의해 대관사용이 불가능하게 된 경우, 또는 사용일로부터 최소 15일 이전에 대관을 취소하는 경우: 100% 반환\r\n * 사용일 14일 이전부터 7일 이전까지의 기간 동안 대관을 취소하는 경우: 80% 반환\r\n * 사용일 6일 이전부터 1일 이전까지의 기간 동안 대관을 취소하는 경우: 60% 반환\r\n * 사용기간 중 남은 기간에 대하여 대관취소 신청을 하는 경우: 남은 일수의 50% 반환\r\n\r\n\r\n[대관절차]\r\n1. 대관신청: 서울시 공공서비스예약 시스템을 통해 예약 신청하실 때, 첨부된 대관 허가신청서를 작성하여 업로드해 주시기 바랍니다.\r\n2. 대관심의: 신청서 접수 후 최종 승인 여부 결정까지는 최대 7일 정도의 기간이 소요됩니다.\r\n3. 승인통보: 대관 승인 시, 신청 시 작성하신 이메일을 통해 개별적으로 안내해 드립니다.\r\n4. 계약 및 대관료 납부: 대관 계약은 전자계약으로 진행되며 원활한 대관 진행을 위해 사용일 10일 전까지 지정된 계좌로 대관료 납부를 해주시기 바랍니다.\r\n ※ 대관료 납부 일자 조율이 필요하신 경우 담당자에게 사전에 문의해 주시길 바랍니다.\r\n5. 공간사용: 행사 당일 사전 입장 및 사전 준비는 어려운 점 양해 부탁드립니다. 대관 시간을 준수하여 이용해 주시기 바랍니다.\r\n6. 종료점검: 행사 종료 후 다음 이용자를 위해 사용하신 공간의 점검 및 정돈 후 퇴실을 부탁드립니다.\r\n\r\n\r\n[이용안내]\r\n쾌적한 대관 공간 조성과 원활한 운영을 위해 아래 사항을 반드시 확인해 주시기 바랍니다.\r\n\r\n1. 공간 환경 및 시설 이용 수칙\r\n○ 서울갤러리 내 쾌적한 환경 유지를 위해 개별 포장 되어있는 봉지 과자(초코파이 등)및 뚜껑이 있는 음료 외 다른 음식물은 반입 및 섭취가 어렵습니다.\r\n○ 서울시청의 일회용품 줄이기 캠페인에 따라 시설 내 일회용 컵을 제공하지 않습니다.텀블러 사용을 권장 드리며, 1회용테이크아웃컵 등 일회용품 사용을 최소화해주시기 바랍니다.\r\n○ 공간 내 별도의 쓰레기 처리 공간이 마련되어 있지 않습니다. 대관 후 발생한 쓰레기는 직접 수거해 주시기를 부탁드립니다.\r\n\r\n2. 안내문 게시 및 설비 설치 수칙\r\n○ 지정된 장소에만 안내문 게시가 가능합니다.\r\n - 에스컬레이터/엘리베이터 앞: 대관 게시판(A4 가로)\r\n - 워크숍룸/동그라미방: 문 부착용 판넬(A3 가로)\r\n- 회의실 1, 2문 부착용 판넬(A4 가로)\r\n○ 위 지정 장소 외 벽면 부착은 불가합니다. 추가 안내문이 필요하신 경우 X배너나 POP를직접 지참해 주시기 바랍니다.\r\n○ X배너 설치 등 외부 설비 설치가 필요하신 경우 사전에 담당자와 협의해주시기 바랍니다.\r\n\r\n3. 운영 및 안전 책임 수칙\r\n○ 승인된 목적 이외의 용도나 운영 규정에 위반되는 행사(상업적, 종교적, 정치적 등)및 타인에게 양도 및 전대할 경우 대관이 취소될 수 있습니다.\r\n○ 행사 중 발생하는 안전사고 및 분실물에 대한 책임은 대관 신청자(주최 측)에게 있습니다. 귀중품 관리 및 안전사고 예방에 각별히 유의해 주시기 바랍니다.\r\n○ 사용자의 부주의로 인한 시설 파손 및 장비 고장 시, 원상 복구 또는 실비 변상을 원칙으로 합니다.\r\n○ 자세한 사항은 첨부된 [서울갤러리 대관 운영규정]을 확인해 주시기 바랍니다.\r\n\r\n[대관 문의 안내]\r\n○ 연락처: 02-6324-1413, 1414, 1416 / ***@**.**○ 문의가능 시간: 월~금 09:00~18:00 (점심시간 12:00~13:00)\r\n4. 주의사항※ 원활한 심사를 위해 대관 허가신청서를 작성하시어 신청시 함께 제출하거나 이메일로 보내주시기 바랍니다.\r\n※ 대관 공간 입실은 대관 시간부터 가능하며 사전 개방은 어려운 점 양해 부탁드립니다. 행사 준비 및 철수시간 포함하여 예약해 주시기 바랍니다.\r\n※ 서울시청 주차장 이용 시 별도의 주차비 지원은 되지 않습니다. 주차 공간이 협소하고 현장 상황(시위, 공사 등)에 따라 이용이 불가할 수 있으므로 대중교통 이용을 권장드립니다.\r\n※ 서울갤러리 운영시간 이외 내부 출입 불가합니다."
+      }
+    ]
+  },
+  {
+    "id": "seoul-space-242d1ee1",
+    "name": "서울시립미술관 서소문본관",
+    "fullPlaceName": "서울시립미술관 서소문본관",
+    "district": "중구",
+    "locationLabel": "서울 중구",
+    "primaryCategory": "강의실",
+    "categoryNames": [
+      "강의실"
+    ],
+    "spaceKind": "lectureRoom",
+    "longitude": null,
+    "latitude": null,
+    "imageUrl": "https://sema.seoul.go.kr/common/imageView?FILE_PATH=/nj/VEN01/2018/&FILE_NM=20180501164929_1d153226cfb8403ebe964ad770c9a005_c004599dd17a47cb883737e10afe664a",
+    "officialUrl": "https://sema.seoul.go.kr/kr/sema/rental/info",
+    "reservationCount": 1,
+    "reservations": [
+      {
+        "serviceId": "XML-172861",
+        "title": "강당 세마홀",
+        "statusText": "접수중",
+        "majorCategory": "공간시설",
+        "category": "강의실",
+        "paidType": "유료",
+        "targetText": "제한없음",
+        "receptionStartAt": "2026-01-21T00:00:00",
+        "receptionEndAt": "2026-12-31T00:00:00",
+        "useStartAt": "2026-01-21T00:00:00",
+        "useEndAt": "2026-12-31T00:00:00",
+        "serviceUrl": "https://sema.seoul.go.kr/kr/sema/rental/info",
+        "imageUrl": "https://sema.seoul.go.kr/common/imageView?FILE_PATH=/nj/VEN01/2018/&FILE_NM=20180501164929_1d153226cfb8403ebe964ad770c9a005_c004599dd17a47cb883737e10afe664a",
+        "telephone": "02-2124-8822",
+        "detailText": ""
       }
     ]
   },

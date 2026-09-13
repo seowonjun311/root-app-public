@@ -69,10 +69,10 @@ export type SeoulEducationPlace = {
 };
 
 export const SEOUL_EDUCATION_PROGRAM_COUNT =
-  391;
+  386;
 
 export const SEOUL_EDUCATION_PLACE_COUNT =
-  141;
+  138;
 
 export const SEOUL_EDUCATION_PLACES:
   readonly SeoulEducationPlace[] =
@@ -220,8 +220,8 @@ export const SEOUL_EDUCATION_PLACES:
     ],
     "longitude": 127.10067,
     "latitude": 37.4658,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17865144840530TB0KY4AVHMSC2X2ULWOYA68O",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260812145839538194",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1786515139286CG1ZLJVMBLU827RXIS2FE158G",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260812150815858561",
     "programCount": 3,
     "programs": [
       {
@@ -304,8 +304,8 @@ export const SEOUL_EDUCATION_PLACES:
     ],
     "longitude": 127.07454,
     "latitude": 37.50034,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17865172344118JDRU5QMVEZEPX7D8DCAZTC48",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260812154522772753",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1786511678279QONLTWV7WGDMEDJLI2WLDDX82",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260812141133027947",
     "programCount": 5,
     "programs": [
       {
@@ -685,8 +685,8 @@ export const SEOUL_EDUCATION_PLACES:
     ],
     "longitude": 127.12294,
     "latitude": 37.53578,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1773054463783X16MJJGJDOR9D16Y8QSZL7C35",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260309200314587260",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1785998222687U4245X1CYVCBR74TTCVUFXYX1",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260806153409420158",
     "programCount": 6,
     "programs": [
       {
@@ -1115,7 +1115,7 @@ export const SEOUL_EDUCATION_PLACES:
         "title": "[서울청년센터 강북] 청년, 하고 싶은 거 다하는 청년주간행사! 2026년 청년주간행사 '유스터마이징'",
         "originalCategory": "청년정보",
         "category": "cookingFood",
-        "statusText": "예약마감",
+        "statusText": "접수종료",
         "paidType": "무료",
         "targetText": "청년",
         "audienceTags": [
@@ -1508,26 +1508,6 @@ export const SEOUL_EDUCATION_PLACES:
     "programCount": 4,
     "programs": [
       {
-        "serviceId": "S260823162102711417",
-        "title": "[강서습지]어른이를 위한 꼼지락 공방 -나뭇잎 키링 만들기 -",
-        "originalCategory": "자연/과학",
-        "category": "craftMaking",
-        "statusText": "접수중",
-        "paidType": "무료",
-        "targetText": "성인",
-        "audienceTags": [
-          "adult"
-        ],
-        "receptionStartAt": "2026-08-23T00:00:00",
-        "receptionEndAt": "2026-09-20T00:00:00",
-        "useStartAt": "2026-08-23T00:00:00",
-        "useEndAt": "2026-09-20T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260823162102711417",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787469744655R2WU4Y3U0LLPZFAS3B0AUZQ8I",
-        "telephone": "",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n\n활동장소 : 강서습지생태공원\n\n모이는 장소 : 강서습지생태공원 강서안내센터 3층 생태교실\n\n오시는길 : 방화역 1번 출구 하차 ---> 방화동삼익아파트(16-957) 정류장에서 07번 마을 버스 승차 ---> 생태공원 정류장 하차 ---> 7분 정도 걷기​​​​​ \n\n4. 주의사항\n\n- 성인대상 실내 프로그램입니다. \n\n- 프로그램 시간을 지켜주시기 바랍니다 . \n\n- 예약인원이 3 명 이하일 경우 프로그램이 취소될 수 있습니다 . \n\n- 예약취소는 2일 전까지 해주시기 바랍니다. \n\n** 김포공항방면 올림필대로 이용시 오시는 길 안내**\n\n김포공항 방면 올림필대로 이용시 초록선과 연두선이 같이 나와 혼선을 주는 경우가 많습니다.\n\n왼쪽 초록선을 따라 오세요(연두선은 인청공항, 청라 방향임 주의) \n\n초록선을 따라 오시면 강서습지생태공원으로 진입합니다. \n\n회전교차로를 돌아 우회전하면 우측에 강서한강공원 1주차장 입구입니다.\n\n노랑색 화장실 건물 뒷편에 주차하시면 강서안내센터와 가장 가깝습니다. \n\n주차하고 주차장 끝쪽으로 오면 강서안내센터 건물이 보입니다.\n\n자건거 도로는 위험하니 차량도로 왼편으로 붙어서 이동하시면 됩니다.\n\n계단을 이용해 3층 생태교실로 오세요"
-      },
-      {
         "serviceId": "S260221153407453243",
         "title": "[강서습지] 강서습지 새를 보다 -새, 사랑을 노래하다-",
         "originalCategory": "자연/과학",
@@ -1589,6 +1569,26 @@ export const SEOUL_EDUCATION_PLACES:
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787469968865AHI3JAUP2OW96NO27O1R8VFBK",
         "telephone": "",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n\n야외활동인 만큼 모자, 긴팔, 긴바지, 운동화 착용하고 마실 물 챙기시기 바랍니다.\n\n활동장소 : 강서습지생태공원\n\n모이는 장소 : 강서습지생태공원 강서안내센터 3층 생태교실\n\n오시는길 : 방화역 1번 출구 하차 ---> 방화동삼익아파트(16-957) 정류장에서 07번 마을 버스 승차 ---> 생태공원 정류장 하차 ---> 7분 정도 걷기​​​​​ \n\n4. 주의사항\n\n- 접수시 참여가족수를 모두 신청해 주시기 바랍니다 .\n\n초등학생 이상 가족단위로 진행되는 프로그램입니다. \n\n(부모님이 함께 참여하는 프로그램입니다.) \n\n- 프로그램 시간을 지켜주시기 바랍니다 . \n\n- 예약인원이 5 명 이하일 경우 프로그램이 취소될 수 있습니다 . \n\n- 기상 및 현장상황에 따라 프로그램이 변동 또는 취소 될 수 있습니다.\n\n- 예약취소는 2일 전까지 해주시기 바랍니다. \n\n- 우천시 실내프로그램으로 대체됩니다. \n\n** 김포공항 방면 올림필대로 이용시 오시는 길 안내** \n\n김포공항 방면 올림픽대로 이용시 초록선과 연두선이 나타나 혼선을 일으킵니다.\n\n왼편 초록선을 따라 오시면 됩니다.(연두선은 인천공항, 청라방면임, 주의 요망)​​​​ \n\n초록선을 따라 오시면 강서습지생태공원으로 진입됩니다. \n\n회전교차로를 돌아 우회전하면 오른쪽에 주자장 진입구가 있습니다.(정면 아님)\n\n노란색 화장실 건물 뒷편에 주차하시면 강서안내센터와 가깝습니다. \n\n주차장 끝쪽에서 보면 강서안내센터 건물이 보입니다.\n\n자전거 도로는 위험하니 차랑도로 왼편 끝으로 붙어서 걸어오세요\n\n계단을 이용해 3층 생태교실오 오시면 됩니다."
+      },
+      {
+        "serviceId": "S260823162102711417",
+        "title": "[강서습지]어른이를 위한 꼼지락 공방 -나뭇잎 키링 만들기 -",
+        "originalCategory": "자연/과학",
+        "category": "craftMaking",
+        "statusText": "예약마감",
+        "paidType": "무료",
+        "targetText": "성인",
+        "audienceTags": [
+          "adult"
+        ],
+        "receptionStartAt": "2026-08-23T00:00:00",
+        "receptionEndAt": "2026-09-20T00:00:00",
+        "useStartAt": "2026-08-23T00:00:00",
+        "useEndAt": "2026-09-20T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260823162102711417",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787469744655R2WU4Y3U0LLPZFAS3B0AUZQ8I",
+        "telephone": "",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n\n활동장소 : 강서습지생태공원\n\n모이는 장소 : 강서습지생태공원 강서안내센터 3층 생태교실\n\n오시는길 : 방화역 1번 출구 하차 ---> 방화동삼익아파트(16-957) 정류장에서 07번 마을 버스 승차 ---> 생태공원 정류장 하차 ---> 7분 정도 걷기​​​​​ \n\n4. 주의사항\n\n- 성인대상 실내 프로그램입니다. \n\n- 프로그램 시간을 지켜주시기 바랍니다 . \n\n- 예약인원이 3 명 이하일 경우 프로그램이 취소될 수 있습니다 . \n\n- 예약취소는 2일 전까지 해주시기 바랍니다. \n\n** 김포공항방면 올림필대로 이용시 오시는 길 안내**\n\n김포공항 방면 올림필대로 이용시 초록선과 연두선이 같이 나와 혼선을 주는 경우가 많습니다.\n\n왼쪽 초록선을 따라 오세요(연두선은 인청공항, 청라 방향임 주의) \n\n초록선을 따라 오시면 강서습지생태공원으로 진입합니다. \n\n회전교차로를 돌아 우회전하면 우측에 강서한강공원 1주차장 입구입니다.\n\n노랑색 화장실 건물 뒷편에 주차하시면 강서안내센터와 가장 가깝습니다. \n\n주차하고 주차장 끝쪽으로 오면 강서안내센터 건물이 보입니다.\n\n자건거 도로는 위험하니 차량도로 왼편으로 붙어서 이동하시면 됩니다.\n\n계단을 이용해 3층 생태교실로 오세요"
       }
     ]
   },
@@ -2453,31 +2453,10 @@ export const SEOUL_EDUCATION_PLACES:
     ],
     "longitude": 127.07640809215353,
     "latitude": 37.54885733182838,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1788421886657FNT6D12OCYK7Y7JVHRFAD9IBI",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260903164231718379",
-    "programCount": 4,
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1788423973087P3GWA7VEAEVCFXIIETZ529DCZ",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260903170445125973",
+    "programCount": 3,
     "programs": [
-      {
-        "serviceId": "S260903164231718379",
-        "title": "9/12(토) 서울어린이대공원 자연생태 체험교실 \"빗자루 만들기\" - 보호자 동반 , 오전/오후 2회차 운영",
-        "originalCategory": "공예/취미",
-        "category": "craftMaking",
-        "statusText": "접수종료",
-        "paidType": "유료",
-        "targetText": "어린이(6세~9세)",
-        "audienceTags": [
-          "children",
-          "family"
-        ],
-        "receptionStartAt": "2026-09-04T10:00:00",
-        "receptionEndAt": "2026-09-11T17:00:00",
-        "useStartAt": "2026-09-04T00:00:00",
-        "useEndAt": "2026-09-12T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260903164231718379",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1788421886657FNT6D12OCYK7Y7JVHRFAD9IBI",
-        "telephone": "02-450-9338",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n\n야생탐사대와 함께하는 \"자연생태\" 체험 교실 !! \n\n아이들을 위하여 다양한 프로그램을 준비했습니다.\n\n공원의 자연을 활용한 다양한 체험 수업에 참여해보세요~~!! \n\n<모바일 화면으로는 정보가 일부 표시되지 않을 수 있습니다. PC버전 혹은 Web을 통한 접속을 권장드립니다> \n\n<모집개요> \n\n○ 대 상 : 6세 ~ 9세 어린이 12명/회차당 \n\n○ 교 육 일 : 2026년 9월 12일 (토) \n\n○ 교육시간 : <1회차> 11:00 ~ 12:30 (90분)\n\n<2회차> 14:00 ~ 15:30 (90분) \n\n○ 접수기간 : 2026년 9월 4일(금) 10:00 ~ 9월 11일(금) 17시 까지 \n\n○ 금액(참가비) : 3천원/인 (보호자 동반 필수, 어린이의 요금만 내시면 됩니다) \n\nex) 어린이 1인 + 보호자 1인 = 3,000원\n\n어린이 1인 + 보호자 2인 = 3,000원\n\n어린이 2인 + 보호자 2인 = 6,000원 \n\n○ 체험장소 : 어린이대공원 정문 고객센터 뒤 녹색교실 \n\n○ 운영내용 : 옛 조상들의 지혜를 배우고 볏짚을 활용해 빗자루 만들기 \n\n<주의사항> \n\n※ 서울특별시 도시공원조례 제 19조에 따라 취소 수수료가 공제됨을 알려드립니다.\n\n프로그램 7일 전까지 혹은 예약당일 취소 : 이용료 전액 반환,\n\n사용일 6~3일 전까지 취소 : 이용료의 100분의 10을 공제한 나머지 금액 반환,\n\n사용일 2~1일 전까지 취소 : 이용료의 100분의 30을 공제한 나머지 금액 반환\n\n※ 프로그램 1일 전까지만 취소가 가능하며, 당일 취소 환불 불가합니다. (노쇼 지양) \n\n※ 우천 혹은 기상악화 등으로 취소 및 환불처리될 수 있습니다 \n\n※ 결제 시스템 오류 문의는 이용 중인 카드사로 개별문의 바랍니다.\n\n(결제 오류로 인한 접수를 못하신 건에 대하여 추가 접수 불가합니다) \n\n4. 주의사항\n※ 주의사항 \n\n주차장은 정문,후문,구의문 주차장을 이용하시기 바랍니다. (주차료는 별도) \n\n1. 공원입장료는 무료입니다. \n\n2. 녹색교실은 어린이대공원 정문 고객센터 뒤에 위치하고 있습니다. \n\n3. 상담가능시간 : 오전 10:00 ~ 17 :00 (평일) \n\n** 참여자 주의 사항 ** \n1. 프로그램 예약 시간 10 분 전 도착해주세요 . \n2. 무단결석은 이용을 원하는 다른 분들에게 피해를 주는 일입니다 . \n3. 원활한 진행을 위해 예약 취소는 프로그램 진행 1 일전까지 꼭 취소해 주세요 . \n4. 사전 취소 없이 불참한 경우 , 이후 신청 프로그램에서 제외 될 수 있습니다 . \n5. 취소수수료는 서울특별시 도시공원조례 제 19 조 ( 요금 등의 환불 ) 내용에 따릅니다 . \n6. 프로그램 관련 ( 내용변경 , 취소 등 ) 안내시 문자로 연락드리오니 예약시 휴대폰 SMS 수신거부를 체크하지 마세요 . \n\n**환불규정안내**…"
-      },
       {
         "serviceId": "S260903170445125973",
         "title": "9/13(일) 서울어린이대공원 자연생태 체험교실 \"춤추는 피노키오를 만들어보아요\" - 보호자 동반 , 오전/오후 2회차 운영",
@@ -2626,8 +2605,8 @@ export const SEOUL_EDUCATION_PLACES:
     ],
     "longitude": 127.07654,
     "latitude": 37.55223,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1773983496834NWADLPKKE0GLQVSJZINIW9B30",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260320134544206891",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1782974268931G5GKPCNMV0DV4NBOQ5JJOFJ4A",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260702153749244828",
     "programCount": 9,
     "programs": [
       {
@@ -3327,8 +3306,8 @@ export const SEOUL_EDUCATION_PLACES:
     ],
     "longitude": 126.8837,
     "latitude": 37.47621,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1788844488296MB06Q6ZNDM1C8O6UHEHHH971D",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260908141245608215",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17721924875265KNT5FO3ORP4JBD5UOW5W7CYC",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260227203104055090",
     "programCount": 2,
     "programs": [
       {
@@ -3384,7 +3363,7 @@ export const SEOUL_EDUCATION_PLACES:
     "operationScope": "insideSeoul",
     "district": "금천구",
     "locationLabel": "서울 금천구",
-    "primaryCategory": "craftMaking",
+    "primaryCategory": "careerYouth",
     "categoryNames": [
       "careerYouth",
       "craftMaking",
@@ -3395,9 +3374,9 @@ export const SEOUL_EDUCATION_PLACES:
     ],
     "longitude": 126.8837,
     "latitude": 37.47621,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=178530902417341SE2TQNZY9SQX37B0F7DRQ7S",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260729160031955008",
-    "programCount": 4,
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17878071165081OJL0485EP9UIGZZF78UNQ9VY",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260827135934617536",
+    "programCount": 3,
     "programs": [
       {
         "serviceId": "S260908141218371886",
@@ -3458,28 +3437,6 @@ export const SEOUL_EDUCATION_PLACES:
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787807775831APPPFNXM03FEE0RNV631D7EH9",
         "telephone": "02-852-0103",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n\n일상에서 바로 쓰는 생활법률 특강 \n\n(사)한국여성변호사회 소속 변호사와 함께 층간소음, 누수, 일조&middot;조망권 침해 등\n\n공동주택에서 발생 가능한 분쟁 사례와 법적 대응 방법 에 대해서 알아보겠습니다.\n\n해당 교육은 꼭 하단 링크를 통해 네이버로 신청 바랍니다. \n\n📅교육 일정 \n\n- 9/17(목) 12:10~12:50 \n\n💻 교육 방법 : 오프라인 \n\n(서울시 금천구 가산디지털1로 120, G밸리창업복지센터 3층) \n\n👥 수강 인원 : 20\n\n교육신청하기 \n\nhttps://naver.me/GsB9BVHL \n\n📌 비용 : 무료\n\n📞 문의 : 02-852-0103\n\n4. 주의사항\n✅ 안내사항 \n\n* 교육 참여 대상자에게는 모집 종료 후 개별 문자 안내 예정이며, 신청자가 많은 경우 조기 마감될 수 있습니다.\n\n* 교육에 참석하신 분께는 맛있는 샌드위치를 제공합니다.\n\n* 수료증은 신청자에 한해 교육 종료 후 이메일로 발송해 드립니다.\n\n■ 교육 문의 02-852-0103"
-      },
-      {
-        "serviceId": "S260729160031955008",
-        "title": "부모, 자녀 기질탐험 '우리집 합 찾기 프로젝트' TCI기질검사 참여자 모집",
-        "originalCategory": "기타",
-        "category": "craftMaking",
-        "statusText": "접수종료",
-        "paidType": "무료",
-        "targetText": "성인",
-        "audienceTags": [
-          "children",
-          "adult",
-          "family"
-        ],
-        "receptionStartAt": "2026-07-29T00:00:00",
-        "receptionEndAt": "2026-08-30T00:01:00",
-        "useStartAt": "2026-07-29T00:00:00",
-        "useEndAt": "2026-09-12T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260729160031955008",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=178530902417341SE2TQNZY9SQX37B0F7DRQ7S",
-        "telephone": "02-852-0103",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n\n부모&middot;자녀 기질탐험 프로그램\n\n「우리집 '합'찾기」참여자 모집 안내 \n\n지난해 참여자 만족도 99.24점을 기록한 상담 프로그램이 다시 찾아왔습니다.\n\n서남권직장맘지원센터에서는 초등 자녀를 둔 직장맘과 대디를 대상으로\n\n부모&middot;자녀 TCI 기질검사 프로그램을 진행합니다.\n\n부모와 자녀가 함께 심리검사인 TCI 검사를 실시하고,\n\n상담전문가에게 검사 개념과 결과 해석에 관한 설명을 들을 수 있는 프로그램입니다.\n\n교육 당일에는 부모와 자녀의 개별 심리검사 결과지도 제공됩니다.\n\n우리 가족의 서로 다른 기질을 이해하고, 더욱 건강한 소통 방법을 찾아보시기 바랍니다.✨\n\n📅 일시: 2026. 9.12(토) 14:00~16:00 \n\n📅 모집기간 : 2026. 7.22 ~ 8.30 / 조기 마감될 수 있음 \n\n※ 모집 종료 후 개별 문자 안내 / 신청자 많을 시 조기 마감\n\n📍 장소: 센터 교육장 \n\n서울 금천구 가산디지털1로 120 G밸리창업복지센터 3층\n\n📍강사 : 이미화 강사\n\n-교육학 박사(상담심리 전공)\n\n-상담심리사 1급\n\n-해인심리상담교육센터장\n\n📍모집대상\n\n초등학생 자녀를 둔 직장맘과 대디 15명\n\n📍프로그램 진행 일정\n\n1. 8/31(월) : 참여자 선정 후 개별 문자 메시지를 발송합니다.\n\n2. 9/2(수) : TCI 심리검사 참여 링크와 검사 방법을 이메일 및 문자 메시지로 안내합니다.\n\n3. 9/5(토) : 부모와 자녀의 심리검사를 모두 완료해야 합니다.\n\n4.9/12(토) : 서남권직장맘지원센터에서 프로그램을 진행합니다.\n\n-교육 당일에는 부모만 참석 가능하며, 자녀 동반은 불가합니다.\n\n📞 문의: 02-852-0103 / ***\n\n👉 참가신청 https://naver.me/G8fw1BOD \n\n4. 주의사항\n✅ 프로그램 참여 대상자에게는 개별 문자 안내 예정입니다.\n\n✅ 본 프로그램은 전액 무료로 진행됩니다.\n\n공공예약서비스로 신청할 경우 신청이 누락될 수 있으니 꼭 네이버 예약으로 신청 부탁드립니다."
       }
     ]
   },
@@ -3659,7 +3616,7 @@ export const SEOUL_EDUCATION_PLACES:
         "title": "(토,일) 10월 불암산나비정원 곤충아카데미 -장수풍뎅이 표본교실-",
         "originalCategory": "자연/과학",
         "category": "craftMaking",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "paidType": "유료",
         "targetText": "초등학생",
         "audienceTags": [
@@ -4040,48 +3997,6 @@ export const SEOUL_EDUCATION_PLACES:
     ]
   },
   {
-    "id": "seoul-education-6ec03861",
-    "name": "김근태기념도서관",
-    "fullPlaceName": "김근태기념도서관",
-    "operationScope": "insideSeoul",
-    "district": "도봉구",
-    "locationLabel": "서울 도봉구",
-    "primaryCategory": "liberalArtsLanguage",
-    "categoryNames": [
-      "liberalArtsLanguage"
-    ],
-    "originalCategoryNames": [
-      "기타"
-    ],
-    "longitude": 127.04402,
-    "latitude": 37.68767,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17886826336559ZOP11DY1O321T6OCLUEDMJRY",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260906171713981812",
-    "programCount": 1,
-    "programs": [
-      {
-        "serviceId": "S260906171713981812",
-        "title": "김근태기념도서관 9월 독서의 달 기념 어린이 경제 프로그램 (9/12)",
-        "originalCategory": "기타",
-        "category": "liberalArtsLanguage",
-        "statusText": "접수종료",
-        "paidType": "무료",
-        "targetText": "초등학생",
-        "audienceTags": [
-          "children"
-        ],
-        "receptionStartAt": "2026-09-06T09:00:00",
-        "receptionEndAt": "2026-09-12T12:00:00",
-        "useStartAt": "2026-09-06T00:00:00",
-        "useEndAt": "2026-09-12T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260906171713981812",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17886826336559ZOP11DY1O321T6OCLUEDMJRY",
-        "telephone": "",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n\n4. 주의사항"
-      }
-    ]
-  },
-  {
     "id": "seoul-education-28e7b05a",
     "name": "메이커스쿨 도봉",
     "fullPlaceName": "메이커스쿨 도봉",
@@ -4100,9 +4015,9 @@ export const SEOUL_EDUCATION_PLACES:
     ],
     "longitude": 127.04714,
     "latitude": 37.66871,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17878968249169XM3ZPS81D5R7LPB2DK8TGAO6",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260828145928599993",
-    "programCount": 6,
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787896972462GH7Z8468CT644H5VY1GSI5Z18",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260828150155699106",
+    "programCount": 5,
     "programs": [
       {
         "serviceId": "S260910161909152640",
@@ -4183,26 +4098,6 @@ export const SEOUL_EDUCATION_PLACES:
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1789007684031Q1XT4E8H2THI46AKPVNMPS8ZZ",
         "telephone": "02-2091-2399",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n&crarr; \n\n프로그램명: 말랑메이커, 신나는 전기 실험실\n\n운영기간: 10월 10일, 17일 (토) 10:00~12:00 *2회차 모두 참여 필요 \n\n운영장소: 도봉구청 1층 메이커스쿨 도봉 (서울시 도봉구 마들로656)\n\n주요내용: LED 및 모터를 이용한 전기 실험 체험\n\n참여방법: 대면 진행\n\n신청방법: 메이커스쿨 도봉 홈페이지 온라인 신청\n\nhttp://dbmakerschool.co.kr/ \n\n*신청 오류 시 이메일(***@**.**)로 접수 부탁드립니다. (이름, 나이, 연락처, 거주지역, 신청동기 기재)\n\n이메일 접수 또한 선정자에 한해 확정 문자가 발송됩니다.\n\n4. 주의사항\nhttp://dbmakerschool.co.kr/ \n\n메이커스쿨 도봉 홈페이지 신청만 받습니다."
-      },
-      {
-        "serviceId": "S260828145928599993",
-        "title": "(토) 메이커스쿨 도봉 '텀블러 홀더' 프로그램",
-        "originalCategory": "공예/취미",
-        "category": "craftMaking",
-        "statusText": "접수종료",
-        "paidType": "무료",
-        "targetText": "제한없음",
-        "audienceTags": [
-          "unspecified"
-        ],
-        "receptionStartAt": "2026-08-28T00:00:00",
-        "receptionEndAt": "2026-09-04T15:01:00",
-        "useStartAt": "2026-08-28T00:00:00",
-        "useEndAt": "2026-09-12T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260828145928599993",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17878968249169XM3ZPS81D5R7LPB2DK8TGAO6",
-        "telephone": "02-2091-2399",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n\n프로그램명: 텀블러 홀더 제작\n\n운영기간: 9월 12일 (토) 13:00~15:00 \n\n운영장소: 도봉구청 1층 메이커스쿨 도봉 (서울시 도봉구 마들로656)\n\n주요내용: 가죽을 활용한 텀블러 홀더 제작\n\n참여방법: 대면 진행\n\n신청방법: 메이커스쿨 도봉 홈페이지 온라인 신청\n\nhttp://dbmakerschool.co.kr/ \n\n*신청 오류 시 이메일(***@**.**)로 접수 부탁드립니다. (이름, 나이, 연락처, 거주지역, 신청동기 기재)\n\n이메일 접수 또한 선정자에 한해 확정 문자가 발송됩니다.\n\n4. 주의사항\nhttp://dbmakerschool.co.kr/ \n\n메이커스쿨 도봉 홈페이지 신청만 받습니다."
       },
       {
         "serviceId": "S260828150155699106",
@@ -4979,8 +4874,29 @@ export const SEOUL_EDUCATION_PLACES:
     "latitude": 37.49483898546161,
     "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1786597397417CSDN9MTTBCEKI2ZLWMIKPRD8V",
     "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260813140145649535",
-    "programCount": 6,
+    "programCount": 5,
     "programs": [
+      {
+        "serviceId": "S260813145123518752",
+        "title": "[보라매공원] 동행가드닝 (하반기, 9 ~11월)",
+        "originalCategory": "공예/취미",
+        "category": "craftMaking",
+        "statusText": "접수중",
+        "paidType": "유료",
+        "targetText": "성인",
+        "audienceTags": [
+          "all",
+          "adult"
+        ],
+        "receptionStartAt": "2026-08-25T10:00:00",
+        "receptionEndAt": "2026-09-15T17:00:00",
+        "useStartAt": "2026-08-25T00:00:00",
+        "useEndAt": "2026-09-30T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260813145123518752",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787376658490AE0YOY23Q3B6O9ZEKI1NB6VJU",
+        "telephone": "02-2181-1177, 02-300-5574",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n[ 보라매공원 동행가드닝 ] \n\n보라매 동행가드닝 (하반기) \n\n\" 배우기만하는 가드닝이 아니라\n\n정원을 만들고, 관찰하고, 가꾸는 정원프로그램입니다 \" \n\n------ 이런 분께 추천합니다 ------ \n\n* 화분을 넘어 작은 정원을 직접 만들어보고 싶으신 분 \n\n* 식물을 제대로 키우는 법을 배우고 싶으신 분 \n\n* 계절의 변화를 느끼며 나만의 정원을 직접 관리해보고 싶으신 분 \n\n- 일 시 : 9월 16일(수요일) ~ 11월 11일(수) 총 5회 (9/16, 9/30, 10/14, 10/28, 11/11) \n\n- 시 간 : 10:00~12:00\n\n- 대 상 : 정원에 관심있는 누구나(성인) \n\n- 인 원 : 15명\n\n- 운영장소 : 보라매공원 정원문화센터2층 / 동행가드닝 실습정원 \n\n- 참 가 비 : 10,000원 (총5회 / 만들기작품포함)\n\n- 예약방법 : 서울시 공공서비스예약을 통한 선착순 접수\n\n※ 전월 25일 10시부터 프로그램 1일 전 17시까지 예약 가능(25일이 휴일인 경우 익일 오픈) \n\n- 문의전화 : 02-300-5574, 02-2181-1177 \n\n- 주차장이 매우 협소합니다. 가급적 대중교통을 이용하시기 바랍니다. \n\n4. 주의사항\n< 참여자 주의사항 > \n\n1. 프로그램 예약 시간 5 분 전 도착 해주세요 . \n\n2. 무단결석은 이용을 원하는 다른 분들에게 피해를 주는 일입니다 . \n\n3. 원활한 진행을 위해 예약 취소는 프로그램 진행 1 일전까지 꼭 취소해 주세요 . \n\n4. 「 서울특별시 도시공원조례 제 19 조 ( 요금 등의 환불 ) 」 일부 개정에 따라 취소 수수료가 발생합니다 (2021.6.1. 일부터 ). \n\n취소일 \n환불비율 \n\n이용예정일 7 일전 \n전액 환불 \n\n이용예정일 6~3 일전 \n사전 납부된 금액의 10% 공제 후 환불 \n\n이용예정일 2~1 일전 \n사전 납부된 금액의 30% 공제 후 환불 \n\n이용 당일 \n환불 불가 \n\n5. 사전 취소 없이 불참한 경우 , 이후 신청 프로그램에서 제외 될 수 있습니다 . \n\n6. 프로그램 관련 ( 내용변경 , 취소 등 ) 안내시 문자로 연락드리오니 예약시 휴대폰 SMS 수신거부를 체크하지 마세요 . \n\n7. 프로그램 참여 현장에서 촬영된 사진이나 동영상은 서울시 홍보자료로 사용될 수 있으니 , 원하시지 않는 분은 프로그램 시작 전에 말씀하여 주시기 바랍니다. \n\n<오시는 길 >\n\n보라매공원역(신림선) - 1번출구 도보3분 \n\n보라매 정원문화센터 (공원관리사무소 2층 ) \n\n*** 주차장이 매우 협소합니다. 가급적 대중교통을 이용하시기 바랍니다."
+      },
       {
         "serviceId": "S260813140145649535",
         "title": "[보라매공원] 볼매정원상담소(9월, 식물상담)",
@@ -5000,48 +4916,6 @@ export const SEOUL_EDUCATION_PLACES:
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1786597397417CSDN9MTTBCEKI2ZLWMIKPRD8V",
         "telephone": "02-2181-1177, 02-300-5574",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n\n볼 매 정 원 상 담 소 \n\n보면 볼수록 매력있는 반려식물 \" 식물상담이 필요할 땐 \" , 보라매공원으로! \n\n○ 시 간 : 매주 화요일/ 금요일(14:00~16:00) \n\n○ 대 상 : 식물 관리에 관심있는 서울시민 누구나\n\n○ 장 소 : 보라매공원 정원문화센터(보라매공원 관리사무소 2층)\n\n○ 신청방법 : 서울시 공공서비스 예약을 통한 모집\n\n○ 취소기간 : 이용일 1일 전까지\n\n○ 요 금 : 무료(상담,치료,분갈이)\n\n(분갈이는 무료이나 화분은 제공되지 않으니 필요시 화분은 본인 지참바랍니다.)\n\n○ 내 용 : 식물 간이 진단과 처치, 식물관리 상담과 기본 교육\n\n○ 주의 사항\n\n- 1인 3개 이하, 지름 30센치이하 화분\n\n- 제외 : 희귀 식물, 분재, 10만원 이상 식물, 실외에서 재배하는 식물류\n\n- 본상담소는 간이 진단 서비스이며 법적 분쟁의 증거 자료로는 사용할 수 없습니다.\n\n○ 문 의: 02-2181-1177(서부공원여가센터 공원여가과) \n\n4. 주의사항\n< 참여자 주의사항 > \n\n1. 프로그램 예약 시간 5 분 전 도착 해주세요 . \n\n2. 무단결석은 이용을 원하는 다른 분들에게 피해를 주는 일입니다 . \n\n3. 원활한 진행을 위해 예약 취소는 프로그램 진행 1 일전까지 꼭 취소해 주세요 . \n\n4 . 사전 취소 없이 불참한 경우 , 이후 신청 프로그램에서 제외 될 수 있습니다 . \n\n6. 프로그램 관련 ( 내용변경 , 취소 등 ) 안내시 문자로 연락드리오니 예약시 휴대폰 SMS 수신거부를 체크하지 마세요 . \n\n7. 프로그램 참여 현장에서 촬영된 사진이나 동영상은 서울시 홍보자료로 사용될 수 있으니 , 원하시지 않는 분은 프로그램 시작 전에 말씀하여 주시기 바랍니다. \n\n<오시는 길 >\n\n보라매공원역(신림선) - 1번출구 도보3분 \n\n보라매공원 정원문화센터2층 (공원관리사무소 2층)\n\n*** 주차장이 매우 협소합니다. 가급적 대중교통을 이용하시기 바랍니다."
-      },
-      {
-        "serviceId": "S260822143319442797",
-        "title": "[보라매공원]  소소한 즐거움 가족가드닝  -  9월 해바라기가 있는 정원",
-        "originalCategory": "자연/과학",
-        "category": "natureEnvironment",
-        "statusText": "접수종료",
-        "paidType": "유료",
-        "targetText": "가족(초등학생)",
-        "audienceTags": [
-          "children",
-          "family"
-        ],
-        "receptionStartAt": "2026-08-25T10:00:00",
-        "receptionEndAt": "2026-09-11T17:00:00",
-        "useStartAt": "2026-08-25T00:00:00",
-        "useEndAt": "2026-09-12T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260822143319442797",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787378338195ZWBSCRHU6ZAUOW2NSBZ3NT8VV",
-        "telephone": "02-2181-1177, 02-300-5574",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n[ 보라매공원 ] 소소한 즐거움 가족가드닝 \n\n명화 플라워 클래스 : \" 해바라기 가 있는 정원 \" \n\n\" 이번 클래스는 명화를 눈으로 감상하는 것에 그치지 않고,\n\n화가들이 표현한 해바라기의 에너지와 강렬한 선을\n\n자신만의 작품을 만들어보는 플라워 수업 입니다.\" \n\n- 일 시 : 9 월 05 일(토), 9월12일 (토 ) / 10:30~12:00 \n\n- 대 상 : 7 세 이상 어린이 가족 \n\n- 인 원 : 8 가족 / 회 (* 최대 3 명 / 1 가족 ) \n\n- 운영장소 : 보라매공원 정원문화센터 ( 관리사무소 2 층 ) \n\n- 참 가 비 : 5,000 원 / 가족 \n\n- 예약방법 : 서울시 공공서비스예약을 통한 선착순 접수 \n\n- 문의전화 : 02-2181-1177, 02-300-5574 \n\n*** 주차장이 매우 협소하오니 가급적 대중교통을 이용해 주시기 바랍니다 . \n\n4. 주의사항\n< 참여자 주의사항 > \n\n1. 프로그램 예약 시간 5 분 전 도착 해주세요 . \n\n2. 무단결석은 이용을 원하는 다른 분들에게 피해를 주는 일입니다 . \n\n3. 원활한 진행을 위해 예약 취소는 프로그램 진행 1 일전까지 꼭 취소해 주세요 . \n\n4. 「 서울특별시 도시공원조례 제 19 조 ( 요금 등의 환불 ) 」 일부 개정에 따라 취소 수수료 가 발생합니다 (2021.6.1. 일부터 ). \n\n취소일 \n환불비율 \n\n이용예정일 7 일전 \n전액 환불 \n\n이용예정일 6~3 일전 \n사전 납부된 금액의 10% 공제 후 환불 \n\n이용예정일 2~1 일전 \n사전 납부된 금액의 30% 공제 후 환불 \n\n이용 당일 \n환불 불가 \n\n5. 사전 취소 없이 불참한 경우 , 이후 신청 프로그램에서 제외 될 수 있습니다 . \n\n6. 프로그램 관련 ( 내용변경 , 취소 등 ) 안내시 문자로 연락드리오니 예약시 휴대폰 SMS 수신거부를 체크하지 마세요 . \n\n7. 프로그램 참여 현장에서 촬영된 사진이나 동영상은 서울시 홍보자료로 사용될 수 있으니 , 원하시지 않는 분은 프로그램 시작 전에 말씀하여 주시기 바랍니다. \n\n8. 프로그램 예약은 전달25일 10시에 접수 시작됩니다.( 주말, 공휴일일 경우에는 익일 접수)\n\n<오시는 길> \n\n보라매공원역(신림선) - 1번출구 도보3분 \n\n보라매공원관리사무소 2층 정원문화센터"
-      },
-      {
-        "serviceId": "S260813145123518752",
-        "title": "[보라매공원] 동행가드닝 (하반기, 9 ~11월)",
-        "originalCategory": "공예/취미",
-        "category": "craftMaking",
-        "statusText": "예약마감",
-        "paidType": "유료",
-        "targetText": "성인",
-        "audienceTags": [
-          "all",
-          "adult"
-        ],
-        "receptionStartAt": "2026-08-25T10:00:00",
-        "receptionEndAt": "2026-09-15T17:00:00",
-        "useStartAt": "2026-08-25T00:00:00",
-        "useEndAt": "2026-09-30T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260813145123518752",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787376658490AE0YOY23Q3B6O9ZEKI1NB6VJU",
-        "telephone": "02-2181-1177, 02-300-5574",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n[ 보라매공원 동행가드닝 ] \n\n보라매 동행가드닝 (하반기) \n\n\" 배우기만하는 가드닝이 아니라\n\n정원을 만들고, 관찰하고, 가꾸는 정원프로그램입니다 \" \n\n------ 이런 분께 추천합니다 ------ \n\n* 화분을 넘어 작은 정원을 직접 만들어보고 싶으신 분 \n\n* 식물을 제대로 키우는 법을 배우고 싶으신 분 \n\n* 계절의 변화를 느끼며 나만의 정원을 직접 관리해보고 싶으신 분 \n\n- 일 시 : 9월 16일(수요일) ~ 11월 11일(수) 총 5회 (9/16, 9/30, 10/14, 10/28, 11/11) \n\n- 시 간 : 10:00~12:00\n\n- 대 상 : 정원에 관심있는 누구나(성인) \n\n- 인 원 : 15명\n\n- 운영장소 : 보라매공원 정원문화센터2층 / 동행가드닝 실습정원 \n\n- 참 가 비 : 10,000원 (총5회 / 만들기작품포함)\n\n- 예약방법 : 서울시 공공서비스예약을 통한 선착순 접수\n\n※ 전월 25일 10시부터 프로그램 1일 전 17시까지 예약 가능(25일이 휴일인 경우 익일 오픈) \n\n- 문의전화 : 02-300-5574, 02-2181-1177 \n\n- 주차장이 매우 협소합니다. 가급적 대중교통을 이용하시기 바랍니다. \n\n4. 주의사항\n< 참여자 주의사항 > \n\n1. 프로그램 예약 시간 5 분 전 도착 해주세요 . \n\n2. 무단결석은 이용을 원하는 다른 분들에게 피해를 주는 일입니다 . \n\n3. 원활한 진행을 위해 예약 취소는 프로그램 진행 1 일전까지 꼭 취소해 주세요 . \n\n4. 「 서울특별시 도시공원조례 제 19 조 ( 요금 등의 환불 ) 」 일부 개정에 따라 취소 수수료가 발생합니다 (2021.6.1. 일부터 ). \n\n취소일 \n환불비율 \n\n이용예정일 7 일전 \n전액 환불 \n\n이용예정일 6~3 일전 \n사전 납부된 금액의 10% 공제 후 환불 \n\n이용예정일 2~1 일전 \n사전 납부된 금액의 30% 공제 후 환불 \n\n이용 당일 \n환불 불가 \n\n5. 사전 취소 없이 불참한 경우 , 이후 신청 프로그램에서 제외 될 수 있습니다 . \n\n6. 프로그램 관련 ( 내용변경 , 취소 등 ) 안내시 문자로 연락드리오니 예약시 휴대폰 SMS 수신거부를 체크하지 마세요 . \n\n7. 프로그램 참여 현장에서 촬영된 사진이나 동영상은 서울시 홍보자료로 사용될 수 있으니 , 원하시지 않는 분은 프로그램 시작 전에 말씀하여 주시기 바랍니다. \n\n<오시는 길 >\n\n보라매공원역(신림선) - 1번출구 도보3분 \n\n보라매 정원문화센터 (공원관리사무소 2층 ) \n\n*** 주차장이 매우 협소합니다. 가급적 대중교통을 이용하시기 바랍니다."
       },
       {
         "serviceId": "S260821161112850051",
@@ -6346,50 +6220,6 @@ export const SEOUL_EDUCATION_PLACES:
     ]
   },
   {
-    "id": "seoul-education-e1c5ea8",
-    "name": "서울숲 꿀벌정원",
-    "fullPlaceName": "서울숲 꿀벌정원",
-    "operationScope": "insideSeoul",
-    "district": "성동구",
-    "locationLabel": "서울 성동구",
-    "primaryCategory": "craftMaking",
-    "categoryNames": [
-      "craftMaking"
-    ],
-    "originalCategoryNames": [
-      "자연/과학"
-    ],
-    "longitude": 127.0407137476077,
-    "latitude": 37.54190637775537,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17870291294938XBU9IKNSNOI5Q85OZG8UVSHV",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260818132501043670",
-    "programCount": 1,
-    "programs": [
-      {
-        "serviceId": "S260818132501043670",
-        "title": "서울숲 K-Bee 꿀벌정원 꿀벌체험교실(토)",
-        "originalCategory": "자연/과학",
-        "category": "craftMaking",
-        "statusText": "접수종료",
-        "paidType": "무료",
-        "targetText": "제한없음(초등학생 이상 누구나)",
-        "audienceTags": [
-          "all",
-          "children",
-          "family"
-        ],
-        "receptionStartAt": "2026-08-28T09:00:00",
-        "receptionEndAt": "2026-09-08T10:00:00",
-        "useStartAt": "2026-08-20T00:00:00",
-        "useEndAt": "2026-09-12T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260818132501043670",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17870291294938XBU9IKNSNOI5Q85OZG8UVSHV",
-        "telephone": "",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n\n서울숲 K-Bee 꿀벌정원 꿀벌체험교실 \n\n□ 프로그램 일시 : 9월 12일(토) 13:00~14:00(60분)\n\n□ 프로그램 장소: 서울숲공원 내 K-Bee 꿀벌정원\n\n□ 집결지: 서울숲 곤충식물원 앞 * 네이버지도, 카카오맵에서 '서울숲 곤충식물원' 검색\n\n□ 대상 : 초등학생 이상 누구나(초등학생의 경우 보호자 같이 예약해주세요)\n\n□ 인원: 25명\n\n□ 참가비: 무료\n\n□ 내용: 꿀벌의 생태와 도시양봉 이야기, 볼통 내검 체험(방충복 입고 벌통을 살펴봄), 꿀벌이 좋아하는 식물 이야기, 밀랍초 만들기\n\n□ 필수확인 및 수의사항: 본 체험은 꿀벌을 근접거리에서 관찰합니다. 안전한 체험을 위해 아라사항을 반드시 확인해주세요. \n\n- 벌에 대한 공포심 이 크거나 , 벌침 알레르기가 있으신 분 은 신청을 자제 해 주시기 바랍니다.\n\n- 쏘임 사고 예방을 위해 긴바지 착용 필수입니다.\n\n- 꿀벌을 자극할 수 있는 향수, 향이 진한 화장품(로션 등) 사용을 금합니다. \n\n- 체험 당일 바나나 및 바나나 향 음료 섭취를 금합니다 . 바나나향은 꿀벌의 공격 페로몬과 유사하여 벌을 자극할 수 있습니다. \n\n4. 주의사항\n**참여자 주의 사항**\n\n1. 프로그램 예약 시간 10분 전 도착해주세요.\n\n2. 무단결석은 이용을 원하는 다른 분들에게 피해를 주는 일입니다.\n\n3. 원활한 진행을 위해 예약 취소는 프로그램 진행 1일전까지 꼭 취소해 주세요.\n\n4. 사전 취소 없이 불참한 경우, 이후 신청 프로그램에서 제외 될 수 있습니다.\n\n5. 프로그램 관련 (내용변경, 취소 등) 안내시 문자로 연락드리오니 예약시 휴대폰 SMS 수신거부를 체크하지 마세요.\n\n6. 프로그램 참여 현장에서 촬영된 사진이나 동영상은 서울시 홍보자료로 사용될 수 있으니, 원하시지 않는 분은 프로그램 시작 전에 말씀하여 주시기 바랍니다."
-      }
-    ]
-  },
-  {
     "id": "seoul-education-9c8b751c",
     "name": "서울숲 방문자센터",
     "fullPlaceName": "서울숲 방문자센터",
@@ -6494,6 +6324,27 @@ export const SEOUL_EDUCATION_PLACES:
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n\n<서울숲, 정원이 즐겁다 > \n\n국제정원박람회와 함께하는 서울숲 정원산책, \n\n시원한 숲길과 정원을 걸으며 숲해설가와 함께 식물과 곤충의 생태 이야기,\n\n정원에 담긴 디자인과 숨은 의미를 쉽고 재미있게 알아보는 프로그램입니다.\n\n숲과 정원에 관심이 있는 시민 누구나 참여하실 수 있습니다. \n\n- 운영 일정 - \n\n&middot; 날짜: 화요일 오후 15:00~16:00 / 수요일 오전 10:00~11:00 ( 60 분 진행 ) \n\n&middot; 대상 : 성인, 단체\n\n&middot; 인원 : 12명/회 \n\n&middot; 참가 비 : 무료 \n\n&middot; 집결장소 : 서울숲 칠엽수마당 (지도 어플에서 '서울숲 방문자센터'검색) \n\n&middot; 예약방법 : 선착순 온라인 예약\n\n&middot; 단체예약 시 전화로 문의해주세요. \n\n&middot; 문 의 : 02- 460-2945 ( 연결 가능 시간 08:50~17:00 ) \n\n* 예약 취소 는 2일 전까지 가능, 당일에는 유선으로 연락 바랍니다.\n\n* 불참하시는 경우 예약을 원하는 다른 참여자를 위해 미리 취소 바랍니다.\n\n* 예약인원이 3명 미만일 경우 프로그램이 취소될 수 있습니다. \n\n<집결장소> \n\n지도 어플에서 '서울숲 방문자 센터 또는 서울숲 1번 출입구' 검색\n\n(서울숲 역 3번 출입구에서 직진 100m 오신 후 우회전 해서 직진으로 도보 150m) \n\n4. 주의사항\n\n► 사전 취소 없이 불참한 경우 , 이후 신청 프로그램에서 제외될 수 있습니다 . \n\n► 예약 취소는 프로그램 진행 이틀 전 16 시 까지 반드시 하셔야 합니다 . (이후 유선으로 연락) \n\n► 미세먼지 저감 조치 발생 시 등 기상 상황에 따라 프로그램이 취소될 수 있습니다 . \n\n► 프로그램중 촬영된 사진은 서울시 홍보 목적으로 사용될 수 있습니다."
       },
       {
+        "serviceId": "S260820112110821180",
+        "title": "[서울숲] 같이숲학교 - \"일요가족생태나들이\" (9월)",
+        "originalCategory": "자연/과학",
+        "category": "natureEnvironment",
+        "statusText": "접수중",
+        "paidType": "무료",
+        "targetText": "가족(누구나)",
+        "audienceTags": [
+          "all",
+          "family"
+        ],
+        "receptionStartAt": "2026-08-25T09:00:00",
+        "receptionEndAt": "2026-09-17T16:00:00",
+        "useStartAt": "2026-08-25T00:00:00",
+        "useEndAt": "2026-09-20T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260820112110821180",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787192540575XE8R93OWJBJTBYMS0QFW6BV0D",
+        "telephone": "02-460-2950",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n&crarr; &crarr; \n\n4. 주의사항\n* 무단 결석은 이용을 원하는 다른 분들에게 피해를 주는 일입니다.\n\n* 원활한 진행을 위해 예약 취소는 프로그램 신청 1일 전까지 꼭 취소해 주세요.\n\n* 폭설, 폭우, 한파경보 발령 등 기상상황에 따라 프로그램이 취소될 수 있습니다. \n\n* 프로그램은 그 과정이 사진/영상촬영될 수 있으며, 내부 보고용 및 서울시 홍보목적으로 사용될 수 있습니다.\n\n* 식수가 제공되지 않으니 개인 물 등을 지참해주세요.\n\n* 가급적 대중교통을 이용해주세요(주차비는 지원되지 않습니다.)"
+      },
+      {
         "serviceId": "S260220142329827478",
         "title": "[서울숲]생물다양성 탐사대 (단체)",
         "originalCategory": "자연/과학",
@@ -6512,27 +6363,6 @@ export const SEOUL_EDUCATION_PLACES:
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1771565128564P5QUYMR56TEB5AF82CAOCWXHS",
         "telephone": "02-460-2945",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n\n4. 주의사항\n\n►집결 장소\n\n방문자센터 : 서울숲 1번출구\n\n- 수인분당선 서울숲역 3,4번 출구"
-      },
-      {
-        "serviceId": "S260820112110821180",
-        "title": "[서울숲] 같이숲학교 - \"일요가족생태나들이\" (9월)",
-        "originalCategory": "자연/과학",
-        "category": "natureEnvironment",
-        "statusText": "예약마감",
-        "paidType": "무료",
-        "targetText": "가족(누구나)",
-        "audienceTags": [
-          "all",
-          "family"
-        ],
-        "receptionStartAt": "2026-08-25T09:00:00",
-        "receptionEndAt": "2026-09-17T16:00:00",
-        "useStartAt": "2026-08-25T00:00:00",
-        "useEndAt": "2026-09-20T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260820112110821180",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787192540575XE8R93OWJBJTBYMS0QFW6BV0D",
-        "telephone": "02-460-2950",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n&crarr; &crarr; \n\n4. 주의사항\n* 무단 결석은 이용을 원하는 다른 분들에게 피해를 주는 일입니다.\n\n* 원활한 진행을 위해 예약 취소는 프로그램 신청 1일 전까지 꼭 취소해 주세요.\n\n* 폭설, 폭우, 한파경보 발령 등 기상상황에 따라 프로그램이 취소될 수 있습니다. \n\n* 프로그램은 그 과정이 사진/영상촬영될 수 있으며, 내부 보고용 및 서울시 홍보목적으로 사용될 수 있습니다.\n\n* 식수가 제공되지 않으니 개인 물 등을 지참해주세요.\n\n* 가급적 대중교통을 이용해주세요(주차비는 지원되지 않습니다.)"
       }
     ]
   },
@@ -6748,7 +6578,7 @@ export const SEOUL_EDUCATION_PLACES:
         "title": "(8,9월) 별빛따라 서울숲 탐험(야간, 가족)",
         "originalCategory": "자연/과학",
         "category": "natureEnvironment",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "paidType": "유료",
         "targetText": "가족(7세 이상 어린이+보호자)",
         "audienceTags": [
@@ -7454,8 +7284,8 @@ export const SEOUL_EDUCATION_PLACES:
     ],
     "longitude": 127.03548073425982,
     "latitude": 37.59442429532809,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17725315365405CWHIGTGMR936XYPP1OJ5Z1IV",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260223184700450621",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1788576443773IRIMJH9SDYIO4JTJA9FWO9BWP",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260905114649268960",
     "programCount": 6,
     "programs": [
       {
@@ -7670,28 +7500,8 @@ export const SEOUL_EDUCATION_PLACES:
     "latitude": 37.5103180005696,
     "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17871980876602LMUFEFTNCU1V88LZ5OUDTCMY",
     "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260820110921594410",
-    "programCount": 25,
+    "programCount": 29,
     "programs": [
-      {
-        "serviceId": "S260821095243955130",
-        "title": "문화실험공간 호수 [월간 호수랩 9월] <(아동)꼬마 화가의 추석 한 상>",
-        "originalCategory": "미술제작",
-        "category": "cookingFood",
-        "statusText": "접수중",
-        "paidType": "유료(요금안내문의)",
-        "targetText": "어린이(만 5,6,7세)",
-        "audienceTags": [
-          "children"
-        ],
-        "receptionStartAt": "2026-08-21T11:00:00",
-        "receptionEndAt": "2026-09-19T00:00:00",
-        "useStartAt": "2026-08-21T00:00:00",
-        "useEndAt": "2026-09-30T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260821095243955130",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1788402248630JSSNII37SU375B3NM9MXYN2CG",
-        "telephone": "02-3431-9784",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n&crarr; \n문화실험공간 호수 클래스 \n\n월간 호수랩 9월 \n\n<(아동) 꼬마 화가의 추석 한 상> \n\n아이들과 함께 우리 고유의 명절인 추석을 맞아 전통 차례상을 \n\n직접 그림으로 표현해 보는 특별한 미술 수업입니다 . \n\n추석의 의미와 전통 음식 , 차례상의 구성을 자연스럽게 배우며 \n\n문화적 이해를 넓힐 수 있습니다 . \n\n| 대상 | \n\n만 5~7세 유아 \n\n| 인원 | \n\n총 6명 \n\n| 준비물 | \n\n- 마실 물(선택사항) \n\n| 재료비 | \n\n회차당 15,000원 \n\n입금 계좌: ***6 카카오뱅크\n\n성함: 박지윤 \n\n| 수업일시 | \n\n※ 원데이로 진행되는 클래스입니다. \n\n회차 \n수업일시 \n강의내용 \n목표 \n재료비 \n\n1 \n9 월 5 일 (토) \n\n11:00~12:30 \n아이가 좋아하는 추석 음식으로 \n\n채워보는 차례상 \n차례상 음식 5 개 완성 \n15000 원 \n\n2 \n9 월 12 일 (토) \n\n11:00~12:30 \n아이가 좋아하는 추석 음식으로 \n\n채워보는 차례상 \n차례상 음식 5 개 완성 \n15000 원 \n\n3 \n9 월 19 일 (토) \n\n11:00~12:30 \n아이가 좋아하는 추석 음식으로 \n\n채워보는 차례상 \n차례상 음식 5 개 완성 \n15000 원 \n\n4. 주의사항\n\n- 수업 신청이 정상적으로 완료되면 '서울톡'에서 예약 완료 카톡 알림이 발송 됩니다. \n\n- 정원이 마감된 수업 을 예약할 경우 대기자 로 예약됩니다. \n\n- 수업 당일 신청 시 수강이 어렵습니다.\n\n- 수업 신청 인원이 4인 미만일 경우 폐강 됩니다. \n\n수업 장소 \n\n문화실험공간호수 3층 \n\n송파구 잠실동 송파나루길 256 \n\n​ \n\n문의전화 \n\n02-3431-9784\n\n카카오톡 \n\n상담 안내 \n\n문의사항은 카카오톡으로 보내주시면\n\n확인 후 답변해 드리겠습니다.\n\n카카오톡 채팅 시작하기\n\n평일 09:00 - 18:00 운영"
-      },
       {
         "serviceId": "S260820173610180190",
         "title": "문화실험공간 호수 [월간 호수랩 9월] <가을 원두향기, 나만의 드립백 만들기>",
@@ -7897,7 +7707,7 @@ export const SEOUL_EDUCATION_PLACES:
         "useStartAt": "2026-09-12T00:00:00",
         "useEndAt": "2026-09-27T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260912142515088767",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1789191877401J214RMZ4LVQCOYU1BW4C17HRB",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17892584051777CA0K7ZMFORS8T56OSACUQ4AR",
         "telephone": "02-3431-9784",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n&crarr; \n문화실험공간 호수 클래스\n\n🌜 추석 특집 프로그램 🌛 \n<다같이 차려보는 추석 한 상> \n\n친구들! 여기 문화실험공간 호수는 지금 여러분의 힘이 필요해요! \n\n이번 추석이 지나기 전까지 다 함께 추석 한 상을 가득 채워야 해요! \n\n기름내 솔솔 풍기는 추석 한 상을 꾸려내보는 체험입니다.\n\n1인당 1접시씩 음식을 그려, 차례상에 붙여봅시다.\n\n우리 모두의 손이 모이면 어느새 풍성한 한 상 완성! \n\n*상시로 진행하는 프로그램으로, 별도의 예약 없이 체험 가능합니다. \n\n| 대상 | \n\n누구나 (만5세 이상)\n\n*만들기에 미숙한 유아의 경우 보호자 동반으로 진행됩니다. \n\n| 인원 | \n\n상시 체험 프로그램 \n\n| 준비물 | \n\n- 마실 물(선택사항) \n\n| 재료비 | \n\n※ 재료비 입금 계좌 및 방법 ※ \n\n​ - 반드시 서울시공공서비스예약 사이트에서 예약 후 재료비 송금해 주세요 . \n\n- 입금시 입금자명에 날짜기입 필수 \n\n( 예시 : 신청자 홍길동 / 수업일 12 월 21 일 = 홍길동 1221) \n\n- 이용자명 과 입금자명 을 동일하게 해주세요 . \n\n| 수업일시 | \n\n*9/22(화) ~ 9/27(일) 상시로 진행되는 체험 프로그램입니다. \n\n*9/25(금) 추석 연휴 당일은 휴무입니다. \n\n*쉬는 시간: 12:00 ~ 13:00 / *마감 시간: 17:00 \n\n4. 주의사항\n\n- 수업 신청이 정상적으로 완료되면 '서울톡'에서 예약 완료 카톡 알림이 발송 됩니다. \n\n- 수업 신청 시 재료비 입금까지 완료해 주셔야 신청이 확정 됩니다. \n\n- 수업 신청 후 3일 이상 재료비 미입금 시 예약이 취소 될 수 있습니다.\n\n- 정원이 마감된 수업 을 예약할 경우 대기자 로 예약됩니다. \n\n- 수업 당일 신청 시 수강이 어렵습니다. \n\n- 수업일 3일 전까지 취소가능 하며 이후 재료비 환불 불가 합니다. \n\n※ 환불 접수: 카카오톡 채널 검색창에 '문화실험공간 호수' 검색 후 환불 정보를 기재하여 보내주세요.\n\n예시)프로그램명/수업날짜/계좌정보/예금주 \n\n또는 문화실험공간 호수 02-3431-9784 전화주세요. \n\n​ \n\n수업 장소 \n\n문화실험공간호수 3층 \n\n송파구 잠실동 송파나루길 256 \n\n​ \n\n문의전화 \n\n02-3431-9784 \n\n상담 안내 \n\n문의사항은 카카오톡으로 보내주시면\n\n확인 후 답변해 드리겠습니다.\n\n카카오톡 채팅 시작하기\n\n평일 09:00 - 18:00 운영"
       },
@@ -7946,6 +7756,106 @@ export const SEOUL_EDUCATION_PLACES:
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n문화실험공간 호수 \n\n2026 더 임팩트 선정 작가 조은혁 《어디쯤, 우리는》전시 연계 교육 \n\n조은혁 작가와 함께, 이번 추석 연휴에 소중한 가족을 캔버스 위에 남겨보아요.\n\n꼭 가족이 아니라도, 지금 떠오른 그분이어도 좋아요.\n\n소중한 사람을 내 손으로 그려나가 봅니다. \n\n완성된 작품을 집에 전시해보세요. 소중한 기억과 멋진 작품이 집안을 훈훈하게 만들어줄 거예요. \n\n*필독!! \n\n본 수업은 조은혁 작가가 사전에 스케치를 진행해드리는 방식으로 진행됩니다. \n\n수업 신청 후 9월 20일(일)까지 문화실험공간 호수 카카오톡 채널로 희망하시는 사진을 발송 부탁드립니다. \n\n하단 카카오채널 링크를 통해 희망하시는 사진과 배경색 을 보내주세요. \n\n(배경색은 분홍 또는 연보라 중 택1) \n\n1. 분홍\n\n2. 연보라 \n\n[교육 유의사항]\n\n1. 선착순 예약 신청\n\n2. 재료비 입금까지 하셔야 예약이 확정됩니다. \n\n3. 공간 내 물이나 음료가 제공되지 않으니 개인 지참을 권장드립니다. \n\n※ 9월26일(토) 수강 시 1회차 진행되는 원데이 클래스입니다.\n\n※ 그림에 들어가는 인물 인원 수에 따라 재료비가 상이합니다. 최대 2인까지 가능합니다.\n\n(1인 25,000원, 2인 30,000원)*반려동물 포함 \n\n회차 \n소요시간 \n강의내용 \n목표 \n재료비 \n\n1 \n9 월 26 일 ( 토 ) \n\n14:00-16:00 \n아크릴로 그리는 \n\n추석 가족 초상화 \n나만의 작품 제작 \n인물 1인 25,000원\n\n인물 2인 30,000원 \n\n[재료비 입금 방법] \n\n​- 반드시 서울시공공서비스예약 사이트에서 예약 후 재료비 송금해 주세요.\n\n- 입금시 입금자명에 날짜기입 필수\n\n(예시: 신청자 홍길동 / 수업일 12월 21일 = 홍길동1221)\n\n- 이용자명과 입금자명을 동일하게 해주세요. \n\n| 대상 | \n\n만 13세 이상 누구나\n\n| 인원 | \n\n회차당 8명 \n\n| 준비물 | \n\n※ 선택사항: 마실 물 (물이 제공되지 않으니 참여 시 유의바랍니다.) \n\n| 재료비 | \n\n- 그림에 들어가는 인물(반려동물 포함) 인원에 따라 재료비가 상이합니다. \n\n- 최대 2인까지 가능합니다. \n\n1인 25,000원\n\n2인 30,000원 \n\n| 재료비 입금계좌 | \n\n카카오뱅크 ***3 조은혁 \n\n4. 주의사항\n- 수업 신청이 정상적으로 완료되면 '서울톡'에서 예약 완료 카톡 알림이 발송 됩니다.\n\n- 수업 신청 시 재료비 입금까지 완료해 주셔야 신청이 확정 됩니다.\n\n- 수업 신청 후 3일 이상 재료비 미입금 시 예약이 취소 될 수 있습니다.\n\n- 정원이 마감된 수업 을 예약할 경우 대기자 로 예약됩니다.\n\n- 수업 당일 신청 시 수강이 어렵습니다.\n\n- 수업일 3일 전까지 취소가능 하며 이후 재료비 환불 불가 합니다.\n\n※ 환불 접수: 카카오톡 채널 검색창에 '문화실험공간 호…"
       },
       {
+        "serviceId": "S260913130516560351",
+        "title": "문화실험공간 호수 [월간 호수랩 10월] <꽃과 색 - 계절의 장면을 만들다>",
+        "originalCategory": "공예/취미",
+        "category": "craftMaking",
+        "statusText": "안내중",
+        "paidType": "유료(요금안내문의)",
+        "targetText": "제한없음(11세 이상 누구나)",
+        "audienceTags": [
+          "all"
+        ],
+        "receptionStartAt": "2026-09-18T11:00:00",
+        "receptionEndAt": "2026-10-08T00:01:00",
+        "useStartAt": "2026-09-18T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260913130516560351",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17892726656257Q4V96ACY893U042JP3DU1VKO",
+        "telephone": "02-3431-9784",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n&crarr; \n문화실험공간 호수 클래스 \n\n월간 호수랩 10월 \n\n<꽃과 색 - 계절의 장면을 만들다> \n\n새로운 계절, 새로운 풍경, 새로운 시선으로 꽃꽂이를 해보는 프로그램입니다.\n\n매달 달라지는 계절의 색을 꽃꽂이로 담아보세요.\n\n각자의 감각으로, 지금 이 계절의 '장면'을 만들어봅니다. \n\n| 대상 | \n\n11세 이상 꽃을 사랑하는 누구나 \n\n| 인원 | \n\n회차당 8 명 \n\n| 준비물 | \n\n- 마실 물, (공간 내 정수기가 마련되어 있지 않습니다.) \n\n| 재료비 | \n\n회차당 30,000원 \n\n예금주: \n\n입금계좌: \n\n※ 재료비 입금 계좌 및 방법 ※ \n\n​ - 반드시 서울시공공서비스예약 사이트에서 예약 후 재료비 송금해 주세요 . \n\n- 입금시 입금자명에 날짜기입 필수 \n\n( 예시 : 신청자 홍길동 / 수업일 12 월 21 일 = 홍길동 1221) \n\n- 이용자명 과 입금자명 을 동일하게 해주세요 . \n\n| 수업일시 | \n\n1회차 씩 진행되는 원데이 클래스입니다. \n\n회차 \n수업일시 \n강의내용 \n목표 \n재료비 \n\n1 \n10월1일 (목) \n\n14:00 - 15:30 \n\n10월8일 (목)\n\n14:00 - 15:30 \n\n1. 매달 하나의 색을 중심으로 계절의 꽃과 소재를 살펴보고 꽃의 색 , 형태 , 질감 , 높이와 방향을 관찰하며 각각의 특징 이해하기 \n\n2. 여러 색의 관계와 조화를 살펴보고 전체적인 색감 구성하기 \n\n꽃의 크기와 높낮이 , 방향을 조절하며 작은 공간 안에서 요소를 배치하기 \n\n3. 정해진 꽃꽂이 형태를 따르기보다 자신의 취향과 감각에 따라 꽃을 조합하여 하나의 장면 완성하기 \n\n4. 완성된 꽃꽂이는 칠링백에 담아 엽서 &middot; 리본 등의 장식 소재를 활용해 나만의 포장 공간 꾸며 꽃과 포장까지 하나의 작은 작품을 일상으로 확장시켜본다 . \n꽃을 단순히 장식적인 소재로 바라보는 것을 넘어 색과 형태를 가진 하나의 조형 요소로 경험하는 것을 목표로 한다 . 계절의 꽃이 가진 다양한 색과 형태를 관찰하고 , 이를 직접 선택하고 배치하는 과정을 통해 색의 조화와 공간 구성에 대한 감각을 기른다 . \n\n또한 하나의 화면 안에 다양한 요소를 배치하여 장면을 구성하는 작가의 작업 방식처럼 , 참여자가 자신의 감각에 따라 꽃과 소재를 조합하며 하나의 작은 공간과 장면을 완성하는 창작 경험을 할 수 있도록 한다 . \n3 만원 \n\n4. 주의사항\n\n- 수업 신청이 정상적으로 완료되면 '서울톡'에서 예약 완료 카톡 알림이 발송 됩니다. \n\n- 수업 신청 시 재료비 입금까지 완료해 주셔야 신청이 확정 됩니다. \n\n- 수업 신청 후 3일 이상 재료비 미입금 시 예약이 취소 될 수 있습니다.\n\n- 정원이 마감된 수업 을 예약할 경우 대기자 로 예약됩니다. \n\n- 수업 당일 신청 시 수강이 어렵습니다.\n\n- 수업 신청 인원이 4인…"
+      },
+      {
+        "serviceId": "S260913132459518837",
+        "title": "문화실험공간 호수 [월간 호수랩 10월] <멍멍! 야옹! 카페투어 드로잉>",
+        "originalCategory": "미술제작",
+        "category": "craftMaking",
+        "statusText": "안내중",
+        "paidType": "유료(요금안내문의)",
+        "targetText": "제한없음(7세 이상 누구나)",
+        "audienceTags": [
+          "all"
+        ],
+        "receptionStartAt": "2026-09-18T11:00:00",
+        "receptionEndAt": "2026-10-29T00:00:00",
+        "useStartAt": "2026-09-18T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260913132459518837",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17892740677822CQ8PBAVRSCQXEAQ0AQP6Y0UC",
+        "telephone": "02-3431-9784",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n&crarr; \n문화실험공간 호수 클래스 \n\n월간 호수랩 10월 \n\n<멍멍! 야옹! 카페투어 드로잉> \n\n<고양이와 함께 카페투어> 의 저자 요우망고와 함께하는 색연필 드로잉 수업입니다.\n\n책을 모티브로, 좋아하는 카페의 풍경과 고양이, 그리고 소소한 일상의 장면을 색연필로 그려봐요. \n\n고양이뿐 아니라 반려동물을 키우고 계신다면, 사랑하는 반려동물을 주제로 그림을 그려볼 수도 있답니다. \n\n| 대상 | \n\n6세 이상 누구나 \n\n| 인원 | \n\n회차당 8 명 \n\n| 준비물 | \n\n- 마실 물, (공간 내 정수기가 마련되어 있지 않습니다.) \n\n| 재료비 | \n\n회차당 10,000원 \n\n예금주: \n\n입금계좌: \n\n※ 재료비 입금 계좌 및 방법 ※ \n\n​ - 반드시 서울시공공서비스예약 사이트에서 예약 후 재료비 송금해 주세요 . \n\n- 입금시 입금자명에 날짜기입 필수 \n\n( 예시 : 신청자 홍길동 / 수업일 12 월 21 일 = 홍길동 1221) \n\n- 이용자명 과 입금자명 을 동일하게 해주세요 . \n\n| 수업일시 | \n\n1회차 씩 진행되는 원데이 클래스입니다. \n\n회차 \n수업일시 \n강의내용 \n목표 \n재료비 \n\n1 \n10 월 15 일 ( 목 ) \n\n14:00 &ndash; 15:30 \n\n10 월 22 일 ( 목 ) \n\n14:00 &ndash; 15:30 \n\n10 월 29 일 ( 목 ) \n\n14:00 &ndash; 15:30 \n\n1. 색연필의 기본적인 사용법과 색을 겹쳐 표현하는 방법을 간단히 익힌다 . \n\n2. 손바닥 크기의 질감 있는 캘리그라피 종이에 고양이 또는 강아지의 특징을 관찰하여 털의 결을 살린 반려동물 드로잉을 완성한다 . \n\n3. 반려동물과 어울리는 디저트와 음료를 함께 그려 하나의 장면을 구성한다 . \n\n선과 도형을 활용해 의자 , 테이블 , 벽면 등 간단한 카페 공간을 표현하고 화면의 균형을 잡는다 . \n\n4. 색연필의 색감과 질감을 활용하여 각자의 취향과 분위기가 담긴 하나의 작은 카페 장면을 완성한다 . \n\n5. 완성된 작품을 페이퍼 액자에 넣어 소장할 수 있도록 마무리한다 . \n색연필의 섬세한 색감과 질감 표현을 경험하고 , 반려동물과 일상적인 소재를 활용해 자신만의 작은 공간을 한 장의 그림으로 완성하는 것을 목표로 한다 . \n\n특히 세밀한 묘사에 부담을 느끼는 초보자도 간단한 선과 형태를 활용하여 개성 있는 화면을 구성하고 , 완성된 작품을 직접 액자에 담아 가져가며 색연필 드로잉의 즐거움을 경험할 수 있도록 한다 . \n1 만원 \n\n4. 주의사항\n\n- 수업 신청이 정상적으로 완료되면 '서울톡'에서 예약 완료 카톡 알림이 발송 됩니다. \n\n- 수업 신청 시 재료비 입금까지 완료해 주셔야 신청이 확정 됩니다. \n\n- 수업 신청 후 3일 이상 재료비 미입금 시 예약이 취소 될 수 있습니다.\n\n- 정원이 마감된 수업 을 예약할…"
+      },
+      {
+        "serviceId": "S260913134647009281",
+        "title": "문화실험공간 호수 [월간 호수랩 10월] <미술관 안 요가교실>",
+        "originalCategory": "스포츠",
+        "category": "craftMaking",
+        "statusText": "안내중",
+        "paidType": "무료",
+        "targetText": "성인",
+        "audienceTags": [
+          "adult"
+        ],
+        "receptionStartAt": "2026-09-18T11:00:00",
+        "receptionEndAt": "2026-10-16T00:01:00",
+        "useStartAt": "2026-09-18T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260913134647009281",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1789275086914HMLQVVU428VLNCORLITLMZKJD",
+        "telephone": "02-3431-9784",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n&crarr; \n문화실험공간 호수 클래스 \n\n월간 호수랩 9월 \n\n<미술관 안 요가교실> \n\n바쁜 일상 속 잠시 속도를 늦추고, 호흡과 움직임을 통해 자신의 몸을 천천히 관찰해보는 요가 프로그램입니다. \n\n정해진 자세를 완벽하게 만드는 것보다, 각자의 몸이 움직일 수 있는 범위 안에서 편안하게 움직이며 호흡과 몸의 감각에 집중합니다. 부드러운 스트레칭과 기본적인 요가 동작, 이완과 명상을 통해 몸과 마음의 긴장을 내려놓고 스스로에게 집중하는 시간을 갖습니다. \n\n요가는 전시장 안에서 진행됩니다. 작품이 놓인 공간 속에서 호흡하고 움직이며, 눈으로 감상하던 미술관을 몸으로 느끼는 새로운 방식으로 만나보세요. 고요한 전시장의 분위기와 예술 작품이 만들어내는 공간감이 요가의 이완과 명상을 한층 깊이 있게 더해줄 거예요. \n\n요가를 처음 접하는 분들도 부담 없이 참여할 수 있도록, 쉽고 편안한 동작을 중심으로 진행합니다. \n\n*노쇼 시 동일 수업 재수강이 어렵습니다.\n\n(당일 취소도 마찬가지로 노쇼로 간주됩니다.) \n\n| 대상 | \n\n성인 \n\n| 인원 | \n\n회차 당 10명 \n\n| 준비물 | \n\n- 마실 물(선택사항) \n\n| 재료비 | \n\n※ 재료비 입금 계좌 및 방법 ※ \n\n​ - 반드시 서울시공공서비스예약 사이트에서 예약 후 재료비 송금해 주세요 . \n\n- 입금시 입금자명에 날짜기입 필수 \n\n( 예시 : 신청자 홍길동 / 수업일 12 월 21 일 = 홍길동 1221) \n\n- 이용자명 과 입금자명 을 동일하게 해주세요 . \n\n| 수업일시 | \n\n* 원데이 클래스, 1회 1시간 입니다. 하루를 선택해주세요. \n\n회차 \n수업일시 \n강의내용 \n목표 \n재료비 \n\n1 \n10 월 2 일 ( 금 ) 10:30 - 11:30 \n호흡과 함께 내 몸 알아차리기\n\n&bull; 편안하게 앉아 현재의 호흡과 몸 상태 관찰하기\n\n&bull; 목&middot;어깨&middot;척추를 중심으로 긴장을 풀어주는 부드러운 움직임\n\n&bull; 호흡과 움직임을 연결하는 기본 요가 동작\n\n&bull; 서 있는 자세를 통해 몸의 균형과 중심 느껴보기\n\n&bull; 편안한 이완과 짧은 명상으로 수업 마무리 \n호흡과 움직임을 통한 몸의 감각 알아차림 및 자신의 몸에 맞는 움직임 경험 \n\n2 \n10 월 16 일 ( 금 ) 10:30 - 11:30 \n천천히 움직이며 몸과 마음 연결하기\n\n&bull; 호흡을 통해 현재의 몸과 마음 상태 살펴보기\n\n&bull; 전신의 긴장을 이완하는 스트레칭\n\n&bull; 호흡의 흐름에 맞춰 천천히 이어지는 요가 동작\n\n&bull; 균형 자세를 통해 몸의 중심과 집중 경험하기\n\n&bull; 누운 자세에서 전신 이완 및 사바아사나\n\n&bull; 짧은 명상과 함께 오늘의 몸 상태 돌아보기 \n호흡과 움직임의 연결 및 자신의 속도를 존중하는 몸과 마음의 편안함 경험…"
+      },
+      {
+        "serviceId": "S260913140227111485",
+        "title": "문화실험공간 호수 [월간 호수랩 10월] <제철 가일 채소 수채화>",
+        "originalCategory": "미술제작",
+        "category": "craftMaking",
+        "statusText": "안내중",
+        "paidType": "유료(요금안내문의)",
+        "targetText": "성인",
+        "audienceTags": [
+          "adult"
+        ],
+        "receptionStartAt": "2026-09-18T11:00:00",
+        "receptionEndAt": "2026-10-30T00:00:00",
+        "useStartAt": "2026-09-18T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260913140227111485",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1789276652789X4VA13OS8VLGG8H8C1H72Q8QT",
+        "telephone": "02-3431-9784",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n&crarr; \n문화실험공간 호수 클래스 \n\n월간 호수랩 10월 \n\n<제철 가을 채소 수채화> \n\n가을철에 만날 수 있는 다양한 채소와 과일을 소재로 수채화를 체험해보는 프로그램입니다.\n\n기본적인 표현 방법과 색감 조절을 배우며 수채화의 기본을 익히고,\n\n제철 채소와 과일을 관찰하며 그림으로 표현해보는 시간을 가져봅시다.\n\n겹겹이 쌓이는 수채의 매력에 빠져보세요. \n\n| 대상 | \n\n성인 \n\n| 인원 | \n\n회차당 8 명 \n\n| 준비물 | \n\n- 마실 물, (공간 내 정수기가 마련되어 있지 않습니다.) \n\n| 재료비 | \n\n회차당 15,000원 \n\n예금주: 정수현 \n\n입금계좌: 농협은행 *** \n\n※ 재료비 입금 계좌 및 방법 ※ \n\n​ - 반드시 서울시공공서비스예약 사이트에서 예약 후 재료비 송금해 주세요 . \n\n- 입금시 입금자명에 날짜기입 필수 \n\n( 예시 : 신청자 홍길동 / 수업일 12 월 21 일 = 홍길동 1221) \n\n- 이용자명 과 입금자명 을 동일하게 해주세요 . \n\n| 수업일시 | \n\n1회차 씩 진행되는 원데이 클래스입니다. \n\n회차 \n수업일시 \n강의내용 \n목표 \n재료비 \n\n1 \n10 월 16 일 ( 금 ) 15:00-17:00 \n수채화에 번집과 겹침 기법을 연습하고 가을 채소 완성하기 \n드로잉 작품 1 점 완성 \n15000 원 \n\n2 \n10 월 23 일 ( 금 ) 15:00-17:00 \n수채화에 번집과 겹침 기법을 연습하고 가을 채소 완성하기 \n드로잉 작품 1 점 완성 \n15000 원 \n\n3 \n10 월 30 일 ( 금 ) 15:00-17:00 \n수채화에 번집과 겹침 기법을 연습하고 가을 채소 완성하기 \n드로잉 작품 1 점 완성 \n15000 원 \n\n4. 주의사항\n\n- 수업 신청이 정상적으로 완료되면 '서울톡'에서 예약 완료 카톡 알림이 발송 됩니다. \n\n- 수업 신청 시 재료비 입금까지 완료해 주셔야 신청이 확정 됩니다. \n\n- 수업 신청 후 3일 이상 재료비 미입금 시 예약이 취소 될 수 있습니다.\n\n- 정원이 마감된 수업 을 예약할 경우 대기자 로 예약됩니다. \n\n- 수업 당일 신청 시 수강이 어렵습니다.\n\n- 수업 신청 인원이 4인 미만일 경우 폐강 됩니다. \n\n- 수업일 3일 전까지 취소가능 하며 이후 재료비 환불 불가 합니다. \n\n※ 환불 접수: 카카오톡 채널 검색창에 '문화실험공간 호수' 검색 후 환불 정보를 기재하여 보내주세요.\n\n예시)프로그램명/수업날짜/계좌정보/예금주 \n\n또는 문화실험공간 호수 02-3431-9784 전화주세요. \n\n​ \n\n수업 장소 \n\n문화실험공간호수 3층 \n\n송파구 잠실동 송파나루길 256 \n\n​ \n\n문의전화 \n\n02-3431-9784 \n\n상담 안내 \n\n문의사항은 카카오톡으로 보내주시면\n\n확인 후 답변해 드리겠습니다.\n\n카카오톡 채팅 시작하기\n\n평일 09:00 - 18:00 운영"
+      },
+      {
+        "serviceId": "S260821095243955130",
+        "title": "문화실험공간 호수 [월간 호수랩 9월] <(아동)꼬마 화가의 추석 한 상>",
+        "originalCategory": "미술제작",
+        "category": "cookingFood",
+        "statusText": "예약마감",
+        "paidType": "유료(요금안내문의)",
+        "targetText": "어린이(만 5,6,7세)",
+        "audienceTags": [
+          "children"
+        ],
+        "receptionStartAt": "2026-08-21T11:00:00",
+        "receptionEndAt": "2026-09-19T00:00:00",
+        "useStartAt": "2026-08-21T00:00:00",
+        "useEndAt": "2026-09-30T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260821095243955130",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1788402248630JSSNII37SU375B3NM9MXYN2CG",
+        "telephone": "02-3431-9784",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n&crarr; \n문화실험공간 호수 클래스 \n\n월간 호수랩 9월 \n\n<(아동) 꼬마 화가의 추석 한 상> \n\n아이들과 함께 우리 고유의 명절인 추석을 맞아 전통 차례상을 \n\n직접 그림으로 표현해 보는 특별한 미술 수업입니다 . \n\n추석의 의미와 전통 음식 , 차례상의 구성을 자연스럽게 배우며 \n\n문화적 이해를 넓힐 수 있습니다 . \n\n| 대상 | \n\n만 5~7세 유아 \n\n| 인원 | \n\n총 6명 \n\n| 준비물 | \n\n- 마실 물(선택사항) \n\n| 재료비 | \n\n회차당 15,000원 \n\n입금 계좌: ***6 카카오뱅크\n\n성함: 박지윤 \n\n| 수업일시 | \n\n※ 원데이로 진행되는 클래스입니다. \n\n회차 \n수업일시 \n강의내용 \n목표 \n재료비 \n\n1 \n9 월 5 일 (토) \n\n11:00~12:30 \n아이가 좋아하는 추석 음식으로 \n\n채워보는 차례상 \n차례상 음식 5 개 완성 \n15000 원 \n\n2 \n9 월 12 일 (토) \n\n11:00~12:30 \n아이가 좋아하는 추석 음식으로 \n\n채워보는 차례상 \n차례상 음식 5 개 완성 \n15000 원 \n\n3 \n9 월 19 일 (토) \n\n11:00~12:30 \n아이가 좋아하는 추석 음식으로 \n\n채워보는 차례상 \n차례상 음식 5 개 완성 \n15000 원 \n\n4. 주의사항\n\n- 수업 신청이 정상적으로 완료되면 '서울톡'에서 예약 완료 카톡 알림이 발송 됩니다. \n\n- 정원이 마감된 수업 을 예약할 경우 대기자 로 예약됩니다. \n\n- 수업 당일 신청 시 수강이 어렵습니다.\n\n- 수업 신청 인원이 4인 미만일 경우 폐강 됩니다. \n\n수업 장소 \n\n문화실험공간호수 3층 \n\n송파구 잠실동 송파나루길 256 \n\n​ \n\n문의전화 \n\n02-3431-9784\n\n카카오톡 \n\n상담 안내 \n\n문의사항은 카카오톡으로 보내주시면\n\n확인 후 답변해 드리겠습니다.\n\n카카오톡 채팅 시작하기\n\n평일 09:00 - 18:00 운영"
+      },
+      {
         "serviceId": "S260820143526576396",
         "title": "문화실험공간 호수 [월간 호수랩 9월] <(아동)달달한 노오븐 디저트>",
         "originalCategory": "공예/취미",
@@ -7971,7 +7881,7 @@ export const SEOUL_EDUCATION_PLACES:
         "title": "문화실험공간 호수 [월간 호수랩 9월] <(아동)데이비드 호크니가 사랑하는 반려견 그리기>",
         "originalCategory": "미술제작",
         "category": "craftMaking",
-        "statusText": "예약마감",
+        "statusText": "접수종료",
         "paidType": "유료(요금안내문의)",
         "targetText": "어린이(6,7,8,9세)",
         "audienceTags": [
@@ -8747,27 +8657,6 @@ export const SEOUL_EDUCATION_PLACES:
     "programCount": 9,
     "programs": [
       {
-        "serviceId": "S260902092900112208",
-        "title": "[한성백제박물관] 2026년 하반기 주말가족탐방 <몽촌토성 탐방>",
-        "originalCategory": "역사",
-        "category": "craftMaking",
-        "statusText": "접수중",
-        "paidType": "무료",
-        "targetText": "가족(직계가족만 참여 가능)",
-        "audienceTags": [
-          "children",
-          "family"
-        ],
-        "receptionStartAt": "2026-09-04T10:00:00",
-        "receptionEndAt": "2026-11-20T10:00:00",
-        "useStartAt": "2026-09-02T00:00:00",
-        "useEndAt": "2026-11-21T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260902092900112208",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17883090828650P4XERF5BVTP0CP0Q71G1XJ8Y",
-        "telephone": "02-2152-5834/5833",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n2026년 하반기 한성백제박물관 주말가족탐방 \n\n한성백제박물관 몽촌토성 탐방 \n\n2026년 하반기 초등학교 고학년 맞춤 <몽촌토성 탐방>을 운영합니다. \n\n주말 오전, 가족과 함께 몽촌토성을 거닐며 백제의 역사를 온몸으로 경험해 보세요. \n\n❚ 교육 개요 \n\n○ 교육이름: <한성백제박물관 몽촌토성 탐방> \n○ 운영기간 : 2026년 9월 19일(토)~11월 21일(토) \n\n○ 교육시간: 매주 토요일 / 1회차 9 :30~11 :30, 2회차 10:00~12:00 \n\n○ 교육대상: 초등학생 이상 동반 가족 ※ 미취학 아동 참여 불가 \n\n○ 참가비용: 무료 \n\n❚ 참여 방법 \n\n○ 신청방법: 서울시 공공서비스예약 로그인 후, 선착순 접수 \n\n○ 신청기간: 2026년 9월 4일(금) 10:00 ~ 정원 마감 시 \n\n○ 집합장소: 한성백제박물관 교육동 강당(한성백제홀) 앞\n\n○ 준 비 물: 간편한 복장과 신발, 모자, 생수 등 \n\n○ 문의 : 02-2152-5834, 5833 교육홍보과 \n\n※ 우천이나 미세먼지 경보 등 기상 악화 시 탐방이 실내교육으로 전환됩니다. \n\n❚ 교육 내용 및 순서 \n\n○ 현장 탐방 \n\n시간 \n\n순서 \n\n내용 \n\n장소 \n\n20분 \n\n도입 \n\n․ 백 제 한성기 역사와 문화, 탐방 코스 소개 \n\n박물관 로비/교육실 \n\n90분 \n\n유적 탐방 \n\n․ 몽촌토성 및 발굴현장 도보 탐방\n\n․ 고고학자가 되어 유적을 탐색하고 모의 임무 해결 \n\n유적 현장 \n\n10분 \n\n마무리 \n\n․ 단체사진 촬영 및 만족도 조사 \n\n○ 실내 교육 ※ 기상 상황 등으로 야외 탐방이 불가한 경우 진행 \n\n시간 \n\n순서 \n\n내용 \n\n장소 \n\n20분 \n\n도입 \n\n․백제 한성기 역사와 문화, 몽촌토성 소개 \n\n교육실 \n\n50분 \n\n탐방 대체활동 \n\n․박물관 옥상(또는 앞마당)에서 몽촌토성 조망 관람\n\n․ 팝업보드로 토성의 구조와 생활문화 학습 \n\n야외정원/교육실 \n\n40분 \n\n만들기 \n\n․ 칠지도 또는 수막새 디폼블록 만들기 \n\n교육실 \n\n10분 \n\n마무리 \n\n․ 만족도 조사 \n\n4. 주의사항\n1. 본 교육은 초등학생 과 1명 이상의 보호자 (직계가족만 가능)가 함께 참석해야 합니다. (미취학 자녀는 대표교육생으로 등록 불가, 친구나 친척도 함께 참여 불가 ) \n\n2. 활동지 및 체험교구는 학생당 1개씩 배부하며, 미취학 아동은 참여가 불가합니다. \n\n3. 필수 기재사항이 누락된 경우, 임의로 교육이 취소될 수 있습니다. \n\n4. 도보 탐방을 위한 편한 신발, 모자, 개인용 물 을 꼭 지참하여 주세요. \n\n5. 취소 는 수업일 2일 전까지 서울시 공공서비스예약을 통해 가능합니다. 하루 전날이나 당일 예약 취소 시 , 6 개월 동안 동일 교육 참여가 제한 됩니다 . \n\n※ 법정감염병으로 인한 불참 시, 증빙서류(소견서, 진료확인사, 처방전 등)를 ***@**.**로…"
-      },
-      {
         "serviceId": "S260801130033084929",
         "title": "[한성백제박물관] 초등 4~6학년 단체 대면 교육 <서울 쏙! 백제 콕!>(목ㆍ금)",
         "originalCategory": "역사",
@@ -8929,6 +8818,27 @@ export const SEOUL_EDUCATION_PLACES:
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787890978378CYIR08TZZDRW4FV581XHAP1BB",
         "telephone": "02-2152-5834/5833",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n2026년 하반기 한성백제박물관 주말가족교육 \n\n찾아라! 백제 왕성 속 비밀들 \n\n2026년 하반기 한성백제박물관의 주말 가족교육 <찾아라! 백제 왕성 속 비밀들>이 아래와 같이 운영됩니다. \n\n몽촌토성의 발굴조사 성과를 중심으로 백제 한성기의 역사와 생활문화를 알아보는 교육입니다. 가족 여러분의 많은 관심 바랍니다. \n\n❚ 교육 개요 \n\n○ 운영기간 : 2026년 9월 12일(토)~12월 5일(토) \n\n○ 교육시간: 매주 토요일 / 1회차 13 :30~15 :30, 2회차 15:40~17:40 (1일 2회, 중복신청 불가 ) \n\n○ 교육장소: 한성백제박물관 지하2층 교육실1&middot;2 \n\n○ 교육대상: 초등학생 이상 동반 가족 \n\n○ 참가비용: 무료 \n\n❚ 교육 내용 및 순서 \n\n○ 교육내용: 몽촌토성 발굴조사 성과를 중심으로 알아보는 백제 한성기의 생활과 문화\n\n○ 진행순서 \n\n시간 \n순서 \n내용 \n장소 \n\n05 분 \n도입 \n․ 수업 안내 및 강사 소개 \n교육실 \n\n30 분 \n시청각 수업 \n․ 백제 한성의 역사와 백제인의 생활문화 소개 \n\n․ 백제인의 생활 속 공존했던 동식물 알아보기 \n\n30 분 \n야외 활동\n\n체험 활동1 \n․ ( 어린이 ) 전사벽 또는 옥상정원에서 백제의 토성과 생활 문화유산 심화 학습 \n\n․ ( 보호자 ) 백제 왕성 발굴 성과 소개 \n옥상정원\n\n/교육실 \n\n50 분 \n체험 활동2 \n․ 몽촌토성 풍경상자 만들기 \n교육실 \n\n05 분 \n마무리 \n․ 소감 나누기 및 만족도 설문 조사 \n\n※ 1회차, 2회차의 내용은 동일합니다(단, 날씨 등 상황에 따라 세부 내용 및 시간은 변경 가능). \n\n❚ 참가 신청 \n\n○ 신청방법: 서울시 공공서비스예약 로그인 후, 선착순 접수 \n\n○ 신청기간: 2026년 8월 28일(금) 10:00 ~ 정원 마감 시 \n\n○ 문의 : 02-2152-5834, 5833 교육홍보과\n\n❚ 참고 사진\n\n4. 주의사항\n1. 본 교육은 1일 2회 운영되며, 매회 동일한 내용이므로 시간 확인 후 1회만 신청 하셔야 합니다. \n\n2. 본 교육은 초등학생 과 1명 이상의 보호자 (직계가족만 가능)가 함께 참석해야 합니다(미취학 자녀는 대표교육생으로 등록 불가, 친구나 친척도 함께 참여 불가).\n\n3. 한 가족이 1개의 팀으로 신청해야 합니다(분할 신청 불가, 적발시 참여 제한).\n\n4. 불가피하게 동반한 미취학 아동이 수업에 지장을 줄 경우, 원활한 교육 진행을 위해 수업에서 배제될 수 있습니다.\n\n5. 취소 는 수업일 2일 전 까지 서울시 공공서비스예약을 통해 가능합니다. 하루 전날이나 당일 예약 취소 시, 6개월 동안 동일 교육 참여가 제한 됩니다.\n\n※ 법정감염병으로 인한 불참 시, 증빙서류(소견서, 진료확인사, 처방전 등)를 ***@**.**로 제출하는 경우 예외 인정(그 외 사유는 인정 불가)\n\n6. 체…"
+      },
+      {
+        "serviceId": "S260902092900112208",
+        "title": "[한성백제박물관] 2026년 하반기 주말가족탐방 <몽촌토성 탐방>",
+        "originalCategory": "역사",
+        "category": "craftMaking",
+        "statusText": "예약마감",
+        "paidType": "무료",
+        "targetText": "가족(직계가족만 참여 가능)",
+        "audienceTags": [
+          "children",
+          "family"
+        ],
+        "receptionStartAt": "2026-09-04T10:00:00",
+        "receptionEndAt": "2026-11-20T10:00:00",
+        "useStartAt": "2026-09-02T00:00:00",
+        "useEndAt": "2026-11-21T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260902092900112208",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17883090828650P4XERF5BVTP0CP0Q71G1XJ8Y",
+        "telephone": "02-2152-5834/5833",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n2026년 하반기 한성백제박물관 주말가족탐방 \n\n한성백제박물관 몽촌토성 탐방 \n\n2026년 하반기 초등학교 고학년 맞춤 <몽촌토성 탐방>을 운영합니다. \n\n주말 오전, 가족과 함께 몽촌토성을 거닐며 백제의 역사를 온몸으로 경험해 보세요. \n\n❚ 교육 개요 \n\n○ 교육이름: <한성백제박물관 몽촌토성 탐방> \n○ 운영기간 : 2026년 9월 19일(토)~11월 21일(토) \n\n○ 교육시간: 매주 토요일 / 1회차 9 :30~11 :30, 2회차 10:00~12:00 \n\n○ 교육대상: 초등학생 이상 동반 가족 ※ 미취학 아동 참여 불가 \n\n○ 참가비용: 무료 \n\n❚ 참여 방법 \n\n○ 신청방법: 서울시 공공서비스예약 로그인 후, 선착순 접수 \n\n○ 신청기간: 2026년 9월 4일(금) 10:00 ~ 정원 마감 시 \n\n○ 집합장소: 한성백제박물관 교육동 강당(한성백제홀) 앞\n\n○ 준 비 물: 간편한 복장과 신발, 모자, 생수 등 \n\n○ 문의 : 02-2152-5834, 5833 교육홍보과 \n\n※ 우천이나 미세먼지 경보 등 기상 악화 시 탐방이 실내교육으로 전환됩니다. \n\n❚ 교육 내용 및 순서 \n\n○ 현장 탐방 \n\n시간 \n\n순서 \n\n내용 \n\n장소 \n\n20분 \n\n도입 \n\n․ 백 제 한성기 역사와 문화, 탐방 코스 소개 \n\n박물관 로비/교육실 \n\n90분 \n\n유적 탐방 \n\n․ 몽촌토성 및 발굴현장 도보 탐방\n\n․ 고고학자가 되어 유적을 탐색하고 모의 임무 해결 \n\n유적 현장 \n\n10분 \n\n마무리 \n\n․ 단체사진 촬영 및 만족도 조사 \n\n○ 실내 교육 ※ 기상 상황 등으로 야외 탐방이 불가한 경우 진행 \n\n시간 \n\n순서 \n\n내용 \n\n장소 \n\n20분 \n\n도입 \n\n․백제 한성기 역사와 문화, 몽촌토성 소개 \n\n교육실 \n\n50분 \n\n탐방 대체활동 \n\n․박물관 옥상(또는 앞마당)에서 몽촌토성 조망 관람\n\n․ 팝업보드로 토성의 구조와 생활문화 학습 \n\n야외정원/교육실 \n\n40분 \n\n만들기 \n\n․ 칠지도 또는 수막새 디폼블록 만들기 \n\n교육실 \n\n10분 \n\n마무리 \n\n․ 만족도 조사 \n\n4. 주의사항\n1. 본 교육은 초등학생 과 1명 이상의 보호자 (직계가족만 가능)가 함께 참석해야 합니다. (미취학 자녀는 대표교육생으로 등록 불가, 친구나 친척도 함께 참여 불가 ) \n\n2. 활동지 및 체험교구는 학생당 1개씩 배부하며, 미취학 아동은 참여가 불가합니다. \n\n3. 필수 기재사항이 누락된 경우, 임의로 교육이 취소될 수 있습니다. \n\n4. 도보 탐방을 위한 편한 신발, 모자, 개인용 물 을 꼭 지참하여 주세요. \n\n5. 취소 는 수업일 2일 전까지 서울시 공공서비스예약을 통해 가능합니다. 하루 전날이나 당일 예약 취소 시 , 6 개월 동안 동일 교육 참여가 제한 됩니다 . \n\n※ 법정감염병으로 인한 불참 시, 증빙서류(소견서, 진료확인사, 처방전 등)를 ***@**.**로…"
       }
     ]
   },
@@ -9061,6 +8971,27 @@ export const SEOUL_EDUCATION_PLACES:
     "programCount": 4,
     "programs": [
       {
+        "serviceId": "S260907105743700597",
+        "title": "누룩꽃이 필 때 : 시간이 빚어내는 발효의 맛",
+        "originalCategory": "도시농업",
+        "category": "cookingFood",
+        "statusText": "접수중",
+        "paidType": "유료",
+        "targetText": "성인",
+        "audienceTags": [
+          "all",
+          "adult"
+        ],
+        "receptionStartAt": "2026-09-07T00:00:00",
+        "receptionEndAt": "2026-10-13T00:00:00",
+        "useStartAt": "2026-09-07T00:00:00",
+        "useEndAt": "2026-10-14T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260907105743700597",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17887681127174V7OAYUTRY74YI60QOIEM8K68",
+        "telephone": "02-2620-4563",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n📌 프로그램 개요 \n\n모집 기간 : 2026. 9. 7.(월) 오전 9시 ~ 회차별 마감 시까지 \n교육 기간 : 2026. 9. 30.(수) ~ 10. 14.(수) / 매주 수요일 13:30 ~ 15:30 (총 3회) \n모집 대상 : 서울시민 누구나 \n모집 인원 : 회차별 12명 (선착순 마감) \n참가 비용 : 회차당 3,000원 \n교육 장소 : 오목공원 식물쉼터 \n신청 방법 : 서울시 공공서비스예약 \n문의전화 : 02-2620-4563 \n유의 사항 : 원하시는 회차를 선택하여 신청 가능합니다. (원데이 클래스) \n\n📅 강의 일정 및 상세 안내 \n\n회차 \n일시 \n주제 \n이야기 \n\n1회차 \n9. 30.(수) \n익어가는 장진주 \n누룩과 발효주 이야기 &middot; 전통주 문화와 장진주의 의미 &middot; 색깔 있는 막걸리 \n\n2회차 \n10. 7.(수) \n정원이 빚는 발효 \n식물과 미생물, 발효의 관계 &middot; 우리 발효식문화 이야기 &middot; 청국장 \n\n3회차 \n10. 14.(수) \n누룩이 만드는 깊은 맛 \n누룩의 발효 원리와 감칠맛 &middot; 발효와 숙성의 시간 &middot; 누룩소금과 맛간장 \n\n4. 주의사항"
+      },
+      {
         "serviceId": "S260904130316427352",
         "title": "다담:6대명차와 만나는 찻상(차한잔의 여유)",
         "originalCategory": "도시농업",
@@ -9105,7 +9036,7 @@ export const SEOUL_EDUCATION_PLACES:
         "title": "향기로 엮은 허브HERB GARLAND",
         "originalCategory": "도시농업",
         "category": "cookingFood",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "paidType": "유료",
         "targetText": "성인",
         "audienceTags": [
@@ -9120,27 +9051,6 @@ export const SEOUL_EDUCATION_PLACES:
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=178874696874112MOTN1SP11SYYJCC2CFX488L",
         "telephone": "02-2620-4563",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n📌 프로그램 개요 \n\n모집 기간 : 2026. 9. 7.(월) 오전 9시 ~ 회차별 마감 시까지 \n교육 기간 : 2026. 9. 30.(수) ~ 10. 21.(수) / 매주 수요일 16:00 ~ 18:00 (총 4회) \n모집 대상 : 서울시민 누구나 \n모집 인원 : 회차별 12명 (선착순 마감) \n참가 비용 : 회차당 3,000원 \n교육 장소 : 오목공원 식물쉼터 \n신청 방법 : 서울시 공공서비스예약 \n문의전화 : 02-2620-4563 \n유의 사항 : 원하시는 회차를 선택하여 신청 가능합니다. (원데이 클래스) \n\n📅 강의 일정 및 상세 안내 \n\n회차 \n일시 \n주제 \n이야기 \n\n1회차 \n9. 30.(수) \n음악에서 만나는 허브 \nScarborough Fair 속 파슬리&middot;세이지&middot;로즈마리&middot;타임의 상징성, 음악과 사랑 이야기 \n\n2회차 \n10. 7.(수) \n드라마속의 허브 \nChocolat 속 허브와 음식문화, 영화 속 향기와 정원 이야기 \n\n3회차 \n10. 14.(수) \n역사를 바꾼 허브 \n클레오파트라의 향과 미용, 흑사병과 네 도둑 식초, 향신료 무역과 세계사 \n\n4회차 \n10. 21.(수) \n성경 속 허브와 치유의 향기 \n우슬초&middot;몰약&middot;유향&middot;박하, 고대 이스라엘의 향과 정결의식, 치유와 나눔 \n\n4. 주의사항"
-      },
-      {
-        "serviceId": "S260907105743700597",
-        "title": "누룩꽃이 필 때 : 시간이 빚어내는 발효의 맛",
-        "originalCategory": "도시농업",
-        "category": "cookingFood",
-        "statusText": "예약마감",
-        "paidType": "유료",
-        "targetText": "성인",
-        "audienceTags": [
-          "all",
-          "adult"
-        ],
-        "receptionStartAt": "2026-09-07T00:00:00",
-        "receptionEndAt": "2026-10-13T00:00:00",
-        "useStartAt": "2026-09-07T00:00:00",
-        "useEndAt": "2026-10-14T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260907105743700597",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17887681127174V7OAYUTRY74YI60QOIEM8K68",
-        "telephone": "02-2620-4563",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n📌 프로그램 개요 \n\n모집 기간 : 2026. 9. 7.(월) 오전 9시 ~ 회차별 마감 시까지 \n교육 기간 : 2026. 9. 30.(수) ~ 10. 14.(수) / 매주 수요일 13:30 ~ 15:30 (총 3회) \n모집 대상 : 서울시민 누구나 \n모집 인원 : 회차별 12명 (선착순 마감) \n참가 비용 : 회차당 3,000원 \n교육 장소 : 오목공원 식물쉼터 \n신청 방법 : 서울시 공공서비스예약 \n문의전화 : 02-2620-4563 \n유의 사항 : 원하시는 회차를 선택하여 신청 가능합니다. (원데이 클래스) \n\n📅 강의 일정 및 상세 안내 \n\n회차 \n일시 \n주제 \n이야기 \n\n1회차 \n9. 30.(수) \n익어가는 장진주 \n누룩과 발효주 이야기 &middot; 전통주 문화와 장진주의 의미 &middot; 색깔 있는 막걸리 \n\n2회차 \n10. 7.(수) \n정원이 빚는 발효 \n식물과 미생물, 발효의 관계 &middot; 우리 발효식문화 이야기 &middot; 청국장 \n\n3회차 \n10. 14.(수) \n누룩이 만드는 깊은 맛 \n누룩의 발효 원리와 감칠맛 &middot; 발효와 숙성의 시간 &middot; 누룩소금과 맛간장 \n\n4. 주의사항"
       }
     ]
   },
@@ -9374,8 +9284,8 @@ export const SEOUL_EDUCATION_PLACES:
     ],
     "longitude": 126.89448509990125,
     "latitude": 37.50421234524328,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=178522283458704CXQHRN29NJ55THLYLVIHTDC",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260728161247396183",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1785220505864H5JVE1TH36OZR52XNZ2LHFB9Q",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260728153217119823",
     "programCount": 6,
     "programs": [
       {
@@ -9521,8 +9431,8 @@ export const SEOUL_EDUCATION_PLACES:
     ],
     "longitude": null,
     "latitude": null,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1785990871696XQFWK6ZQ9R1CX8X6QG3H7HSOX",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260601103722364889",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17830424879647X5GJH8FW8D1PJVGF5D3D2DET",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260703101445276324",
     "programCount": 6,
     "programs": [
       {
@@ -9688,9 +9598,9 @@ export const SEOUL_EDUCATION_PLACES:
         "useStartAt": "2026-09-03T00:00:00",
         "useEndAt": "2026-09-17T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260903204253321296",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1789017730908MYFKN12NLN75DZTEFTNW0Y97S",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1789283100195TPXRIWYY9WE1DE4MEEYJNEJWW",
         "telephone": "02-2069-0249 / 02-2069-0246",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n\n📚 청년정_책 읽는 티톡\n\n바쁜 일상 속에서 책 한 권 읽기, 쉽지 않죠?\n\n잠시 일상에서 벗어나 책 읽는 습관을 만들어보세요. ☕📖\n\n향긋한 차와 편안한 음악이 함께하는 공간에서\n\n자유롭게 책을 읽고,\n\n청년정책도 함께 알아가는 시간!\n\n책을 읽으며 여유를 찾고,\n\n나에게 필요한 청년정책까지 알아보는\n\n「청년정_책 읽는 티톡」에 여러분을 초대합니다. 💛\n\n📢 신청기간\n\n9. 3.(목) ~ 9. 13.(일)\n\n📅 운영일시\n\n9. 17.(목) 오후 7:30 ~ 9:30\n\n👥 대상\n\n서울시 거주 만 19세~39세 청년\n\n(10명 내외)\n\n📍 장소\n\n서울청년센터 영등포 배움포랑2\n\n👉 신청방법\n\n서울시공공서비스예약\n\n📖 책과 함께 잠시 쉬어가는 시간,\n\n☕ 차 한 잔과 함께 청년정책을 알아가는 시간!\n\n청년정_책 읽는 티톡에서 만나요!\n\n#서울청년센터영등포 #영등포청년 #청년정책 #청년프로그램 #청년독서 #독서모임 #책읽는티톡 #서울청년 #청년공간 #서울시공공서비스예약 \n4. 주의사항\n\n* 당일 노쇼발생 시 추후 청년센터 영등포 프로그램 참여 제한 !!!!!! \n\n* 예약시 신청자와 이용자의 정보가 다를 경우 선정이 불가하오니 반드시 본인 계정으로 예약바랍니다. \n\n* 신청자 정보 > 휴대폰 SMS 수신거부 체크 시 안내 문자 수신이 불가할 수 있으니 이 점 유의해주세요.\n\n운영 시간: 10시 - 22시 / 토요일 10시 - 17시 (공휴일, 일요일 휴무)\n\n문의: 02-2069-0249 마리매니저 \n\n<필독>선정결과 확인 방법 \n\n* 신청(예약) 완료시: 카카오톡(서울톡을 통해 \"심사중\" 메세지 발송됨\n\n* 선정 완료시(최종확정): 개별 문자를 통해 최종선정 메세지 발송됨---> 선정자에 한해 메세지 발송됨 \n* 대기자 연락 시 연락이 되지 않으면 바로 다음 대기자에게 순번이 넘어가오니 이 점 양해 부탁드립니다."
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n\n📚 청년정_책 읽는 티톡\n\n바쁜 일상 속에서 책 한 권 읽기, 쉽지 않죠?\n\n잠시 일상에서 벗어나 책 읽는 습관을 만들어보세요. ☕📖\n\n향긋한 차와 편안한 음악이 함께하는 공간에서\n\n자유롭게 책을 읽고,\n\n청년정책도 함께 알아가는 시간!\n\n책을 읽으며 여유를 찾고,\n\n나에게 필요한 청년정책까지 알아보는\n\n「청년정_책 읽는 티톡」에 여러분을 초대합니다. 💛\n\n📢 신청기간\n9. 3.(목) ~ 9. 14.(월) \n\n📅 운영일시\n\n9. 17.(목) 오후 7:30\n\n👥 대상\n\n만 19세~39세 청년\n\n📍 장소\n\n서울청년센터 영등포 배움포랑2\n\n👉 신청방법\n\n서울시공공서비스예약\n\n📖 책과 함께 잠시 쉬어가는 시간,\n\n☕ 차 한 잔과 함께 청년정책을 알아가는 시간!\n\n청년정_책 읽는 티톡에서 만나요!\n\n#서울청년센터영등포 #영등포청년 #청년정책 #청년프로그램 #청년독서 #독서모임 #책읽는티톡 #서울청년 #청년공간 #서울시공공서비스예약 \n4. 주의사항\n\n* 당일 노쇼발생 시 추후 청년센터 영등포 프로그램 참여 제한 !!!!!! \n\n* 예약시 신청자와 이용자의 정보가 다를 경우 선정이 불가하오니 반드시 본인 계정으로 예약바랍니다. \n\n* 신청자 정보 > 휴대폰 SMS 수신거부 체크 시 안내 문자 수신이 불가할 수 있으니 이 점 유의해주세요.\n\n운영 시간: 10시 - 22시 / 토요일 10시 - 17시 (공휴일, 일요일 휴무)\n\n문의: 02-2069-0249 마리매니저 \n\n<필독>선정결과 확인 방법 \n\n* 신청(예약) 완료시: 카카오톡(서울톡을 통해 \"심사중\" 메세지 발송됨\n\n* 선정 완료시(최종확정): 개별 문자를 통해 최종선정 메세지 발송됨---> 선정자에 한해 메세지 발송됨 \n* 대기자 연락 시 연락이 되지 않으면 바로 다음 대기자에게 순번이 넘어가오니 이 점 양해 부탁드립니다."
       },
       {
         "serviceId": "S260901175111344864",
@@ -9731,49 +9641,6 @@ export const SEOUL_EDUCATION_PLACES:
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787796720676EFHPJ5SO8LBIUXB59DU7I0L1X",
         "telephone": "02-2069-0249 / 02-2069-0246",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n\n<영등포 티톡 🍜 청년반점> 우리동네 배달맛집 \n\n영등포구 최고의 배달 맛집에서 주문한 요리를 먹으며,\n\n최고의 청년정책을 뽑아보는 특별한 시간!\n\n(볶음밥은 직접 만들어 볼거에요)\n\n대단한 요리는 아니지만 일요일 점심을 혼자 보내지 않고\n\n함께 요리하고, 식사하고, 수다 떨다보면\n\n즐거운 시간이 될거에요 : )\n\n🔊 지원 전 아래 내용을\n\n꼭 확인해주세요!\n\n📌 모집기간\n\n2026. 8. 24.(월) ~ 9. 7.(월)\n\n📌 선정발표\n\n2026. 9. 8.(화) 14:00 (선정자 개별연락)\n\n📌 모집대상\n\n영등포구 거주 및 활동 중인 청년\n\n공고일 기준 만 19세 이상 39세 이하 청년\n\n- 단, 의무복무 제대군인인 경우 복무기간 고려하여\n\n최대 3년 이내 연령 상한 연장 적용\n\n‣ 2년 이상의 복무기간을 마치고 전역한\n\n제대군인 : 3세 가산 (~만 42세)\n\n‣ 1년 이상 2년 미만의 복무기간을 자치고 전역한\n\n제대군인 : 2세 가산 (~만 41세)\n\n‣ 1년 미만의 복무기간을 마치고 전역한\n\n제대군인 : 1세 가산 (~만 40세)\n\n📌 모임 일시\n\n9월 13일(일) 11:00 ~ 14:00\n\n📌 장소\n\n서울청년센터 영등포 모임포랑(공유주방)\n\n📌 운영방식\n\n✅ 그룹상담\n\n(주제별 이야기 나눔)\n\n✅ 정책소개\n\n(청년센터 및 청년정책 소개, 정책 퀴즈 타임)\n\n✅ 볶음밥 만들기\n\n(나만의 레시피로 만들어 보기)\n\n📌 신청방법\n\n서울공공서비스예약\n\n(선정자에게 별도의 문자발송)\n\n📌 문의\n\n📞 02-2069-0249 \n\n(전화 문의 평일 10~18시) \n4. 주의사항\n\n* 당일 노쇼발생 시 추후 청년센터 영등포 프로그램 참여 제한 !!!!!! \n\n* 예약시 신청자와 이용자의 정보가 다를 경우 선정이 불가하오니 반드시 본인 계정으로 예약바랍니다. \n\n* 신청자 정보 > 휴대폰 SMS 수신거부 체크 시 안내 문자 수신이 불가할 수 있으니 이 점 유의해주세요.\n\n운영 시간: 10시 - 22시 / 토요일 10시 - 17시 (공휴일, 일요일 휴무)\n\n문의: 02-2069-0249 마리매니저 \n\n<필독>선정결과 확인 방법 \n\n* 신청(예약) 완료시: 카카오톡(서울톡을 통해 \"심사중\" 메세지 발송됨\n\n* 선정 완료시(최종확정): 개별 문자를 통해 최종선정 메세지 발송됨---> 선정자에 한해 메세지 발송됨 \n* 대기자 연락 시 연락이 되지 않으면 바로 다음 대기자에게 순번이 넘어가오니 이 점 양해 부탁드립니다."
-      }
-    ]
-  },
-  {
-    "id": "seoul-education-a7502ca8",
-    "name": "선유도공원",
-    "fullPlaceName": "선유도공원",
-    "operationScope": "insideSeoul",
-    "district": "영등포구",
-    "locationLabel": "서울 영등포구",
-    "primaryCategory": "natureEnvironment",
-    "categoryNames": [
-      "natureEnvironment"
-    ],
-    "originalCategoryNames": [
-      "자연/과학"
-    ],
-    "longitude": 126.902,
-    "latitude": 37.54241,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787633522841XB3XRSRM3F4RIZWLTPMI42NEA",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260825133237977706",
-    "programCount": 1,
-    "programs": [
-      {
-        "serviceId": "S260825133237977706",
-        "title": "[선유도공원] 여성조경가 1호 정영선 조경가와 선유도, 정원사의 산책(2026 시민정원사를 위한 '정원의 쓸모' 세 번째 이진형 조경 전문가 특강)",
-        "originalCategory": "자연/과학",
-        "category": "natureEnvironment",
-        "statusText": "접수종료",
-        "paidType": "유료",
-        "targetText": "성인(시민정원사 또는 정원사 과정 수료자, 정원 관심 있는 시민 등)",
-        "audienceTags": [
-          "all",
-          "adult"
-        ],
-        "receptionStartAt": "2026-08-25T16:00:00",
-        "receptionEndAt": "2026-09-11T17:00:00",
-        "useStartAt": "2026-08-25T00:00:00",
-        "useEndAt": "2026-09-12T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260825133237977706",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787633522841XB3XRSRM3F4RIZWLTPMI42NEA",
-        "telephone": "02-300-5574",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n[ 월드컵공원 ] 정원사와 정원사가 되고싶은 시민을 위한 2026 정원의 쓸모 세 번째 프로그램 \n\n선유도를 직접 설계한 정원사와 와 함께하는 < 정원사의 산책> \n\n강 사 : 이진형 소장 (선유도공원 설계한 '조경설계 서안' 소장, 선우도공원, 아시아공원, 예술의 전당 등 다수 조경 설계) \n\n주 제 : 정원을 직접 조성한 조경가와 함께하는 정원사의 산책 \n\n- 숨겨진 선유도공원의 정원 설계 이야기\n\n- 선유도공원 속 가을 정원 함께 산책하기\n\n- 질의응답(정원사로서 조경가님께 궁금한 점) \n\n- 일 시 : 9월 12일 (토) 10:00~11:30\n\n- 접 수 : 8월 25일 (화) 16:00~9월 11일 (금) 17:00\n\n- 대 상 : 서울시 시민정원사, 타 정원사 과정 이수자 또는 정원에 관심 많은 시민 누구나(성인) \n\n- 인 원 : 30명 \n\n- 집결장소 : 선유도공원 이야기관 앞(영등포구 선유로 343) \n\n- 참 가 비 : 3천원(인) \n\n- 예약방법 : 서울시 공공서비스예약을 통한 선착순 접수(신청서는 ***@**.**로 제출 요망) \n\n- 문의전화 : 02-300-5574 \n\n*** 오시는 길 반드시 사전 확인 부탁드리며, 주차장 이용이 불가하므로 인근 주차장을 이용해주시기 바랍니다. *** \n\n4. 주의사항\n< 참여자 주의사항 > \n\n1. 프로그램 예약 시간 5 분 전 도착 해주세요 . \n\n2. 무단결석은 이용을 원하는 다른 분들에게 피해를 주는 일입니다 . \n\n3. 원활한 진행을 위해 예약 취소는 프로그램 진행 1 일전까지 꼭 취소해 주세요 . \n\n5. 사전 취소 없이 불참한 경우 , 이후 신청 프로그램에서 제외 될 수 있습니다 . \n\n6. 프로그램 관련 ( 내용변경 , 취소 등 ) 안내시 문자로 연락드리오니 예약시 휴대폰 SMS 수신거부를 체크하지 마세요 . \n\n7. 프로그램 참여 현장에서 촬영된 사진이나 동영상은 서울시 홍보자료로 사용될 수 있으니 , 원하시지 않는 분은 프로그램 시작 전에 말씀하여 주시기 바랍니다. \n\n<오시는 길 >\n\n선유도공원 이야기관 \n\n- 주 소 : 서울특별시 영등포구 선유로 343\n\n- 자가용 : 양화 한강공원 3주차장 검색 (주차료 &ndash; 최초 30분 1,000원, 추가 10분당 200원)\n\n- 대중교통 : 합정역(6호선) 9번 출구에서 버스 5714, 7612번 승차 - 선유도공원 정류장 하차 - 선유도공원 이야기관까지 약 163m(2분) 도보이동"
       }
     ]
   },
@@ -10989,9 +10856,9 @@ export const SEOUL_EDUCATION_PLACES:
     ],
     "longitude": 127.10055,
     "latitude": 37.61351,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787875692311AHOJOAVP18CANPOL6AIZ0PS2I",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260828090426606167",
-    "programCount": 5,
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787884013925WHOW59MUY4ZZ9HDL2A6VFW9SK",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260828112436193804",
+    "programCount": 3,
     "programs": [
       {
         "serviceId": "S260904160936632048",
@@ -11052,46 +10919,6 @@ export const SEOUL_EDUCATION_PLACES:
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787891679151FB6EXX2143EX4LMONZXRGMA94",
         "telephone": "02-3423-2981",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n예약사이트 바로가기--> https://www.jungnang.go.kr/ecoEdu/app/ecoEdu/select.do?programId=ecoEdu&ecoEduId=1757&menuNo=360012 \n\n4. 주의사항"
-      },
-      {
-        "serviceId": "S260828090426606167",
-        "title": "중랑구 환경교육센터 '기후적응 챌린지-지구와 나를 위한 선택'",
-        "originalCategory": "자연/과학",
-        "category": "natureEnvironment",
-        "statusText": "접수종료",
-        "paidType": "무료",
-        "targetText": "초등학생(초4~6학년)",
-        "audienceTags": [
-          "children"
-        ],
-        "receptionStartAt": "2026-08-28T00:00:00",
-        "receptionEndAt": "2026-09-10T17:00:00",
-        "useStartAt": "2026-07-31T00:00:00",
-        "useEndAt": "2026-09-12T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260828090426606167",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787875692311AHOJOAVP18CANPOL6AIZ0PS2I",
-        "telephone": "02-3423-2981",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n예약사이트 바로가기--> https://www.jungnang.go.kr/ecoEdu/app/ecoEdu/select.do?programId=ecoEdu&ecoEduId=1748&menuNo=360012 \n\n4. 주의사항"
-      },
-      {
-        "serviceId": "S260828091736291140",
-        "title": "중랑구 환경교육센터 '보드게임으로 배우는 환경:자원순환'",
-        "originalCategory": "자연/과학",
-        "category": "natureEnvironment",
-        "statusText": "접수종료",
-        "paidType": "무료",
-        "targetText": "초등학생(초3~4학년)",
-        "audienceTags": [
-          "children"
-        ],
-        "receptionStartAt": "2026-08-28T00:00:00",
-        "receptionEndAt": "2026-09-10T17:00:00",
-        "useStartAt": "2026-08-28T00:00:00",
-        "useEndAt": "2026-09-12T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260828091736291140",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787876847368KS4HI8UO04IF9SF3WHXQGK7SV",
-        "telephone": "02-3423-2981",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\n시설이용료 납부는 각 관리기관에서 규정에 준 합니다.\n본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\n접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\n2. 시설예약\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\n3. 상세내용\n예약사이트 바로가기--> https://www.jungnang.go.kr/ecoEdu/app/ecoEdu/select.do?programId=ecoEdu&ecoEduId=1751&menuNo=360012 \n\n4. 주의사항"
       }
     ]
   },

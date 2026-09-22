@@ -46,7 +46,7 @@ export type SeoulSpaceFacility = {
 };
 
 export const SEOUL_SPACE_RESERVATION_COUNT =
-  537;
+  538;
 
 export const SEOUL_SPACE_FACILITY_COUNT =
   294;
@@ -637,8 +637,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 127.03609,
     "latitude": 37.62512,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1755910260156MZHIELAZ1CSQFWAEDZS4KC790",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250225141423643424",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1740460982331BY3PRH56LY62Z20H6B08EFDFE",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250225135811325469",
     "reservationCount": 6,
     "reservations": [
       {
@@ -5473,7 +5473,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260511170716263118",
         "title": "[서울청년센터동대문] 세미나실 N1",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "청년공간",
         "paidType": "유료",
@@ -7016,7 +7016,7 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "other",
     "longitude": null,
     "latitude": null,
-    "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540028/20210310/1615306958094G1GA5PIEMY41YT48VJNQW4LRM.jpg",
+    "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540028/20210310/1615306942991NXZLBXJ4ABFCLL5KATPIIWASB.jpg",
     "officialUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do#rest9",
     "reservationCount": 2,
     "reservations": [
@@ -10817,8 +10817,25 @@ export const SEOUL_SPACE_FACILITIES:
     "latitude": 37.51834828002767,
     "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1788244052149SVQH2A8O8AVGJWV3GMZ4UM0T4",
     "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260901152413294531",
-    "reservationCount": 1,
+    "reservationCount": 2,
     "reservations": [
+      {
+        "serviceId": "S260901154745705247",
+        "title": "양천공원 키지트 온라인 사전예약 (0929-1004)",
+        "statusText": "접수중",
+        "majorCategory": "공간시설",
+        "category": "민원 등 기타",
+        "paidType": "무료",
+        "targetText": "성인, 어린이(8세 미만), 유아",
+        "receptionStartAt": "2026-09-22T09:00:00",
+        "receptionEndAt": "2026-09-27T18:00:00",
+        "useStartAt": "2026-09-22T00:00:00",
+        "useEndAt": "2026-10-04T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260901154745705247",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17882458934931EXLQRTTAUNXFNH2PQ18D0FKJ",
+        "telephone": "",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용*키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n- (아이 2명당 1명의 보호자가 입장하셔야 합니다)\r\n* 예약 시, 보호자 포함한 인원수로 예약 해주시면 됩니다\r\n- (예. 보호자 1명과 아이 1명이 입장 시 2명으로 예약)\r\n\r\n* 키지트 운영정보 : 매주 화요일 ~ 일요일\r\n 09시 - 18시\r\n 월요일과 국가 공휴일은 운영 되지 않습니다.\r\n\r\n* 키지트 운영시간 *\r\n1) 09 : 30 ~ 11 : 30\r\n2) 13 : 00 ~ 15 : 00\r\n3) 15 : 30 ~ 17 : 30\r\n\r\n 해당 시간에만 키지트 사용이 가능하며 그 외 시간은 키지트 청소 중입니다. *\r\n! 예약 전, 꼭 키지트 운영시간 확인을 부탁드립니다 !4. 주의사항* 키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n* 키지트는 9세 까지 (만 8세, 초등학교 2학년 이하) 까지 참여가 가능합니다."
+      },
       {
         "serviceId": "S260901152413294531",
         "title": "양천공원 키지트 온라인 사전예약 (0922~0927)",
@@ -11164,8 +11181,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "hall",
     "longitude": null,
     "latitude": null,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1782289728984OZYXIKMU3KQHORUUMYC42HPOX",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260623151848569470",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1776335113654YO3XN3MHQ7D8W1KE6LRPXNSEQ",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260416124649907466",
     "reservationCount": 5,
     "reservations": [
       {
@@ -14229,7 +14246,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S251128132526110716",
         "title": "(주말) 서울시청 서소문별관 후생동 4층강당",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "강당",
         "paidType": "유료",

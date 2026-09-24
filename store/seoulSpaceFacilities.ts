@@ -46,7 +46,7 @@ export type SeoulSpaceFacility = {
 };
 
 export const SEOUL_SPACE_RESERVATION_COUNT =
-  538;
+  539;
 
 export const SEOUL_SPACE_FACILITY_COUNT =
   294;
@@ -637,8 +637,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 127.03609,
     "latitude": 37.62512,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1740460982331BY3PRH56LY62Z20H6B08EFDFE",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250225135811325469",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17402023279296BZLQ5OWAJOLZU8OSGUG91QY0",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250222142900323973",
     "reservationCount": 6,
     "reservations": [
       {
@@ -5648,8 +5648,25 @@ export const SEOUL_SPACE_FACILITIES:
     "latitude": 37.55950113434951,
     "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787720811229I0HT4JN5EBT7TYCO58HWIK7BU",
     "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260826140606085347",
-    "reservationCount": 1,
+    "reservationCount": 2,
     "reservations": [
+      {
+        "serviceId": "S260922131936777702",
+        "title": "2026 경의선숲길공원(연남동구간) 버스킹 (10월)",
+        "statusText": "접수중",
+        "majorCategory": "공간시설",
+        "category": "공연장",
+        "paidType": "무료",
+        "targetText": "제한없음",
+        "receptionStartAt": "2026-09-24T00:00:00",
+        "receptionEndAt": "2026-10-31T00:00:00",
+        "useStartAt": "2026-09-24T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260922131936777702",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1790050874928J6UBYOOPEMZAOAB5XEEUSF5WT",
+        "telephone": "02-719-8830",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n경의선숲길공원(연남) 버스킹 신청 안내\r\n\r\n\r\n○운영시간 : 평일 11:00~19:00 /주말 및 공휴일 14:00~19:00\r\n        (13:00~14:00, 16:00~17:00 제외)\r\n\r\n○공연시간 : 회차별 1시간(준비 및 정리시간 포함)\r\n\r\n○사 용 료 : 무료\r\n\r\n○예약횟수 : 월 4회(일 1시간/최대 2회차 예약가능)\r\n       ※다양하고 보다 많은 버스커의 공연을 위해 예약 횟수를 제한합니다.\r\n\r\n○예약기간 : 전월 마지막 목요일 00:00부터 예약 가능\r\n        ※예약 및 취소는 이용일 1일 전까지 가능\r\n\r\n○공연장소 : 경의선숲길공원 홍대입구역 3번출구 부터연남파출소 방향\r\n        횡단보도(약 250m 구간) 내보행자 불편이 없는 유휴공간\r\n\r\n\r\n○예약 시 주의사항\r\n-예약자와 실제 이용자가 동일해야하며 타인에게 양도할 수 없습니다.(적발시 이용이 제한됨)\r\n\r\n- 순찰근무자(관리자)가 확인 요청 시 예약확인증(또는 예약확인문자 등)과\r\n 본인확인을 위한 신분증을 제시하시기 바랍니다.\r\n ※예약확인증 출력 : 마이페이지나의 예약내역『확인증』 버튼 클릭  출력\r\n\r\n\r\n공연 시 주의사항\r\n- 공연자 3인 이하만 가능하며 소형스피커만 활용가능합니다.\r\n\r\n- 공연에 필요한 장비 외 시설물(촬영장비, 모금함 등) 설치 불가합니다.\r\n\r\n- 공연 후 주변 정리 및 발생된 쓰레기를 수거해주세요.\r\n\r\n- 공연 외 상품, 기업홍보 및 행사성 등 상업(영업) 등 수익 창출 행위, 정치, 종교,\r\n 집회 등의 활동은 절대 불가하며, 타인에게 양도, 인원초과(1팀당 최대3명),\r\n\r\n 이용시간 미준수 시, 기 예약건 취소 및 익월예약이 제한됩니다.\r\n\r\n- 소음, 진동관리법 시행규칙에 따라 타인에게 피해를 줄 수 있는 소음은 금지되며,\r\n 지역주민, 상인, 보행자에게 소음으로 인한 피해가 없도록 유의해주세요.\r\n\r\n 공연으로 인한 소음민원 및 공원이용객의 불편을 주는 행위 등발생 시\r\n공연은 중단 될 수 있습니다.\r\n\r\n\r\n\r\n\r\n\r\n○문 의 처 : 경의선숲길공원 관리사무실 02-719-8830\r\n \r\n\r\n\r\n4. 주의사항\r\n공연 시 주의사항\r\n- 공연자 3인 이하만 가능하며 소형스피커만 활용가능합니다.\r\n\r\n- 공연에 필요한 장비 외 시설물(촬영장비, 모금함 등) 설치 불가합니다.\r\n\r\n- 공연 후 주변 정리 및 발생된 쓰레기를 수거해주세요.\r\n\r\n- 공연 외 상품, 기업홍보 및 행사성 등 상업(영업) 등 수익 창출 행위, 정치, 종교,\r\n 집회 등의 활동은 절대 불가하며, 타인에게 양도, 인원초과(1팀당 최대3명),\r\n\r\n이용시간 미준수 시, 기 예약건 취소 및 익월예약이 제한됩니다.\r\n\r\n- 소음, 진동관리법 시행규칙에 따라 타인에게 피해를 줄 수 있는 소음은 금지되며,\r\n 지역주민, 상인, 보행자에게 소음으로 인한 피해가 없도록 유의해주세요.\r\n\r\n 공연으로 인한 소음민원 및 공원이용객의 불편을 주는 행위 등발생 시\r\n 공연은 중단 될 수 있습니다.\r\n\r\n※소음,진동관리법 제21조1항 및 동법시행규칙 제20조3항 \r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t공연시간대\r\n\t\t\t주간(10:00~18:00)\r\n\t\t\t야간(18:00~20:00)\r\n\t\t\r\n\t\t\r\n\t\t\t규제기준치\r\n\t\t\t65dB이하\r\n\t\t\t60dB이하\r\n\t\t\r\n\t\r\n\r\n\r\n- 공연자(공연팀)가공연으로 인해 공원의 환경을 훼손할 때는 관계법령에 의거과태료가 부과됩니다."
+      },
       {
         "serviceId": "S260826140606085347",
         "title": "2026 경의선숲길공원(연남동구간) 버스킹 (9월)",

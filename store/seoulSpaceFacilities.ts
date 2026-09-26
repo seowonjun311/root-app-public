@@ -7756,7 +7756,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260209172409981157",
         "title": "방배숲환경도서관 시설 대관 안내",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "강의실",
         "paidType": "유료",
@@ -11945,7 +11945,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260811104549862404",
         "title": "용산도시기억전시관 세미나실 대관(9월)",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "회의실",
         "paidType": "무료",

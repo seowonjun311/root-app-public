@@ -46,7 +46,7 @@ export type SeoulSpaceFacility = {
 };
 
 export const SEOUL_SPACE_RESERVATION_COUNT =
-  539;
+  540;
 
 export const SEOUL_SPACE_FACILITY_COUNT =
   294;
@@ -3130,7 +3130,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260911130136525920",
         "title": "[서울아트책보고 워크숍룸] 9월 공간 지원",
-        "statusText": "접수중",
+        "statusText": "접수종료",
         "majorCategory": "공간시설",
         "category": "강의실",
         "paidType": "무료",
@@ -5473,15 +5473,15 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260511170716263118",
         "title": "[서울청년센터동대문] 세미나실 N1",
-        "statusText": "예약마감",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "청년공간",
         "paidType": "유료",
         "targetText": "청년",
         "receptionStartAt": "2026-05-11T00:00:00",
-        "receptionEndAt": "2026-09-30T00:00:00",
+        "receptionEndAt": "2026-10-31T00:00:00",
         "useStartAt": "2026-05-11T00:00:00",
-        "useEndAt": "2026-09-30T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260511170716263118",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1778488196358ZGQQ96WPF6OFMGEYMOWEAD2PP",
         "telephone": "",
@@ -5670,7 +5670,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260826140606085347",
         "title": "2026 경의선숲길공원(연남동구간) 버스킹 (9월)",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "공연장",
         "paidType": "무료",
@@ -5755,12 +5755,29 @@ export const SEOUL_SPACE_FACILITIES:
     "latitude": 37.56670301919164,
     "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787358057180X6R9SWS74CMBMS6JV7574JSUZ",
     "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260822092002113383",
-    "reservationCount": 1,
+    "reservationCount": 2,
     "reservations": [
+      {
+        "serviceId": "S260927152414347387",
+        "title": "[월드컵공원] 유아숲체험원 참여기관 모집(자율반 수시/10월)",
+        "statusText": "접수중",
+        "majorCategory": "공간시설",
+        "category": "광장",
+        "paidType": "무료",
+        "targetText": "어린이(단체)",
+        "receptionStartAt": "2026-09-28T10:00:00",
+        "receptionEndAt": "2026-10-29T13:00:00",
+        "useStartAt": "2026-09-28T00:00:00",
+        "useEndAt": "2026-10-30T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260927152414347387",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1790490671410VD00MQKHL86XRUKVPEMSWTYPI",
+        "telephone": "02-300-5530",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용월드컵공원 유아숲체험원참여기관 모집(자율반 수시/10월)\r\n 초록빛 숲에서 자라나는 아이들의 꿈,\r\n 유아숲체험원에서 함께해요~~~\r\n\r\n□ 모집대상\r\n - 서울시 내 유아기관(어린이집, 유치원)\r\n\r\n* 유의사항\r\n- 예약 후불참 시 향후 월드컵공원 프로그램 참여 제한\r\n\r\n□ 모집기간: 9. 28(월) ~ 10. 30(금)\r\n\r\n□ 장 소: 난지천공원 유아숲체험원\r\n       난지주차장에서 도보로 1~2분 소요\r\n\r\n□ 참여방법\r\n - 서울시공공서비스예약 누리집 접수\r\n\r\n□ 문의: 02-300-5574, 02-300-5530\r\n\r\n4. 주의사항"
+      },
       {
         "serviceId": "S260822092002113383",
         "title": "[월드컵공원] 유아숲체험원 참여기관 모집(자율반 수시/9월)",
-        "statusText": "접수중",
+        "statusText": "접수종료",
         "majorCategory": "공간시설",
         "category": "광장",
         "paidType": "무료",
@@ -7033,7 +7050,7 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "other",
     "longitude": null,
     "latitude": null,
-    "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540028/20210310/1615306958094G1GA5PIEMY41YT48VJNQW4LRM.jpg",
+    "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540028/20210310/1615306942991NXZLBXJ4ABFCLL5KATPIIWASB.jpg",
     "officialUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do#rest9",
     "reservationCount": 2,
     "reservations": [
@@ -8651,13 +8668,13 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260225181612419301",
         "title": "우면도서관 세미나실 대관",
-        "statusText": "접수종료",
+        "statusText": "안내중",
         "majorCategory": "공간시설",
         "category": "강의실",
         "paidType": "유료(요금안내문의)",
         "targetText": "제한없음",
-        "receptionStartAt": "2026-09-01T00:00:00",
-        "receptionEndAt": "2026-09-15T23:55:00",
+        "receptionStartAt": "2026-10-01T00:00:00",
+        "receptionEndAt": "2026-10-15T23:55:00",
         "useStartAt": "2026-02-01T00:00:00",
         "useEndAt": "2026-12-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260225181612419301",
@@ -9396,7 +9413,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260913105938574391",
         "title": "문화실험공간 호수 [10월 우리끼리 식당] 송파구 석촌호수 문화실험공간 호수",
-        "statusText": "예약마감",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "주민공유공간",
         "paidType": "유료",
@@ -9413,7 +9430,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260821090649954475",
         "title": "문화실험공간 호수 [9월 우리끼리 식당] 송파구 석촌호수 문화실험공간 호수",
-        "statusText": "예약마감",
+        "statusText": "접수종료",
         "majorCategory": "공간시설",
         "category": "주민공유공간",
         "paidType": "유료",
@@ -10493,8 +10510,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "lectureRoom",
     "longitude": 126.85428642000242,
     "latitude": 37.51857061433107,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1767088963325BU2K2TIWI24EJJDRR22HN942Z",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251230185226022223",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1767089168244VWSRCZ53YMCZY0YQ1299P01ZO",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251230190502340967",
     "reservationCount": 3,
     "reservations": [
       {
@@ -10832,24 +10849,24 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "other",
     "longitude": 126.86805669034565,
     "latitude": 37.51834828002767,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1788244052149SVQH2A8O8AVGJWV3GMZ4UM0T4",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260901152413294531",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17882458934931EXLQRTTAUNXFNH2PQ18D0FKJ",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260901154745705247",
     "reservationCount": 2,
     "reservations": [
       {
-        "serviceId": "S260901152413294531",
-        "title": "양천공원 키지트 온라인 사전예약 (0922~0927)",
-        "statusText": "접수종료",
+        "serviceId": "S260907163330058301",
+        "title": "양천공원 키지트 온라인 사전예약 (1006-1011)",
+        "statusText": "안내중",
         "majorCategory": "공간시설",
         "category": "민원 등 기타",
         "paidType": "무료",
         "targetText": "성인, 어린이(8세 미만), 유아",
-        "receptionStartAt": "2026-09-15T09:00:00",
-        "receptionEndAt": "2026-09-20T18:00:00",
-        "useStartAt": "2026-09-15T00:00:00",
-        "useEndAt": "2026-09-27T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260901152413294531",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1788244052149SVQH2A8O8AVGJWV3GMZ4UM0T4",
+        "receptionStartAt": "2026-09-29T09:00:00",
+        "receptionEndAt": "2026-10-04T18:00:00",
+        "useStartAt": "2026-09-29T00:00:00",
+        "useEndAt": "2026-10-11T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260907163330058301",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1788766432720OANGS9H0W8RCW3FER6KEB2EO4",
         "telephone": "",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용*키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n- (아이 2명당 1명의 보호자가 입장하셔야 합니다)\r\n* 예약 시, 보호자 포함한 인원수로 예약 해주시면 됩니다\r\n- (예. 보호자 1명과 아이 1명이 입장 시 2명으로 예약)\r\n\r\n* 키지트 운영정보 : 매주 화요일 ~ 일요일\r\n 09시 - 18시\r\n 월요일과 국가 공휴일은 운영 되지 않습니다.\r\n\r\n* 키지트 운영시간 *\r\n1) 09 : 30 ~ 11 : 30\r\n2) 13 : 00 ~ 15 : 00\r\n3) 15 : 30 ~ 17 : 30\r\n\r\n 해당 시간에만 키지트 사용이 가능하며 그 외 시간은 키지트 청소 중입니다. *\r\n! 예약 전, 꼭 키지트 운영시간 확인을 부탁드립니다 !4. 주의사항* 키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n* 키지트는 9세 까지 (만 8세, 초등학교 2학년 이하) 까지 참여가 가능합니다."
       },
@@ -11198,8 +11215,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "hall",
     "longitude": null,
     "latitude": null,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1776335113654YO3XN3MHQ7D8W1KE6LRPXNSEQ",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260416124649907466",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1782289728984OZYXIKMU3KQHORUUMYC42HPOX",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260623151848569470",
     "reservationCount": 5,
     "reservations": [
       {
@@ -12163,7 +12180,7 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료(요금안내문의)",
         "targetText": "제한없음",
         "receptionStartAt": "2026-01-05T00:00:00",
-        "receptionEndAt": "2026-11-07T00:00:00",
+        "receptionEndAt": "2026-11-14T00:00:00",
         "useStartAt": "2026-01-01T00:00:00",
         "useEndAt": "2026-12-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S220610101207535228",
@@ -13535,7 +13552,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260521131235766157",
         "title": "[수시접수] 2026년 하반기 아뜨리애 갤러리 전시공간 대관 (6월~12월)",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "전시실",
         "paidType": "무료",

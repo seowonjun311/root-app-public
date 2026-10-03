@@ -46,10 +46,10 @@ export type SeoulSpaceFacility = {
 };
 
 export const SEOUL_SPACE_RESERVATION_COUNT =
-  528;
+  529;
 
 export const SEOUL_SPACE_FACILITY_COUNT =
-  295;
+  296;
 
 export const SEOUL_SPACE_FACILITIES:
   readonly SeoulSpaceFacility[] =
@@ -3037,6 +3037,42 @@ export const SEOUL_SPACE_FACILITIES:
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1767578395318T54O7NLKDDIDN61M1OW0X0RAN",
         "telephone": "",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n★ 인터넷 예약 방문시같은 건물 1층 카운터에서\r\n  대관신청서 및 보안서약서를 각 1부 작성 부탁드립니다.\r\n\r\n-운영 시간: 평일 10:00 ~ 17:00(야간 및 주말의 경우 사전문의 필수)\r\n※ 예약 승인 이후 공간 이용이 가능하오니 승인 여부를먼저 확인하시기 바랍니다.\r\n\r\n\r\n\r\n\r\n\r\n \r\n\r\n❍ 시설 개요\r\n\r\n \r\n\r\n- 위 치 : 모아래마을활력소 1층 모임방1\r\n\r\n \r\n\r\n- 면 적 : 31.25㎡\r\n\r\n \r\n\r\n- 수용인원 : 24명\r\n\r\n\r\n \r\n\r\n\r\n\r\n❍ 개방 시간\r\n\r\n \r\n\r\n- 평일 10:00~17:00 / 토,일,공휴일 탄력적 운영\r\n\r\n \r\n\r\n※ 단, 먼저 예약된 행사(직능단체등)가 있을 경우 사용 불가, 예약전 확인 요망\r\n\r\n\r\n \r\n\r\n❍ 사용료\r\n\r\n \r\n\r\n- 무료\r\n\r\n\r\n \r\n\r\n❍ 이용 가능 행사\r\n\r\n \r\n\r\n- 모임, 회의, 강연, 교육 등\r\n\r\n\r\n \r\n\r\n❍ 사용 자격\r\n\r\n \r\n\r\n- 구로구에 주민등록이 되어 있는 개인 및 주소지가 되어 있는 단체\r\n\r\n \r\n\r\n- 구로구에 주소지를 두고 있는 직장학교 등에 재직 또는 재학 중인 자\r\n\r\n \r\n\r\n※ 사용당일 자격서류 확인(주민등록지, 사업장소재지, 재학여부 등)\r\n\r\n \r\n\r\n❍ 예약신청\r\n\r\n \r\n\r\n- 사용(예정)일로부터 7일전까지\r\n\r\n \r\n\r\n❍ 이용허가 : 심사(사용목적 등 제한사항 검토)\r\n\r\n  \r\n\r\n※ 이용당일 서약서 제출 후 이용\r\n\r\n \r\n\r\n❍ 예약 취소\r\n\r\n \r\n\r\n- 취소기간 : 사용(예정)일로부터 3일전까지\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n \r\n\r\n\r\n\r\n\r\n\r\n\r\n4. 주의사항\r\n❍ 사용허가 제외 및 취소대상\r\n\r\n \r\n\r\n \r\n\r\n- 시설 및 설비 등을 훼손할 우려가 있는 행사\r\n \r\n\r\n \r\n\r\n- 정치적인 행위 또는 종교 활동을 목적으로 하는 경우\r\n\r\n \r\n\r\n- 영리를 목적으로 하는 경우 \r\n\r\n \r\n\r\n- 기타 공공질서와 선량한 풍속을 해할 우려가 있다고 인정되는 경우 \r\n\r\n \r\n\r\n- 사용 목적을 위반하는 경우 \r\n\r\n \r\n\r\n- 다른 시민의 안전유지를 위해 사용을 제한할 필요가 있다고 인정할 경우\r\n\r\n \r\n\r\n \r\n\r\n❍  행위의 제한 \r\n\r\n \r\n\r\n- 흡연, 음주 또는 취식 행위 \r\n\r\n \r\n\r\n- 관리자의 허가 없는 촬영 행위 \r\n\r\n \r\n\r\n- 고성 및 난무 등 다른 시민에게 지장을 주는 행위  \r\n\r\n\r\n \r\n\r\n❍ 선정방법 :심사(사용목적 등 제한사항 검토) \r\n\r\n \r\n\r\n- 개인과 개인 경합시 : 선착순 \r\n\r\n \r\n\r\n- 개인과 단체 경합시 : 단체 우선 \r\n\r\n \r\n\r\n- 단체와 단체 경합시 : 선착순\r\n\r\n-  현장접수와 인터넷 예약 경합시 : 선착순\r\n\r\n \r\n\r\n\r\n\r\n \r\n\r\n❍ 기타 주의사항\r\n\r\n \r\n\r\n- 개방공간에 대하여 선량한 관리자로서의 주의의무를 다한다. \r\n\r\n \r\n\r\n(시설 파손행위, 음식물 반입, 취사 ․ 음주행위, 쓰레기 무단투기 금지) \r\n\r\n \r\n\r\n- 개방공간 사용시 정숙을 유지하며, 지나친 소음을 유발하지 아니한다.\r\n\r\n \r\n\r\n(고함, 고성방가 등 금지) \r\n\r\n \r\n\r\n- 설비 부착시 사전허가를 받으며, 사용시간 종료와 동시에 원상복구한다. \r\n\r\n \r\n\r\n- 사용기간 중 시설 또는 설비를 훼손하였을 때는 즉시 원상복구 또는 변상한다. \r\n\r\n- 애완동물과 동반하여 출입을 하지 아니한다. (목줄 착용 및 케이지 안에 있는 경우에도 입장 불가)\r\n\r\n \r\n\r\n- 기타 시설 관계자의 안내사항을 준수한다."
+      }
+    ]
+  },
+  {
+    "id": "seoul-space-deff658c",
+    "name": "서울아트책보고",
+    "fullPlaceName": "서울아트책보고",
+    "district": "구로구",
+    "locationLabel": "서울 구로구",
+    "primaryCategory": "강의실",
+    "categoryNames": [
+      "강의실"
+    ],
+    "spaceKind": "lectureRoom",
+    "longitude": 126.86727086827104,
+    "latitude": 37.49826975985675,
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1790992975470UYSUWV2ZIFF3TMVW5DTBPOY4T",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S261003105757299142",
+    "reservationCount": 1,
+    "reservations": [
+      {
+        "serviceId": "S261003105757299142",
+        "title": "[서울아트책보고 워크숍룸] 10월 공간 지원",
+        "statusText": "접수중",
+        "majorCategory": "공간시설",
+        "category": "강의실",
+        "paidType": "무료",
+        "targetText": "제한없음",
+        "receptionStartAt": "2026-10-03T00:00:00",
+        "receptionEndAt": "2026-10-28T23:00:00",
+        "useStartAt": "2026-10-03T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S261003105757299142",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1790992975470UYSUWV2ZIFF3TMVW5DTBPOY4T",
+        "telephone": "02-2066-4830",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n서울아트책보고 홈페이지를 통해 신청 가능합니다.\r\n자세한 사항은 서울아트책보고 공지사항을 확인해주세요.\r\n\r\n공지사항 바로가기(클릭)\r\n\r\n\r\n\r\n서울아트책보고 워크숍룸 공간을 빌려드립니다.\r\n\r\n10월 중 워크숍룸 이용을 희망하는 단체에게 공간을 빌려드립니다.\r\n다음의 이용 가능 날짜를 확인 후 이용 신청서를 작성하여 제출하시면 검토 후 배정해 드립니다.\r\n\r\n이용희망일 3일 전까지 신청서를 제출해 주셔야 검토가 가능합니다.\r\n\r\n\r\n\r\n신청 제한\r\n- 서울아트책보고 사용자에게 방해가 되거나 시설 운영에 지장을 줄 우려가 있는 행사\r\n- 공공질서유지 및 미풍양속을 해칠 우려가 있는 행사\r\n- 정치적 목적 및 종교 단체의 행사\r\n- 과외수업, 특정 제품 홍보 및 판매 등 영리를 목적으로 하는 행사\r\n- 수익이 발생하는 유료 프로그램 및 강좌\r\n- 서울아트책보고 운영 방향 및 부합 여부 등을 검토 후 적합하지 않다고 판단되는 행사\r\n- 그 밖에 사용자 준수사항을 위반하거나 공익상 사용을 제한할 필요가 있다고 인정되는 경우\r\n\r\n지원 기준\r\n- 기본 2시간(준비와 정리시간 포함)\r\n- 테이블 15개, 의자 30개\r\n- 프로젝터 이용 가능(프로젝터 이용 시 HDMI케이블 연결 가능한 노트북 지참 필수)\r\n- 마이크 2대 사용 가능(유선1, 무선1)\r\n- 외부 음식 반입 금지 / 북카페 음료만 반입 가능\r\n- 포스터, 배너 등 홍보물 설치 불가\r\n- 이용 후 책상, 의자 및 쓰레기 정리 필수※ 기물 파손 시 실비 청구\r\n- 제출한 신청서와 다른 용도로 사용 시 즉시 퇴실 조치\r\n\r\n시간기준\r\n(신청자 1팀 당 2시간만 신청 가능합니다. 연속 사용을 희망하는 경우 별도 문의바랍니다.)\r\n\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t구분\r\n\t\t\t이용 시간\r\n\t\t\r\n\t\r\n\t\r\n\t\t\r\n\t\t\t오전\r\n\t\t\t10:00~12:00\r\n\t\t\r\n\t\t\r\n\t\t\t오후 A\r\n\t\t\t13:30~15:30\r\n\t\t\r\n\t\t\r\n\t\t\t오후 B\r\n\t\t\t16:00~18:00\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n이용가능일\r\n(서울아트책보고 운영 상황에 따라 이용이 불가한 날이 생길 수 있습니다. 신청서 제출 후 꼭 확인을 부탁드립니다.)\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t일정\r\n\t\t\t이용 시간\r\n\t\t\r\n\t\t\r\n\t\t\t10월 6일\r\n\t\t\t오후 A\r\n\t\t\r\n\t\t\r\n\t\t\t10월 8일\r\n\t\t\t오전, 오후 A, 오후 B\r\n\t\t\r\n\t\t\r\n\t\t\t10월 9일\r\n\t\t\t오전, 오후 A, 오후 B\r\n\t\t\r\n\t\t\r\n\t\t\t10월 10일\r\n\t\t\t오전\r\n\t\t\r\n\t\t\r\n\t\t\t10월 11일\r\n\t\t\t오전, 오후 A, 오후 B\r\n\t\t\r\n\t\t\r\n\t\t\t10월 13일\r\n\t\t\t오후 A, 오후 B\r\n\t\t\r\n\t\t\r\n\t\t\t10월 16일\r\n\t\t\t오전 A, 오후 A, 오후 B\r\n\t\t\r\n\t\t\r\n\t\t\t10월 17일\r\n\t\t\t오전\r\n\t\t\r\n\t\t\r\n\t\t\t10월 18일\r\n\t\t\t오전, 오후 A, 오후 B\r\n\t\t\r\n\t\t\r\n\t\t\t10월 20일\r\n\t\t\t오후 A\r\n\t\t\r\n\t\t\r\n\t\t\t10월 21일\r\n\t\t\t오후 A, 오후 B\r\n\t\t\r\n\t\t\r\n\t\t\t10월 23일\r\n\t\t\t오전, 오후 A, 오후 B\r\n\t\t\r\n\t\t\r\n\t\t\t10월 24일\r\n\t\t\t오전, 오후 A, 오후 B\r\n\t\t\r\n\t\t\r\n\t\t\t10월 25일\r\n\t\t\t오전, 오후 A, 오후 B\r\n\t\t\r\n\t\t\r\n\t\t\t10월 27일\r\n\t\t\t오후 A, 오후 B\r\n\t\t\r\n\t\t\r\n\t\t\t10월 28일\r\n\t\t\t오후 A, 오후 B\r\n\t\t\r\n\t\t\r\n\t\t\t10월 29일\r\n\t\t\t오전\r\n\t\t\r\n\t\t\r\n\t\t\t10월 30일\r\n\t\t\t오전, 오후 A, 오후 B\r\n\t\t\r\n\t\t\r\n\t\t\t10월 31일\r\n\t\t\t오전\r\n\t\t\r\n\t\r\n\r\n\r\n4. 주의사항서울아트책보고 홈페이지 내 공지사항을 확인 후 신청서를 작성하여 제출하여주시기 바랍니다."
       }
     ]
   },
@@ -9221,7 +9257,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S250529213953796420",
         "title": "[서울청년센터성북] 4층 멀티룸",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "청년공간",
         "paidType": "무료",

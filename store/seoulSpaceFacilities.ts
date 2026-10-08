@@ -46,10 +46,10 @@ export type SeoulSpaceFacility = {
 };
 
 export const SEOUL_SPACE_RESERVATION_COUNT =
-  531;
+  532;
 
 export const SEOUL_SPACE_FACILITY_COUNT =
-  297;
+  298;
 
 export const SEOUL_SPACE_FACILITIES:
   readonly SeoulSpaceFacility[] =
@@ -637,8 +637,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 127.03609,
     "latitude": 37.62512,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17402023279296BZLQ5OWAJOLZU8OSGUG91QY0",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250222142900323973",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1755910260156MZHIELAZ1CSQFWAEDZS4KC790",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250225141423643424",
     "reservationCount": 6,
     "reservations": [
       {
@@ -3785,8 +3785,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 126.89929,
     "latitude": 37.47217,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1774051333310IM3AI1R8FFIP8NDKZW4MJXU8Y",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260105110923188618",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1774063783767XASI7EDMPP1MP7H5A9WCWJIHP",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260321122841167108",
     "reservationCount": 2,
     "reservations": [
       {
@@ -4521,8 +4521,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "lectureRoom",
     "longitude": 127.03565,
     "latitude": 37.64142,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1768971047437XLHUMVHPVQX3JE9IWXMSF6G8K",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260121134852607557",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1768960603810P6ZUVC0XB8TKNKA5RO5P9R7ZN",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250618140112905638",
     "reservationCount": 4,
     "reservations": [
       {
@@ -4840,7 +4840,7 @@ export const SEOUL_SPACE_FACILITIES:
         "useEndAt": "2026-12-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S210324144011126965",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=16165654840612L9LA2K8IUS8D4D38US9Y6Y1I",
-        "telephone": "02-2091-2213",
+        "telephone": "02-954-1223",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용-공간소개\r\nㆍ주민 참여형 재생사업을 통한 마을카페\r\n\r\n-공간현황\r\nㆍ운영시간: 월 ~ 일 10:00 ~ 21:00\r\nㆍ휴 무 일: 설날 및 추석 연휴\r\nㆍ연 락 처: 02-954-1223\r\n\r\n4. 주의사항○ 이용 가능 행사\r\n\r\n - 교육, 단체회의, 주민모임 등 주민공동체 활동\r\n\r\n○ 이용 제한 및 취소\r\n\r\n - 정치적인 행위를 목적으로 하는 경우\r\n\r\n- 종교활동을 목적으로 하는 경우\r\n\r\n - 영리를 목적으로 하는 경우\r\n\r\n - 기타 공공질서와 선량한 미풍양속을 해할 우려가 있다고 인정되는 경우\r\n\r\n - 사용목적을 위반하거나 사용료를 지정기일까지 납부하지 않는 경우\r\n\r\n - 기타 다른 시민의 안전 및 시설물 유지상 사용을 제한할 필요가 있다고 인정할 경우\r\n\r\n○ 주 차 장 : 없음\r\n\r\n**시설 운영현황에 따라대관 가능여부가 변동할 수 있으므로, 반드시 전화 또는 방문을 통하여 확인하여 주시기 바랍니다.**"
       }
     ]
@@ -7687,8 +7687,8 @@ export const SEOUL_SPACE_FACILITIES:
     "reservations": [
       {
         "serviceId": "S260209110654180176",
-        "title": "방배1동 주민센터 2층 소회의실",
-        "statusText": "접수중",
+        "title": "방배1동 주민센터 2층 소회의실 (도서관 리모델링으로 예약 일시 중지)",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "회의실",
         "paidType": "유료",
@@ -7700,7 +7700,7 @@ export const SEOUL_SPACE_FACILITIES:
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260209110654180176",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17706029184872AG7SN83FI56CY0KBDN5359P5",
         "telephone": "02-2155-7744",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n\r\n\r\n○ 위 치: 서울특별시 서초구 효령로29길 43 방배1동 주민센터 2층 작은도서관 내 회의실\r\n○수용인원: 20명\r\n○ 이용면적: 31.2㎡\r\n○사 용 료: 10,000원(2시간)\r\n- 1시간 초과시마다 기준시간(2시간) 금액을 50%가산 (단 사용시간 1시간 이하는 1시간으로 계산)\r\n- 장비 설치 및 준비,마무리 시간도 사용 시간에 포함\r\n○ 이용가능시간:(평일)월,금 14:00~18:00\r\n○ 이용가능행사: 동아리행사, 교육, 주민모임 등 주민공동체 활용\r\n○ 이용절차\r\n-예약접수 : 이용예정일 3일전까지(온라인/방문 예약)\r\n- 이용허가 : 신청일로부터 3일\r\n- 사용료 납부 : 허가를 받은 날로부터 2일 이내\r\n- 신청서, 서약서 제출 후 이용\r\n○ 선정방법: 심사(사용목적 등 제한사항 검토)\r\n※ 동일 공간 신청 경합 시 우선이용 선정\r\n- 개인과 개인 경합 시 : 방배1동에 주민등록이 되어있는 사람\r\n- 개인과 단체 경합 시 : 단체\r\n- 단체와 단체 경합 시 : 자원봉사, 평생학습 등 지역사회 발전에 기여한 단체\r\n\r\n○ 이용제한 및 취소\r\n-정치적인 행위를 목적으로 하는 경우\r\n-종교 활동을 목적으로 하는 경우\r\n-영리를 목적으로 하는 경우\r\n-기타 공공질서와 선량한 미풍양속을 해할 우려가 있다고 인정되는 경우\r\n-사용목적을 위반하는 경우\r\n-다른 시민의 안전 및 시설물 유지상 사용을 제한할 필요가 있다고 인정될 경우\r\n-소음으로 인해 민원이 야기될 우려가 있는 경우\r\n\r\n○ 사용자격\r\n- 서초구 관내에 주민등록이 되어있는 개인 및 주소지가 되어있는 단체\r\n-서초구 관내에 주소지를 두고 있는 직장학교 등에 재직 또는 재학 중인 자\r\n* 사용 당일 자격서류 확인(주민등록지, 사업장소재지, 재학여부 등)\r\n\r\n○ 교통수단\r\n◦ 지하철\r\n- 방배역 하차(2호선) : 3번출구-국민은행골목-아크로타워-방배1동주민센터(5분소요)\r\n- 내방역 하차(7호선) : 3번출구-국민은행골목-아크로타워-방배1동주민센터(10분소요)\r\n\r\n※ 문의처 : 방배1동 주민센터 (02-2155-7744,7738)\r\n\r\n\r\n\r\n   \r\n4. 주의사항\r\n\r\n\r\n 주의사항\r\n\r\n- 취소 시 3일 전 전화 또는 방문 바랍니다.\r\n\r\n- 모든 대관은 준비 및 정리시간을 포함한 시간입니다.\r\n\r\n-사용완료 후 최초 상태로 정리해주시고,소등 및 전자제품 전원확인을 꼭 해주시기 바랍니다.\r\n\r\n-작은도서관 내에 있는 강의실이므로 조용히 이용해주시기 바랍니다.\r\n\r\n- 소음민원이 발생할 경우, 즉시 퇴실처리하겠습니다. 이점, 양해해주시기 바랍니다.\r\n\r\n- 미취학아동 및 초등학생은 유휴공간 이용 시 반드시 보호자를 동반해야 합니다.\r\n\r\n 사용료 반환기준 : 사용일 3일 전까지 전액, 2일 전 90%, 전일 80%, 사용일 당일에는 반환하지 않음"
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n\r\n\r\n[대관 일시 중지 안내]\r\n방배1동 작은도서관 리모델링 공사로 인해 공간대여가 일시적으로 불가합니다.\r\n양해 부탁드립니다.\r\n\r\n\r\n\r\n○ 위 치: 서울특별시 서초구 효령로29길 43 방배1동 주민센터 2층 작은도서관 내 회의실\r\n○수용인원: 20명\r\n○ 이용면적: 31.2㎡\r\n○사 용 료: 10,000원(2시간)\r\n- 1시간 초과시마다 기준시간(2시간) 금액을 50%가산 (단 사용시간 1시간 이하는 1시간으로 계산)\r\n- 장비 설치 및 준비,마무리 시간도 사용 시간에 포함\r\n○ 이용가능시간:(평일)월,금 14:00~18:00\r\n○ 이용가능행사: 동아리행사, 교육, 주민모임 등 주민공동체 활용\r\n○ 이용절차\r\n-예약접수 : 이용예정일 3일전까지(온라인/방문 예약)\r\n- 이용허가 : 신청일로부터 3일\r\n- 사용료 납부 : 허가를 받은 날로부터 2일 이내\r\n- 신청서, 서약서 제출 후 이용\r\n○ 선정방법: 심사(사용목적 등 제한사항 검토)\r\n※ 동일 공간 신청 경합 시 우선이용 선정\r\n- 개인과 개인 경합 시 : 방배1동에 주민등록이 되어있는 사람\r\n- 개인과 단체 경합 시 : 단체\r\n- 단체와 단체 경합 시 : 자원봉사, 평생학습 등 지역사회 발전에 기여한 단체\r\n\r\n○ 이용제한 및 취소\r\n-정치적인 행위를 목적으로 하는 경우\r\n-종교 활동을 목적으로 하는 경우\r\n-영리를 목적으로 하는 경우\r\n-기타 공공질서와 선량한 미풍양속을 해할 우려가 있다고 인정되는 경우\r\n-사용목적을 위반하는 경우\r\n-다른 시민의 안전 및 시설물 유지상 사용을 제한할 필요가 있다고 인정될 경우\r\n-소음으로 인해 민원이 야기될 우려가 있는 경우\r\n\r\n○ 사용자격\r\n- 서초구 관내에 주민등록이 되어있는 개인 및 주소지가 되어있는 단체\r\n-서초구 관내에 주소지를 두고 있는 직장학교 등에 재직 또는 재학 중인 자\r\n* 사용 당일 자격서류 확인(주민등록지, 사업장소재지, 재학여부 등)\r\n\r\n○ 교통수단\r\n◦ 지하철\r\n- 방배역 하차(2호선) : 3번출구-국민은행골목-아크로타워-방배1동주민센터(5분소요)\r\n- 내방역 하차(7호선) : 3번출구-국민은행골목-아크로타워-방배1동주민센터(10분소요)\r\n\r\n※ 문의처 : 방배1동 주민센터 (02-2155-7744,7738)\r\n\r\n\r\n\r\n   \r\n4. 주의사항\r\n\r\n\r\n 주의사항\r\n\r\n- 취소 시 3일 전 전화 또는 방문 바랍니다.\r\n\r\n- 모든 대관은 준비 및 정리시간을 포함한 시간입니다.\r\n\r\n-사용완료 후 최초 상태로 정리해주시고,소등 및 전자제품 전원확인을 꼭 해주시기 바랍니다.\r\n\r\n-작은도서관 내에 있는 강의실이므로 조용히 이용해주시기 바랍니다.\r\n\r\n- 소음민원이 발생할 경우, 즉시 퇴실처리하겠습니다. 이점, 양해해주시기 바랍니다.\r\n\r\n- 미취학아동 및 초등학생은 유휴공간 이용 시 반드시 보호자를 동반해야 합니다.\r\n\r\n 사용료 반환기준 : 사용일 3일 전까지 전액, 2일 전 90%, 전일 80%, 사용일 당일에는 반환하지 않음"
       }
     ]
   },
@@ -10516,8 +10516,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "hall",
     "longitude": 126.85479077037304,
     "latitude": 37.51514742485221,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1767089635811CENYCRKG33DSHJ65JCXIWITO7",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251230191337674970",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1767090683599EXWE9Y2JXF6Z0JUCF7XT7BZNU",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251230193108105608",
     "reservationCount": 2,
     "reservations": [
       {
@@ -10978,8 +10978,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "hall",
     "longitude": null,
     "latitude": null,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1776335113654YO3XN3MHQ7D8W1KE6LRPXNSEQ",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260416124649907466",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17766486627787U7Q5SP1CNFI5BDKTAPZKVPPV",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260420101329008209",
     "reservationCount": 5,
     "reservations": [
       {
@@ -11546,8 +11546,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "multipurpose",
     "longitude": 126.96935,
     "latitude": 37.54134,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706509980380LX6ZAN6GL4H31ONX5TFNVL44X",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240129152832507143",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17067696277485GZWM7H2FSML890Q32YTYEUPH",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240201153828421138",
     "reservationCount": 8,
     "reservations": [
       {
@@ -14165,6 +14165,42 @@ export const SEOUL_SPACE_FACILITIES:
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1710204692220T5WCAMF87D80CECQDDF0A9Y36",
         "telephone": "02-2094-6056",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용○ 시설개요\r\n- 위 치 : 서울시 중랑구 동일로101길 20-15 (면목동)\r\n- 면 적 : 약95㎡\r\n- 수용인원 : 50명\r\n○ 이용료 : 5,000원/1시간 기준\r\n - 단체, 개인별 1일 최소 1시간부터 최대 3시간까지 이용 가능\r\n - 이용허가일로부터 2일 이내 이용료를 납부하지 않는 경우, 허가 취소 가능\r\n○ 이용가능시간 : 전화문의\r\n○ 접 수 : 전화 및 방문 접수만 가능합니다.\r\n○ 이용료 반환\r\n - 천재지변 등 불가항력의 사유로 인하여 이용이 취소된 경우 전액 반환\r\n - 시설의 귀책사유로 인하여 이용이 취소된 경우 전액 반환\r\n - 본인 취소시 : 사용일 2일전 사용료의 90%,\r\n 1일전 사용료의 80%(사용취소일로부터 7일 이내 반환)\r\n○ 사용자격\r\n - 서울시에 주민등록이 되어있는 개인 및 주소지가 되어있는 단체\r\n - 서울시에 주소지를 두고 있는 직장, 학교 등에 재직 또는 재학 중인 자\r\n * 사용당일 자격서류 확인(주민등록지, 사업장소재지, 재학여부 등)\r\n * 주차공간이 많이 부족하오니 가능한 대중교통을 이용해 주시기 바랍니다.\r\n○ 이용 가능 행사 : 토론회, 교육, 주민모임 등 주민공동체 활동\r\n○ 선정방법 : 심사(사용목적 등 제한사항 검토)\r\n- 개인과 개인 경합시 : 선착순\r\n- 개인과 단체 경합시 : 단체 우선\r\n- 단체와 단체 경합시 : 선착순\r\n○ 이용제한 및 취소\r\n- 정치적인 행위를 목적으로 하는 경우\r\n- 종교활동을 목적으로 하는 경우\r\n- 영리를 목적으로 하는 경우\r\n- 기타 공공질서와 선량한 미풍양속을 해할 우려가 있다고 인정되는 경우\r\n- 사용목적을 위반하거나 사용료를 지정기일까지 납부하지 않는 경우\r\n- 기타 다른 시민의 안전 및 시설물 유지상 사용을 제한할 필요가 있다고 인정할 경우\r\n○ 문의 : 02-2094-60564. 주의사항"
+      }
+    ]
+  },
+  {
+    "id": "seoul-space-4ac0048b",
+    "name": "면목4동자치회관",
+    "fullPlaceName": "면목4동자치회관",
+    "district": "중랑구",
+    "locationLabel": "서울 중랑구",
+    "primaryCategory": "회의실",
+    "categoryNames": [
+      "회의실"
+    ],
+    "spaceKind": "meetingRoom",
+    "longitude": 127.08560824216559,
+    "latitude": 37.57470042496719,
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1791450419814OZB0UKIXI2QQSUZ2E0SDKGAQ6",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S261008174926045310",
+    "reservationCount": 1,
+    "reservations": [
+      {
+        "serviceId": "S261008174926045310",
+        "title": "중랑구 면목4동 자치회관 회의실 2층 다목적실",
+        "statusText": "접수중",
+        "majorCategory": "공간시설",
+        "category": "회의실",
+        "paidType": "유료(요금안내문의)",
+        "targetText": "제한없음",
+        "receptionStartAt": "2026-10-08T09:00:00",
+        "receptionEndAt": "2026-12-31T18:00:00",
+        "useStartAt": "2026-10-08T00:00:00",
+        "useEndAt": "2026-12-31T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S261008174926045310",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1791450419814OZB0UKIXI2QQSUZ2E0SDKGAQ6",
+        "telephone": "02-2094-6139",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용필수 준수사항\r\n모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.\r\n각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.\r\n각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.\r\n시설이용료 납부는 각 관리기관에서 규정에 준합니다.\r\n본 사이트와 각 관리기관의 규정을 위반할 시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.\r\n접수 시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.\r\n\r\n시설예약\r\n비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.\r\n\r\n상세내용\r\n○ 시설 개요\r\n\r\n- 위 치 : 서울시 중랑구 면목로 246(면목동)\r\n- 면 적 : 회의실 105.8㎡,\r\n- 수용인원 : 20명\r\n\r\n\r\n○ 이용가능시간 : 월~금 9:00~18:00(자치회관 프로그램 운영시간 제외)\r\n\r\n※ 준비 및 마무리 시간 포함하여 1단체당 1일 3시간 이내 제한\r\n\r\n○ 이용 가능 행사\r\n- 토론회, 동아리행사, 교육, 주민모임 등 주민공동체 활동\r\n\r\n○ 이용절차\r\n- 예약접수 : 이용예정일 5일전까지\r\n- 이용허가 : 신청일로부터 3일 이내\r\n- 이용료 납부 : 허가일로부터 2일 이내\r\n- 시설 이용 : 접수당일 서약서 제출 후 이용\r\n\r\n○ 심사 및 이용허가 : 신청일로부터 3일 이내 SMS 통보\r\n\r\n○ 선정방법 : 심사(사용목적 등 제한사항 검토)\r\n- 개인과 개인 경합시 : 선착순\r\n- 개인과 단체 경합시 : 단체 우선\r\n- 단체와 단체 경합시 : 선착순\r\n\r\n○ 이용 제한 및 취소\r\n- 정치적인 행위를 목적으로 하는 경우\r\n- 종교활동을 목적으로 하는 경우\r\n- 영리를 목적으로 하는 경우\r\n- 기타 공공질서와 선량한 미풍양속을 해할 우려가 있다고 인정되는 경우\r\n- 사용목적을 위반하거나 사용료를 지정기일까지 납부하지 않는 경우\r\n- 기타 다른 시민의 안전 및 시설물 유지상 사용을 제한할 필요가 있다고 인정할 경우\r\n\r\n○ 이용료 : 1회(3시간 기준) 만원(고지서 납부)\r\n- 1단체당 1회 제한\r\n\r\n○ 이용료 반환 (제1항과 제2항의 경우 관련 법령에 따른 이자액을 가산하여 반환)\r\n- 천재지변 등 불가항력의 사유로 인하여 이용이 취소된 경우 전액 반환\r\n- 시설의 귀책사유로 인하여 이용이 취소된 경우 전액 반환\r\n\r\n○ 사용자격\r\n- 시에 주민등록이 되어있는 개인 및 주소지가 되어있는 단체\r\n- 시에 주소지를 두고 있는 직장학교 등에 재직 또는 재학 중인 자\r\n※ 사용당일 자격서류 확인(주민등록지, 사업장소재지, 재학여부 등)\r\n\r\n○ 교통편\r\n지하철이용 : 지하철 7호선 용마산역에서 하차하신 후 1번 출구로 나오셔서 면목4동 주민센터로 오시면 됩니다.\r\n\r\n\r\n○ 주 차 장 : 면목4동 주민센터 지상(무료)\r\n※ 주차공간이 많이 부족하오니 대중교통을 이용해 주시기 바랍니다.\r\n\r\n○ 문의처 : 김유정(02-2094-6139)\r\n\r\n\r\n\r\n\r\n\r\n4. 주의사항주의사항\r\n○ 이용 제한 및 취소사유\r\n- 정치적인 행위를 목적으로 하는 경우\r\n- 종교활동을 목적으로 하는 경우\r\n- 영리를 목적으로 하는 경우\r\n- 기타 공공질서와 선량한 미풍양속을 해할 우려가 있다고 인정되는 경우\r\n- 사용목적을 위반하거나 사용료를 지정기일까지 납부하지 않는 경우\r\n- 기타 다른 시민의 안전 및 시설물 유지상 사용을 제한할 필요가 있다고 인정할 경"
       }
     ]
   },

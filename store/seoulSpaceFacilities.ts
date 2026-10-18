@@ -637,8 +637,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 127.03609,
     "latitude": 37.62512,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17402023279296BZLQ5OWAJOLZU8OSGUG91QY0",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250222142900323973",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1755910260156MZHIELAZ1CSQFWAEDZS4KC790",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250225141423643424",
     "reservationCount": 6,
     "reservations": [
       {
@@ -4001,8 +4001,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 127.0603153174388,
     "latitude": 37.65381413048446,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1766128825411G244NL3HJWFTIUDW55WDLNU8N",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S221021151144642859",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1666335053893EG7RBBCFHXGGYTS9HR0T65EJ0",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S220722144143250673",
     "reservationCount": 3,
     "reservations": [
       {
@@ -6912,7 +6912,7 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "other",
     "longitude": null,
     "latitude": null,
-    "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540028/20210310/1615306958094G1GA5PIEMY41YT48VJNQW4LRM.jpg",
+    "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540028/20210310/1615306942991NXZLBXJ4ABFCLL5KATPIIWASB.jpg",
     "officialUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do#rest9",
     "reservationCount": 2,
     "reservations": [
@@ -9327,6 +9327,23 @@ export const SEOUL_SPACE_FACILITIES:
     "reservationCount": 2,
     "reservations": [
       {
+        "serviceId": "S260913105938574391",
+        "title": "문화실험공간 호수 [10월 우리끼리 식당] 송파구 석촌호수 문화실험공간 호수",
+        "statusText": "접수중",
+        "majorCategory": "공간시설",
+        "category": "주민공유공간",
+        "paidType": "유료",
+        "targetText": "제한없음",
+        "receptionStartAt": "2026-09-18T11:00:00",
+        "receptionEndAt": "2026-10-30T00:01:00",
+        "useStartAt": "2026-09-18T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260913105938574391",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1789264944494VS3RZY0MPQXMOM7E9UQLUPMXB",
+        "telephone": "02-3431-9784",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n프 라 이 빗쿠 킹스 튜 디오\r\n\r\n우리끼리 식당\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n2026년 10월우리끼리 식당은 화/목/금오픈됩니다.\r\n\r\n※ 예약 보증금 10,000원이 발생합니다. 노쇼 방지 금액으로, 이용 후 환불 가능합니다.\r\n\r\n예약 신청 시 이용인원을 1명으로 설정해 주셔야 보증금이 10,000원으로 책정됩니다.\r\n실제 방문 인원은 방문인원 란에 기입해 주시면 감사하겠습니다.\r\n\r\n운영 시간: 화, 목, 금\r\n\r\n오전11:00-14:00/오후14:30-17:30\r\n※ 10월 6일 (화) ~ 10월 9일 (금) 내부 공간 재정비 및 공휴일로 운영하지 않습니다. 신청에 유의 바랍니다.\r\n\r\n\r\n\r\n\r\n\r\n운영 장소\r\n\r\n송파구 문화실험공간 호수 3층 쿠킹스튜디오\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n보유장비\r\n\r\n\r\n\r\n시설\r\n\r\n3개의 키친 스테이션\r\n\r\n\r\n\r\n\r\n키친툴\r\n\r\n\r\n​냄비, 코팅 웍, 프라이팬, 믹싱볼, 채반,\r\n\r\n\r\n샐러드 스피너, 무선 전기포트, 전기밥솥 외 키친툴\r\n\r\n\r\n\r\n\r\n식기류\r\n\r\n\r\n공기, 찬기, 접시, 화이트접시, 파스타볼, 그라탕기, 캐서롤, 소스볼, 컵, 커피잔 등\r\n\r\n\r\n\r\n\r\n조미료\r\n\r\n\r\n개인 준비 필요\r\n\r\n\r\n\r\n*공간 사정상, 운영 불가한 일정 제외\r\n\r\n\r\n\r\n\r\n\r\n\r\n4. 주의사항1.8인이내 그룹신청만 가능합니다.\r\n\r\n\r\n2. 예약은 선착순으로 진행 되며, 한달에 최대 한번 이용이 가능합니다.\r\n\r\n\r\n3. 프로그램은 3시간 이내에 청소를 포함한 모든 이용이 마무리 되어야 합니다.\r\n\r\n\r\n4. 직원의 안내에 따라 이용수칙을 준수하여야 합니다.\r\n\r\n\r\n5. 시설 및 장비 파손 시 배상이 요구될 수 있습니다.\r\n\r\n\r\n6. 종교, 상업 목적 및 개인 강의용도로는 이용불가합니다.\r\n\r\n\r\n7.주류 반입은 불가합니다. (주류 섭취시 3개월간 이용이 불가합니다.)\r\n\r\n\r\n8. 환기 문제로 특정 메뉴에 제한이 있을 수 있습니다.\r\n\r\n\r\n9. 예약시간 후 30분 경과시 노쇼(NO-SHOW)로 처리되며 당일 취소는 향후 이용이 제한 될 수 있습니다.\r\n\r\n\r\n10. 개인 정보 제공에 동의하지 않으실 경우 이용이 어려우실 수 있습니다.\r\n\r\n\r\n11. ​ 날짜 시간이 중복될 경우나 공간 사정상 이용이 불가 할 경우 다른 날짜로 변동 또는 예약이 취소 될 수 있습니다.\r\n\r\n12. 만 18세 이하는 보호자 동반 없이 참여 불가합니다.\r\n\r\n13.주차 시, 석촌호수 서호 1 공영 주차장(유료: 시간당 6,000원) 이용 가능합니다."
+      },
+      {
         "serviceId": "S261016112036432157",
         "title": "문화실험공간 호수 [11월 우리끼리 식당] 송파구 석촌호수 문화실험공간 호수",
         "statusText": "접수중",
@@ -9342,23 +9359,6 @@ export const SEOUL_SPACE_FACILITIES:
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1792117523724SPJS8XPUWAVKVTMMY8HK7W5CY",
         "telephone": "02-3431-9784",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n프 라 이 빗쿠 킹스 튜 디오\r\n\r\n우리끼리 식당\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n2026년 11월우리끼리 식당은 화/목/금오픈됩니다.\r\n\r\n※ 예약 보증금 10,000원이 발생합니다. 노쇼 방지 금액으로, 이용 후 환불 가능합니다.\r\n\r\n예약 신청 시 이용인원을 1명으로 설정해 주셔야 보증금이 10,000원으로 책정됩니다.\r\n실제 방문 인원은 방문인원 란에 기입해 주시면 감사하겠습니다.\r\n\r\n운영 시간: 화, 목, 금\r\n\r\n오전11:00-14:00/오후14:30-17:30\r\n※ 11월 3일 (화) 내부 사정으로 운영하지 않습니다. 신청에 유의 바랍니다.\r\n\r\n\r\n\r\n\r\n\r\n운영 장소\r\n\r\n송파구 문화실험공간 호수 3층 쿠킹스튜디오\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n보유장비\r\n\r\n\r\n\r\n시설\r\n\r\n3개의 키친 스테이션\r\n\r\n\r\n\r\n\r\n키친툴\r\n\r\n\r\n​냄비, 코팅 웍, 프라이팬, 믹싱볼, 채반,\r\n\r\n\r\n샐러드 스피너, 무선 전기포트, 전기밥솥 외 키친툴\r\n\r\n\r\n\r\n\r\n식기류\r\n\r\n\r\n공기, 찬기, 접시, 화이트접시, 파스타볼, 그라탕기, 캐서롤, 소스볼, 컵, 커피잔 등\r\n\r\n\r\n\r\n\r\n조미료\r\n\r\n\r\n개인 준비 필요\r\n\r\n\r\n\r\n*공간 사정상, 운영 불가한 일정 제외\r\n\r\n\r\n\r\n\r\n\r\n\r\n4. 주의사항1.8인이내 그룹신청만 가능합니다.\r\n\r\n\r\n2. 예약은 선착순으로 진행 되며, 한달에 최대 한번 이용이 가능합니다.\r\n\r\n\r\n3. 프로그램은 3시간 이내에 청소를 포함한 모든 이용이 마무리 되어야 합니다.\r\n\r\n\r\n4. 직원의 안내에 따라 이용수칙을 준수하여야 합니다.\r\n\r\n\r\n5. 시설 및 장비 파손 시 배상이 요구될 수 있습니다.\r\n\r\n\r\n6. 종교, 상업 목적 및 개인 강의용도로는 이용불가합니다.\r\n\r\n\r\n7.주류 반입은 불가합니다. (주류 섭취시 3개월간 이용이 불가합니다.)\r\n\r\n\r\n8. 환기 문제로 특정 메뉴에 제한이 있을 수 있습니다.\r\n\r\n\r\n9. 예약시간 후 30분 경과시 노쇼(NO-SHOW)로 처리되며 당일 취소는 향후 이용이 제한 될 수 있습니다.\r\n\r\n\r\n10. 개인 정보 제공에 동의하지 않으실 경우 이용이 어려우실 수 있습니다.\r\n\r\n\r\n11. ​ 날짜 시간이 중복될 경우나 공간 사정상 이용이 불가 할 경우 다른 날짜로 변동 또는 예약이 취소 될 수 있습니다.\r\n\r\n12. 만 18세 이하는 보호자 동반 없이 참여 불가합니다.\r\n\r\n13.주차 시, 석촌호수 서호 1 공영 주차장(유료: 시간당 6,000원) 이용 가능합니다."
-      },
-      {
-        "serviceId": "S260913105938574391",
-        "title": "문화실험공간 호수 [10월 우리끼리 식당] 송파구 석촌호수 문화실험공간 호수",
-        "statusText": "예약마감",
-        "majorCategory": "공간시설",
-        "category": "주민공유공간",
-        "paidType": "유료",
-        "targetText": "제한없음",
-        "receptionStartAt": "2026-09-18T11:00:00",
-        "receptionEndAt": "2026-10-30T00:01:00",
-        "useStartAt": "2026-09-18T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260913105938574391",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1789264944494VS3RZY0MPQXMOM7E9UQLUPMXB",
-        "telephone": "02-3431-9784",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n프 라 이 빗쿠 킹스 튜 디오\r\n\r\n우리끼리 식당\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n2026년 10월우리끼리 식당은 화/목/금오픈됩니다.\r\n\r\n※ 예약 보증금 10,000원이 발생합니다. 노쇼 방지 금액으로, 이용 후 환불 가능합니다.\r\n\r\n예약 신청 시 이용인원을 1명으로 설정해 주셔야 보증금이 10,000원으로 책정됩니다.\r\n실제 방문 인원은 방문인원 란에 기입해 주시면 감사하겠습니다.\r\n\r\n운영 시간: 화, 목, 금\r\n\r\n오전11:00-14:00/오후14:30-17:30\r\n※ 10월 6일 (화) ~ 10월 9일 (금) 내부 공간 재정비 및 공휴일로 운영하지 않습니다. 신청에 유의 바랍니다.\r\n\r\n\r\n\r\n\r\n\r\n운영 장소\r\n\r\n송파구 문화실험공간 호수 3층 쿠킹스튜디오\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n보유장비\r\n\r\n\r\n\r\n시설\r\n\r\n3개의 키친 스테이션\r\n\r\n\r\n\r\n\r\n키친툴\r\n\r\n\r\n​냄비, 코팅 웍, 프라이팬, 믹싱볼, 채반,\r\n\r\n\r\n샐러드 스피너, 무선 전기포트, 전기밥솥 외 키친툴\r\n\r\n\r\n\r\n\r\n식기류\r\n\r\n\r\n공기, 찬기, 접시, 화이트접시, 파스타볼, 그라탕기, 캐서롤, 소스볼, 컵, 커피잔 등\r\n\r\n\r\n\r\n\r\n조미료\r\n\r\n\r\n개인 준비 필요\r\n\r\n\r\n\r\n*공간 사정상, 운영 불가한 일정 제외\r\n\r\n\r\n\r\n\r\n\r\n\r\n4. 주의사항1.8인이내 그룹신청만 가능합니다.\r\n\r\n\r\n2. 예약은 선착순으로 진행 되며, 한달에 최대 한번 이용이 가능합니다.\r\n\r\n\r\n3. 프로그램은 3시간 이내에 청소를 포함한 모든 이용이 마무리 되어야 합니다.\r\n\r\n\r\n4. 직원의 안내에 따라 이용수칙을 준수하여야 합니다.\r\n\r\n\r\n5. 시설 및 장비 파손 시 배상이 요구될 수 있습니다.\r\n\r\n\r\n6. 종교, 상업 목적 및 개인 강의용도로는 이용불가합니다.\r\n\r\n\r\n7.주류 반입은 불가합니다. (주류 섭취시 3개월간 이용이 불가합니다.)\r\n\r\n\r\n8. 환기 문제로 특정 메뉴에 제한이 있을 수 있습니다.\r\n\r\n\r\n9. 예약시간 후 30분 경과시 노쇼(NO-SHOW)로 처리되며 당일 취소는 향후 이용이 제한 될 수 있습니다.\r\n\r\n\r\n10. 개인 정보 제공에 동의하지 않으실 경우 이용이 어려우실 수 있습니다.\r\n\r\n\r\n11. ​ 날짜 시간이 중복될 경우나 공간 사정상 이용이 불가 할 경우 다른 날짜로 변동 또는 예약이 취소 될 수 있습니다.\r\n\r\n12. 만 18세 이하는 보호자 동반 없이 참여 불가합니다.\r\n\r\n13.주차 시, 석촌호수 서호 1 공영 주차장(유료: 시간당 6,000원) 이용 가능합니다."
       }
     ]
   },
@@ -10753,23 +10753,6 @@ export const SEOUL_SPACE_FACILITIES:
     "reservationCount": 2,
     "reservations": [
       {
-        "serviceId": "S260914162429759594",
-        "title": "양천공원 키지트 온라인 사전예약 (1020-1025)",
-        "statusText": "접수중",
-        "majorCategory": "공간시설",
-        "category": "민원 등 기타",
-        "paidType": "무료",
-        "targetText": "성인, 어린이(8세 미만), 유아",
-        "receptionStartAt": "2026-10-13T09:00:00",
-        "receptionEndAt": "2026-10-18T18:00:00",
-        "useStartAt": "2026-10-13T00:00:00",
-        "useEndAt": "2026-10-25T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260914162429759594",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17893706912321RJJNBU3Q61LGDWJZT31GEL1I",
-        "telephone": "",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용*키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n- (아이 2명당 1명의 보호자가 입장하셔야 합니다)\r\n* 예약 시, 보호자 포함한 인원수로 예약 해주시면 됩니다\r\n- (예. 보호자 1명과 아이 1명이 입장 시 2명으로 예약)\r\n\r\n* 키지트 운영정보 : 매주 화요일 ~ 일요일\r\n 09시 - 18시\r\n 월요일과 국가 공휴일은 운영 되지 않습니다.\r\n\r\n* 키지트 운영시간 *\r\n1) 09 : 30 ~ 11 : 30\r\n2) 13 : 00 ~ 15 : 00\r\n3) 15 : 30 ~ 17 : 30\r\n\r\n 해당 시간에만 키지트 사용이 가능하며 그 외 시간은 키지트 청소 중입니다. *\r\n! 예약 전, 꼭 키지트 운영시간 확인을 부탁드립니다 !4. 주의사항* 키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n* 키지트는 9세 까지 (만 8세, 초등학교 2학년 이하) 까지 참여가 가능합니다."
-      },
-      {
         "serviceId": "S260914162102808082",
         "title": "양천공원 키지트 온라인 사전예약 (1013-1018)",
         "statusText": "접수종료",
@@ -10783,6 +10766,23 @@ export const SEOUL_SPACE_FACILITIES:
         "useEndAt": "2026-10-18T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260914162102808082",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17893704864465421STM70QX65MKV96J29CCGH",
+        "telephone": "",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용*키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n- (아이 2명당 1명의 보호자가 입장하셔야 합니다)\r\n* 예약 시, 보호자 포함한 인원수로 예약 해주시면 됩니다\r\n- (예. 보호자 1명과 아이 1명이 입장 시 2명으로 예약)\r\n\r\n* 키지트 운영정보 : 매주 화요일 ~ 일요일\r\n 09시 - 18시\r\n 월요일과 국가 공휴일은 운영 되지 않습니다.\r\n\r\n* 키지트 운영시간 *\r\n1) 09 : 30 ~ 11 : 30\r\n2) 13 : 00 ~ 15 : 00\r\n3) 15 : 30 ~ 17 : 30\r\n\r\n 해당 시간에만 키지트 사용이 가능하며 그 외 시간은 키지트 청소 중입니다. *\r\n! 예약 전, 꼭 키지트 운영시간 확인을 부탁드립니다 !4. 주의사항* 키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n* 키지트는 9세 까지 (만 8세, 초등학교 2학년 이하) 까지 참여가 가능합니다."
+      },
+      {
+        "serviceId": "S260914162429759594",
+        "title": "양천공원 키지트 온라인 사전예약 (1020-1025)",
+        "statusText": "접수종료",
+        "majorCategory": "공간시설",
+        "category": "민원 등 기타",
+        "paidType": "무료",
+        "targetText": "성인, 어린이(8세 미만), 유아",
+        "receptionStartAt": "2026-10-13T09:00:00",
+        "receptionEndAt": "2026-10-18T18:00:00",
+        "useStartAt": "2026-10-13T00:00:00",
+        "useEndAt": "2026-10-25T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260914162429759594",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17893706912321RJJNBU3Q61LGDWJZT31GEL1I",
         "telephone": "",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용*키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n- (아이 2명당 1명의 보호자가 입장하셔야 합니다)\r\n* 예약 시, 보호자 포함한 인원수로 예약 해주시면 됩니다\r\n- (예. 보호자 1명과 아이 1명이 입장 시 2명으로 예약)\r\n\r\n* 키지트 운영정보 : 매주 화요일 ~ 일요일\r\n 09시 - 18시\r\n 월요일과 국가 공휴일은 운영 되지 않습니다.\r\n\r\n* 키지트 운영시간 *\r\n1) 09 : 30 ~ 11 : 30\r\n2) 13 : 00 ~ 15 : 00\r\n3) 15 : 30 ~ 17 : 30\r\n\r\n 해당 시간에만 키지트 사용이 가능하며 그 외 시간은 키지트 청소 중입니다. *\r\n! 예약 전, 꼭 키지트 운영시간 확인을 부탁드립니다 !4. 주의사항* 키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n* 키지트는 9세 까지 (만 8세, 초등학교 2학년 이하) 까지 참여가 가능합니다."
       }
@@ -10978,8 +10978,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "hall",
     "longitude": null,
     "latitude": null,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17766486627787U7Q5SP1CNFI5BDKTAPZKVPPV",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260420101329008209",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1776335113654YO3XN3MHQ7D8W1KE6LRPXNSEQ",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260416124649907466",
     "reservationCount": 5,
     "reservations": [
       {
@@ -11546,8 +11546,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "multipurpose",
     "longitude": 126.96935,
     "latitude": 37.54134,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706509980380LX6ZAN6GL4H31ONX5TFNVL44X",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240129152832507143",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706773047524QE8F1NEQBRX6KG036UOJGMQQM",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240201163539334445",
     "reservationCount": 8,
     "reservations": [
       {
@@ -13470,8 +13470,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "multipurpose",
     "longitude": 127.00681,
     "latitude": 37.55822,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17135203841098NVB3G7R3O2UOM4WHGOYYWDYA",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240419185222663073",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=171351969992651ID1MO4EN1CSN1862YA22YSS",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240419184021073337",
     "reservationCount": 2,
     "reservations": [
       {

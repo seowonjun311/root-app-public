@@ -46,7 +46,7 @@ export type SeoulSpaceFacility = {
 };
 
 export const SEOUL_SPACE_RESERVATION_COUNT =
-  531;
+  533;
 
 export const SEOUL_SPACE_FACILITY_COUNT =
   298;
@@ -620,8 +620,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 127.03609,
     "latitude": 37.62512,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17402023279296BZLQ5OWAJOLZU8OSGUG91QY0",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250222142900323973",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1755910260156MZHIELAZ1CSQFWAEDZS4KC790",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250225141423643424",
     "reservationCount": 6,
     "reservations": [
       {
@@ -1505,8 +1505,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "meetingRoom",
     "longitude": 126.82542542790536,
     "latitude": 37.56604152182494,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1781659885742ILM45HURD7JBC12TONT6B43XI",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251114095705071351",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=178166013558555DHXPQ2VXU0RONALLVQGA3B8",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251114092225138614",
     "reservationCount": 3,
     "reservations": [
       {
@@ -3751,8 +3751,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 126.89929,
     "latitude": 37.47217,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1774051333310IM3AI1R8FFIP8NDKZW4MJXU8Y",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260105110923188618",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1774063783767XASI7EDMPP1MP7H5A9WCWJIHP",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260321122841167108",
     "reservationCount": 2,
     "reservations": [
       {
@@ -3997,9 +3997,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "무료",
         "targetText": "청년",
         "receptionStartAt": "2022-07-25T00:01:00",
-        "receptionEndAt": "2026-10-31T23:59:00",
+        "receptionEndAt": "2026-11-30T23:59:00",
         "useStartAt": "2022-07-24T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
+        "useEndAt": "2026-11-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S220722144143250673",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1666335053893EG7RBBCFHXGGYTS9HR0T65EJ0",
         "telephone": "02-937-5550",
@@ -4014,9 +4014,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "무료",
         "targetText": "청년",
         "receptionStartAt": "2025-04-18T00:00:00",
-        "receptionEndAt": "2026-10-31T23:59:00",
+        "receptionEndAt": "2026-11-30T23:59:00",
         "useStartAt": "2025-04-18T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
+        "useEndAt": "2026-11-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250418161551159364",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1750820256464D6KYF39FVJKLTR25FV436CM2T",
         "telephone": "02-937-5550",
@@ -4031,9 +4031,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "무료",
         "targetText": "청년",
         "receptionStartAt": "2022-10-21T15:00:00",
-        "receptionEndAt": "2026-10-31T23:59:00",
+        "receptionEndAt": "2026-11-30T23:59:00",
         "useStartAt": "2022-10-21T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
+        "useEndAt": "2026-11-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S221021151144642859",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1766128825411G244NL3HJWFTIUDW55WDLNU8N",
         "telephone": "02-937-5550",
@@ -5615,8 +5615,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "multipurpose",
     "longitude": 126.92299,
     "latitude": 37.55218,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1785975374827FQWEQGNYOB7D4B9KAAHX1HIAJ",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260411091657156127",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1785975585811BSCA45TGQBFIP9FJBIPEEOAAJ",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260223174123630667",
     "reservationCount": 2,
     "reservations": [
       {
@@ -9231,9 +9231,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "무료",
         "targetText": "청년",
         "receptionStartAt": "2025-05-29T00:00:00",
-        "receptionEndAt": "2026-10-31T23:59:00",
+        "receptionEndAt": "2026-11-30T23:59:00",
         "useStartAt": "2025-05-29T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
+        "useEndAt": "2026-11-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250529201218374454",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1748517137258ABDO124JIF0WOAY2YR4NXW06B",
         "telephone": "02-921-5330",
@@ -9248,9 +9248,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "무료",
         "targetText": "청년",
         "receptionStartAt": "2025-05-29T00:00:00",
-        "receptionEndAt": "2026-10-31T23:59:00",
+        "receptionEndAt": "2026-11-30T23:59:00",
         "useStartAt": "2025-05-29T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
+        "useEndAt": "2026-11-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250529214804681407",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17688069185516WQQTW978HK403JE6RUMSQSPX",
         "telephone": "02-921-5330",
@@ -9265,9 +9265,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "무료",
         "targetText": "청년",
         "receptionStartAt": "2026-01-20T13:01:00",
-        "receptionEndAt": "2026-10-31T23:59:00",
+        "receptionEndAt": "2026-11-30T23:59:00",
         "useStartAt": "2026-01-20T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
+        "useEndAt": "2026-11-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260119143217689665",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17688016775390OYY9H0UV06SGIRHF3AN04T19",
         "telephone": "02-921-5330",
@@ -9276,15 +9276,15 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S250529213953796420",
         "title": "[서울청년센터성북] 4층 멀티룸",
-        "statusText": "예약마감",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "청년공간",
         "paidType": "무료",
         "targetText": "청년",
         "receptionStartAt": "2025-05-29T00:00:00",
-        "receptionEndAt": "2026-10-31T23:59:00",
+        "receptionEndAt": "2026-11-30T23:59:00",
         "useStartAt": "2025-05-29T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
+        "useEndAt": "2026-11-30T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250529213953796420",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17485226349046Y3M9NKMIO8556A1Q5VCGJTQN",
         "telephone": "02-921-5330",
@@ -9310,6 +9310,23 @@ export const SEOUL_SPACE_FACILITIES:
     "reservationCount": 2,
     "reservations": [
       {
+        "serviceId": "S260913105938574391",
+        "title": "문화실험공간 호수 [10월 우리끼리 식당] 송파구 석촌호수 문화실험공간 호수",
+        "statusText": "접수중",
+        "majorCategory": "공간시설",
+        "category": "주민공유공간",
+        "paidType": "유료",
+        "targetText": "제한없음",
+        "receptionStartAt": "2026-09-18T11:00:00",
+        "receptionEndAt": "2026-10-30T00:01:00",
+        "useStartAt": "2026-09-18T00:00:00",
+        "useEndAt": "2026-10-31T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260913105938574391",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1789264944494VS3RZY0MPQXMOM7E9UQLUPMXB",
+        "telephone": "02-3431-9784",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n프 라 이 빗쿠 킹스 튜 디오\r\n\r\n우리끼리 식당\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n2026년 10월우리끼리 식당은 화/목/금오픈됩니다.\r\n\r\n※ 예약 보증금 10,000원이 발생합니다. 노쇼 방지 금액으로, 이용 후 환불 가능합니다.\r\n\r\n예약 신청 시 이용인원을 1명으로 설정해 주셔야 보증금이 10,000원으로 책정됩니다.\r\n실제 방문 인원은 방문인원 란에 기입해 주시면 감사하겠습니다.\r\n\r\n운영 시간: 화, 목, 금\r\n\r\n오전11:00-14:00/오후14:30-17:30\r\n※ 10월 6일 (화) ~ 10월 9일 (금) 내부 공간 재정비 및 공휴일로 운영하지 않습니다. 신청에 유의 바랍니다.\r\n\r\n\r\n\r\n\r\n\r\n운영 장소\r\n\r\n송파구 문화실험공간 호수 3층 쿠킹스튜디오\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n보유장비\r\n\r\n\r\n\r\n시설\r\n\r\n3개의 키친 스테이션\r\n\r\n\r\n\r\n\r\n키친툴\r\n\r\n\r\n​냄비, 코팅 웍, 프라이팬, 믹싱볼, 채반,\r\n\r\n\r\n샐러드 스피너, 무선 전기포트, 전기밥솥 외 키친툴\r\n\r\n\r\n\r\n\r\n식기류\r\n\r\n\r\n공기, 찬기, 접시, 화이트접시, 파스타볼, 그라탕기, 캐서롤, 소스볼, 컵, 커피잔 등\r\n\r\n\r\n\r\n\r\n조미료\r\n\r\n\r\n개인 준비 필요\r\n\r\n\r\n\r\n*공간 사정상, 운영 불가한 일정 제외\r\n\r\n\r\n\r\n\r\n\r\n\r\n4. 주의사항1.8인이내 그룹신청만 가능합니다.\r\n\r\n\r\n2. 예약은 선착순으로 진행 되며, 한달에 최대 한번 이용이 가능합니다.\r\n\r\n\r\n3. 프로그램은 3시간 이내에 청소를 포함한 모든 이용이 마무리 되어야 합니다.\r\n\r\n\r\n4. 직원의 안내에 따라 이용수칙을 준수하여야 합니다.\r\n\r\n\r\n5. 시설 및 장비 파손 시 배상이 요구될 수 있습니다.\r\n\r\n\r\n6. 종교, 상업 목적 및 개인 강의용도로는 이용불가합니다.\r\n\r\n\r\n7.주류 반입은 불가합니다. (주류 섭취시 3개월간 이용이 불가합니다.)\r\n\r\n\r\n8. 환기 문제로 특정 메뉴에 제한이 있을 수 있습니다.\r\n\r\n\r\n9. 예약시간 후 30분 경과시 노쇼(NO-SHOW)로 처리되며 당일 취소는 향후 이용이 제한 될 수 있습니다.\r\n\r\n\r\n10. 개인 정보 제공에 동의하지 않으실 경우 이용이 어려우실 수 있습니다.\r\n\r\n\r\n11. ​ 날짜 시간이 중복될 경우나 공간 사정상 이용이 불가 할 경우 다른 날짜로 변동 또는 예약이 취소 될 수 있습니다.\r\n\r\n12. 만 18세 이하는 보호자 동반 없이 참여 불가합니다.\r\n\r\n13.주차 시, 석촌호수 서호 1 공영 주차장(유료: 시간당 6,000원) 이용 가능합니다."
+      },
+      {
         "serviceId": "S261016112036432157",
         "title": "문화실험공간 호수 [11월 우리끼리 식당] 송파구 석촌호수 문화실험공간 호수",
         "statusText": "접수중",
@@ -9325,23 +9342,6 @@ export const SEOUL_SPACE_FACILITIES:
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1792117523724SPJS8XPUWAVKVTMMY8HK7W5CY",
         "telephone": "02-3431-9784",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n프 라 이 빗쿠 킹스 튜 디오\r\n\r\n우리끼리 식당\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n2026년 11월우리끼리 식당은 화/목/금오픈됩니다.\r\n\r\n※ 예약 보증금 10,000원이 발생합니다. 노쇼 방지 금액으로, 이용 후 환불 가능합니다.\r\n\r\n예약 신청 시 이용인원을 1명으로 설정해 주셔야 보증금이 10,000원으로 책정됩니다.\r\n실제 방문 인원은 방문인원 란에 기입해 주시면 감사하겠습니다.\r\n\r\n운영 시간: 화, 목, 금\r\n\r\n오전11:00-14:00/오후14:30-17:30\r\n※ 11월 3일 (화) 내부 사정으로 운영하지 않습니다. 신청에 유의 바랍니다.\r\n\r\n\r\n\r\n\r\n\r\n운영 장소\r\n\r\n송파구 문화실험공간 호수 3층 쿠킹스튜디오\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n보유장비\r\n\r\n\r\n\r\n시설\r\n\r\n3개의 키친 스테이션\r\n\r\n\r\n\r\n\r\n키친툴\r\n\r\n\r\n​냄비, 코팅 웍, 프라이팬, 믹싱볼, 채반,\r\n\r\n\r\n샐러드 스피너, 무선 전기포트, 전기밥솥 외 키친툴\r\n\r\n\r\n\r\n\r\n식기류\r\n\r\n\r\n공기, 찬기, 접시, 화이트접시, 파스타볼, 그라탕기, 캐서롤, 소스볼, 컵, 커피잔 등\r\n\r\n\r\n\r\n\r\n조미료\r\n\r\n\r\n개인 준비 필요\r\n\r\n\r\n\r\n*공간 사정상, 운영 불가한 일정 제외\r\n\r\n\r\n\r\n\r\n\r\n\r\n4. 주의사항1.8인이내 그룹신청만 가능합니다.\r\n\r\n\r\n2. 예약은 선착순으로 진행 되며, 한달에 최대 한번 이용이 가능합니다.\r\n\r\n\r\n3. 프로그램은 3시간 이내에 청소를 포함한 모든 이용이 마무리 되어야 합니다.\r\n\r\n\r\n4. 직원의 안내에 따라 이용수칙을 준수하여야 합니다.\r\n\r\n\r\n5. 시설 및 장비 파손 시 배상이 요구될 수 있습니다.\r\n\r\n\r\n6. 종교, 상업 목적 및 개인 강의용도로는 이용불가합니다.\r\n\r\n\r\n7.주류 반입은 불가합니다. (주류 섭취시 3개월간 이용이 불가합니다.)\r\n\r\n\r\n8. 환기 문제로 특정 메뉴에 제한이 있을 수 있습니다.\r\n\r\n\r\n9. 예약시간 후 30분 경과시 노쇼(NO-SHOW)로 처리되며 당일 취소는 향후 이용이 제한 될 수 있습니다.\r\n\r\n\r\n10. 개인 정보 제공에 동의하지 않으실 경우 이용이 어려우실 수 있습니다.\r\n\r\n\r\n11. ​ 날짜 시간이 중복될 경우나 공간 사정상 이용이 불가 할 경우 다른 날짜로 변동 또는 예약이 취소 될 수 있습니다.\r\n\r\n12. 만 18세 이하는 보호자 동반 없이 참여 불가합니다.\r\n\r\n13.주차 시, 석촌호수 서호 1 공영 주차장(유료: 시간당 6,000원) 이용 가능합니다."
-      },
-      {
-        "serviceId": "S260913105938574391",
-        "title": "문화실험공간 호수 [10월 우리끼리 식당] 송파구 석촌호수 문화실험공간 호수",
-        "statusText": "예약마감",
-        "majorCategory": "공간시설",
-        "category": "주민공유공간",
-        "paidType": "유료",
-        "targetText": "제한없음",
-        "receptionStartAt": "2026-09-18T11:00:00",
-        "receptionEndAt": "2026-10-30T00:01:00",
-        "useStartAt": "2026-09-18T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260913105938574391",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1789264944494VS3RZY0MPQXMOM7E9UQLUPMXB",
-        "telephone": "02-3431-9784",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n프 라 이 빗쿠 킹스 튜 디오\r\n\r\n우리끼리 식당\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n2026년 10월우리끼리 식당은 화/목/금오픈됩니다.\r\n\r\n※ 예약 보증금 10,000원이 발생합니다. 노쇼 방지 금액으로, 이용 후 환불 가능합니다.\r\n\r\n예약 신청 시 이용인원을 1명으로 설정해 주셔야 보증금이 10,000원으로 책정됩니다.\r\n실제 방문 인원은 방문인원 란에 기입해 주시면 감사하겠습니다.\r\n\r\n운영 시간: 화, 목, 금\r\n\r\n오전11:00-14:00/오후14:30-17:30\r\n※ 10월 6일 (화) ~ 10월 9일 (금) 내부 공간 재정비 및 공휴일로 운영하지 않습니다. 신청에 유의 바랍니다.\r\n\r\n\r\n\r\n\r\n\r\n운영 장소\r\n\r\n송파구 문화실험공간 호수 3층 쿠킹스튜디오\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n보유장비\r\n\r\n\r\n\r\n시설\r\n\r\n3개의 키친 스테이션\r\n\r\n\r\n\r\n\r\n키친툴\r\n\r\n\r\n​냄비, 코팅 웍, 프라이팬, 믹싱볼, 채반,\r\n\r\n\r\n샐러드 스피너, 무선 전기포트, 전기밥솥 외 키친툴\r\n\r\n\r\n\r\n\r\n식기류\r\n\r\n\r\n공기, 찬기, 접시, 화이트접시, 파스타볼, 그라탕기, 캐서롤, 소스볼, 컵, 커피잔 등\r\n\r\n\r\n\r\n\r\n조미료\r\n\r\n\r\n개인 준비 필요\r\n\r\n\r\n\r\n*공간 사정상, 운영 불가한 일정 제외\r\n\r\n\r\n\r\n\r\n\r\n\r\n4. 주의사항1.8인이내 그룹신청만 가능합니다.\r\n\r\n\r\n2. 예약은 선착순으로 진행 되며, 한달에 최대 한번 이용이 가능합니다.\r\n\r\n\r\n3. 프로그램은 3시간 이내에 청소를 포함한 모든 이용이 마무리 되어야 합니다.\r\n\r\n\r\n4. 직원의 안내에 따라 이용수칙을 준수하여야 합니다.\r\n\r\n\r\n5. 시설 및 장비 파손 시 배상이 요구될 수 있습니다.\r\n\r\n\r\n6. 종교, 상업 목적 및 개인 강의용도로는 이용불가합니다.\r\n\r\n\r\n7.주류 반입은 불가합니다. (주류 섭취시 3개월간 이용이 불가합니다.)\r\n\r\n\r\n8. 환기 문제로 특정 메뉴에 제한이 있을 수 있습니다.\r\n\r\n\r\n9. 예약시간 후 30분 경과시 노쇼(NO-SHOW)로 처리되며 당일 취소는 향후 이용이 제한 될 수 있습니다.\r\n\r\n\r\n10. 개인 정보 제공에 동의하지 않으실 경우 이용이 어려우실 수 있습니다.\r\n\r\n\r\n11. ​ 날짜 시간이 중복될 경우나 공간 사정상 이용이 불가 할 경우 다른 날짜로 변동 또는 예약이 취소 될 수 있습니다.\r\n\r\n12. 만 18세 이하는 보호자 동반 없이 참여 불가합니다.\r\n\r\n13.주차 시, 석촌호수 서호 1 공영 주차장(유료: 시간당 6,000원) 이용 가능합니다."
       }
     ]
   },
@@ -10733,8 +10733,42 @@ export const SEOUL_SPACE_FACILITIES:
     "latitude": 37.51834828002767,
     "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17893706912321RJJNBU3Q61LGDWJZT31GEL1I",
     "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260914162429759594",
-    "reservationCount": 1,
+    "reservationCount": 3,
     "reservations": [
+      {
+        "serviceId": "S260914162737497583",
+        "title": "양천공원 키지트 온라인 사전예약 (1027-1101)",
+        "statusText": "접수중",
+        "majorCategory": "공간시설",
+        "category": "민원 등 기타",
+        "paidType": "무료",
+        "targetText": "성인, 어린이(8세 미만), 유아",
+        "receptionStartAt": "2026-10-20T09:00:00",
+        "receptionEndAt": "2026-10-25T18:00:00",
+        "useStartAt": "2026-10-20T00:00:00",
+        "useEndAt": "2026-11-01T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260914162737497583",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17893708818681ISOAGNKII7VZ9THTBVU5F0FY",
+        "telephone": "",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용*키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n- (아이 2명당 1명의 보호자가 입장하셔야 합니다)\r\n* 예약 시, 보호자 포함한 인원수로 예약 해주시면 됩니다\r\n- (예. 보호자 1명과 아이 1명이 입장 시 2명으로 예약)\r\n\r\n* 키지트 운영정보 : 매주 화요일 ~ 일요일\r\n 09시 - 18시\r\n 월요일과 국가 공휴일은 운영 되지 않습니다.\r\n\r\n* 키지트 운영시간 *\r\n1) 09 : 30 ~ 11 : 30\r\n2) 13 : 00 ~ 15 : 00\r\n3) 15 : 30 ~ 17 : 30\r\n\r\n 해당 시간에만 키지트 사용이 가능하며 그 외 시간은 키지트 청소 중입니다. *\r\n! 예약 전, 꼭 키지트 운영시간 확인을 부탁드립니다 !4. 주의사항* 키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n* 키지트는 9세 까지 (만 8세, 초등학교 2학년 이하) 까지 참여가 가능합니다."
+      },
+      {
+        "serviceId": "S261012100905987004",
+        "title": "양천공원 키지트 온라인 사전예약 (1103-1108)",
+        "statusText": "접수중",
+        "majorCategory": "공간시설",
+        "category": "민원 등 기타",
+        "paidType": "무료",
+        "targetText": "성인, 어린이(8세 미만), 유아",
+        "receptionStartAt": "2026-10-20T09:00:00",
+        "receptionEndAt": "2026-10-25T18:00:00",
+        "useStartAt": "2026-10-20T00:00:00",
+        "useEndAt": "2026-11-08T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S261012100905987004",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1791767391274BXCF9SIZ1XHWM57EC9O0HKPRV",
+        "telephone": "",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용*키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n- (아이 2명당 1명의 보호자가 입장하셔야 합니다)\r\n* 예약 시, 보호자 포함한 인원수로 예약 해주시면 됩니다\r\n- (예. 보호자 1명과 아이 1명이 입장 시 2명으로 예약)\r\n\r\n* 키지트 운영정보 : 매주 화요일 ~ 일요일\r\n 09시 - 18시\r\n 월요일과 국가 공휴일은 운영 되지 않습니다.\r\n\r\n* 키지트 운영시간 *\r\n1) 09 : 30 ~ 11 : 30\r\n2) 13 : 00 ~ 15 : 00\r\n3) 15 : 30 ~ 17 : 30\r\n\r\n 해당 시간에만 키지트 사용이 가능하며 그 외 시간은 키지트 청소 중입니다. *\r\n! 예약 전, 꼭 키지트 운영시간 확인을 부탁드립니다 !4. 주의사항* 키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n* 키지트는 9세 까지 (만 8세, 초등학교 2학년 이하) 까지 참여가 가능합니다."
+      },
       {
         "serviceId": "S260914162429759594",
         "title": "양천공원 키지트 온라인 사전예약 (1020-1025)",
@@ -11512,8 +11546,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "multipurpose",
     "longitude": 126.96935,
     "latitude": 37.54134,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706509980380LX6ZAN6GL4H31ONX5TFNVL44X",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240129152832507143",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706773047524QE8F1NEQBRX6KG036UOJGMQQM",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240201163539334445",
     "reservationCount": 8,
     "reservations": [
       {
@@ -11951,7 +11985,7 @@ export const SEOUL_SPACE_FACILITIES:
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250320143719511730",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1742449067075P7V66NYW8NXKJR32TT5N8TR5H",
         "telephone": "02-351-3711",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용📢 비밀의방 대관 안내\r\n1. 공간 이용 안내\r\n- 비밀의방은 소규모 상담 공간으로, 서울시 청년사업(영테크심리상담 등) 진행을 위한 용도에 한해 무료 대관이 가능합니다.\r\n- 일반 목적의 대관을 원하실 경우에는 **타지역 청년센터 또는 빌려방(10~30인 전용)**을 이용해 주세요.\r\n\r\n2. 난방 관련 안내(동절기)\r\n동절기 비밀의방은 난방이 원활하지 않아 실내 온도가 매우 낮은 상태입니다.\r\n이에 따라 12월~3월 동절기 대관은 최소한으로 운영됩니다.\r\n그럼에도 대관을 희망하시는 청년께서는 공간이 매우 춥다는 점을 충분히 고려하시어 신청해 주세요.\r\n\r\n\r\n서울청년센터 은평 대관 안내\r\n청년의 오늘을 함께하는 서울청년센터 은평은\r\n살고 있는 곳 가까이에서 청년 누구나 이용할 수 있는 공간입니다.\r\n\r\n청년을 위해 다양한 청년정보를 전달하고,\r\n여러분의 고민을 듣고 자원을 연결하는 사업을 진행하고 있습니다.\r\n\r\n📅 대관 신청 일정\r\n대관 신청은 월 단위로 오픈되며,\r\n매월 **20일(주말공휴일 시 전일)**부터 신청 가능합니다.\r\n\r\n\r\n꼭 필독사항 숙지하신 다음에 대관 신청 부탁드립니다.\r\n🚨 필독사항\r\n1. 대관 목적 및 이용 자격\r\n- 수용 인원: 최소 2명 ~ 최대 6명\r\n-청년 비율 80% 이상이어야 하며, 개인별 대관은 월 4회, 1일 1회(2시간)로 제한됩니다.\r\n- 수익성종교성정치성사행성 목적의 대관은 불가합니다.\r\n- 담당자는 대관 목적이 적합한지 현장에서 확인할 수 있습니다.\r\n\r\n2. 예약 및 취소\r\n- 대관 신청은 최소 2일 전까지 가능하며, 담당자 확인 및 승인 후 이용할 수 있습니다.\r\n- 당일 예약은 불가능합니다.\r\n- 이용일 2일 전까지 취소 가능하며, 취소 시 수수료가발생합니다.\r\n- 무단 취소 및 당일 취소 시, 이후 대관 이용이 제한될 수 있습니다.\r\n\r\n3. 이용 시 유의사항\r\n- 행사 준비 및 정리시간은 별도로 제공되지 않으므로반드시 대관 시간에 포함해 신청해 주세요.\r\n- 신청서와 실제 사용 목적이 다를 경우, 당일에도 대관이 제한되거나 즉시 퇴거될 수 있습니다.\r\n- 사전 협의되지 않은 내용은 대관이 제한될 수 있습니다.\r\n\r\n4. 공간 내 준수사항\r\n- 음식물 섭취, 흡연, 주류 반입은 불가합니다.\r\n- 공간 및 기물 파손 시 비용이 청구될 수 있습니다.\r\n- 사용 후 책상의자 정리, 쓰레기 처리, 청소는 대관자가 직접 진행해야 합니다.\r\n- 행사 전 부착물, 외부 안내물 설치 등은 반드시 담당자와 사전 협의해 주세요.\r\n\r\n5. 주차\r\n- 별도의 주차공간이 마련되어 있지 않습니다.\r\n- 차량 이용 시, 인근 공영민영 주차장을 이용해 주세요.\r\n\r\n4. 주의사항\r\n📌 유의사항\r\n-대관, 프로그램, 서울시 지침 등에 따라 공간 이용이 제한될 수 있습니다.\r\n- 대관 신청 전 서울청년센터 은평(02-351-3711)으로 확인 부탁드립니다.\r\n\r\n🚨 취소 및 환불 규정\r\n1. 취소 기한\r\n-이용일 기준 2일 전까지 취소 가능합니다.\r\n- 1일 전 또는 당일 취소는 센터로 직접 전화 부탁드립니다.\r\n\r\n2. 취소 수수료\r\n이용일2일 전까지:이체수수료(500원)제외환불\r\n이용일1일 전:취소수수료50%(1타임 5,000원)제외환불\r\n(※ 우리은행계좌로환불시이체수수료가발생하지않을수있음)\r\n이용일당일취소:환불불가능\r\n당일 노쇼 : 대관료 환불 불가\r\n\r\n3. 결제 관련\r\n- 예약 확정 후 2일 이내 대관료 미입금 시, 자동 취소됩니다.\r\n\r\n⚠️ 주의사항\r\n- 대관 가능 연령: 만 19세 ~ 만 39세 청년 (청년이 아닌 경우, 예약이 취소될 수 있습니다.)\r\n- 대관일 기준 1일 전당일 예약은 불가합니다.\r\n- 운영시간 이후 접수된 예약은 다음 영업일에 확인됩니다.\r\n- 잦은 취소 및 노쇼 발생 시, 추후 은평 공간 대관에 제한이 있을 수 있습니다.\r\n\r\n🕑 운영 시간\r\n월~금: 10:00 ~ 21:00\r\n토요일: 10:00 ~ 17:00\r\n**일요일공휴일 휴관\r\n\r\n📍 오시는 길\r\n주소: 서울특별시 은평구 통일로67길 9 주주베 A동, 2층 서울청년센터 은평\r\n\r\n☎️ 문의\r\n대표번호: 02-351-3711\r\n블로그: https://blog.naver.com/sycep\r\n인스타그램: https://www.instagram.com/seoulyouthcenter_ep/"
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용※ 서울시 청년사업(영테크심리상담 등) 일정으로 인해 11월 별도 대관이 불가합니다.\r\n\r\n📢 비밀의방 대관 안내\r\n1. 공간 이용 안내\r\n- 비밀의방은 소규모 상담 공간으로, 서울시 청년사업(영테크심리상담 등) 진행을 위한 용도에 한해 무료 대관이 가능합니다.\r\n- 일반 목적의 대관을 원하실 경우에는 **타지역 청년센터 또는 빌려방(10~30인 전용)**을 이용해 주세요.\r\n\r\n2. 난방 관련 안내(동절기)\r\n동절기 비밀의방은 난방이 원활하지 않아 실내 온도가 매우 낮은 상태입니다.\r\n이에 따라 12월~3월 동절기 대관은 최소한으로 운영됩니다.\r\n그럼에도 대관을 희망하시는 청년께서는 공간이 매우 춥다는 점을 충분히 고려하시어 신청해 주세요.\r\n\r\n\r\n서울청년센터 은평 대관 안내\r\n청년의 오늘을 함께하는 서울청년센터 은평은\r\n살고 있는 곳 가까이에서 청년 누구나 이용할 수 있는 공간입니다.\r\n\r\n청년을 위해 다양한 청년정보를 전달하고,\r\n여러분의 고민을 듣고 자원을 연결하는 사업을 진행하고 있습니다.\r\n\r\n📅 대관 신청 일정\r\n대관 신청은 월 단위로 오픈되며,\r\n매월 **20일(주말공휴일 시 전일)**부터 신청 가능합니다.\r\n\r\n\r\n꼭 필독사항 숙지하신 다음에 대관 신청 부탁드립니다.\r\n🚨 필독사항\r\n1. 대관 목적 및 이용 자격\r\n- 수용 인원: 최소 2명 ~ 최대 6명\r\n-청년 비율 80% 이상이어야 하며, 개인별 대관은 월 4회, 1일 1회(2시간)로 제한됩니다.\r\n- 수익성종교성정치성사행성 목적의 대관은 불가합니다.\r\n- 담당자는 대관 목적이 적합한지 현장에서 확인할 수 있습니다.\r\n\r\n2. 예약 및 취소\r\n- 대관 신청은 최소 2일 전까지 가능하며, 담당자 확인 및 승인 후 이용할 수 있습니다.\r\n- 당일 예약은 불가능합니다.\r\n- 이용일 2일 전까지 취소 가능하며, 취소 시 수수료가발생합니다.\r\n- 무단 취소 및 당일 취소 시, 이후 대관 이용이 제한될 수 있습니다.\r\n\r\n3. 이용 시 유의사항\r\n- 행사 준비 및 정리시간은 별도로 제공되지 않으므로반드시 대관 시간에 포함해 신청해 주세요.\r\n- 신청서와 실제 사용 목적이 다를 경우, 당일에도 대관이 제한되거나 즉시 퇴거될 수 있습니다.\r\n- 사전 협의되지 않은 내용은 대관이 제한될 수 있습니다.\r\n\r\n4. 공간 내 준수사항\r\n- 음식물 섭취, 흡연, 주류 반입은 불가합니다.\r\n- 공간 및 기물 파손 시 비용이 청구될 수 있습니다.\r\n- 사용 후 책상의자 정리, 쓰레기 처리, 청소는 대관자가 직접 진행해야 합니다.\r\n- 행사 전 부착물, 외부 안내물 설치 등은 반드시 담당자와 사전 협의해 주세요.\r\n\r\n5. 주차\r\n- 별도의 주차공간이 마련되어 있지 않습니다.\r\n- 차량 이용 시, 인근 공영민영 주차장을 이용해 주세요.\r\n4. 주의사항\r\n📌 유의사항\r\n-대관, 프로그램, 서울시 지침 등에 따라 공간 이용이 제한될 수 있습니다.\r\n- 대관 신청 전 서울청년센터 은평(02-351-3711)으로 확인 부탁드립니다.\r\n\r\n🚨 취소 및 환불 규정\r\n1. 취소 기한\r\n-이용일 기준 2일 전까지 취소 가능합니다.\r\n- 1일 전 또는 당일 취소는 센터로 직접 전화 부탁드립니다.\r\n\r\n2. 취소 수수료\r\n이용일2일 전까지:이체수수료(500원)제외환불\r\n이용일1일 전:취소수수료50%(1타임 5,000원)제외환불\r\n(※ 우리은행계좌로환불시이체수수료가발생하지않을수있음)\r\n이용일당일취소:환불불가능\r\n당일 노쇼 : 대관료 환불 불가\r\n\r\n3. 결제 관련\r\n- 예약 확정 후 2일 이내 대관료 미입금 시, 자동 취소됩니다.\r\n\r\n⚠️ 주의사항\r\n- 대관 가능 연령: 만 19세 ~ 만 39세 청년 (청년이 아닌 경우, 예약이 취소될 수 있습니다.)\r\n- 대관일 기준 1일 전당일 예약은 불가합니다.\r\n- 운영시간 이후 접수된 예약은 다음 영업일에 확인됩니다.\r\n- 잦은 취소 및 노쇼 발생 시, 추후 은평 공간 대관에 제한이 있을 수 있습니다.\r\n\r\n🕑 운영 시간\r\n월~금: 10:00 ~ 21:00\r\n토요일: 10:00 ~ 17:00\r\n**일요일공휴일 휴관\r\n\r\n📍 오시는 길\r\n주소: 서울특별시 은평구 통일로67길 9 주주베 A동, 2층 서울청년센터 은평\r\n\r\n☎️ 문의\r\n대표번호: 02-351-3711\r\n블로그: https://blog.naver.com/sycep\r\n인스타그램: https://www.instagram.com/seoulyouthcenter_ep/"
       },
       {
         "serviceId": "S230116200051447142",
@@ -11961,8 +11995,8 @@ export const SEOUL_SPACE_FACILITIES:
         "category": "청년공간",
         "paidType": "유료",
         "targetText": "청년",
-        "receptionStartAt": "2026-09-01T00:00:00",
-        "receptionEndAt": "2026-10-31T23:59:00",
+        "receptionStartAt": "2026-10-01T00:00:00",
+        "receptionEndAt": "2026-11-30T23:59:00",
         "useStartAt": "2026-01-01T00:00:00",
         "useEndAt": "2026-12-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S230116200051447142",
@@ -13449,13 +13483,13 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료",
         "targetText": "성인",
         "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-10-26T18:00:00",
+        "receptionEndAt": "2026-12-26T18:00:00",
         "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
+        "useEndAt": "2026-12-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240419184021073337",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=171351969992651ID1MO4EN1CSN1862YA22YSS",
         "telephone": "02-2128-2813",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용장충체육관 다목적실 이용 및 예약 안내\r\n\r\n\r\n○ 운영시설 : 장충체육관 - 다목적실1 (지하1층)\r\n\r\n\r\n○ 운영시간 : 06:00~24:00 까지 운영, 3시간 1타임\r\n\r\n\r\n\r\n\t이용시간 정보\r\n\t\r\n\t\t\r\n\t\t\t시작\r\n\t\t\t종료\r\n\t\t\t비고\r\n\t\t\r\n\t\t\r\n\t\t\t06:00\r\n\t\t\t09:00\r\n\t\t\t조기\r\n\t\t\r\n\t\t\r\n\t\t\t09:00\r\n\t\t\t12:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t12:00\r\n\t\t\t15:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t15:00\r\n\t\t\t18:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t18:00\r\n\t\t\t21:00\r\n\t\t\t야간\r\n\t\t\r\n\t\t\r\n\t\t\t21:00\r\n\t\t\t24:00\r\n\t\t\t야간\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n * 이용 시간은 준비 및 마무리 시간 포함임\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 사용용도 : 실내 운동, 회의 등\r\n\r\n\r\n\r\n○ 예약방법 : 선착순\r\n\r\n\r\n\r\n○ 예약기간 :\r\n\r\n\r\n ⦁9 - 10월 예약 : 2026. 8. 25(화) 13:00 부터\r\n\r\n\r\n ⦁ 11-12월 예약 : 2026. 10. 20(화) 13:00 부터(*사용일로부터 5일 전 18시까지 접수 가능)\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 이용요금 및 대관방법\r\n\r\n\r\n※ 서울특별시립체육시설 설치 및 운영에 관한 조례에 따름\r\n\r\n\r\n\r\n ⦁예약방법 : 선착순 (사용일로부터 5일전 18시까지 접수 가능)\r\n\r\n\r\n\r\n  ⦁이용요금\r\n\r\n  - 결제하시는 금액은 전용사용료와 전기료 등을 최대로 합친 추정사용료 입니다.\r\n\r\n\r\n  - 결제금액= 전용사용료 + 부속시설사용료(전기조명(전기료), 냉난방 및 기계설비 등(공공료)) 등\r\n\r\n\r\n  -결제 후 사용 종료 3~5주 이내 실제 사용하신 전기료 등 정산 -환불 or 추가납입\r\n\r\n\r\n\r\n※ 전용사용료(3시간 1타임당)\r\n\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t시간대\r\n\t\t\t전용사용료\r\n\t\t\r\n\t\t\r\n\t\t\t평일 주간\r\n\t\t\t37,200원\r\n\t\t\r\n\t\t\r\n\t\t\t평일조야간\r\n\t\t\t48,400원\r\n\t\t\r\n\t\t\r\n\t\t\t휴일 주간\r\n\t\t\t48,400원\r\n\t\t\r\n\t\t\r\n\t\t\t휴일조야간\r\n\t\t\t62,900원\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t시작\r\n\t\t\t종료\r\n\t\t\t비고\r\n\t\t\r\n\t\t\r\n\t\t\t06:00\r\n\t\t\t09:00\r\n\t\t\t조기\r\n\t\t\r\n\t\t\r\n\t\t\t09:00\r\n\t\t\t12:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t12:00\r\n\t\t\t15:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t15:00\r\n\t\t\t18:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t18:00\r\n\t\t\t21:00\r\n\t\t\t야간\r\n\t\t\r\n\t\t\r\n\t\t\t21:00\r\n\t\t\t24:00\r\n\t\t\t야간\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n※ 부속시설사용료\r\n\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t부 속 시 설\r\n\t\t\t기 본 료\r\n\t\t\r\n\t\t\r\n\t\t\t전기조명\r\n\t\t\t월기본료  1/30\r\n\t\t\t※월기본료：실제 사용한 부하변압기의 용량합계kw당 한전기준 단가\r\n\t\t\r\n\t\t\r\n\t\t\t냉․난방 및 기계설비\r\n\t\t\t가. 기계사용료 ： 30,000~39,000\r\n\t\t\t나. 전기사용료 ： 월기본료  1/30\r\n\t\t\r\n\t\t\r\n\t\t\t음향시설\r\n\t\t\t60,000~78,000\r\n\t\t\r\n\t\t\r\n\t\t\t비고\r\n\t\t\t부속시설사용료는 위 표의 기본료에 실제 사용한 전기･유류･가스 사용료를 합한 금액으로 한다. 다만, 전광판 개인 이벤트의 경우는 예외로 한다.\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n※ 서울특별시 시립체육시설 스포츠데이 사용료 감면 적용\r\n\r\n\r\n ⦁감면일자 : 매월 첫째 주 수요일\r\n\r\n ⦁감면요금 : 전용사용료 30% 감면 (『서울특별시립체육시설의 설치 및 운영에 관한 조례 』 별표3 기준)\r\n\r\n☞ 이용 후 실사용료 정산 및 환불 과정에서 부속시설사용료(전기료,공공료 등)를 제외한 전용사용료만 30% 감면하여 정산처리 됩니다.\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 환불규정\r\n\r\n※ 서울특별시립체육시설 설치 및 운영에 관한 조례에 따름\r\n\r\n※ 사용일 당일 및 사용일 이후에는 취소 및 환불 불가\r\n\r\n\r\n\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t전용사용료\r\n\t\t\r\n\t\t\r\n\t\t\t취소 요청시기\r\n\t\t\t반환요율\r\n\t\t\r\n\t\t\r\n\t\t\t신청 당일\r\n\t\t\t전액 반환\r\n\t\t\r\n\t\t\r\n\t\t\t10일전\r\n\t\t\t전액 반환\r\n\t\t\r\n\t\t\r\n\t\t\t5~9일전\r\n\t\t\t90%\r\n\t\t\r\n\t\t\r\n\t\t\t1~4일전\r\n\t\t\t70%\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 유의사항\r\n\r\n - 이용자께서는 시설물 사용 후 원상복구 의무가 있습니다.\r\n\r\n -시설 내 음식물 섭취 금지\r\n\r\n -체육관 훼손될 수 있는 행동 금지(바닥 및 벽면 테이핑, 시설물 반입, 바닥 훼손 등)\r\n\r\n - 예약확정 후 취소시 수수료가 부과되므로 예약에 신중을 기하여 주시기 바랍니다.\r\n\r\n- 향후 정부 및 서울시 방역지침, 각종 행사 및 긴급 보수공사 등에 따라 예약 취소 및 사용 불가할 수 있음을 알려드립니다.\r\n\r\n- 운동관련 용품 지급대여판매하지 않습니다. 운동복, 신발, 농구공, 배구공 등 직접 챙겨오시기 바랍니다.\r\n\r\n\r\n※ 이용제외 대상\r\n\r\n1) 정치적인 행위를 목적으로 하는 경우\r\n\r\n2) 종교활동을 목적으로 하는 경우\r\n\r\n3) 영리를 목적으로 하는 경우\r\n\r\n4) 기타 공공질서와 선량한 미풍양속을 해할 우려가 있다고 인정되는 경우\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 기타 안내사항\r\n\r\n\r\n ⦁장충체육관주체육관 정기대관 행사와 연동되는 경우 예약이 불가한 점 양해 부탁드립니다.\r\n\r\n ⦁주체육관 행사일정에 따라 승인 후에도 취소처리 될 수 있음을 미리 고지드립니다.\r\n\r\n\r\n\r\n※ 관리자가 휴일 사용 예약 건 시도 및 취소 현황을 수시로 모니터링 합니다.\r\n\r\n① 동일IP 및 동일계정의 단시간 내 문자인증 과다 요청시 비정상적 접근 예약으로 간주하여 확인 후 사용 취소 가능\r\n\r\n② 우연으로 볼 수 없는 특정 계정간 예약 주고받기 확인 시에는 해당 아이디 예약 접수 90일간 차단합니다. 실 사용자만 예약 신청하시기 바랍니다.\r\n\r\n③ 매크로, 프로그램 사용 정황이 있는 예약 건에 대해서는 예약 기록 확인 후 직권 취소 처리하고 해당 계정 예약 접수 차단하오니 유의 바랍니다.\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 주차정보\r\n\r\n\r\n ⦁장충체육관 인근 지역은 불법 주‧정차 단속 구간으로 과태료가 부과될 수 있으므로\r\n\r\n ⦁대중교통 이용 및 장충체육관 주차장(5분 / 400원)을 이용해주시기 바랍니다.\r\n\r\n ⦁단, 배구경기 및 행사일 : 장충체육관 주차장 이용 불가\r\n\r\n ⦁주체육관 배구 경기 및 행사일에는 인근 민영주차장을 이용해주시기 바랍니다.\r\n\r\n\r\n\r\n\r\n※ 참고 : 인근주차장 안내\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t 구 분\r\n\t\t\t장충공영주차장\r\n\t\t\t약수공영주차장\r\n\t\t\t동국대학교\r\n\t\t\t한국자유총연맹\r\n\t\t\r\n\t\t\r\n\t\t\t이용거리\r\n\t\t\t도보 약 10분\r\n\t\t\t(약 610m)\r\n\t\t\t도보 약 20분\r\n\t\t\t(약 1.2km)\r\n\t\t\t도보 약 10분\r\n\t\t\t(약 600m)\r\n\t\t\t도보 약 16분\r\n\t\t\t(약 1km)\r\n\t\t\r\n\t\t\r\n\t\t\t대표전화\r\n\t\t\t02) 2277-7004\r\n\t\t\t02) 2252-3349\r\n\t\t\t02) 2260-3114\r\n\t\t\t02) 2238-1037\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n4. 주의사항1) 예약 후 허가 없이 되팔기 등 불법 전대가 적발될 경우 예약이 취소되고 향후 서울시 공공서비스예약 홈페이지를 이용할 수 없는 등 불이익을 받을 수 있으니 주의하시기 바랍니다.\r\n2) 장충 보조체육관은 코팅된 나무 바닥이오니 이용시 미끄러움에 주의바랍니다.\r\n3) 부속시설(보조체육관, 다목적실) 내부 시설물 파손 시에는 원상복구가 원칙이며, 대관 이용자에게 손해배상을 청구할 수 있습니다.\r\n4) 부속시설(보조체육관, 다목적실) 내부에서 조리나 불을 피우는 행위 일체를 금지합니다.\r\n5) 부속시설(보조체육관, 다목적실) 내‧외부 천막‧캐노피 등 설치 일체를 금지합니다.\r\n6) 운동 종목별 시설물(농구대, 배구네트 등) 필요시 구비여부 관련 문의를 주시길 바라며, 그 외 소모품성 비품(운동화, 농구공, 배구공 등)은 일체 제공하지 않습니다.\r\n7) 타 행사 용도로 사용하시고자 할 경우 반드시 허가가 필요합니다.(담당자 : 02-2128-2813~4)"
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용장충체육관 다목적실 이용 및 예약 안내\r\n\r\n\r\n○ 운영시설 : 장충체육관 - 다목적실1 (지하1층)\r\n\r\n\r\n○ 운영시간 : 06:00~24:00 까지 운영, 3시간 1타임\r\n\r\n\r\n\r\n\t이용시간 정보\r\n\t\r\n\t\t\r\n\t\t\t시작\r\n\t\t\t종료\r\n\t\t\t비고\r\n\t\t\r\n\t\t\r\n\t\t\t06:00\r\n\t\t\t09:00\r\n\t\t\t조기\r\n\t\t\r\n\t\t\r\n\t\t\t09:00\r\n\t\t\t12:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t12:00\r\n\t\t\t15:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t15:00\r\n\t\t\t18:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t18:00\r\n\t\t\t21:00\r\n\t\t\t야간\r\n\t\t\r\n\t\t\r\n\t\t\t21:00\r\n\t\t\t24:00\r\n\t\t\t야간\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n * 이용 시간은 준비 및 마무리 시간 포함임\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 사용용도 : 실내 운동, 회의 등\r\n\r\n\r\n\r\n○ 예약방법 : 선착순\r\n\r\n\r\n\r\n○ 예약기간 :\r\n\r\n\r\n  ⦁ 11-12월 예약 : 2026. 10. 20(화)13:00부터 접수 시작\r\n\r\n  ⦁ 2027년 1월-2월 예약 : 2026. 12. 22(화)13:00부터(*이용일로부터 5일 전 18시까지 접수 가능)\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 이용요금 및 대관방법\r\n\r\n\r\n※ 서울특별시립체육시설 설치 및 운영에 관한 조례에 따름\r\n\r\n\r\n\r\n ⦁예약방법 : 선착순 (사용일로부터 5일전 18시까지 접수 가능)\r\n\r\n\r\n\r\n  ⦁이용요금\r\n\r\n  - 결제하시는 금액은 전용사용료와 전기료 등을 최대로 합친 추정사용료 입니다.\r\n\r\n\r\n  - 결제금액= 전용사용료 + 부속시설사용료(전기조명(전기료), 냉난방 및 기계설비 등(공공료)) 등\r\n\r\n\r\n  -결제 후 사용 종료 3~5주 이내 실제 사용하신 전기료 등 정산 -환불 or 추가납입\r\n\r\n\r\n\r\n※ 전용사용료(3시간 1타임당)\r\n\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t시간대\r\n\t\t\t전용사용료\r\n\t\t\r\n\t\t\r\n\t\t\t평일 주간\r\n\t\t\t37,200원\r\n\t\t\r\n\t\t\r\n\t\t\t평일조야간\r\n\t\t\t48,400원\r\n\t\t\r\n\t\t\r\n\t\t\t휴일 주간\r\n\t\t\t48,400원\r\n\t\t\r\n\t\t\r\n\t\t\t휴일조야간\r\n\t\t\t62,900원\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t시작\r\n\t\t\t종료\r\n\t\t\t비고\r\n\t\t\r\n\t\t\r\n\t\t\t06:00\r\n\t\t\t09:00\r\n\t\t\t조기\r\n\t\t\r\n\t\t\r\n\t\t\t09:00\r\n\t\t\t12:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t12:00\r\n\t\t\t15:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t15:00\r\n\t\t\t18:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t18:00\r\n\t\t\t21:00\r\n\t\t\t야간\r\n\t\t\r\n\t\t\r\n\t\t\t21:00\r\n\t\t\t24:00\r\n\t\t\t야간\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n※ 부속시설사용료\r\n\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t부 속 시 설\r\n\t\t\t기 본 료\r\n\t\t\r\n\t\t\r\n\t\t\t전기조명\r\n\t\t\t월기본료  1/30\r\n\t\t\t※월기본료：실제 사용한 부하변압기의 용량합계kw당 한전기준 단가\r\n\t\t\r\n\t\t\r\n\t\t\t냉․난방 및 기계설비\r\n\t\t\t가. 기계사용료 ： 30,000~39,000\r\n\t\t\t나. 전기사용료 ： 월기본료  1/30\r\n\t\t\r\n\t\t\r\n\t\t\t음향시설\r\n\t\t\t60,000~78,000\r\n\t\t\r\n\t\t\r\n\t\t\t비고\r\n\t\t\t부속시설사용료는 위 표의 기본료에 실제 사용한 전기･유류･가스 사용료를 합한 금액으로 한다. 다만, 전광판 개인 이벤트의 경우는 예외로 한다.\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n※ 서울특별시 시립체육시설 스포츠데이 사용료 감면 적용\r\n\r\n\r\n ⦁감면일자 : 매월 첫째 주 수요일\r\n\r\n ⦁감면요금 : 전용사용료 30% 감면 (『서울특별시립체육시설의 설치 및 운영에 관한 조례 』 별표3 기준)\r\n\r\n☞ 이용 후 실사용료 정산 및 환불 과정에서 부속시설사용료(전기료,공공료 등)를 제외한 전용사용료만 30% 감면하여 정산처리 됩니다.\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 환불규정\r\n\r\n※ 서울특별시립체육시설 설치 및 운영에 관한 조례에 따름\r\n\r\n※ 사용일 당일 및 사용일 이후에는 취소 및 환불 불가\r\n\r\n\r\n\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t전용사용료\r\n\t\t\r\n\t\t\r\n\t\t\t취소 요청시기\r\n\t\t\t반환요율\r\n\t\t\r\n\t\t\r\n\t\t\t신청 당일\r\n\t\t\t전액 반환\r\n\t\t\r\n\t\t\r\n\t\t\t10일전\r\n\t\t\t전액 반환\r\n\t\t\r\n\t\t\r\n\t\t\t5~9일전\r\n\t\t\t90%\r\n\t\t\r\n\t\t\r\n\t\t\t1~4일전\r\n\t\t\t70%\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 유의사항\r\n\r\n - 이용자께서는 시설물 사용 후 원상복구 의무가 있습니다.\r\n\r\n -시설 내 음식물 섭취 금지\r\n\r\n -체육관 훼손될 수 있는 행동 금지(바닥 및 벽면 테이핑, 시설물 반입, 바닥 훼손 등)\r\n\r\n - 예약확정 후 취소시 수수료가 부과되므로 예약에 신중을 기하여 주시기 바랍니다.\r\n\r\n- 향후 정부 및 서울시 방역지침, 각종 행사 및 긴급 보수공사 등에 따라 예약 취소 및 사용 불가할 수 있음을 알려드립니다.\r\n\r\n- 운동관련 용품 지급대여판매하지 않습니다. 운동복, 신발, 농구공, 배구공 등 직접 챙겨오시기 바랍니다.\r\n\r\n\r\n※ 이용제외 대상\r\n\r\n1) 정치적인 행위를 목적으로 하는 경우\r\n\r\n2) 종교활동을 목적으로 하는 경우\r\n\r\n3) 영리를 목적으로 하는 경우\r\n\r\n4) 기타 공공질서와 선량한 미풍양속을 해할 우려가 있다고 인정되는 경우\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 기타 안내사항\r\n\r\n\r\n ⦁장충체육관주체육관 정기대관 행사와 연동되는 경우 예약이 불가한 점 양해 부탁드립니다.\r\n\r\n ⦁주체육관 행사일정에 따라 승인 후에도 취소처리 될 수 있음을 미리 고지드립니다.\r\n\r\n\r\n\r\n※ 관리자가 휴일 사용 예약 건 시도 및 취소 현황을 수시로 모니터링 합니다.\r\n\r\n① 동일IP 및 동일계정의 단시간 내 문자인증 과다 요청시 비정상적 접근 예약으로 간주하여 확인 후 사용 취소 가능\r\n\r\n② 우연으로 볼 수 없는 특정 계정간 예약 주고받기 확인 시에는 해당 아이디 예약 접수 90일간 차단합니다. 실 사용자만 예약 신청하시기 바랍니다.\r\n\r\n③ 매크로, 프로그램 사용 정황이 있는 예약 건에 대해서는 예약 기록 확인 후 직권 취소 처리하고 해당 계정 예약 접수 차단하오니 유의 바랍니다.\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 주차정보\r\n\r\n\r\n ⦁장충체육관 인근 지역은 불법 주‧정차 단속 구간으로 과태료가 부과될 수 있으므로\r\n\r\n ⦁대중교통 이용 및 장충체육관 주차장(5분 / 400원)을 이용해주시기 바랍니다.\r\n\r\n ⦁단, 배구경기 및 행사일 : 장충체육관 주차장 이용 불가\r\n\r\n ⦁주체육관 배구 경기 및 행사일에는 인근 민영주차장을 이용해주시기 바랍니다.\r\n\r\n\r\n\r\n\r\n※ 참고 : 인근주차장 안내\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t 구 분\r\n\t\t\t장충공영주차장\r\n\t\t\t약수공영주차장\r\n\t\t\t동국대학교\r\n\t\t\t한국자유총연맹\r\n\t\t\r\n\t\t\r\n\t\t\t이용거리\r\n\t\t\t도보 약 10분\r\n\t\t\t(약 610m)\r\n\t\t\t도보 약 20분\r\n\t\t\t(약 1.2km)\r\n\t\t\t도보 약 10분\r\n\t\t\t(약 600m)\r\n\t\t\t도보 약 16분\r\n\t\t\t(약 1km)\r\n\t\t\r\n\t\t\r\n\t\t\t대표전화\r\n\t\t\t02) 2277-7004\r\n\t\t\t02) 2252-3349\r\n\t\t\t02) 2260-3114\r\n\t\t\t02) 2238-1037\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n4. 주의사항1) 예약 후 허가 없이 되팔기 등 불법 전대가 적발될 경우 예약이 취소되고 향후 서울시 공공서비스예약 홈페이지를 이용할 수 없는 등 불이익을 받을 수 있으니 주의하시기 바랍니다.\r\n2) 장충 보조체육관은 코팅된 나무 바닥이오니 이용시 미끄러움에 주의바랍니다.\r\n3) 부속시설(보조체육관, 다목적실) 내부 시설물 파손 시에는 원상복구가 원칙이며, 대관 이용자에게 손해배상을 청구할 수 있습니다.\r\n4) 부속시설(보조체육관, 다목적실) 내부에서 조리나 불을 피우는 행위 일체를 금지합니다.\r\n5) 부속시설(보조체육관, 다목적실) 내‧외부 천막‧캐노피 등 설치 일체를 금지합니다.\r\n6) 운동 종목별 시설물(농구대, 배구네트 등) 필요시 구비여부 관련 문의를 주시길 바라며, 그 외 소모품성 비품(운동화, 농구공, 배구공 등)은 일체 제공하지 않습니다.\r\n7) 타 행사 용도로 사용하시고자 할 경우 반드시 허가가 필요합니다.(담당자 : 02-2128-2813~4)"
       },
       {
         "serviceId": "S240419185222663073",
@@ -13466,13 +13500,13 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료",
         "targetText": "성인",
         "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-10-26T18:00:00",
+        "receptionEndAt": "2026-12-26T18:00:00",
         "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-10-31T00:00:00",
+        "useEndAt": "2026-12-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240419185222663073",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17135203841098NVB3G7R3O2UOM4WHGOYYWDYA",
         "telephone": "02-2128-2813",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용장충체육관 다목적실 이용 및 예약 안내\r\n\r\n\r\n○ 운영시설 : 장충체육관 - 다목적실2 (지하2층)\r\n\r\n\r\n○ 운영시간 : 06:00~24:00 까지 운영, 3시간 1타임\r\n\r\n\r\n\r\n\t이용시간 정보\r\n\t\r\n\t\t\r\n\t\t\t시작\r\n\t\t\t종료\r\n\t\t\t비고\r\n\t\t\r\n\t\t\r\n\t\t\t06:00\r\n\t\t\t09:00\r\n\t\t\t조기\r\n\t\t\r\n\t\t\r\n\t\t\t09:00\r\n\t\t\t12:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t12:00\r\n\t\t\t15:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t15:00\r\n\t\t\t18:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t18:00\r\n\t\t\t21:00\r\n\t\t\t야간\r\n\t\t\r\n\t\t\r\n\t\t\t21:00\r\n\t\t\t24:00\r\n\t\t\t야간\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n * 이용 시간은 준비 및 마무리 시간 포함임\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 사용용도 : 실내 운동, 회의 등\r\n\r\n\r\n\r\n○ 예약방법 : 선착순\r\n\r\n\r\n\r\n○ 예약기간 :\r\n\r\n\r\n\r\n ⦁9 - 10월 예약 : 2026. 8. 25(화) 13:00 부터\r\n\r\n\r\n ⦁ 11-12월 예약 : 2026. 10. 20(화) 13:00 부터(*사용일로부터 5일 전 18시까지 접수 가능)\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 이용요금 및 대관방법\r\n\r\n\r\n※ 서울특별시립체육시설 설치 및 운영에 관한 조례에 따름\r\n\r\n\r\n\r\n ⦁예약방법 : 선착순 (사용일로부터 5일전 18시까지 접수 가능)\r\n\r\n\r\n\r\n  ⦁이용요금\r\n\r\n  - 결제하시는 금액은 전용사용료와 전기료 등을 최대로 합친 추정사용료 입니다.\r\n\r\n\r\n  - 결제금액= 전용사용료 + 부속시설사용료(전기조명(전기료), 냉난방 및 기계설비 등(공공료)) 등\r\n\r\n\r\n  -결제 후 사용 종료 3~5주 이내 실제 사용하신 전기료 등 정산 -환불 or 추가납입\r\n\r\n\r\n※ 전용사용료(이용시간대(평일/주말, 조기/주간/야간)에 따라 할증요금(30%) 부과)\r\n\r\n*3시간 1타임당\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t시간대\r\n\t\t\t전용사용료\r\n\t\t\r\n\t\t\r\n\t\t\t평일 주간\r\n\t\t\t37,200원\r\n\t\t\r\n\t\t\r\n\t\t\t평일조야간\r\n\t\t\t48,400원\r\n\t\t\r\n\t\t\r\n\t\t\t휴일 주간\r\n\t\t\t48,400원\r\n\t\t\r\n\t\t\r\n\t\t\t휴일조야간\r\n\t\t\t62,900원\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t시작\r\n\t\t\t종료\r\n\t\t\t비고\r\n\t\t\r\n\t\t\r\n\t\t\t06:00\r\n\t\t\t09:00\r\n\t\t\t조기\r\n\t\t\r\n\t\t\r\n\t\t\t09:00\r\n\t\t\t12:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t12:00\r\n\t\t\t15:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t15:00\r\n\t\t\t18:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t18:00\r\n\t\t\t21:00\r\n\t\t\t야간\r\n\t\t\r\n\t\t\r\n\t\t\t21:00\r\n\t\t\t24:00\r\n\t\t\t야간\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n※ 부속시설사용료\r\n\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t부 속 시 설\r\n\t\t\t기 본 료\r\n\t\t\r\n\t\t\r\n\t\t\t전기조명\r\n\t\t\t월기본료  1/30\r\n\t\t\t※월기본료：실제 사용한 부하변압기의 용량합계kw당 한전기준 단가\r\n\t\t\r\n\t\t\r\n\t\t\t냉․난방 및 기계설비\r\n\t\t\t가. 기계사용료 ： 30,000~39,000\r\n\t\t\t나. 전기사용료 ： 월기본료  1/30\r\n\t\t\r\n\t\t\r\n\t\t\t음향시설\r\n\t\t\t60,000~78,000\r\n\t\t\r\n\t\t\r\n\t\t\t비고\r\n\t\t\t부속시설사용료는 위 표의 기본료에 실제 사용한 전기･유류･가스 사용료를 합한 금액으로 한다. 다만, 전광판 개인 이벤트의 경우는 예외로 한다.\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n※ 서울특별시 시립체육시설 스포츠데이 사용료 감면 적용\r\n\r\n ⦁감면일자 : 매월 첫째 주 수요일\r\n\r\n ⦁감면요금 : 전용사용료 30% 감면 (『서울특별시립체육시설의 설치 및 운영에 관한 조례 』 별표3 기준)\r\n\r\n☞ 이용 후 실사용료 정산 및 환불 과정에서 부속시설사용료(전기료,공공료 등)를 제외한 전용사용료만 30% 감면하여 정산처리 됩니다.\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 환불규정\r\n\r\n※ 서울특별시립체육시설 설치 및 운영에 관한 조례에 따름\r\n\r\n※ 사용일 당일 및 사용일 이후에는 취소 및 환불 불가\r\n\r\n\r\n\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t전용사용료\r\n\t\t\r\n\t\t\r\n\t\t\t취소 요청시기\r\n\t\t\t반환요율\r\n\t\t\r\n\t\t\r\n\t\t\t신청 당일\r\n\t\t\t전액 반환\r\n\t\t\r\n\t\t\r\n\t\t\t10일전\r\n\t\t\t전액 반환\r\n\t\t\r\n\t\t\r\n\t\t\t5~9일전\r\n\t\t\t90%\r\n\t\t\r\n\t\t\r\n\t\t\t1~4일전\r\n\t\t\t70%\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 유의사항\r\n\r\n - 이용자께서는 시설물 사용 후 원상복구 의무가 있습니다.\r\n\r\n -시설 내 음식물 섭취 금지\r\n\r\n -체육관 훼손될 수 있는 행동 금지(바닥 및 벽면 테이핑, 시설물 반입, 바닥 훼손 등)\r\n\r\n - 예약확정 후 취소시 수수료가 부과되므로 예약에 신중을 기하여 주시기 바랍니다.\r\n\r\n- 향후 정부 및 서울시 방역지침, 각종 행사 및 긴급 보수공사 등에 따라 예약 취소 및 사용 불가할 수 있음을 알려드립니다.\r\n\r\n- 운동관련 용품 지급대여판매하지 않습니다. 운동복, 신발, 농구공, 배구공 등 직접 챙겨오시기 바랍니다.\r\n\r\n\r\n\r\n※ 이용제외 대상\r\n\r\n1) 정치적인 행위를 목적으로 하는 경우\r\n\r\n2) 종교활동을 목적으로 하는 경우\r\n\r\n3) 영리를 목적으로 하는 경우\r\n\r\n4) 기타 공공질서와 선량한 미풍양속을 해할 우려가 있다고 인정되는 경우\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 기타 안내사항\r\n\r\n\r\n\r\n ⦁장충체육관주체육관 정기대관 행사와 연동되는 경우 예약이 불가한 점 양해 부탁드립니다.\r\n\r\n ⦁주체육관 행사일정에 따라 승인 후에도 취소처리 될 수 있음을 미리 고지드립니다.\r\n\r\n\r\n\r\n※ 관리자가 휴일 사용 예약 건 시도 및 취소 현황을 수시로 모니터링 합니다.\r\n\r\n① 동일IP 및 동일계정의 단시간 내 문자인증 과다 요청시 비정상적 접근 예약으로 간주하여 확인 후 사용 취소 가능\r\n\r\n② 우연으로 볼 수 없는 특정 계정간 예약 주고받기 확인 시에는 해당 아이디 예약 접수 90일간 차단합니다. 실 사용자만 예약 신청하시기 바랍니다.\r\n\r\n③ 매크로, 프로그램 사용 정황이 있는 예약 건에 대해서는 예약 기록 확인 후 직권 취소 처리하고 해당 계정 예약 접수 차단하오니 유의 바랍니다.\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 주차정보\r\n\r\n\r\n ⦁장충체육관 인근 지역은 불법 주‧정차 단속 구간으로 과태료가 부과될 수 있으므로\r\n\r\n\r\n ⦁대중교통 이용 및 장충체육관 주차장(5분 / 400원)을 이용해주시기 바랍니다.\r\n\r\n\r\n\r\n ⦁단, 배구경기 및 행사일 : 장충체육관 주차장 이용 불가\r\n\r\n\r\n ⦁주체육관 배구 경기 및 행사일에는 인근 민영주차장을 이용해주시기 바랍니다.\r\n\r\n\r\n\r\n\r\n※ 참고 : 인근주차장 안내\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t 구 분\r\n\t\t\t장충공영주차장\r\n\t\t\t약수공영주차장\r\n\t\t\t동국대학교\r\n\t\t\t한국자유총연맹\r\n\t\t\r\n\t\t\r\n\t\t\t이용거리\r\n\t\t\t도보 약 10분\r\n\t\t\t(약 610m)\r\n\t\t\t도보 약 20분\r\n\t\t\t(약 1.2km)\r\n\t\t\t도보 약 10분\r\n\t\t\t(약 600m)\r\n\t\t\t도보 약 16분\r\n\t\t\t(약 1km)\r\n\t\t\r\n\t\t\r\n\t\t\t대표전화\r\n\t\t\t02) 2277-7004\r\n\t\t\t02) 2252-3349\r\n\t\t\t02) 2260-3114\r\n\t\t\t02) 2238-1037\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n\r\n\r\n\r\n4. 주의사항1) 예약 후 허가 없이 되팔기 등 불법 전대가 적발될 경우 예약이 취소되고 향후 서울시 공공서비스예약 홈페이지를 이용할 수 없는 등 불이익을 받을 수 있으니 주의하시기 바랍니다.\r\n2) 장충 보조체육관은 코팅된 나무 바닥이오니 이용시 미끄러움에 주의바랍니다.\r\n3) 부속시설(보조체육관, 다목적실) 내부 시설물 파손 시에는 원상복구가 원칙이며, 대관 이용자에게 손해배상을 청구할 수 있습니다.\r\n4) 부속시설(보조체육관, 다목적실) 내부에서 조리나 불을 피우는 행위 일체를 금지합니다.\r\n5) 부속시설(보조체육관, 다목적실) 내‧외부 천막‧캐노피 등 설치 일체를 금지합니다.\r\n6) 운동 종목별 시설물(농구대, 배구네트 등) 필요시 구비여부 관련 문의를 주시길 바라며, 그 외 소모품성 비품(운동화, 농구공, 배구공 등)은 일체 제공하지 않습니다.\r\n7) 타 행사 용도로 사용하시고자 할 경우 반드시 허가가 필요합니다.(담당자 : 02-2128-2813~4)"
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용장충체육관 다목적실 이용 및 예약 안내\r\n\r\n\r\n○ 운영시설 : 장충체육관 - 다목적실2 (지하2층)\r\n\r\n\r\n○ 운영시간 : 06:00~24:00 까지 운영, 3시간 1타임\r\n\r\n\r\n\r\n\t이용시간 정보\r\n\t\r\n\t\t\r\n\t\t\t시작\r\n\t\t\t종료\r\n\t\t\t비고\r\n\t\t\r\n\t\t\r\n\t\t\t06:00\r\n\t\t\t09:00\r\n\t\t\t조기\r\n\t\t\r\n\t\t\r\n\t\t\t09:00\r\n\t\t\t12:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t12:00\r\n\t\t\t15:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t15:00\r\n\t\t\t18:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t18:00\r\n\t\t\t21:00\r\n\t\t\t야간\r\n\t\t\r\n\t\t\r\n\t\t\t21:00\r\n\t\t\t24:00\r\n\t\t\t야간\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n * 이용 시간은 준비 및 마무리 시간 포함임\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 사용용도 : 실내 운동, 회의 등\r\n\r\n\r\n\r\n○ 예약방법 : 선착순\r\n\r\n\r\n\r\n○ 예약기간 :\r\n\r\n\r\n\r\n  ⦁ 11-12월 예약 : 2026. 10. 20(화)13:00부터 접수 시작\r\n\r\n  ⦁ 2027년 1월-2월 예약 : 2026. 12. 22(화)13:00부터(*이용일로부터 5일 전 18시까지 접수 가능)\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 이용요금 및 대관방법\r\n\r\n\r\n※ 서울특별시립체육시설 설치 및 운영에 관한 조례에 따름\r\n\r\n\r\n\r\n ⦁예약방법 : 선착순 (사용일로부터 5일전 18시까지 접수 가능)\r\n\r\n\r\n\r\n  ⦁이용요금\r\n\r\n  - 결제하시는 금액은 전용사용료와 전기료 등을 최대로 합친 추정사용료 입니다.\r\n\r\n\r\n  - 결제금액= 전용사용료 + 부속시설사용료(전기조명(전기료), 냉난방 및 기계설비 등(공공료)) 등\r\n\r\n\r\n  -결제 후 사용 종료 3~5주 이내 실제 사용하신 전기료 등 정산 -환불 or 추가납입\r\n\r\n\r\n※ 전용사용료(이용시간대(평일/주말, 조기/주간/야간)에 따라 할증요금(30%) 부과)\r\n\r\n*3시간 1타임당\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t시간대\r\n\t\t\t전용사용료\r\n\t\t\r\n\t\t\r\n\t\t\t평일 주간\r\n\t\t\t37,200원\r\n\t\t\r\n\t\t\r\n\t\t\t평일조야간\r\n\t\t\t48,400원\r\n\t\t\r\n\t\t\r\n\t\t\t휴일 주간\r\n\t\t\t48,400원\r\n\t\t\r\n\t\t\r\n\t\t\t휴일조야간\r\n\t\t\t62,900원\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t시작\r\n\t\t\t종료\r\n\t\t\t비고\r\n\t\t\r\n\t\t\r\n\t\t\t06:00\r\n\t\t\t09:00\r\n\t\t\t조기\r\n\t\t\r\n\t\t\r\n\t\t\t09:00\r\n\t\t\t12:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t12:00\r\n\t\t\t15:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t15:00\r\n\t\t\t18:00\r\n\t\t\t주간\r\n\t\t\r\n\t\t\r\n\t\t\t18:00\r\n\t\t\t21:00\r\n\t\t\t야간\r\n\t\t\r\n\t\t\r\n\t\t\t21:00\r\n\t\t\t24:00\r\n\t\t\t야간\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n※ 부속시설사용료\r\n\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t부 속 시 설\r\n\t\t\t기 본 료\r\n\t\t\r\n\t\t\r\n\t\t\t전기조명\r\n\t\t\t월기본료  1/30\r\n\t\t\t※월기본료：실제 사용한 부하변압기의 용량합계kw당 한전기준 단가\r\n\t\t\r\n\t\t\r\n\t\t\t냉․난방 및 기계설비\r\n\t\t\t가. 기계사용료 ： 30,000~39,000\r\n\t\t\t나. 전기사용료 ： 월기본료  1/30\r\n\t\t\r\n\t\t\r\n\t\t\t음향시설\r\n\t\t\t60,000~78,000\r\n\t\t\r\n\t\t\r\n\t\t\t비고\r\n\t\t\t부속시설사용료는 위 표의 기본료에 실제 사용한 전기･유류･가스 사용료를 합한 금액으로 한다. 다만, 전광판 개인 이벤트의 경우는 예외로 한다.\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n※ 서울특별시 시립체육시설 스포츠데이 사용료 감면 적용\r\n\r\n ⦁감면일자 : 매월 첫째 주 수요일\r\n\r\n ⦁감면요금 : 전용사용료 30% 감면 (『서울특별시립체육시설의 설치 및 운영에 관한 조례 』 별표3 기준)\r\n\r\n☞ 이용 후 실사용료 정산 및 환불 과정에서 부속시설사용료(전기료,공공료 등)를 제외한 전용사용료만 30% 감면하여 정산처리 됩니다.\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 환불규정\r\n\r\n※ 서울특별시립체육시설 설치 및 운영에 관한 조례에 따름\r\n\r\n※ 사용일 당일 및 사용일 이후에는 취소 및 환불 불가\r\n\r\n\r\n\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t전용사용료\r\n\t\t\r\n\t\t\r\n\t\t\t취소 요청시기\r\n\t\t\t반환요율\r\n\t\t\r\n\t\t\r\n\t\t\t신청 당일\r\n\t\t\t전액 반환\r\n\t\t\r\n\t\t\r\n\t\t\t10일전\r\n\t\t\t전액 반환\r\n\t\t\r\n\t\t\r\n\t\t\t5~9일전\r\n\t\t\t90%\r\n\t\t\r\n\t\t\r\n\t\t\t1~4일전\r\n\t\t\t70%\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 유의사항\r\n\r\n - 이용자께서는 시설물 사용 후 원상복구 의무가 있습니다.\r\n\r\n -시설 내 음식물 섭취 금지\r\n\r\n -체육관 훼손될 수 있는 행동 금지(바닥 및 벽면 테이핑, 시설물 반입, 바닥 훼손 등)\r\n\r\n - 예약확정 후 취소시 수수료가 부과되므로 예약에 신중을 기하여 주시기 바랍니다.\r\n\r\n- 향후 정부 및 서울시 방역지침, 각종 행사 및 긴급 보수공사 등에 따라 예약 취소 및 사용 불가할 수 있음을 알려드립니다.\r\n\r\n- 운동관련 용품 지급대여판매하지 않습니다. 운동복, 신발, 농구공, 배구공 등 직접 챙겨오시기 바랍니다.\r\n\r\n\r\n\r\n※ 이용제외 대상\r\n\r\n1) 정치적인 행위를 목적으로 하는 경우\r\n\r\n2) 종교활동을 목적으로 하는 경우\r\n\r\n3) 영리를 목적으로 하는 경우\r\n\r\n4) 기타 공공질서와 선량한 미풍양속을 해할 우려가 있다고 인정되는 경우\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 기타 안내사항\r\n\r\n\r\n\r\n ⦁장충체육관주체육관 정기대관 행사와 연동되는 경우 예약이 불가한 점 양해 부탁드립니다.\r\n\r\n ⦁주체육관 행사일정에 따라 승인 후에도 취소처리 될 수 있음을 미리 고지드립니다.\r\n\r\n\r\n\r\n※ 관리자가 휴일 사용 예약 건 시도 및 취소 현황을 수시로 모니터링 합니다.\r\n\r\n① 동일IP 및 동일계정의 단시간 내 문자인증 과다 요청시 비정상적 접근 예약으로 간주하여 확인 후 사용 취소 가능\r\n\r\n② 우연으로 볼 수 없는 특정 계정간 예약 주고받기 확인 시에는 해당 아이디 예약 접수 90일간 차단합니다. 실 사용자만 예약 신청하시기 바랍니다.\r\n\r\n③ 매크로, 프로그램 사용 정황이 있는 예약 건에 대해서는 예약 기록 확인 후 직권 취소 처리하고 해당 계정 예약 접수 차단하오니 유의 바랍니다.\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n○ 주차정보\r\n\r\n\r\n ⦁장충체육관 인근 지역은 불법 주‧정차 단속 구간으로 과태료가 부과될 수 있으므로\r\n\r\n\r\n ⦁대중교통 이용 및 장충체육관 주차장(5분 / 400원)을 이용해주시기 바랍니다.\r\n\r\n\r\n\r\n ⦁단, 배구경기 및 행사일 : 장충체육관 주차장 이용 불가\r\n\r\n\r\n ⦁주체육관 배구 경기 및 행사일에는 인근 민영주차장을 이용해주시기 바랍니다.\r\n\r\n\r\n\r\n\r\n※ 참고 : 인근주차장 안내\r\n\r\n\r\n\t\r\n\t\t\r\n\t\t\t 구 분\r\n\t\t\t장충공영주차장\r\n\t\t\t약수공영주차장\r\n\t\t\t동국대학교\r\n\t\t\t한국자유총연맹\r\n\t\t\r\n\t\t\r\n\t\t\t이용거리\r\n\t\t\t도보 약 10분\r\n\t\t\t(약 610m)\r\n\t\t\t도보 약 20분\r\n\t\t\t(약 1.2km)\r\n\t\t\t도보 약 10분\r\n\t\t\t(약 600m)\r\n\t\t\t도보 약 16분\r\n\t\t\t(약 1km)\r\n\t\t\r\n\t\t\r\n\t\t\t대표전화\r\n\t\t\t02) 2277-7004\r\n\t\t\t02) 2252-3349\r\n\t\t\t02) 2260-3114\r\n\t\t\t02) 2238-1037\r\n\t\t\r\n\t\r\n\r\n\r\n\r\n\r\n\r\n\r\n4. 주의사항1) 예약 후 허가 없이 되팔기 등 불법 전대가 적발될 경우 예약이 취소되고 향후 서울시 공공서비스예약 홈페이지를 이용할 수 없는 등 불이익을 받을 수 있으니 주의하시기 바랍니다.\r\n2) 장충 보조체육관은 코팅된 나무 바닥이오니 이용시 미끄러움에 주의바랍니다.\r\n3) 부속시설(보조체육관, 다목적실) 내부 시설물 파손 시에는 원상복구가 원칙이며, 대관 이용자에게 손해배상을 청구할 수 있습니다.\r\n4) 부속시설(보조체육관, 다목적실) 내부에서 조리나 불을 피우는 행위 일체를 금지합니다.\r\n5) 부속시설(보조체육관, 다목적실) 내‧외부 천막‧캐노피 등 설치 일체를 금지합니다.\r\n6) 운동 종목별 시설물(농구대, 배구네트 등) 필요시 구비여부 관련 문의를 주시길 바라며, 그 외 소모품성 비품(운동화, 농구공, 배구공 등)은 일체 제공하지 않습니다.\r\n7) 타 행사 용도로 사용하시고자 할 경우 반드시 허가가 필요합니다.(담당자 : 02-2128-2813~4)"
       }
     ]
   },
@@ -13550,7 +13584,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260119194817217542",
         "title": "[중구교육지원센터] 밴드룸",
-        "statusText": "안내중",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "주민공유공간",
         "paidType": "유료(요금안내문의)",
@@ -13567,7 +13601,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260119193451202578",
         "title": "[중구교육지원센터] 액티비티2",
-        "statusText": "안내중",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "주민공유공간",
         "paidType": "유료(요금안내문의)",
@@ -13584,7 +13618,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260119194158754284",
         "title": "[중구교육지원센터] 에듀쿡",
-        "statusText": "안내중",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "주민공유공간",
         "paidType": "유료(요금안내문의)",
@@ -13601,7 +13635,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260119182723998849",
         "title": "[중구교육지원센터] 커뮤니티1",
-        "statusText": "안내중",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "주민공유공간",
         "paidType": "유료(요금안내문의)",
@@ -13618,7 +13652,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260119183726526667",
         "title": "[중구교육지원센터] 커뮤니티2",
-        "statusText": "안내중",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "주민공유공간",
         "paidType": "유료(요금안내문의)",
@@ -13635,7 +13669,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260119184822007560",
         "title": "[중구교육지원센터] 커뮤니티3",
-        "statusText": "안내중",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "주민공유공간",
         "paidType": "유료(요금안내문의)",
@@ -13652,7 +13686,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260119163307647702",
         "title": "[중구교육지원센터] 컨퍼런스1",
-        "statusText": "안내중",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "주민공유공간",
         "paidType": "유료(요금안내문의)",
@@ -13669,7 +13703,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260119181025560424",
         "title": "[중구교육지원센터] 컨퍼런스4",
-        "statusText": "안내중",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "주민공유공간",
         "paidType": "유료(요금안내문의)",

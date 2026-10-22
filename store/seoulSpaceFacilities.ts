@@ -9312,7 +9312,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260913105938574391",
         "title": "문화실험공간 호수 [10월 우리끼리 식당] 송파구 석촌호수 문화실험공간 호수",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "주민공유공간",
         "paidType": "유료",

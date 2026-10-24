@@ -3961,9 +3961,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "유료",
         "targetText": "제한없음",
         "receptionStartAt": "2026-02-27T00:00:00",
-        "receptionEndAt": "2026-12-31T00:00:00",
+        "receptionEndAt": "2026-11-30T00:00:00",
         "useStartAt": "2026-02-27T00:00:00",
-        "useEndAt": "2026-12-31T00:00:00",
+        "useEndAt": "2026-11-30T00:00:00",
         "serviceUrl": "https://sema.seoul.go.kr/kr/sema/rental/info",
         "imageUrl": "https://sema.seoul.go.kr/common/imageView?FILE_PATH=/nj/VEN01/2018/&FILE_NM=20180514153059_7d2e7bba0bc04a40938c3a15cb2533b3_0c95d7e21e9e40e89844e3c3af7631ad",
         "telephone": "02-2124-5216",
@@ -9165,8 +9165,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "multipurpose",
     "longitude": 127.04224,
     "latitude": 37.56354,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1766387490756I4SABX50ZMFK2GUP77QBSGGMJ",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251222155448719556",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1761888305979N6LNOOE35XYT69R4JLA5IW3M7",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251030105406614828",
     "reservationCount": 2,
     "reservations": [
       {

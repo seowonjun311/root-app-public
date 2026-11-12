@@ -11638,7 +11638,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S261013130947640977",
         "title": "용산도시기억전시관 세미나실 대관(11월)",
-        "statusText": "예약마감",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "회의실",
         "paidType": "무료",

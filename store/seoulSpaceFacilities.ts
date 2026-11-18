@@ -46,7 +46,7 @@ export type SeoulSpaceFacility = {
 };
 
 export const SEOUL_SPACE_RESERVATION_COUNT =
-  544;
+  545;
 
 export const SEOUL_SPACE_FACILITY_COUNT =
   305;
@@ -2380,8 +2380,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "meetingRoom",
     "longitude": 127.07654,
     "latitude": 37.55223,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17685258005847KGJV38ZSTV17A46AYE4IH0BU",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260116100745600869",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1768525131413HV1ULVOVZZX4QRVZ05RWMFYAB",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260116095533353281",
     "reservationCount": 3,
     "reservations": [
       {
@@ -4020,8 +4020,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 127.0603153174388,
     "latitude": 37.65381413048446,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1766128825411G244NL3HJWFTIUDW55WDLNU8N",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S221021151144642859",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1666335053893EG7RBBCFHXGGYTS9HR0T65EJ0",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S220722144143250673",
     "reservationCount": 3,
     "reservations": [
       {
@@ -10791,7 +10791,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S261027094647064033",
         "title": "양천공원 키지트 온라인 사전예약 (1124-1129)",
-        "statusText": "안내중",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "민원 등 기타",
         "paidType": "무료",
@@ -11739,8 +11739,25 @@ export const SEOUL_SPACE_FACILITIES:
     "latitude": 37.52638062679508,
     "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1791864690674SNATTVEGEOCF4GEFSNHRRAFSN",
     "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S261013130947640977",
-    "reservationCount": 1,
+    "reservationCount": 2,
     "reservations": [
+      {
+        "serviceId": "S261117130405543475",
+        "title": "용산도시기억전시관 세미나실 대관(12월)",
+        "statusText": "접수중",
+        "majorCategory": "공간시설",
+        "category": "회의실",
+        "paidType": "무료",
+        "targetText": "제한없음",
+        "receptionStartAt": "2026-11-17T14:00:00",
+        "receptionEndAt": "2026-12-28T00:00:00",
+        "useStartAt": "2026-11-17T00:00:00",
+        "useEndAt": "2026-12-31T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S261117130405543475",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17948883861928R8MOFBJFWZU7P43HPOZ7JB1F",
+        "telephone": "02-3785-2590",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n용산도시기억전시관 세미나실 대관 안내\r\n\r\n○ 시설개요\r\n- 위치 : 용산구 서빙고로 17 용산센트럴파크 해링턴스퀘어 공공시설동 2층\r\n- 수용인원 : 15명\r\n- 부대시설 : 4인용 책상 3개, 의자 15개, 빔프로젝터\r\n\r\n○ 이용가능시간 : 화~토14:00~17:00 (3시간)\r\n  ※ 세미나실 시설은 전시실과 오픈된 구조로 되어있습니다. 시설 이용시 과도한 소음은 자제바랍니다.\r\n ※ 12월 5일ㆍ12일ㆍ26일은 시민참여 프로그램 운영으로 대관이 불가합니다.\r\n\r\n○ 이용 가능 행사\r\n- 토론회, 교육, 스터디 및 소모임\r\n\r\n○ 이용 절차\r\n- 예약접수 : 이용예정일 3일 전까지\r\n- 이용허가 : 신청일로부터 3일 이내 SMS 통보\r\n\r\n○ 선정 방법 : 심사(사용목적 등 제한사항 검토)\r\n\r\n○ 이용료 : 무료\r\n\r\n○ 문의 : 용산도시기억전시관 운영사무실 (02-3785-2590)\r\n\r\n○ 사용 시 주의사항\r\n- 물, 음료 외 음식 섭취를 금지합니다.\r\n- 본 시설은 회의실이 아닌 전시관이므로 책상, 의자는 이용 전 및 퇴실 전에 반드시 정리해주시기 바랍니다.\r\n- 2시간 주차권 지원 가능합니다(추가지원 불가). *2시간 이후 10분당 1,500원\r\n * 주차 안내 링크 https://blog.naver.com/yongsanpark_gallery/222415417976\r\n\r\n\r\n4. 주의사항`○ 이용제한 및 취소\r\n- 정치적, 종교적, 영리적 행위를 목적으로 하는 경우\r\n- 기타 공공질서와 선량한 미풍양속을 해할 우려가 있다고 인정되는 경우\r\n- 기타 다른 시민의 안전 및 시설물 유지상 사용을 제한할 필요가 있다고 인정할 경우"
+      },
       {
         "serviceId": "S261013130947640977",
         "title": "용산도시기억전시관 세미나실 대관(11월)",

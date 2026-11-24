@@ -46,7 +46,7 @@ export type SeoulSpaceFacility = {
 };
 
 export const SEOUL_SPACE_RESERVATION_COUNT =
-  543;
+  545;
 
 export const SEOUL_SPACE_FACILITY_COUNT =
   305;
@@ -656,8 +656,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 127.03609,
     "latitude": 37.62512,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1740460982331BY3PRH56LY62Z20H6B08EFDFE",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250225135811325469",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17402023279296BZLQ5OWAJOLZU8OSGUG91QY0",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250222142900323973",
     "reservationCount": 6,
     "reservations": [
       {
@@ -1158,23 +1158,6 @@ export const SEOUL_SPACE_FACILITIES:
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용○ 이용 가능 행사\r\n-토론회, 동아리 행사, 교육, 주민 모임 (영리적 목적 금지)\r\n\r\n○ 시설 개요\r\n- 위 치 : 서울시 강서구 화곡로63길 96(등촌동 705-4) 3층\r\n- 면적 : 76㎡\r\n- 수용인원 : 24명\r\n- 부대시설 :빔프로젝트,마이크, 스피커, 강의용 테이블, 의자, 화이트 보드\r\n- 주 차 장 : 6면\r\n※ 주차공간이 부족하니 대중교통을 이용해 주시기 바랍니다.\r\n\r\n○ 사용자격\r\n- 시에 주민등록이 되어 있는 개인 및 주소지가 되어있는 단체\r\n- 시에 주소지를 두고 있는 직장,학교 등에 재직 또는 재학 중인 자\r\n ※ 사용당일 자격서류 확인(주민등록지, 사업장소재지, 재학여부 등)\r\n\r\n○ 이용가능 시간\r\n- 평일: 월 13:00~18:00,화 13:00~18:00, 목 09:00~12:00,금 13:00~18:00 (월,화,목 댄스수업으로 소음발생 주의)\r\n※ 예약 전, 전화문의 주시기 바랍니다.\r\n\r\n○ 선정방법 : 심사(사용목적 등 제한사항 검토)\r\n- 개인과 개인 경합시 : 심사\r\n- 개인과 단체 경합시 : 단체 우선\r\n- 단체와 단체 경합시 : 심사\r\n\r\n○ 이용료 : 25,000원/2시간(기준시간 : 최초 2시간)\r\n4. 주의사항\r\n-기준시간 2시간. 25,000원\r\n\r\n-사용승인 후 지정된 기일 내에 사용료 납부(고지서 납기일)\r\n\r\n-예약승인 후에도 공공목적에 의해 취소될 수 있음을 양해하여 주시기 바랍니다.\r\n\r\n-예약확정 후 이용자 취소 시, 다음 규정에 따라 환불됩니다.(등촌3동 주민자치회 및 자치회관 운영세칙 제46조)\r\n\r\nㆍ천재지변 또는 불가항력등의 사유로 인하여 취소하는 경우 전액 반환\r\n\r\nㆍ시설사정으로 인하여 이용이 취소된 경우 전액 반환\r\n\r\nㆍ이용예정일 3일 전까지 이용 취소한 경우 전액 반환\r\n\r\nㆍ이용예정일 2일 전부터 전일까지 이용 취소한 경우 90% 반환\r\n\r\nㆍ이용예정일 당일 이용 취소한 경우 환불 불가"
       },
       {
-        "serviceId": "S260227160029931100",
-        "title": "강서구 등촌3동주민센터 3층 다목적실",
-        "statusText": "접수중",
-        "majorCategory": "공간시설",
-        "category": "다목적실",
-        "paidType": "유료(요금안내문의)",
-        "targetText": "제한없음",
-        "receptionStartAt": "2026-01-01T00:00:00",
-        "receptionEndAt": "2026-11-30T00:00:00",
-        "useStartAt": "2026-01-01T00:00:00",
-        "useEndAt": "2026-11-30T00:00:00",
-        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260227160029931100",
-        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1772175705263T1XYJMTW7M46W5Q8QH6WK0V94",
-        "telephone": "",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용■ 대여기준\r\n\r\n-기준시간 2시간. 30,000원\r\n\r\n-사용승인 후 지정된 기일 내에 사용료 납부(고지서 납기일)\r\n\r\n-예약승인 후에도 공공목적에 의해 취소될 수 있음을 양해하여 주시기 바랍니다.\r\n\r\n-예약확정 후 이용자 취소 시, 다음 규정에 따라 환불됩니다.(등촌3동 주민자치회 및 자치회관 운영세칙 제46조)\r\n\r\nㆍ천재지변 또는 불가항력등의 사유로 인하여 취소하는 경우 전액 반환\r\n\r\nㆍ시설사정으로 인하여 이용이 취소된 경우 전액 반환\r\n\r\nㆍ이용예정일 3일 전까지 이용 취소한 경우 전액 반환\r\n\r\nㆍ이용예정일 2일 전부터 전일까지 이용 취소한 경우 90% 반환\r\n\r\nㆍ이용예정일 당일 이용 취소한 경우 환불 불가\r\n\r\n\r\n■ 시설개요\r\n○ 용도 : 회의실 및 교육장\r\n○ 보유장비 : 마이크 및 빔프로젝터4. 주의사항\r\n-기준시간 2시간. 35,000원\r\n-사용승인 후 지정된 기일 내에 사용료 납부(고지서 납기일)\r\n-예약승인 후에도 공공목적에 의해 취소될 수 있음을 양해하여 주시기 바랍니다.\r\n-예약확정 후 이용자 취소 시, 다음 규정에 따라 환불됩니다.(등촌3동 주민자치회 및 자치회관 운영세칙 제46조)\r\nㆍ천재지변 또는 불가항력등의 사유로 인하여 취소하는 경우 전액 반환\r\nㆍ시설사정으로 인하여 이용이 취소된 경우 전액 반환\r\nㆍ이용예정일 3일 전까지 이용 취소한 경우 전액 반환\r\nㆍ이용예정일 2일 전부터 전일까지 이용 취소한 경우 90% 반환\r\nㆍ이용예정일 당일 이용 취소한 경우 환불 불가"
-      },
-      {
         "serviceId": "S260227162326339086",
         "title": "강서구 등촌3동주민센터 4층 대강당",
         "statusText": "접수중",
@@ -1192,9 +1175,26 @@ export const SEOUL_SPACE_FACILITIES:
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용■ 대여기준\r\n\r\n-기준시간 2시간. 35,000원\r\n\r\n-사용승인 후 지정된 기일 내에 사용료 납부(고지서 납기일)\r\n\r\n-예약승인 후에도 공공목적에 의해 취소될 수 있음을 양해하여 주시기 바랍니다.\r\n\r\n-예약확정 후 이용자 취소 시, 다음 규정에 따라 환불됩니다.(등촌3동 주민자치회 및 자치회관 운영세칙 제46조)\r\n\r\nㆍ천재지변 또는 불가항력등의 사유로 인하여 취소하는 경우 전액 반환\r\n\r\nㆍ시설사정으로 인하여 이용이 취소된 경우 전액 반환\r\n\r\nㆍ이용예정일 3일 전까지 이용 취소한 경우 전액 반환\r\n\r\nㆍ이용예정일 2일 전부터 전일까지 이용 취소한 경우 90% 반환\r\n\r\nㆍ이용예정일 당일 이용 취소한 경우 환불 불가\r\n\r\n\r\n■ 시설개요\r\n○ 용도 : 회의실 및 교육장\r\n○ 보유장비 : 마이크 및 빔프로젝터4. 주의사항\r\n-기준시간 2시간. 35,000원\r\n-사용승인 후 지정된 기일 내에 사용료 납부(고지서 납기일)\r\n-예약승인 후에도 공공목적에 의해 취소될 수 있음을 양해하여 주시기 바랍니다.\r\n-예약확정 후 이용자 취소 시, 다음 규정에 따라 환불됩니다.(등촌3동 주민자치회 및 자치회관 운영세칙 제46조)\r\nㆍ천재지변 또는 불가항력등의 사유로 인하여 취소하는 경우 전액 반환\r\nㆍ시설사정으로 인하여 이용이 취소된 경우 전액 반환\r\nㆍ이용예정일 3일 전까지 이용 취소한 경우 전액 반환\r\nㆍ이용예정일 2일 전부터 전일까지 이용 취소한 경우 90% 반환\r\nㆍ이용예정일 당일 이용 취소한 경우 환불 불가"
       },
       {
+        "serviceId": "S260227160029931100",
+        "title": "강서구 등촌3동주민센터 3층 다목적실",
+        "statusText": "예약마감",
+        "majorCategory": "공간시설",
+        "category": "다목적실",
+        "paidType": "유료(요금안내문의)",
+        "targetText": "제한없음",
+        "receptionStartAt": "2026-01-01T00:00:00",
+        "receptionEndAt": "2026-11-30T00:00:00",
+        "useStartAt": "2026-01-01T00:00:00",
+        "useEndAt": "2026-11-30T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260227160029931100",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1772175705263T1XYJMTW7M46W5Q8QH6WK0V94",
+        "telephone": "",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용■ 대여기준\r\n\r\n-기준시간 2시간. 30,000원\r\n\r\n-사용승인 후 지정된 기일 내에 사용료 납부(고지서 납기일)\r\n\r\n-예약승인 후에도 공공목적에 의해 취소될 수 있음을 양해하여 주시기 바랍니다.\r\n\r\n-예약확정 후 이용자 취소 시, 다음 규정에 따라 환불됩니다.(등촌3동 주민자치회 및 자치회관 운영세칙 제46조)\r\n\r\nㆍ천재지변 또는 불가항력등의 사유로 인하여 취소하는 경우 전액 반환\r\n\r\nㆍ시설사정으로 인하여 이용이 취소된 경우 전액 반환\r\n\r\nㆍ이용예정일 3일 전까지 이용 취소한 경우 전액 반환\r\n\r\nㆍ이용예정일 2일 전부터 전일까지 이용 취소한 경우 90% 반환\r\n\r\nㆍ이용예정일 당일 이용 취소한 경우 환불 불가\r\n\r\n\r\n■ 시설개요\r\n○ 용도 : 회의실 및 교육장\r\n○ 보유장비 : 마이크 및 빔프로젝터4. 주의사항\r\n-기준시간 2시간. 35,000원\r\n-사용승인 후 지정된 기일 내에 사용료 납부(고지서 납기일)\r\n-예약승인 후에도 공공목적에 의해 취소될 수 있음을 양해하여 주시기 바랍니다.\r\n-예약확정 후 이용자 취소 시, 다음 규정에 따라 환불됩니다.(등촌3동 주민자치회 및 자치회관 운영세칙 제46조)\r\nㆍ천재지변 또는 불가항력등의 사유로 인하여 취소하는 경우 전액 반환\r\nㆍ시설사정으로 인하여 이용이 취소된 경우 전액 반환\r\nㆍ이용예정일 3일 전까지 이용 취소한 경우 전액 반환\r\nㆍ이용예정일 2일 전부터 전일까지 이용 취소한 경우 90% 반환\r\nㆍ이용예정일 당일 이용 취소한 경우 환불 불가"
+      },
+      {
         "serviceId": "S260227160609098170",
         "title": "강서구 등촌3동주민센터 4층 소회의실",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "강의실",
         "paidType": "유료(요금안내문의)",
@@ -2380,8 +2380,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "meetingRoom",
     "longitude": 127.07654,
     "latitude": 37.55223,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1768523332485ECVXUX6VG5H07P7K519ZCQ9H0",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260116092315075496",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17685258005847KGJV38ZSTV17A46AYE4IH0BU",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260116100745600869",
     "reservationCount": 3,
     "reservations": [
       {
@@ -3170,7 +3170,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S261112154835460240",
         "title": "오금교 다리밑 야외공연장",
-        "statusText": "안내중",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "공연장",
         "paidType": "무료",
@@ -4020,8 +4020,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 127.0603153174388,
     "latitude": 37.65381413048446,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1666335053893EG7RBBCFHXGGYTS9HR0T65EJ0",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S220722144143250673",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1766128825411G244NL3HJWFTIUDW55WDLNU8N",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S221021151144642859",
     "reservationCount": 3,
     "reservations": [
       {
@@ -4842,8 +4842,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "studio",
     "longitude": 127.04875385874352,
     "latitude": 37.65313238883252,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1686895964961V1NJ77QG92ACMVUXDGL5CQAFB",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S230616151245305514",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1686898091180IIXDTX9XASN27OTCA5FUC2USF",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S230616154734913273",
     "reservationCount": 3,
     "reservations": [
       {
@@ -8755,8 +8755,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "multipurpose",
     "longitude": 127.04153,
     "latitude": 37.54908,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1778227539340SE7V6JQKWS4Z0WOH4PCCBBJDO",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260508170539798720",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1787875130274GSYJ5NTY427CXM6BNKQJZJB34",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260828085751810592",
     "reservationCount": 24,
     "reservations": [
       {
@@ -10087,7 +10087,7 @@ export const SEOUL_SPACE_FACILITIES:
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251230145333466215",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17670740362298Q6WODZRCQZXEBDMZRIX07XRV",
         "telephone": "02-2620-4068",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n내부사정 등으로 이용에 제한이 있을 수 있으니, 사전에 담당자에게 전화문의 후 신청 바랍니다.\r\n\r\n<!--[data-hwpjson]{\r\n\"documentPr\": {\r\n\"di\": \"\",\r\n\"dp\": {\r\n\"dn\": \"test.hwp\",\r\n\"ta\": 1,\r\n\"d1\": 5,\r\n\"d2\": 0,\r\n\"dv\": 5,\r\n\"dr\": 1,\r\n\"do\": 1,\r\n\"vj\": \"1.0\",\r\n\"an\": \"Hancom Office Hangul\",\r\n\"av\": \"9, 1, 1, 4673\",\r\n\"ao\": \"WIN\",\r\n\"ab\": \"32\",\r\n\"ar\": \"LE\",\r\n\"as\": \"Windows_Unknown_Version\"\r\n},\r\n\"dis\": false,\r\n\"ds\": {\r\n\"ti\": \"\",\r\n\"la\": \"ko\",\r\n\"cr\": \"user\",\r\n\"su\": \"\",\r\n\"de\": \"\",\r\n\"cd\": \"***T16:18:11.644Z\",\r\n\"md\": \"***T16:18:11.682Z\",\r\n\"pd\": \"***T09:00:00.000Z\",\r\n\"ke\": \"\"\r\n}\r\n},\r\n\"dh\": {\r\n\"do\": {\r\n\"pa\": 1,\r\n\"fo\": 1,\r\n\"en\": 1,\r\n\"pi\": 1,\r\n\"tb\": 1,\r\n\"eq\": 1\r\n},\r\n\"fo\": [ ],\r\n\"cd\": {\r\n\"tp\": 0,\r\n\"lc\": {\r\n\"af\": false,\r\n\"ui\": false,\r\n\"fu\": false,\r\n\"dn\": false,\r\n\"ul\": false,\r\n\"el\": false,\r\n\"at\": false,\r\n\"tq\": false,\r\n\"da\": false,\r\n\"dw\": false,\r\n\"dj\": false,\r\n\"bc\": false,\r\n\"bu\": false,\r\n\"al\": false,\r\n\"ab\": false,\r\n\"ap\": false,\r\n\"an\": false,\r\n\"aa\": false,\r\n\"ds\": false,\r\n\"de\": false,\r\n\"as\": false,\r\n\"cp\": false,\r\n\"ao\": false,\r\n\"et\": false,\r\n\"ay\": false,\r\n\"am\": false,\r\n\"a1\": false,\r\n\"bt\": false,\r\n\"av\": false,\r\n\"dh\": false,\r\n\"dp\": false,\r\n\"d1\": false,\r\n\"mf\": false,\r\n\"bl\": false,\r\n\"ag\": false,\r\n\"dg\": false,\r\n\"ae\": false,\r\n\"df\": false,\r\n\"do\": false,\r\n\"dl\": false,\r\n\"di\": false,\r\n\"d2\": false,\r\n\"d3\": false,\r\n\"ob\": false,\r\n\"d4\": false,\r\n\"ev\": false,\r\n\"d5\": false,\r\n\"d6\": false,\r\n\"a2\": false,\r\n\"dc\": false\r\n}\r\n},\r\n\"ld\": {\r\n\"pa\": \"\",\r\n\"pi\": true,\r\n\"fo\": false\r\n}\r\n},\r\n\"bf\": {\r\n\"01D669664117604000000420\": {\r\n\"id\": 1,\r\n\"td\": false,\r\n\"sh\": false,\r\n\"st\": 0,\r\n\"sc\": 0,\r\n\"si\": false,\r\n\"bt\": 0,\r\n\"bi\": false,\r\n\"cl\": 0,\r\n\"bc\": false,\r\n\"lt\": 0,\r\n\"lw\": 0,\r\n\"lc\": 0,\r\n\"rt\": 0,\r\n\"rw\": 0,\r\n\"rc\": 0,\r\n\"tt\": 0,\r\n\"tw\": 0,\r\n\"tc\": 0,\r\n\"bbt\": 0,\r\n\"bbw\": 0,\r\n\"bbc\": 0,\r\n\"dt\": 1,\r\n\"dw\": 0,\r\n\"dc\": 0,\r\n\"fi\": { }\r\n},\r\n\"01D669664117604000000421\": {\r\n\"id\": 2,\r\n\"td\": false,\r\n\"sh\": false,\r\n\"st\": 0,\r\n\"sc\": 0,\r\n\"si\": false,\r\n\"bt\": 0,\r\n\"bi\": false,\r\n\"cl\": 0,\r\n\"bc\": false,\r\n\"lt\": 0,\r\n\"lw\": 0,\r\n\"lc\": 0,\r\n\"rt\": 0,\r\n\"rw\": 0,\r\n\"rc\": 0,\r\n\"tt\": 0,\r\n\"tw\": 0,\r\n\"tc\": 0,\r\n\"bbt\": 0,\r\n\"bbw\": 0,\r\n\"bbc\": 0,\r\n\"dt\": 1,\r\n\"dw\": 0,\r\n\"dc\": 0,\r\n\"fi\": {\r\n\"wb\": {\r\n\"fc\": 4294967295,\r\n\"hc\": 0,\r\n\"al\": 0,\r\n\"hs\": -1\r\n}\r\n}\r\n}\r\n},\r\n\"cp\": {\r\n\"01D669664117604000000422\": {\r\n\"id\": 0,\r\n\"he\": 1000,\r\n\"tc\": 0,\r\n\"sc\": 4294967295,\r\n\"uf\": false,\r\n\"uk\": false,\r\n\"sm\": 0,\r\n\"bf\": \"01D669664117604000000421\",\r\n\"f1\": \"한양신명조\",\r\n\"t1\": 2,\r\n\"f2\": \"한양신명조\",\r\n\"t2\": 2,\r\n\"f3\": \"한양신명조\",\r\n\"t3\": 2,\r\n\"f4\": \"한양신명조\",\r\n\"t4\": 2,\r\n\"f5\": \"한양신명조\",\r\n\"t5\": 2,\r\n\"f6\": \"한양신명조\",\r\n\"t6\": 2,\r\n\"f7\": \"명조\",\r\n\"t7\": 2,\r\n\"r1\": 100,\r\n\"r2\": 100,\r\n\"r3\": 100,\r\n\"r4\": 100,\r\n\"r5\": 100,\r\n\"r6\": 100,\r\n\"r7\": 100,\r\n\"s1\": 0,\r\n\"s2\": 0,\r\n\"s3\": 0,\r\n\"s4\": 0,\r\n\"s5\": 0,\r\n\"s6\": 0,\r\n\"s7\": 0,\r\n\"e1\": 100,\r\n\"e2\": 100,\r\n\"e3\": 100,\r\n\"e4\": 100,\r\n\"e5\": 100,\r\n\"e6\": 100,\r\n\"e7\": 100,\r\n\"o1\": 0,\r\n\"o2\": 0,\r\n\"o3\": 0,\r\n\"o4\": 0,\r\n\"o5\": 0,\r\n\"o6\": 0,\r\n\"o7\": 0,\r\n\"it\": false,\r\n\"bo\": false,\r\n\"ut\": 0,\r\n\"us\": 1,\r\n\"uc\": 0,\r\n\"st\": false,\r\n\"ss\": 1,\r\n\"so\": 0,\r\n\"ot\": 0,\r\n\"ht\": 0,\r\n\"hc\": 0,\r\n\"hx\": 0,\r\n\"hy\": 0,\r\n\"em\": false,\r\n\"en\": false,\r\n\"su\": false,\r\n\"sb\": false\r\n},\r\n\"01D669664117604000000423\": {\r\n\"id\": 1,\r\n\"he\": 1000,\r\n\"tc\": 255,\r\n\"sc\": 4294967295,\r\n\"uf\": false,\r\n\"uk\": false,\r\n\"sm\": 0,\r\n\"bf\": \"01D669664117604000000421\",\r\n\"f1\": \"굴림\",\r\n\"t1\": 1,\r\n\"f2\": \"굴림\",\r\n\"t2\": 1,\r\n\"f3\": \"굴림\",\r\n\"t3\": 1,\r\n\"f4\": \"굴림\",\r\n\"t4\": 1,\r\n\"f5\": \"굴림\",\r\n\"t5\": 1,\r\n\"f6\": \"굴림\",\r\n\"t6\": 1,\r\n\"f7\": \"굴림\",\r\n\"t7\": 1,\r\n\"r1\": 100,\r\n\"r2\": 100,\r\n\"r3\": 100,\r\n\"r4\": 100,\r\n\"r5\": 100,\r\n\"r6\": 100,\r\n\"r7\": 100,\r\n\"s1\": 0,\r\n\"s2\": 0,\r\n\"s3\": 0,\r\n\"s4\": 0,\r\n\"s5\": 0,\r\n\"s6\": 0,\r\n\"s7\": 0,\r\n\"e1\": 100,\r\n\"e2\": 100,\r\n\"e3\": 100,\r\n\"e4\": 100,\r\n\"e5\": 100,\r\n\"e6\": 100,\r\n\"e7\": 100,\r\n\"o1\": 0,\r\n\"o2\": 0,\r\n\"o3\": 0,\r\n\"o4\": 0,\r\n\"o5\": 0,\r\n\"o6\": 0,\r\n\"o7\": 0,\r\n\"it\": false,\r\n\"bo\": true,\r\n\"ut\": 0,\r\n\"us\": 1,\r\n\"uc\": 0,\r\n\"st\": false,\r\n\"ss\": 1,\r\n\"so\": 0,\r\n\"ot\": 0,\r\n\"ht\": 0,\r\n\"hc\": 0,\r\n\"hx\": 0,\r\n\"hy\": 0,\r\n\"em\": false,\r\n\"en\": false,\r\n\"su\": false,\r\n\"sb\": false\r\n}\r\n},\r\n\"tp\": {\r\n\"01D669664117604000000424\": {\r\n\"id\": 0,\r\n\"al\": false,\r\n\"ar\": false,\r\n\"tp\": [ ]\r\n}\r\n},\r\n\"nu\": { },\r\n\"bu\": { },\r\n\"pp\": {\r\n\"01D669664117604000000425\": {\r\n\"id\": 0,\r\n\"ah\": 0,\r\n\"av\": 0,\r\n\"ht\": 0,\r\n\"hi\": \"\",\r\n\"hl\": 0,\r\n\"tp\": \"01D669664117604000000424\",\r\n\"kb\": 0,\r\n\"kn\": true,\r\n\"ko\": false,\r\n\"kk\": false,\r\n\"kl\": false,\r\n\"kp\": false,\r\n\"kw\": 0,\r\n\"co\": 0,\r\n\"fl\": false,\r\n\"st\": false,\r\n\"sl\": false,\r\n\"ae\": false,\r\n\"aa\": false,\r\n\"mi\": 0,\r\n\"ml\": 0,\r\n\"mr\": 0,\r\n\"mp\": 0,\r\n\"mn\": 0,\r\n\"lt\": 0,\r\n\"lv\": 160,\r\n\"bf\": \"01D669664117604000000421\",\r\n\"bl\": 0,\r\n\"br\": 0,\r\n\"bt\": 0,\r\n\"bb\": 0,\r\n\"bc\": false,\r\n\"bi\": false\r\n},\r\n\"01D669664117604000000426\": {\r\n\"id\": 1,\r\n\"ah\": 0,\r\n\"av\": 0,\r\n\"ht\": 0,\r\n\"hi\": \"\",\r\n\"hl\": 0,\r\n\"tp\": \"01D669664117604000000424\",\r\n\"kb\": 0,\r\n\"kn\": true,\r\n\"ko\": false,\r\n\"kk\": false,\r\n\"kl\": false,\r\n\"kp\": false,\r\n\"kw\": 0,\r\n\"co\": 0,\r\n\"fl\": false,\r\n\"st\": false,\r\n\"sl\": false,\r\n\"ae\": false,\r\n\"aa\": false,\r\n\"mi\": -11512,\r\n\"ml\": 0,\r\n\"mr\": 0,\r\n\"mp\": 0,\r\n\"mn\": 0,\r\n\"lt\": 0,\r\n\"lv\": 180,\r\n\"bf\": \"01D669664117604000000421\",\r\n\"bl\": 0,\r\n\"br\": 0,\r\n\"bt\": 0,\r\n\"bb\": 0,\r\n\"bc\": false,\r\n\"bi\": false\r\n}\r\n},\r\n\"st\": {\r\n\"01D669664117604000000427\": {\r\n\"id\": 0,\r\n\"ty\": 0,\r\n\"na\": \"바탕글\",\r\n\"en\": \"Normal\",\r\n\"pp\": \"01D669664117604000000425\",\r\n\"cp\": \"01D669664117604000000422\",\r\n\"ns\": \"01D669664117604000000427\",\r\n\"li\": 1042,\r\n\"lf\": false\r\n}\r\n},\r\n\"mp\": { },\r\n\"ro\": {\r\n\"hp\": \"01D66966411760400000041F\",\r\n\"01D66966411760400000041F\": {\r\n\"np\": \"\",\r\n\"id\": 0,\r\n\"pp\": \"01D669664117604000000426\",\r\n\"si\": \"01D669664117604000000427\",\r\n\"bf\": 3,\r\n\"ru\": [\r\n{\r\n\"cp\": \"01D669664117604000000423\",\r\n\"ch\": [\r\n{\r\n\"cc\": 2,\r\n\"ci\": 1936024420,\r\n\"co\": \"01D66966411760400000041D\"\r\n}\r\n,\r\n{\r\n\"cc\": 2,\r\n\"ci\": 1668246628,\r\n\"co\": \"01D66966411760400000041E\"\r\n}\r\n,\r\n{\r\n\"t\": \"코로나19 방역대책 및 내부사정 등으로 이용에 제한이 있을 수 있으니, 사전에 담당자에게 전화문의 후 온라인 신청 바랍니다.\"\r\n}\r\n]\r\n}\r\n]\r\n}\r\n},\r\n\"sl\": { },\r\n\"cs\": {\r\n\"01D66966411760400000041D\": {\r\n\"cc\": 2,\r\n\"ci\": 1936024420,\r\n\"td\": 0,\r\n\"tv\": false,\r\n\"sc\": 1134,\r\n\"ts\": 8000,\r\n\"ms\": \"\",\r\n\"os\": \"\",\r\n\"gl\": 0,\r\n\"gc\": 0,\r\n\"gw\": false,\r\n\"ns\": 0,\r\n\"np\": 0,\r\n\"ni\": 0,\r\n\"nt\": 0,\r\n\"ne\": 0,\r\n\"hh\": false,\r\n\"hf\": false,\r\n\"hm\": false,\r\n\"fb\": false,\r\n\"hb\": false,\r\n\"fi\": false,\r\n\"hi\": false,\r\n\"hp\": false,\r\n\"he\": false,\r\n\"sl\": false,\r\n\"lr\": 0,\r\n\"lc\": 0,\r\n\"ld\": 0,\r\n\"ls\": 0,\r\n\"pp\": {\r\n\"ls\": false,\r\n\"wi\": 59528,\r\n\"he\": 84188,\r\n\"gt\": 0,\r\n\"ml\": 8504,\r\n\"mr\": 8504,\r\n\"mt\": 5668,\r\n\"mb\": 4252,\r\n\"mh\": 4252,\r\n\"mf\": 4252,\r\n\"mg\": 0\r\n},\r\n\"fn\": {\r\n\"at\": 0,\r\n\"au\": \"\",\r\n\"ap\": \"\",\r\n\"ac\": \")\",\r\n\"as\": false,\r\n\"ll\": -1,\r\n\"lt\": 1,\r\n\"lw\": 1,\r\n\"lc\": 0,\r\n\"sa\": 850,\r\n\"sb\": 567,\r\n\"st\": 283\r\n,\r\n\"nt\": 0,\r\n\"nn\": 1,\r\n\"pp\": 0,\r\n\"pb\": false\r\n},\r\n\"en\": {\r\n\"at\": 0,\r\n\"au\": \"\",\r\n\"ap\": \"\",\r\n\"ac\": \")\",\r\n\"as\": false,\r\n\"ll\": 0,\r\n\"lt\": 1,\r\n\"lw\": 1,\r\n\"lc\": 0,\r\n\"sa\": 850,\r\n\"sb\": 567,\r\n\"st\": 0\r\n,\r\n\"nt\": 0,\r\n\"nn\": 1,\r\n\"pp\": 0,\r\n\"pb\": false\r\n},\r\n\"pb\": [\r\n{\r\n\"ty\": 0,\r\n\"bf\": \"01D669664117604000000420\",\r\n\"tb\": true,\r\n\"hi\": false,\r\n\"fi\": false,\r\n\"fa\": 0,\r\n\"ol\": 1417,\r\n\"or\": 1417,\r\n\"ot\": 1417,\r\n\"ob\": 1417\r\n},\r\n{\r\n\"ty\": 1,\r\n\"bf\": \"01D669664117604000000420\",\r\n\"tb\": true,\r\n\"hi\": false,\r\n\"fi\": false,\r\n\"fa\": 0,\r\n\"ol\": 1417,\r\n\"or\": 1417,\r\n\"ot\": 1417,\r\n\"ob\": 1417\r\n},\r\n{\r\n\"ty\": 2,\r\n\"bf\": \"01D669664117604000000420\",\r\n\"tb\": true,\r\n\"hi\": false,\r\n\"fi\": false,\r\n\"fa\": 0,\r\n\"ol\": 1417,\r\n\"or\": 1417,\r\n\"ot\": 1417,\r\n\"ob\": 1417\r\n}\r\n],\r\n\"mp\": [ ]\r\n}\r\n,\r\n\"01D66966411760400000041E\": {\r\n\"cc\": 2,\r\n\"ci\": 1668246628,\r\n\"ty\": 0,\r\n\"la\": 0,\r\n\"co\": 1,\r\n\"ss\": true,\r\n\"sg\": 0,\r\n\"lt\": 0,\r\n\"lw\": 0,\r\n\"lc\": 0,\r\n\"cs\": [ ]\r\n}\r\n},\r\n\"bi\": [ ],\r\n\"bidt\": { }\r\n}-->\r\n\r\n\r\n다목적홀\r\n\r\n○ 시설 개요\r\n - 위 치 : 양천구 곰달래로 1길 38 2층 (신월1동 135-28)\r\n - 면 적 : 165㎡\r\n - 수용인원 : 70명\r\n - 부대시설 : 책상 26, 의자 74,빔프로젝터\r\n\r\n○ 이용가능시간 :월,금 09:00~10:30 / 화14:30~18:00 / 수 16:00~18:00 /월~금 18:00~20:00 \r\n\r\n※ 구 또는 동 행사로 시설이용 가능시간이 변동될 수 있습니다.\r\n※ 평일 야간 이용시 자치회관 프로그램, 행사 등으로 시설 이용이 제한될 수 있으니\r\n 사전에 동 주민센터와 전화 협의 후 신청바랍니다. 감사합니다.\r\n (준비 및 마무리 시간 포함하여 1단체당 1일 3시간 이내 사용)\r\n\r\n○ 이용절차\r\n - 예약접수 : 이용예정일 3일전까지\r\n - 이용허가 : 신청일로부터 2일 이내\r\n - 이용료 납부 : 허가일로부터 2일 이내\r\n - 시설 이용 : 이용당일 서약서 제출 후 이용\r\n\r\n○ 심사 및 이용허가 : 신청일로부터 2일 이내 SMS 또는 유선통보\r\n\r\n○ 선정방법 : 심사(사용목적 등 제한사항 검토)\r\n - 개인과 개인 경합시 : 선착순\r\n - 개인과 단체 경합시 : 단체 우선\r\n - 단체와 단체 경합시 : 선착순\r\n\r\n○ 이용료 :5,000원/1시간\r\n - 이용허가일로부터 2일 이내에 이용료를 납부하지 않는 경우, 허가 취소 가능\r\n\r\n○ 이용료 납부 : 허가일로부터 2일 이내 고지서 납부\r\n\r\n○ 이용료 반환\r\n - 재해나 그 밖의 불가항력적인 사유로 자치회관의 시설사용이 불가능하게 된 경우 전액 반환\r\n - 자치회관의 특별한 사정으로 시설 사용이 불가능하게 된 경우 전액 반환\r\n - 본인 취소시 : 사용예정일 전일까지 시설사용신청을 취소한 경우 전액 반환, 사용일 당일에는 반환 불가\r\n (사용취소일로부터 7일이내 반환)\r\n\r\n○ 찾아오는 방법\r\n - 지 하 철 2호선 화곡역 6번출구, 까치산역 4번출구 도보이동 20분소요\r\n- 버 스 : 651, 652, 6625, 6627 신월1동주민센터 정류장 하차\r\n\r\n○ 주 차 장 : 주차면수 8면(무료)\r\n※ 주차공간이 많이 부족하오니 가능한 한 대중교통을 이용해 주시기 바랍니다.\r\n\r\n○ 문 의 처 :신월1동 주민센터\r\n\r\n(02-2620-4068)\r\n4. 주의사항\r\n○ 이용 제한 및 취소\r\n\r\n- 공공질서와 선량한 풍속을 해칠 우려가 있는 경우\r\n\r\n- 특정 종교활동, 정치적인 행위를 하는 경우\r\n\r\n- 영리목적의 행위를 하는 경우\r\n\r\n- 이용목적을 위반하거나 사용료를 지정기일까지 납부하지 않는 경우\r\n\r\n- 이용자의 안전과 시설물 유지관리상 제한할 필요가 있다고 인정되는 경우\r\n\r\n- 그 밖에 자치회관의 운영취지와 목적 등에 적당하지 아니하다고 인정되는 경우"
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n내부사정 등으로 이용에 제한이 있을 수 있으니, 사전에 담당자에게 전화문의 후 신청 바랍니다.\r\n\r\n<!--[data-hwpjson]{\r\n\"documentPr\": {\r\n\"di\": \"\",\r\n\"dp\": {\r\n\"dn\": \"test.hwp\",\r\n\"ta\": 1,\r\n\"d1\": 5,\r\n\"d2\": 0,\r\n\"dv\": 5,\r\n\"dr\": 1,\r\n\"do\": 1,\r\n\"vj\": \"1.0\",\r\n\"an\": \"Hancom Office Hangul\",\r\n\"av\": \"9, 1, 1, 4673\",\r\n\"ao\": \"WIN\",\r\n\"ab\": \"32\",\r\n\"ar\": \"LE\",\r\n\"as\": \"Windows_Unknown_Version\"\r\n},\r\n\"dis\": false,\r\n\"ds\": {\r\n\"ti\": \"\",\r\n\"la\": \"ko\",\r\n\"cr\": \"user\",\r\n\"su\": \"\",\r\n\"de\": \"\",\r\n\"cd\": \"***T16:18:11.644Z\",\r\n\"md\": \"***T16:18:11.682Z\",\r\n\"pd\": \"***T09:00:00.000Z\",\r\n\"ke\": \"\"\r\n}\r\n},\r\n\"dh\": {\r\n\"do\": {\r\n\"pa\": 1,\r\n\"fo\": 1,\r\n\"en\": 1,\r\n\"pi\": 1,\r\n\"tb\": 1,\r\n\"eq\": 1\r\n},\r\n\"fo\": [ ],\r\n\"cd\": {\r\n\"tp\": 0,\r\n\"lc\": {\r\n\"af\": false,\r\n\"ui\": false,\r\n\"fu\": false,\r\n\"dn\": false,\r\n\"ul\": false,\r\n\"el\": false,\r\n\"at\": false,\r\n\"tq\": false,\r\n\"da\": false,\r\n\"dw\": false,\r\n\"dj\": false,\r\n\"bc\": false,\r\n\"bu\": false,\r\n\"al\": false,\r\n\"ab\": false,\r\n\"ap\": false,\r\n\"an\": false,\r\n\"aa\": false,\r\n\"ds\": false,\r\n\"de\": false,\r\n\"as\": false,\r\n\"cp\": false,\r\n\"ao\": false,\r\n\"et\": false,\r\n\"ay\": false,\r\n\"am\": false,\r\n\"a1\": false,\r\n\"bt\": false,\r\n\"av\": false,\r\n\"dh\": false,\r\n\"dp\": false,\r\n\"d1\": false,\r\n\"mf\": false,\r\n\"bl\": false,\r\n\"ag\": false,\r\n\"dg\": false,\r\n\"ae\": false,\r\n\"df\": false,\r\n\"do\": false,\r\n\"dl\": false,\r\n\"di\": false,\r\n\"d2\": false,\r\n\"d3\": false,\r\n\"ob\": false,\r\n\"d4\": false,\r\n\"ev\": false,\r\n\"d5\": false,\r\n\"d6\": false,\r\n\"a2\": false,\r\n\"dc\": false\r\n}\r\n},\r\n\"ld\": {\r\n\"pa\": \"\",\r\n\"pi\": true,\r\n\"fo\": false\r\n}\r\n},\r\n\"bf\": {\r\n\"01D669664117604000000420\": {\r\n\"id\": 1,\r\n\"td\": false,\r\n\"sh\": false,\r\n\"st\": 0,\r\n\"sc\": 0,\r\n\"si\": false,\r\n\"bt\": 0,\r\n\"bi\": false,\r\n\"cl\": 0,\r\n\"bc\": false,\r\n\"lt\": 0,\r\n\"lw\": 0,\r\n\"lc\": 0,\r\n\"rt\": 0,\r\n\"rw\": 0,\r\n\"rc\": 0,\r\n\"tt\": 0,\r\n\"tw\": 0,\r\n\"tc\": 0,\r\n\"bbt\": 0,\r\n\"bbw\": 0,\r\n\"bbc\": 0,\r\n\"dt\": 1,\r\n\"dw\": 0,\r\n\"dc\": 0,\r\n\"fi\": { }\r\n},\r\n\"01D669664117604000000421\": {\r\n\"id\": 2,\r\n\"td\": false,\r\n\"sh\": false,\r\n\"st\": 0,\r\n\"sc\": 0,\r\n\"si\": false,\r\n\"bt\": 0,\r\n\"bi\": false,\r\n\"cl\": 0,\r\n\"bc\": false,\r\n\"lt\": 0,\r\n\"lw\": 0,\r\n\"lc\": 0,\r\n\"rt\": 0,\r\n\"rw\": 0,\r\n\"rc\": 0,\r\n\"tt\": 0,\r\n\"tw\": 0,\r\n\"tc\": 0,\r\n\"bbt\": 0,\r\n\"bbw\": 0,\r\n\"bbc\": 0,\r\n\"dt\": 1,\r\n\"dw\": 0,\r\n\"dc\": 0,\r\n\"fi\": {\r\n\"wb\": {\r\n\"fc\": 4294967295,\r\n\"hc\": 0,\r\n\"al\": 0,\r\n\"hs\": -1\r\n}\r\n}\r\n}\r\n},\r\n\"cp\": {\r\n\"01D669664117604000000422\": {\r\n\"id\": 0,\r\n\"he\": 1000,\r\n\"tc\": 0,\r\n\"sc\": 4294967295,\r\n\"uf\": false,\r\n\"uk\": false,\r\n\"sm\": 0,\r\n\"bf\": \"01D669664117604000000421\",\r\n\"f1\": \"한양신명조\",\r\n\"t1\": 2,\r\n\"f2\": \"한양신명조\",\r\n\"t2\": 2,\r\n\"f3\": \"한양신명조\",\r\n\"t3\": 2,\r\n\"f4\": \"한양신명조\",\r\n\"t4\": 2,\r\n\"f5\": \"한양신명조\",\r\n\"t5\": 2,\r\n\"f6\": \"한양신명조\",\r\n\"t6\": 2,\r\n\"f7\": \"명조\",\r\n\"t7\": 2,\r\n\"r1\": 100,\r\n\"r2\": 100,\r\n\"r3\": 100,\r\n\"r4\": 100,\r\n\"r5\": 100,\r\n\"r6\": 100,\r\n\"r7\": 100,\r\n\"s1\": 0,\r\n\"s2\": 0,\r\n\"s3\": 0,\r\n\"s4\": 0,\r\n\"s5\": 0,\r\n\"s6\": 0,\r\n\"s7\": 0,\r\n\"e1\": 100,\r\n\"e2\": 100,\r\n\"e3\": 100,\r\n\"e4\": 100,\r\n\"e5\": 100,\r\n\"e6\": 100,\r\n\"e7\": 100,\r\n\"o1\": 0,\r\n\"o2\": 0,\r\n\"o3\": 0,\r\n\"o4\": 0,\r\n\"o5\": 0,\r\n\"o6\": 0,\r\n\"o7\": 0,\r\n\"it\": false,\r\n\"bo\": false,\r\n\"ut\": 0,\r\n\"us\": 1,\r\n\"uc\": 0,\r\n\"st\": false,\r\n\"ss\": 1,\r\n\"so\": 0,\r\n\"ot\": 0,\r\n\"ht\": 0,\r\n\"hc\": 0,\r\n\"hx\": 0,\r\n\"hy\": 0,\r\n\"em\": false,\r\n\"en\": false,\r\n\"su\": false,\r\n\"sb\": false\r\n},\r\n\"01D669664117604000000423\": {\r\n\"id\": 1,\r\n\"he\": 1000,\r\n\"tc\": 255,\r\n\"sc\": 4294967295,\r\n\"uf\": false,\r\n\"uk\": false,\r\n\"sm\": 0,\r\n\"bf\": \"01D669664117604000000421\",\r\n\"f1\": \"굴림\",\r\n\"t1\": 1,\r\n\"f2\": \"굴림\",\r\n\"t2\": 1,\r\n\"f3\": \"굴림\",\r\n\"t3\": 1,\r\n\"f4\": \"굴림\",\r\n\"t4\": 1,\r\n\"f5\": \"굴림\",\r\n\"t5\": 1,\r\n\"f6\": \"굴림\",\r\n\"t6\": 1,\r\n\"f7\": \"굴림\",\r\n\"t7\": 1,\r\n\"r1\": 100,\r\n\"r2\": 100,\r\n\"r3\": 100,\r\n\"r4\": 100,\r\n\"r5\": 100,\r\n\"r6\": 100,\r\n\"r7\": 100,\r\n\"s1\": 0,\r\n\"s2\": 0,\r\n\"s3\": 0,\r\n\"s4\": 0,\r\n\"s5\": 0,\r\n\"s6\": 0,\r\n\"s7\": 0,\r\n\"e1\": 100,\r\n\"e2\": 100,\r\n\"e3\": 100,\r\n\"e4\": 100,\r\n\"e5\": 100,\r\n\"e6\": 100,\r\n\"e7\": 100,\r\n\"o1\": 0,\r\n\"o2\": 0,\r\n\"o3\": 0,\r\n\"o4\": 0,\r\n\"o5\": 0,\r\n\"o6\": 0,\r\n\"o7\": 0,\r\n\"it\": false,\r\n\"bo\": true,\r\n\"ut\": 0,\r\n\"us\": 1,\r\n\"uc\": 0,\r\n\"st\": false,\r\n\"ss\": 1,\r\n\"so\": 0,\r\n\"ot\": 0,\r\n\"ht\": 0,\r\n\"hc\": 0,\r\n\"hx\": 0,\r\n\"hy\": 0,\r\n\"em\": false,\r\n\"en\": false,\r\n\"su\": false,\r\n\"sb\": false\r\n}\r\n},\r\n\"tp\": {\r\n\"01D669664117604000000424\": {\r\n\"id\": 0,\r\n\"al\": false,\r\n\"ar\": false,\r\n\"tp\": [ ]\r\n}\r\n},\r\n\"nu\": { },\r\n\"bu\": { },\r\n\"pp\": {\r\n\"01D669664117604000000425\": {\r\n\"id\": 0,\r\n\"ah\": 0,\r\n\"av\": 0,\r\n\"ht\": 0,\r\n\"hi\": \"\",\r\n\"hl\": 0,\r\n\"tp\": \"01D669664117604000000424\",\r\n\"kb\": 0,\r\n\"kn\": true,\r\n\"ko\": false,\r\n\"kk\": false,\r\n\"kl\": false,\r\n\"kp\": false,\r\n\"kw\": 0,\r\n\"co\": 0,\r\n\"fl\": false,\r\n\"st\": false,\r\n\"sl\": false,\r\n\"ae\": false,\r\n\"aa\": false,\r\n\"mi\": 0,\r\n\"ml\": 0,\r\n\"mr\": 0,\r\n\"mp\": 0,\r\n\"mn\": 0,\r\n\"lt\": 0,\r\n\"lv\": 160,\r\n\"bf\": \"01D669664117604000000421\",\r\n\"bl\": 0,\r\n\"br\": 0,\r\n\"bt\": 0,\r\n\"bb\": 0,\r\n\"bc\": false,\r\n\"bi\": false\r\n},\r\n\"01D669664117604000000426\": {\r\n\"id\": 1,\r\n\"ah\": 0,\r\n\"av\": 0,\r\n\"ht\": 0,\r\n\"hi\": \"\",\r\n\"hl\": 0,\r\n\"tp\": \"01D669664117604000000424\",\r\n\"kb\": 0,\r\n\"kn\": true,\r\n\"ko\": false,\r\n\"kk\": false,\r\n\"kl\": false,\r\n\"kp\": false,\r\n\"kw\": 0,\r\n\"co\": 0,\r\n\"fl\": false,\r\n\"st\": false,\r\n\"sl\": false,\r\n\"ae\": false,\r\n\"aa\": false,\r\n\"mi\": -11512,\r\n\"ml\": 0,\r\n\"mr\": 0,\r\n\"mp\": 0,\r\n\"mn\": 0,\r\n\"lt\": 0,\r\n\"lv\": 180,\r\n\"bf\": \"01D669664117604000000421\",\r\n\"bl\": 0,\r\n\"br\": 0,\r\n\"bt\": 0,\r\n\"bb\": 0,\r\n\"bc\": false,\r\n\"bi\": false\r\n}\r\n},\r\n\"st\": {\r\n\"01D669664117604000000427\": {\r\n\"id\": 0,\r\n\"ty\": 0,\r\n\"na\": \"바탕글\",\r\n\"en\": \"Normal\",\r\n\"pp\": \"01D669664117604000000425\",\r\n\"cp\": \"01D669664117604000000422\",\r\n\"ns\": \"01D669664117604000000427\",\r\n\"li\": 1042,\r\n\"lf\": false\r\n}\r\n},\r\n\"mp\": { },\r\n\"ro\": {\r\n\"hp\": \"01D66966411760400000041F\",\r\n\"01D66966411760400000041F\": {\r\n\"np\": \"\",\r\n\"id\": 0,\r\n\"pp\": \"01D669664117604000000426\",\r\n\"si\": \"01D669664117604000000427\",\r\n\"bf\": 3,\r\n\"ru\": [\r\n{\r\n\"cp\": \"01D669664117604000000423\",\r\n\"ch\": [\r\n{\r\n\"cc\": 2,\r\n\"ci\": 1936024420,\r\n\"co\": \"01D66966411760400000041D\"\r\n}\r\n,\r\n{\r\n\"cc\": 2,\r\n\"ci\": 1668246628,\r\n\"co\": \"01D66966411760400000041E\"\r\n}\r\n,\r\n{\r\n\"t\": \"코로나19 방역대책 및 내부사정 등으로 이용에 제한이 있을 수 있으니, 사전에 담당자에게 전화문의 후 온라인 신청 바랍니다.\"\r\n}\r\n]\r\n}\r\n]\r\n}\r\n},\r\n\"sl\": { },\r\n\"cs\": {\r\n\"01D66966411760400000041D\": {\r\n\"cc\": 2,\r\n\"ci\": 1936024420,\r\n\"td\": 0,\r\n\"tv\": false,\r\n\"sc\": 1134,\r\n\"ts\": 8000,\r\n\"ms\": \"\",\r\n\"os\": \"\",\r\n\"gl\": 0,\r\n\"gc\": 0,\r\n\"gw\": false,\r\n\"ns\": 0,\r\n\"np\": 0,\r\n\"ni\": 0,\r\n\"nt\": 0,\r\n\"ne\": 0,\r\n\"hh\": false,\r\n\"hf\": false,\r\n\"hm\": false,\r\n\"fb\": false,\r\n\"hb\": false,\r\n\"fi\": false,\r\n\"hi\": false,\r\n\"hp\": false,\r\n\"he\": false,\r\n\"sl\": false,\r\n\"lr\": 0,\r\n\"lc\": 0,\r\n\"ld\": 0,\r\n\"ls\": 0,\r\n\"pp\": {\r\n\"ls\": false,\r\n\"wi\": 59528,\r\n\"he\": 84188,\r\n\"gt\": 0,\r\n\"ml\": 8504,\r\n\"mr\": 8504,\r\n\"mt\": 5668,\r\n\"mb\": 4252,\r\n\"mh\": 4252,\r\n\"mf\": 4252,\r\n\"mg\": 0\r\n},\r\n\"fn\": {\r\n\"at\": 0,\r\n\"au\": \"\",\r\n\"ap\": \"\",\r\n\"ac\": \")\",\r\n\"as\": false,\r\n\"ll\": -1,\r\n\"lt\": 1,\r\n\"lw\": 1,\r\n\"lc\": 0,\r\n\"sa\": 850,\r\n\"sb\": 567,\r\n\"st\": 283\r\n,\r\n\"nt\": 0,\r\n\"nn\": 1,\r\n\"pp\": 0,\r\n\"pb\": false\r\n},\r\n\"en\": {\r\n\"at\": 0,\r\n\"au\": \"\",\r\n\"ap\": \"\",\r\n\"ac\": \")\",\r\n\"as\": false,\r\n\"ll\": 0,\r\n\"lt\": 1,\r\n\"lw\": 1,\r\n\"lc\": 0,\r\n\"sa\": 850,\r\n\"sb\": 567,\r\n\"st\": 0\r\n,\r\n\"nt\": 0,\r\n\"nn\": 1,\r\n\"pp\": 0,\r\n\"pb\": false\r\n},\r\n\"pb\": [\r\n{\r\n\"ty\": 0,\r\n\"bf\": \"01D669664117604000000420\",\r\n\"tb\": true,\r\n\"hi\": false,\r\n\"fi\": false,\r\n\"fa\": 0,\r\n\"ol\": 1417,\r\n\"or\": 1417,\r\n\"ot\": 1417,\r\n\"ob\": 1417\r\n},\r\n{\r\n\"ty\": 1,\r\n\"bf\": \"01D669664117604000000420\",\r\n\"tb\": true,\r\n\"hi\": false,\r\n\"fi\": false,\r\n\"fa\": 0,\r\n\"ol\": 1417,\r\n\"or\": 1417,\r\n\"ot\": 1417,\r\n\"ob\": 1417\r\n},\r\n{\r\n\"ty\": 2,\r\n\"bf\": \"01D669664117604000000420\",\r\n\"tb\": true,\r\n\"hi\": false,\r\n\"fi\": false,\r\n\"fa\": 0,\r\n\"ol\": 1417,\r\n\"or\": 1417,\r\n\"ot\": 1417,\r\n\"ob\": 1417\r\n}\r\n],\r\n\"mp\": [ ]\r\n}\r\n,\r\n\"01D66966411760400000041E\": {\r\n\"cc\": 2,\r\n\"ci\": 1668246628,\r\n\"ty\": 0,\r\n\"la\": 0,\r\n\"co\": 1,\r\n\"ss\": true,\r\n\"sg\": 0,\r\n\"lt\": 0,\r\n\"lw\": 0,\r\n\"lc\": 0,\r\n\"cs\": [ ]\r\n}\r\n},\r\n\"bi\": [ ],\r\n\"bidt\": { }\r\n}-->\r\n\r\n\r\n다목적홀\r\n\r\n○ 시설 개요\r\n - 위 치 : 양천구 곰달래로 1길 38 2층 (신월1동 135-28)\r\n - 면 적 : 165㎡\r\n - 수용인원 : 70명\r\n - 부대시설 : 책상 26, 의자 74,빔프로젝터\r\n\r\n○ 이용가능시간 :화,수 ,금 15:00~18:00 /월~금 18:00~20:00 \r\n\r\n※ 구 또는 동 행사로 시설이용 가능시간이 변동될 수 있습니다.\r\n※ 평일 야간 이용시 자치회관 프로그램, 행사 등으로 시설 이용이 제한될 수 있으니\r\n사전에 동 주민센터와 전화 협의 후 신청바랍니다. 감사합니다.\r\n (준비 및 마무리 시간 포함하여 1단체당 1일 3시간 이내 사용)\r\n\r\n○ 이용절차\r\n - 예약접수 : 이용예정일 3일전까지\r\n - 이용허가 : 신청일로부터 2일 이내\r\n - 이용료 납부 : 허가일로부터 2일 이내\r\n - 시설 이용 : 이용당일 서약서 제출 후 이용\r\n\r\n○ 심사 및 이용허가 : 신청일로부터 2일 이내 SMS 또는 유선통보\r\n\r\n○ 선정방법 : 심사(사용목적 등 제한사항 검토)\r\n - 개인과 개인 경합시 : 선착순\r\n - 개인과 단체 경합시 : 단체 우선\r\n - 단체와 단체 경합시 : 선착순\r\n\r\n○ 이용료 :5,000원/1시간\r\n - 이용허가일로부터 2일 이내에 이용료를 납부하지 않는 경우, 허가 취소 가능\r\n\r\n○ 이용료 납부 : 허가일로부터 2일 이내 고지서 납부\r\n\r\n○ 이용료 반환\r\n - 재해나 그 밖의 불가항력적인 사유로 자치회관의 시설사용이 불가능하게 된 경우 전액 반환\r\n - 자치회관의 특별한 사정으로 시설 사용이 불가능하게 된 경우 전액 반환\r\n - 본인 취소시 : 사용예정일 전일까지 시설사용신청을 취소한 경우 전액 반환, 사용일 당일에는 반환 불가\r\n (사용취소일로부터 7일이내 반환)\r\n\r\n○ 찾아오는 방법\r\n - 지 하 철 2호선 화곡역 6번출구, 까치산역 4번출구 도보이동 20분소요\r\n- 버 스 : 651, 652, 6625, 6627 신월1동주민센터 정류장 하차\r\n\r\n○ 주 차 장 : 주차면수 8면(무료)\r\n※ 주차공간이 많이 부족하오니 가능한 한 대중교통을 이용해 주시기 바랍니다.\r\n\r\n○ 문 의 처 :신월1동 주민센터\r\n\r\n(02-2620-4068)\r\n4. 주의사항\r\n○ 이용 제한 및 취소\r\n\r\n- 공공질서와 선량한 풍속을 해칠 우려가 있는 경우\r\n\r\n- 특정 종교활동, 정치적인 행위를 하는 경우\r\n\r\n- 영리목적의 행위를 하는 경우\r\n\r\n- 이용목적을 위반하거나 사용료를 지정기일까지 납부하지 않는 경우\r\n\r\n- 이용자의 안전과 시설물 유지관리상 제한할 필요가 있다고 인정되는 경우\r\n\r\n- 그 밖에 자치회관의 운영취지와 목적 등에 적당하지 아니하다고 인정되는 경우"
       }
     ]
   },
@@ -10785,8 +10785,25 @@ export const SEOUL_SPACE_FACILITIES:
     "latitude": 37.51834828002767,
     "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17930620314037OHB023X2HYJS72LNRNPQAZ2L",
     "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S261027094647064033",
-    "reservationCount": 1,
+    "reservationCount": 2,
     "reservations": [
+      {
+        "serviceId": "S261111141731612842",
+        "title": "양천공원 키지트 온라인 사전예약 (1201-1206)",
+        "statusText": "안내중",
+        "majorCategory": "공간시설",
+        "category": "민원 등 기타",
+        "paidType": "무료",
+        "targetText": "성인, 어린이(8세 미만), 유아",
+        "receptionStartAt": "2026-11-24T09:00:00",
+        "receptionEndAt": "2026-11-29T18:00:00",
+        "useStartAt": "2026-11-24T00:00:00",
+        "useEndAt": "2026-12-06T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S261111141731612842",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1794374363830LRLGYHPIQ6QHSESI4SJ5H10OD",
+        "telephone": "",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용*키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n- (아이 2명당 1명의 보호자가 입장하셔야 합니다)\r\n* 예약 시, 보호자 포함한 인원수로 예약 해주시면 됩니다\r\n- (예. 보호자 1명과 아이 1명이 입장 시 2명으로 예약)\r\n\r\n* 키지트 운영정보 : 매주 화요일 ~ 일요일\r\n 09시 - 18시\r\n 월요일과 국가 공휴일은 운영 되지 않습니다.\r\n\r\n* 키지트 운영시간 *\r\n1) 09 : 30 ~ 11 : 30\r\n2) 13 : 00 ~ 15 : 00\r\n3) 15 : 30 ~ 17 : 30\r\n\r\n 해당 시간에만 키지트 사용이 가능하며 그 외 시간은 키지트 청소 중입니다. *\r\n! 예약 전, 꼭 키지트 운영시간 확인을 부탁드립니다 !4. 주의사항* 키지트는 아이만의 입장이 불가능하며, 항상 부모님 중 한분이 동행 해야 합니다.\r\n* 키지트는 9세 까지 (만 8세, 초등학교 2학년 이하) 까지 참여가 가능합니다."
+      },
       {
         "serviceId": "S261027094647064033",
         "title": "양천공원 키지트 온라인 사전예약 (1124-1129)",
@@ -10824,7 +10841,7 @@ export const SEOUL_SPACE_FACILITIES:
     "latitude": 37.50999,
     "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17707856068755IZ19O69C16ZN6PI34OKOE0VP",
     "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260211135253726824",
-    "reservationCount": 9,
+    "reservationCount": 10,
     "reservations": [
       {
         "serviceId": "S260211135253726824",
@@ -10840,6 +10857,23 @@ export const SEOUL_SPACE_FACILITIES:
         "useEndAt": "2026-12-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260211135253726824",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=17707856068755IZ19O69C16ZN6PI34OKOE0VP",
+        "telephone": "02-846-2980",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n정기대관 또는 수시대관 추가 결제건 관련 페이지입니다.4. 주의사항"
+      },
+      {
+        "serviceId": "S261123160255567506",
+        "title": "[도림생터] 2027년 정기 및 수시대관 결제",
+        "statusText": "접수중",
+        "majorCategory": "공간시설",
+        "category": "민원 등 기타",
+        "paidType": "유료",
+        "targetText": "제한없음",
+        "receptionStartAt": "2026-11-23T09:00:00",
+        "receptionEndAt": "2027-12-31T23:59:00",
+        "useStartAt": "2026-11-23T00:00:00",
+        "useEndAt": "2027-12-31T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S261123160255567506",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1795417443966T93WMB5P2FCZRP9KE4W9C74XF",
         "telephone": "02-846-2980",
         "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n정기대관 또는 수시대관 추가 결제건 관련 페이지입니다.4. 주의사항"
       },
@@ -11564,8 +11598,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "multipurpose",
     "longitude": 126.96935,
     "latitude": 37.54134,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706773316100BVDOSIRFVHFOWPTX2HWW5SHN9",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240201163812272233",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1706509980380LX6ZAN6GL4H31ONX5TFNVL44X",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S240129152832507143",
     "reservationCount": 8,
     "reservations": [
       {

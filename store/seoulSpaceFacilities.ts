@@ -46,10 +46,10 @@ export type SeoulSpaceFacility = {
 };
 
 export const SEOUL_SPACE_RESERVATION_COUNT =
-  544;
+  545;
 
 export const SEOUL_SPACE_FACILITY_COUNT =
-  306;
+  307;
 
 export const SEOUL_SPACE_FACILITIES:
   readonly SeoulSpaceFacility[] =
@@ -974,7 +974,7 @@ export const SEOUL_SPACE_FACILITIES:
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S261022165902881582",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1792655942704HAWBXDYAVMPKYBPZWT6ABKAEI",
         "telephone": "02-2600-6082",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용강서관광정보센터 회의실 대관안내\r\n\r\n□ 시설 개요\r\n -위치: 강서관광정보센터(마곡중앙로 111, CP2 101동 1층)\r\n - 수용인원: 15명 내외\r\n - 부대시설: 테이블, 의자, 스탠바이미, 보드 등\r\n\r\n□ 이용가능시간:화요일 ~ 금요일 / 10:00 ~ 18:00 / 주말 제외\r\n ※주말(토,일)은 센터 내 프로그램 운영 예정으로 대관이 불가합니다.\r\n ※ 준비 및 마무리 시간 포함하여 1단체당 1일 3시간 이내 제한\r\n\r\n□ 이용가능 행사\r\n - 마이스 관련 기업 회의 등\r\n\r\n□ 이용 절차\r\n - 예약접수 : 이용예정일 7일 전까지\r\n - 이용허가 : 신청일로부터 7일 이내 SMS 통보\r\n\r\n□선정 방법: 심사(MICE관련 기업 정보 및 자격 요건 검토)\r\n\r\n□이용료: 무료\r\n\r\n□문의: 강서관광정보센터 안내데스크(02-2658-5990)\r\n\r\n□사용시 주의사항\r\n - 물, 음료 외 음식 섭취를 금지합니다.\r\n - 본 시설은 회의실이 아닌 전시관이므로 책상, 의자는 이용 전 및 퇴실 전에 반드시 정리해주시기 바랍니다.\r\n - 2시간 주차권 지원 가능합니다(추가지원 불가). *2시간 이후 30분당 3,000원\r\n4. 주의사항□이용제한 및 취소\r\n\r\n- 정치적, 종교적, 영리적 행위를 목적으로 하는 경우\r\n- 기타 공공질서와 선량한 미풍양속을 해할 우려가 있다고 인정되는 경우\r\n- 기타 다른 시민의 안전 및 시설물 유지상 사용을 제한할 필요가 있다고 인정할 경우"
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용강서관광정보센터 회의실 대관안내\r\n\r\n□ 시설 개요\r\n -위치: 강서관광정보센터(마곡중앙로 111, CP2 101동 1층)\r\n - 수용인원: 15명 내외\r\n - 부대시설: 테이블, 의자, 스탠바이미, 보드 등\r\n\r\n□ 이용가능시간:화요일 ~ 금요일 / 10:00 ~ 18:00 / 주말 제외\r\n ※주말(토,일)은 센터 내 프로그램 운영 예정으로 대관이 불가합니다.\r\n ※ 준비 및 마무리 시간 포함하여 1단체당 1일 3시간 이내 제한\r\n\r\n□ 이용가능 행사\r\n - 마이스 관련 기업 회의 등\r\n\r\n□ 이용 절차\r\n - 예약접수 : 이용예정일 7일 전까지\r\n - 마이스관련 기업 확인: 시스템 예약 신청 후 담당자 이메일 ***@**.**로 증빙서류 제출 후 심사 및 최종 승인(이용일 2일전까지 미제출시 취소 처리)\r\n * 증빙서류: 관광사업자등록증 또는 사업자등록증(전시.컨벤션 등)\r\n - 이용허가 : 신청일로부터 7일 이내 SMS 통보\r\n\r\n□선정 방법: 심사(MICE관련 기업 정보 및 자격 요건 검토)\r\n\r\n□이용료: 무료\r\n\r\n□문의: 강서관광정보센터 안내데스크(02-2658-5990)\r\n\r\n□사용시 주의사항\r\n - 물, 음료 외 음식 섭취를 금지합니다.\r\n - 본 시설은 회의실이 아닌 전시관이므로 책상, 의자는 이용 전 및 퇴실 전에 반드시 정리해주시기 바랍니다.\r\n - 2시간 주차권 지원 가능합니다(추가지원 불가)\r\n4. 주의사항□이용제한 및 취소\r\n\r\n- 정치적, 종교적, 영리적 행위를 목적으로 하는 경우\r\n- 기타 공공질서와 선량한 미풍양속을 해할 우려가 있다고 인정되는 경우\r\n- 기타 다른 시민의 안전 및 시설물 유지상 사용을 제한할 필요가 있다고 인정할 경우"
       }
     ]
   },
@@ -3417,7 +3417,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260430172509440312",
         "title": "[서울시민대학 모두의학교 캠퍼스] 동네부엌",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "주민공유공간",
         "paidType": "유료(요금안내문의)",
@@ -3453,7 +3453,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260430172120075326",
         "title": "[서울시민대학 모두의학교 캠퍼스] 마루교실",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "다목적실",
         "paidType": "유료(요금안내문의)",
@@ -3489,7 +3489,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260430163625620370",
         "title": "[서울시민대학 모두의학교 캠퍼스] 모두라운지",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "주민공유공간",
         "paidType": "유료(요금안내문의)",
@@ -3525,7 +3525,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260430173603684186",
         "title": "[서울시민대학 모두의학교 캠퍼스] 모두모여방",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "강의실",
         "paidType": "유료(요금안내문의)",
@@ -3561,7 +3561,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260430164551185454",
         "title": "[서울시민대학 모두의학교 캠퍼스] 미술가꿈교실 12",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "강의실",
         "paidType": "유료(요금안내문의)",
@@ -3633,7 +3633,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260430165701463702",
         "title": "[서울시민대학 모두의학교 캠퍼스] 스튜디오",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "녹화장소",
         "paidType": "유료(요금안내문의)",
@@ -3669,7 +3669,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260430162031229357",
         "title": "[서울시민대학 모두의학교 캠퍼스] 시민홀",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "강당",
         "paidType": "유료(요금안내문의)",
@@ -3741,7 +3741,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260430172928100959",
         "title": "[서울시민대학 모두의학교 캠퍼스] 작은방",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "강의실",
         "paidType": "유료(요금안내문의)",
@@ -3830,7 +3830,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260430171535913574",
         "title": "[서울시민대학 모두의학교 캠퍼스] 테라스",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "녹화장소",
         "paidType": "유료(요금안내문의)",
@@ -3866,7 +3866,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260514213101681067",
         "title": "[서울시민대학 모두의학교 캠퍼스] 풋살장",
-        "statusText": "접수중",
+        "statusText": "예약마감",
         "majorCategory": "공간시설",
         "category": "민원 등 기타",
         "paidType": "유료(요금안내문의)",
@@ -4003,8 +4003,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "community",
     "longitude": 127.0603153174388,
     "latitude": 37.65381413048446,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1666335053893EG7RBBCFHXGGYTS9HR0T65EJ0",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S220722144143250673",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1766128825411G244NL3HJWFTIUDW55WDLNU8N",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S221021151144642859",
     "reservationCount": 3,
     "reservations": [
       {
@@ -5406,15 +5406,15 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S260511170716263118",
         "title": "[서울청년센터동대문] 세미나실 N1",
-        "statusText": "예약마감",
+        "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "청년공간",
         "paidType": "유료",
         "targetText": "청년",
         "receptionStartAt": "2026-05-11T00:00:00",
-        "receptionEndAt": "2026-11-30T00:00:00",
+        "receptionEndAt": "2026-12-31T00:00:00",
         "useStartAt": "2026-05-11T00:00:00",
-        "useEndAt": "2026-11-30T00:00:00",
+        "useEndAt": "2026-12-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260511170716263118",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1778488196358ZGQQ96WPF6OFMGEYMOWEAD2PP",
         "telephone": "",
@@ -5639,7 +5639,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S261024182806999392",
         "title": "[월드컵공원] 유아숲체험원 참여기관 모집(자율반 수시/11월)",
-        "statusText": "접수중",
+        "statusText": "접수종료",
         "majorCategory": "공간시설",
         "category": "광장",
         "paidType": "무료",
@@ -6877,7 +6877,7 @@ export const SEOUL_SPACE_FACILITIES:
     "longitude": null,
     "latitude": null,
     "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540028/20210310/1615306942991NXZLBXJ4ABFCLL5KATPIIWASB.jpg",
-    "officialUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do#rest9",
+    "officialUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do?shelter_tab=R000540028",
     "reservationCount": 2,
     "reservations": [
       {
@@ -6892,7 +6892,7 @@ export const SEOUL_SPACE_FACILITIES:
         "receptionEndAt": "2026-12-31T00:00:00",
         "useStartAt": "2024-09-06T00:00:00",
         "useEndAt": "2028-12-31T00:00:00",
-        "serviceUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do#rest9",
+        "serviceUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do?shelter_tab=R000540028",
         "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540028/20210310/1615306958094G1GA5PIEMY41YT48VJNQW4LRM.jpg",
         "telephone": "1833-8261",
         "detailText": "주소 : 서울 마포구 매봉산로 37 DMC산학협력연구센터 604호\r\n전화번호 : 1833-8261\r\n운영시간 : 월~금 / 09:30~20:00"
@@ -6909,7 +6909,7 @@ export const SEOUL_SPACE_FACILITIES:
         "receptionEndAt": "2026-12-31T00:00:00",
         "useStartAt": "2024-09-06T00:00:00",
         "useEndAt": "2028-12-31T00:00:00",
-        "serviceUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do#rest9",
+        "serviceUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do?shelter_tab=R000540028",
         "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540028/20210310/1615306942991NXZLBXJ4ABFCLL5KATPIIWASB.jpg",
         "telephone": "1833-8261",
         "detailText": "주소 : 서울 마포구 매봉산로 37 DMC산학협력연구센터 604호\r\n전화번호 : 1833-8261\r\n운영시간 : 월~금 / 09:30~20:00"
@@ -6930,7 +6930,7 @@ export const SEOUL_SPACE_FACILITIES:
     "longitude": null,
     "latitude": null,
     "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/shelterPlace//20230118/1674018306248O7W9UC4C0TUDAJDP7OGFX1S7C.jpg",
-    "officialUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do#rest6",
+    "officialUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do?shelter_tab=R000540027",
     "reservationCount": 2,
     "reservations": [
       {
@@ -6944,8 +6944,8 @@ export const SEOUL_SPACE_FACILITIES:
         "receptionStartAt": "2024-09-06T00:00:00",
         "receptionEndAt": "2026-12-31T00:00:00",
         "useStartAt": "2024-09-06T00:00:00",
-        "useEndAt": "2026-12-31T00:00:00",
-        "serviceUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do#rest6",
+        "useEndAt": "2028-12-31T00:00:00",
+        "serviceUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do?shelter_tab=R000540027",
         "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/shelterPlace//20230118/1674018306248O7W9UC4C0TUDAJDP7OGFX1S7C.jpg",
         "telephone": "02-6953-74716",
         "detailText": "주소 : 서울 마포구 양화로 73 체리스빌딩 5층\r\n전화번호 : 02-6953-7416\r\n운영시간 : 월~금 / 10:00~06:00(일요일, 공휴일 제외)"
@@ -6961,8 +6961,8 @@ export const SEOUL_SPACE_FACILITIES:
         "receptionStartAt": "2024-09-06T00:00:00",
         "receptionEndAt": "2026-12-31T00:00:00",
         "useStartAt": "2024-09-06T00:00:00",
-        "useEndAt": "2026-12-31T00:00:00",
-        "serviceUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do#rest6",
+        "useEndAt": "2028-12-31T00:00:00",
+        "serviceUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do?shelter_tab=R000540027",
         "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/shelterPlace//20230118/1674018340265TNUMPZ20BZBPPE1JJ7SEX4D23.jpg",
         "telephone": "02-6953-7416",
         "detailText": "주소 : 서울 마포구 양화로 73 체리스빌딩 5층\r\n전화번호 : 02-6953-7415\r\n운영시간 : 월~금 / 10:00~06:00(일요일, 공휴일 제외)"
@@ -8684,7 +8684,7 @@ export const SEOUL_SPACE_FACILITIES:
     "longitude": null,
     "latitude": null,
     "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540025/20210310/16153068277682ULW7SLC2APCZX4HWR4O1NQ4L.jpg",
-    "officialUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do#rest1",
+    "officialUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do?shelter_tab=R000540025",
     "reservationCount": 1,
     "reservations": [
       {
@@ -8698,8 +8698,8 @@ export const SEOUL_SPACE_FACILITIES:
         "receptionStartAt": "2024-09-06T00:00:00",
         "receptionEndAt": "2026-12-31T00:00:00",
         "useStartAt": "2024-09-06T00:00:00",
-        "useEndAt": "2026-12-31T00:00:00",
-        "serviceUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do#rest1",
+        "useEndAt": "2028-12-31T00:00:00",
+        "serviceUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do?shelter_tab=R000540025",
         "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540025/20210310/16153068277682ULW7SLC2APCZX4HWR4O1NQ4L.jpg",
         "telephone": "***",
         "detailText": "주소 : 서울 서초구 사평대로 354 호진빌딩 4층\r\n전화번호 : ***\r\n운영시간 : 월~토 / 13:00~06:00(일요일, 공휴일 제외)"
@@ -8719,8 +8719,8 @@ export const SEOUL_SPACE_FACILITIES:
     "spaceKind": "multipurpose",
     "longitude": 127.04153,
     "latitude": 37.54908,
-    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1785979156707Q5M86BCIALCKUARWRI94R4SP7",
-    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260806101844420527",
+    "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1786330026380H3JZG831EAC6G28B69CPY5DO0",
+    "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S260810114552500017",
     "reservationCount": 24,
     "reservations": [
       {
@@ -9329,7 +9329,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S261016112036432157",
         "title": "문화실험공간 호수 [11월 우리끼리 식당] 송파구 석촌호수 문화실험공간 호수",
-        "statusText": "예약마감",
+        "statusText": "접수종료",
         "majorCategory": "공간시설",
         "category": "주민공유공간",
         "paidType": "유료",
@@ -9487,7 +9487,7 @@ export const SEOUL_SPACE_FACILITIES:
     "reservations": [
       {
         "serviceId": "S260928134215709835",
-        "title": "한성백제박물관 한성백제홀(강당) (27. 1월)",
+        "title": "한성백제박물관 한성백제홀(강당) (2027년 1월)",
         "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "강당",
@@ -9504,7 +9504,7 @@ export const SEOUL_SPACE_FACILITIES:
       },
       {
         "serviceId": "S261029102212500031",
-        "title": "한성백제박물관 한성백제홀(강당) (27. 2월)",
+        "title": "한성백제박물관 한성백제홀(강당) (2027년 2월)",
         "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "강당",
@@ -9946,7 +9946,7 @@ export const SEOUL_SPACE_FACILITIES:
     "latitude": 37.52707,
     "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=176705614528255YTAQ60E5ED2BDC0U1N3S80Q",
     "officialUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251230094621995370",
-    "reservationCount": 1,
+    "reservationCount": 2,
     "reservations": [
       {
         "serviceId": "S251230094621995370",
@@ -9963,7 +9963,24 @@ export const SEOUL_SPACE_FACILITIES:
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S251230094621995370",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=176705614528255YTAQ60E5ED2BDC0U1N3S80Q",
         "telephone": "02-2604-3004",
-        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n\r\n\r\n서서울호수공원 - 장소사용 / 녹화촬영 안내\r\n\r\n\r\n※촬영비 납부 전 반드시 담당자와 협의하여 촬영허가를 받으시기 바랍니다.\r\n신청서 미제출 및 사전 협의없이 촬영비만 납부한 경우,\r\n촬영허가를 받지 않은 것으로 간주하여 촬영이 불가능합니다.\r\n( 문의사항: ☎ 02-2604-3004서부공원여가센터 서서울호수공원 )\r\n\r\n\r\n1.신청절차:신청서 제출(이메일)협의허가촬영비 납부(서울시공공서비스예약시스템)\r\n\r\n-신청서 다운받아 작성 후 서서울호수공원 촬영허가 담당자 김수빈e-mail: ***@**.**에게 제출\r\n-촬영일3일 전까지 신청 가능(주말,공휴일 제외)\r\n-예약 취소는 촬영일1일 전까지 가능\r\n-허가 후 예약일자 변경 불가능,취소 후 다시 예약해야 함\r\n\r\n\r\n\r\n2.기준 및 이용요금: 1시간13,000원(추가시간당6,500원,신용카드 결제만 가능)\r\n\r\n- 결제 후 예약확인증을 인쇄 및 핸드폰인증 지참하고 순찰근무자에게 제시하여 주시기 바랍니다.\r\n- 예약확인증은 예약확인 및 취소 메뉴에서 내용보기를 클릭하여 내용을 확인하신 후 확인증버튼을 이용해 출력하실 수 있습니다.\r\n- 시설물설치 및 통행자 보행 방해 시 촬영을 중단 될 수 있습니다.\r\n\r\n\r\n3.촬영시 유의사항(촬영은 평일만 가능(토/일/공휴일 제외))\r\n\r\n-공원은 다중이 이용하는 시설로서 자연경관의 보호와 공원 이용 시민의 편의 증진이 우선이기에\r\n반드시 허가된 장소와 시간 범위 내에서 촬영이 이루어져야 함\r\n-공원 내시설물 설치 불가\r\n-촬영 참여자의 휴식을 위한 간이텐트(케노피텐트)설치 불가\r\n-촬영으로 인한 시설물 파손 및 수목,녹지 등 훼손시 신청자가 원상 복구\r\n-공원 내 촬영을 위한 차량 진입 불가(촬영용 발전차 등 안전 관련 사항은 별도 협의)\r\n\r\n\r\n4. 주의사항\r\n4.기타 안내\r\n\r\n-촬영비 결제(서울시공공서비스예약시스템)후 예약확인증 프린트하여 순찰 근무자에게 제시\r\n※시스템 내예약확인 및 취소에서내용보기클릭확인증 출력(핸드폰 화면 제시 가능)\r\n-녹화촬영시 부주의로 발생한 제반사항은 신청자가 처리하여야 함\r\n-촬영이 허가 및 협의내용과 다르게 진행될 경우 즉시 허가 취소 및 철수 요청,과태료 부과 가능\r\n\r\n5. 환불안내\r\n\r\n\r\n서울특별시 도시공원 조례\r\n\r\n제19조(요금 등의 환불)\r\n① 사전 납부된 입장료・이용료는 환불할 수 있으며 이용자가 취소하는 경우에는 다음 각 호의\r\n구분에 따라 납부된 이용료를 반환하여야 한다.\r\n1 .천재지변 및 불가항력 등의 사유로 인하여 취소한 경우: 이용료 전액 반환※이용자 직접 취소 시 100%환불 불가로, 관리자에게 연락하여 취소 요청\r\n2. 사용일7일 전까지취소한 경우 또는 예약당일 취소: 이용료전액 반환\r\n3. 사용일6일~3일 전까지취소한 경우: 이용료의100분의 10을 공제한 나머지 금액 반환\r\n4. 사용일2일~1일전까지취소한 경우: 이용료의100분의 30을 공제한 나머지 금액 반환\r\n5.사용일 이후취소한 경우:환불 불가"
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n\r\n\r\n서서울호수공원 - 장소사용 / 녹화촬영 안내\r\n\r\n\r\n※촬영비 납부 전 반드시 담당자와 협의(신청서,이메일 전송)하여 촬영허가를 받으시기 바랍니다.\r\n\r\n신청서 미제출 및 사전 협의없이 촬영비만 납부한 경우,\r\n촬영허가를 받지 않은 것으로 간주하여 촬영이 불가능합니다.\r\n\r\n( 문의사항: ☎ 02-2604-3004서부공원여가센터 서서울호수공원 )\r\n\r\n\r\n1.신청절차:신청서 제출(이메일)협의허가촬영비 납부(서울시공공서비스예약시스템)\r\n\r\n-신청서 다운받아 작성 후 서서울호수공원 촬영허가 담당자 김수빈 안전관e-mail: ***@**.**에게 제출\r\n-촬영일3일 전까지 신청 가능(주말,공휴일 제외)\r\n-예약 취소는 촬영일1일 전까지 가능\r\n-허가 후 예약일자 변경 불가능,취소 후 다시 예약해야 함\r\n\r\n\r\n\r\n2.기준 및 이용요금: 1시간13,000원(추가시간당6,500원,신용카드 결제만 가능)\r\n\r\n- 결제 후 예약확인증을 인쇄 및 핸드폰인증 지참하고 순찰근무자에게 제시하여 주시기 바랍니다.\r\n- 예약확인증은 예약확인 및 취소 메뉴에서 내용보기를 클릭하여 내용을 확인하신 후 확인증버튼을 이용해 출력하실 수 있습니다.\r\n- 시설물설치 및 통행자 보행 방해 시 촬영을 중단 될 수 있습니다.\r\n\r\n\r\n3.촬영시 유의사항(촬영은 평일만 가능(토/일/공휴일 제외))\r\n\r\n-공원은 다중이 이용하는 시설로서 자연경관의 보호와 공원 이용 시민의 편의 증진이 우선이기에\r\n반드시 허가된 장소와 시간 범위 내에서 촬영이 이루어져야 함\r\n-공원 내시설물 설치 불가\r\n-촬영 참여자의 휴식을 위한 간이텐트(케노피텐트)설치 불가\r\n-촬영으로 인한 시설물 파손 및 수목,녹지 등 훼손시 신청자가 원상 복구\r\n-공원 내 촬영을 위한 차량 진입 불가(촬영용 발전차 등 안전 관련 사항은 별도 협의)\r\n\r\n\r\n4. 주의사항\r\n4.기타 안내\r\n\r\n-촬영비 결제(서울시공공서비스예약시스템)후 예약확인증 프린트하여 순찰 근무자에게 제시\r\n※시스템 내예약확인 및 취소에서내용보기클릭확인증 출력(핸드폰 화면 제시 가능)\r\n-녹화촬영시 부주의로 발생한 제반사항은 신청자가 처리하여야 함\r\n-촬영이 허가 및 협의내용과 다르게 진행될 경우 즉시 허가 취소 및 철수 요청,과태료 부과 가능\r\n\r\n5. 환불안내\r\n\r\n\r\n서울특별시 도시공원 조례\r\n\r\n제19조(요금 등의 환불)\r\n① 사전 납부된 입장료・이용료는 환불할 수 있으며 이용자가 취소하는 경우에는 다음 각 호의\r\n구분에 따라 납부된 이용료를 반환하여야 한다.\r\n1 .천재지변 및 불가항력 등의 사유로 인하여 취소한 경우: 이용료 전액 반환※이용자 직접 취소 시 100%환불 불가로, 관리자에게 연락하여 취소 요청\r\n2. 사용일7일 전까지취소한 경우 또는 예약당일 취소: 이용료전액 반환\r\n3. 사용일6일~3일 전까지취소한 경우: 이용료의100분의 10을 공제한 나머지 금액 반환\r\n4. 사용일2일~1일전까지취소한 경우: 이용료의100분의 30을 공제한 나머지 금액 반환\r\n5.사용일 이후취소한 경우:환불 불가"
+      },
+      {
+        "serviceId": "S261126093825499212",
+        "title": "2027 서서울호수공원 촬영신청",
+        "statusText": "안내중",
+        "majorCategory": "공간시설",
+        "category": "녹화장소",
+        "paidType": "유료",
+        "targetText": "제한없음",
+        "receptionStartAt": "2026-12-31T14:00:00",
+        "receptionEndAt": "2027-12-30T17:00:00",
+        "useStartAt": "2026-12-31T00:00:00",
+        "useEndAt": "2027-12-31T00:00:00",
+        "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S261126093825499212",
+        "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1795653661296NBQ0R7LFWK37OP61VSDKLLJ2B",
+        "telephone": "02-2604-3004",
+        "detailText": "1. 공공시설 예약서비스 이용시 필수 준수사항모든 서비스의 이용은 담당 기관의 규정에 따릅니다. 각 시설의 규정 및 허가조건을 반드시 준수하여야 합니다.각 관리기관의 시설물과 부대시설을 이용함에 있어 담당자들과 협의 후 사용합니다.각 관리기관의 사고 발생시 서울시청에서는 어떠한 책임도 지지않습니다.시설이용료 납부는 각 관리기관에서 규정에 준 합니다.본 사이트와 각 관리기관의 규정을 위반할시에는 시설이용 취소 및 시설이용 불허의 조치를 취할 수 있습니다.접수시간을 기준으로 브라우저에서 새로고침을 하면 변경된 정보를 볼 수 있습니다.2. 시설예약비회원일 경우에는 실명 확인을 통하여 사용하실 수 있으며 서울시 통합 회원에 가입 하시게 되면 서울시에서 제공하는 다양하고 많은 혜택을 받으실 수 있습니다.3. 상세내용\r\n\r\n\r\n서서울호수공원 - 장소사용 / 녹화촬영 안내\r\n\r\n\r\n※촬영비 납부 전 반드시 담당자와 협의(신청서 제출, 이메일)하여 촬영허가를 받으시기 바랍니다.\r\n\r\n*신청서 미제출 및 사전 협의없이 촬영비만 납부한 경우,\r\n촬영허가를 받지 않은 것으로 간주하여 촬영이 불가능합니다.\r\n\r\n( 문의사항: ☎ 02-2604-3004서부공원여가센터 서서울호수공원 )\r\n\r\n\r\n1.신청절차:신청서 제출(이메일)협의허가촬영비 납부(서울시공공서비스예약시스템)\r\n\r\n-신청서 다운받아 작성 후 서서울호수공원 촬영허가 담당자 김수빈 안전관e-mail: ***@**.**에게 제출\r\n-촬영일3일 전까지 신청 가능(주말,공휴일 제외)\r\n-예약 취소는 촬영일1일 전까지 가능\r\n-허가 후 예약일자 변경 불가능,취소 후 다시 예약해야 함\r\n\r\n\r\n\r\n2.기준 및 이용요금: 1시간13,000원(추가시간당6,500원,신용카드 결제만 가능)\r\n\r\n- 결제 후 예약확인증을 인쇄 및 핸드폰인증 지참하고 순찰근무자에게 제시하여 주시기 바랍니다.\r\n- 예약확인증은 예약확인 및 취소 메뉴에서 내용보기를 클릭하여 내용을 확인하신 후 확인증버튼을 이용해 출력하실 수 있습니다.\r\n- 시설물설치 및 통행자 보행 방해 시 촬영을 중단 될 수 있습니다.\r\n\r\n\r\n3.촬영시 유의사항(촬영은 평일만 가능(토/일/공휴일 제외))\r\n\r\n-공원은 다중이 이용하는 시설로서 자연경관의 보호와 공원 이용 시민의 편의 증진이 우선이기에\r\n반드시 허가된 장소와 시간 범위 내에서 촬영이 이루어져야 함\r\n-공원 내시설물 설치 불가\r\n-촬영 참여자의 휴식을 위한 간이텐트(케노피텐트)설치 불가\r\n-촬영으로 인한 시설물 파손 및 수목,녹지 등 훼손시 신청자가 원상 복구\r\n-공원 내 촬영을 위한 차량 진입 불가(촬영용 발전차 등 안전 관련 사항은 별도 협의)\r\n\r\n\r\n4. 주의사항\r\n4.기타 안내\r\n\r\n-촬영비 결제(서울시공공서비스예약시스템)후 예약확인증 프린트하여 순찰 근무자에게 제시\r\n※시스템 내예약확인 및 취소에서내용보기클릭확인증 출력(핸드폰 화면 제시 가능)\r\n-녹화촬영시 부주의로 발생한 제반사항은 신청자가 처리하여야 함\r\n-촬영이 허가 및 협의내용과 다르게 진행될 경우 즉시 허가 취소 및 철수 요청,과태료 부과 가능\r\n\r\n5. 환불안내\r\n\r\n\r\n서울특별시 도시공원 조례\r\n\r\n제19조(요금 등의 환불)\r\n① 사전 납부된 입장료・이용료는 환불할 수 있으며 이용자가 취소하는 경우에는 다음 각 호의\r\n구분에 따라 납부된 이용료를 반환하여야 한다.\r\n1 .천재지변 및 불가항력 등의 사유로 인하여 취소한 경우: 이용료 전액 반환※이용자 직접 취소 시 100%환불 불가로, 관리자에게 연락하여 취소 요청\r\n2. 사용일7일 전까지취소한 경우 또는 예약당일 취소: 이용료전액 반환\r\n3. 사용일6일~3일 전까지취소한 경우: 이용료의100분의 10을 공제한 나머지 금액 반환\r\n4. 사용일2일~1일전까지취소한 경우: 이용료의100분의 30을 공제한 나머지 금액 반환\r\n5.사용일 이후취소한 경우:환불 불가"
       }
     ]
   },
@@ -11777,7 +11794,7 @@ export const SEOUL_SPACE_FACILITIES:
       {
         "serviceId": "S261013130947640977",
         "title": "용산도시기억전시관 세미나실 대관(11월)",
-        "statusText": "예약마감",
+        "statusText": "접수종료",
         "majorCategory": "공간시설",
         "category": "회의실",
         "paidType": "무료",
@@ -14119,19 +14136,18 @@ export const SEOUL_SPACE_FACILITIES:
     "locationLabel": "서울 중구",
     "primaryCategory": "강의실",
     "categoryNames": [
-      "강의실",
-      "회의실"
+      "강의실"
     ],
     "spaceKind": "lectureRoom",
     "longitude": null,
     "latitude": null,
     "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540026/20210310/1615306854997N1SYSB5PGDPMN7JKANCIBNTKX.jpg",
-    "officialUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do#rest3",
-    "reservationCount": 2,
+    "officialUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do?shelter_tab=R000540028",
+    "reservationCount": 1,
     "reservations": [
       {
         "serviceId": "XML-seoullaborSRJgEdu",
-        "title": "休서울이동노동자 북창쉼터 교육실",
+        "title": "休서울이동노동자 청계쉼터 교육실",
         "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "강의실",
@@ -14140,15 +14156,34 @@ export const SEOUL_SPACE_FACILITIES:
         "receptionStartAt": "2024-09-06T00:00:00",
         "receptionEndAt": "2026-12-31T00:00:00",
         "useStartAt": "2024-09-06T00:00:00",
-        "useEndAt": "2026-12-31T00:00:00",
-        "serviceUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do#rest3",
+        "useEndAt": "2028-12-31T00:00:00",
+        "serviceUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do?shelter_tab=R000540028",
         "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540026/20210310/1615306854997N1SYSB5PGDPMN7JKANCIBNTKX.jpg",
         "telephone": "02-722-7214",
-        "detailText": "주소 : 서울 중구 세종대로14길 38 단암빌딩 별관 2층 (차량주차 불가)\r\n전화번호 : 02-722-7214\r\n운영시간 : 월~금 / 08:30~20:00"
-      },
+        "detailText": "주소 : 서울 종로구 청계천로 99 수표교빌딩 2층(주차불가)\r\n전화번호 : 02-722-7214\r\n운영시간 : 월~금 / 08:30~20:00"
+      }
+    ]
+  },
+  {
+    "id": "seoul-space-30c6d1e1",
+    "name": "休서울이동노동자 합정쉼터",
+    "fullPlaceName": "休서울이동노동자 합정쉼터",
+    "district": "중구",
+    "locationLabel": "서울 중구",
+    "primaryCategory": "회의실",
+    "categoryNames": [
+      "회의실"
+    ],
+    "spaceKind": "meetingRoom",
+    "longitude": null,
+    "latitude": null,
+    "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540026/20210310/16153068743193S9NN5WIKOXBNB007HL5GYAN4.jpg",
+    "officialUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do?shelter_tab=R000540027",
+    "reservationCount": 1,
+    "reservations": [
       {
         "serviceId": "XML-seoullaborSRJgMr",
-        "title": "休서울이동노동자 북창쉼터 회의실",
+        "title": "休서울이동노동자 합정쉼터 회의실",
         "statusText": "접수중",
         "majorCategory": "공간시설",
         "category": "회의실",
@@ -14157,8 +14192,8 @@ export const SEOUL_SPACE_FACILITIES:
         "receptionStartAt": "2024-09-06T00:00:00",
         "receptionEndAt": "2026-12-31T00:00:00",
         "useStartAt": "2024-09-06T00:00:00",
-        "useEndAt": "2026-12-31T00:00:00",
-        "serviceUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do#rest3",
+        "useEndAt": "2028-12-31T00:00:00",
+        "serviceUrl": "https://www.seoullabor.or.kr/portal/shelterRent/selectShelterRentPlace.do?shelter_tab=R000540027",
         "imageUrl": "https://www.seoullabor.or.kr/cmsdata/web_upload/erntreqst/R000540026/20210310/16153068743193S9NN5WIKOXBNB007HL5GYAN4.jpg",
         "telephone": "02-722-7214",
         "detailText": "주소 : 서울 중구 세종대로14길 38 단암빌딩 별관 2층(차량주차 불가)\r\n전화번호 : 02-722-7214\r\n운영시간 : 월~금 / 08:30~20:00"
@@ -15014,9 +15049,9 @@ export const SEOUL_SPACE_FACILITIES:
         "paidType": "무료",
         "targetText": "제한없음",
         "receptionStartAt": "2025-07-30T00:00:00",
-        "receptionEndAt": "2026-11-30T00:00:00",
+        "receptionEndAt": "2026-12-31T00:00:00",
         "useStartAt": "2025-07-30T00:00:00",
-        "useEndAt": "2026-11-30T00:00:00",
+        "useEndAt": "2026-12-31T00:00:00",
         "serviceUrl": "https://yeyak.seoul.go.kr/web/reservation/selectReservView.do?rsv_svc_id=S250723162210931748",
         "imageUrl": "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1753851236640KWS6QYZTV2EJD6GLJQ86P79IV",
         "telephone": "02-6212-0608",
